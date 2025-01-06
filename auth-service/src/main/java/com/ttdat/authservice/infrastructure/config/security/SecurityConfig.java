@@ -35,6 +35,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final RSAKeyRecord rsaKeyRecord;
+    private final ProjectAuthenticationEntryPoint projectAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -51,6 +52,7 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(requests ->
                         requests
+                                .requestMatchers("/api/v1/users").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -59,6 +61,7 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults())
+                                .authenticationEntryPoint(projectAuthenticationEntryPoint)
                 )
                 .formLogin(AbstractHttpConfigurer::disable);
 
