@@ -119,6 +119,34 @@ services:
     volumes:
       - ${DOCKER_DATA}/ct553/kong-gateway:/var/lib/postgresql/data
       
+  axon-server:
+    image: axoniq/axonserver
+    container_name: axon-server
+    hostname: axonserver
+    volumes:
+      - ${DOCKER_DATA}/ct553/axon-server/data:/data
+      - ${DOCKER_DATA}/ct553/axon-server/event:/eventdata
+      - ${DOCKER_DATA}/ct553/axon-server/config:/config:ro
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+      - "8224:8224"
+    networks:
+      - agrohub
+
+  auth-service-db:
+    image: postgres:16.4-alpine
+    container_name: auth-service-db
+    environment:
+      POSTGRES_DB: auth_service
+      POSTGRES_USER: auth_service
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5433:5432"
+    volumes:
+      - ${DOCKER_DATA}/ct553/auth-service:/var/lib/postgresql/data
+    networks:
+      - agrohub
 
 secrets:
   kong_postgres_password:
