@@ -1,6 +1,5 @@
 package com.ttdat.authservice.application.services.impl;
 
-import com.ttdat.authservice.api.dto.request.CreateUserRequest;
 import com.ttdat.authservice.api.dto.response.UserDTO;
 import com.ttdat.authservice.application.commands.CreateUserCommand;
 import com.ttdat.authservice.application.services.UserService;
