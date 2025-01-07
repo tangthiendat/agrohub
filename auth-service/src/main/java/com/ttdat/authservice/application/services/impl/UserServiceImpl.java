@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -18,7 +16,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(UserDTO userDTO) {
         CreateUserCommand createUserCommand = CreateUserCommand.builder()
-                .userId(UUID.randomUUID())
                 .fullName(userDTO.getFullName())
                 .gender(userDTO.getGender())
                 .email(userDTO.getEmail())
