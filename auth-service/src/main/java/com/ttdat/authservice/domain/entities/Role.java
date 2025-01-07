@@ -28,7 +28,6 @@ public class Role implements GrantedAuthority {
     @OneToMany(mappedBy = "role")
     List<User> users;
 
-
     @Override
     public String getAuthority() {
         return roleName;

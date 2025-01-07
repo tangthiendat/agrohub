@@ -27,6 +27,8 @@ axon:
     processors:
       user-group:
         mode: tracking
+      permission-group:
+        mode: tracking
 application:
   security:
     rsa:
