@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/permissions")
 @RequiredArgsConstructor
 public class PermissionCommandController {
-
     private final PermissionService permissionService;
 
     @PostMapping
