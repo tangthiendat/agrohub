@@ -1,7 +1,9 @@
 package com.ttdat.authservice.application.commandhandler;
 
 import com.ttdat.authservice.application.commands.CreatePermissionCommand;
+import com.ttdat.authservice.application.commands.UpdatePermissionCommand;
 import com.ttdat.authservice.domain.events.PermissionCreatedEvent;
+import com.ttdat.authservice.domain.events.PermissionUpdatedEvent;
 import com.ttdat.authservice.domain.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -26,5 +28,18 @@ public class PermissionCommandHandler {
                 .module(createPermissionCommand.getModule())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(permissionCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdatePermissionCommand updatePermissionCommand){
+        PermissionUpdatedEvent permissionUpdatedEvent = PermissionUpdatedEvent.builder()
+                .permissionId(updatePermissionCommand.getPermissionId())
+                .permissionName(updatePermissionCommand.getPermissionName())
+                .description(updatePermissionCommand.getDescription())
+                .apiPath(updatePermissionCommand.getApiPath())
+                .httpMethod(updatePermissionCommand.getHttpMethod())
+                .module(updatePermissionCommand.getModule())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(permissionUpdatedEvent));
     }
 }

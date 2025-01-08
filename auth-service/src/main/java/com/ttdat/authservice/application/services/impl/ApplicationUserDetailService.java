@@ -1,5 +1,6 @@
 package com.ttdat.authservice.application.services.impl;
 
+import com.ttdat.authservice.application.exception.ErrorCode;
 import com.ttdat.authservice.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,7 @@ public class ApplicationUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Email not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.EMAIL_NOT_FOUND.getMessage()));
     }
 
 }

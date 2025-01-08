@@ -5,4 +5,6 @@ import com.ttdat.authservice.api.dto.response.PermissionDTO;
 
 public interface PermissionService {
     void createPermission(PermissionDTO permissionDTO);
+
+    void updatePermission(Long id, PermissionDTO permissionDTO);
 }
