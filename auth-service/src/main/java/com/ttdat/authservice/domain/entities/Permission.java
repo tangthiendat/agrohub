@@ -1,7 +1,9 @@
 package com.ttdat.authservice.domain.entities;
 
 import com.ttdat.authservice.infrastructure.audit.Auditable;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

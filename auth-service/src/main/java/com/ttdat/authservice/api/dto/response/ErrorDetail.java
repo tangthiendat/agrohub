@@ -10,10 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse<T> {
-    int status;
-    boolean success;
+public class ErrorDetail {
+    String field;
     String message;
-    ApiError error;
-    T payload;
 }

@@ -1,6 +1,6 @@
 package com.ttdat.authservice.application.commandhandler;
 
-import com.ttdat.authservice.application.commands.CreateUserCommand;
+import com.ttdat.authservice.application.commands.user.CreateUserCommand;
 import com.ttdat.authservice.domain.events.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;

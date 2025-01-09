@@ -1,4 +1,4 @@
-package com.ttdat.authservice.application.commands;
+package com.ttdat.authservice.application.commands.user;
 
 import com.ttdat.authservice.domain.entities.Gender;
 import lombok.AllArgsConstructor;

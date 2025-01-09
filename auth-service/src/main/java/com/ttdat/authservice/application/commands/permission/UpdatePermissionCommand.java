@@ -1,4 +1,4 @@
-package com.ttdat.authservice.application.commands;
+package com.ttdat.authservice.application.commands.permission;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
-public class CreatePermissionCommand {
+public class UpdatePermissionCommand {
+    Long permissionId;
     String permissionName;
     String description;
     String apiPath;

@@ -1,7 +1,7 @@
 package com.ttdat.authservice.application.commandhandler;
 
-import com.ttdat.authservice.application.commands.CreatePermissionCommand;
-import com.ttdat.authservice.application.commands.UpdatePermissionCommand;
+import com.ttdat.authservice.application.commands.permission.CreatePermissionCommand;
+import com.ttdat.authservice.application.commands.permission.UpdatePermissionCommand;
 import com.ttdat.authservice.domain.events.PermissionCreatedEvent;
 import com.ttdat.authservice.domain.events.PermissionUpdatedEvent;
 import com.ttdat.authservice.domain.services.IdGeneratorService;

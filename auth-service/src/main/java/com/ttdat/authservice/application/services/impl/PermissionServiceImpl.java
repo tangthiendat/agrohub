@@ -1,8 +1,8 @@
 package com.ttdat.authservice.application.services.impl;
 
 import com.ttdat.authservice.api.dto.response.PermissionDTO;
-import com.ttdat.authservice.application.commands.CreatePermissionCommand;
-import com.ttdat.authservice.application.commands.UpdatePermissionCommand;
+import com.ttdat.authservice.application.commands.permission.CreatePermissionCommand;
+import com.ttdat.authservice.application.commands.permission.UpdatePermissionCommand;
 import com.ttdat.authservice.application.services.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
