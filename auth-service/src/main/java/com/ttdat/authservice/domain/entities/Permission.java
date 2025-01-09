@@ -1,5 +1,6 @@
 package com.ttdat.authservice.domain.entities;
 
+import com.ttdat.authservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "permissions")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Permission {
+public class Permission extends Auditable {
     @Id
     Long permissionId;
 
