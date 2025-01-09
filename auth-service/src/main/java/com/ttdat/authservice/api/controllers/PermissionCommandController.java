@@ -3,6 +3,7 @@ package com.ttdat.authservice.api.controllers;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
 import com.ttdat.authservice.api.dto.response.PermissionDTO;
 import com.ttdat.authservice.application.services.PermissionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class PermissionCommandController {
     private final PermissionService permissionService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Object>> createPermission(@RequestBody PermissionDTO permissionDTO) {
+    public ResponseEntity<ApiResponse<Object>> createPermission(@Valid @RequestBody PermissionDTO permissionDTO) {
         permissionService.createPermission(permissionDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.builder()
@@ -26,7 +27,7 @@ public class PermissionCommandController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Object>> updatePermission(@PathVariable Long id, @RequestBody PermissionDTO permissionDTO) {
+    public ResponseEntity<ApiResponse<Object>> updatePermission(@Valid @PathVariable Long id, @RequestBody PermissionDTO permissionDTO) {
         permissionService.updatePermission(id, permissionDTO);
         return ResponseEntity.ok(ApiResponse.builder()
                 .status(HttpStatus.OK.value())

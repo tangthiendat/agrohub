@@ -26,9 +26,9 @@ axon:
   eventhandling:
     processors:
       user-group:
-        mode: tracking
+        mode: subscribing
       permission-group:
-        mode: tracking
+        mode: subscribing
 application:
   security:
     rsa:

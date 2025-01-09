@@ -3,6 +3,7 @@ package com.ttdat.authservice.application.services.impl;
 import com.ttdat.authservice.api.dto.response.PermissionDTO;
 import com.ttdat.authservice.application.commands.permission.CreatePermissionCommand;
 import com.ttdat.authservice.application.commands.permission.UpdatePermissionCommand;
+import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.services.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -26,7 +27,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public void updatePermission(Long id, PermissionDTO permissionDTO) {
+    public void updatePermission(Long id, PermissionDTO permissionDTO)  throws ResourceNotFoundException {
         UpdatePermissionCommand updatePermissionCommand = UpdatePermissionCommand.builder()
                 .permissionId(id)
                 .permissionName(permissionDTO.getPermissionName())

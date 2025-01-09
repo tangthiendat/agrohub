@@ -31,7 +31,7 @@ public class PermissionCommandHandler {
     }
 
     @CommandHandler
-    public void handle(UpdatePermissionCommand updatePermissionCommand){
+    public void handle(UpdatePermissionCommand updatePermissionCommand)  {
         PermissionUpdatedEvent permissionUpdatedEvent = PermissionUpdatedEvent.builder()
                 .permissionId(updatePermissionCommand.getPermissionId())
                 .permissionName(updatePermissionCommand.getPermissionName())
