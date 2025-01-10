@@ -1,6 +1,6 @@
 package com.ttdat.authservice.application.queryhandlers;
 
-import com.ttdat.authservice.api.dto.response.UserDTO;
+import com.ttdat.authservice.api.dto.UserDTO;
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.application.queries.FindUserByEmailQuery;
 import com.ttdat.authservice.domain.repositories.UserRepository;

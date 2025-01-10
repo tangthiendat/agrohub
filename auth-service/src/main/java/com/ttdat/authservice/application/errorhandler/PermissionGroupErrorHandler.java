@@ -2,7 +2,6 @@ package com.ttdat.authservice.application.errorhandler;
 
 import com.ttdat.authservice.api.dto.response.ApiError;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
-import com.ttdat.authservice.application.exception.ErrorCode;
 import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandExecutionException;
@@ -20,7 +19,6 @@ public class PermissionGroupErrorHandler implements ListenerInvocationErrorHandl
         if(exception instanceof ResourceNotFoundException) {
             ResourceNotFoundException resourceNotFoundException = (ResourceNotFoundException) exception;
             log.error("Resource not found exception message: {}", exception.getMessage());
-//            throw new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND);
             ApiError apiError = ApiError.builder()
                     .errorCode(resourceNotFoundException.getErrorCode().getCode())
                     .errorType(resourceNotFoundException.getErrorCode().getErrorType())

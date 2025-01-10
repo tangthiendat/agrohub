@@ -1,7 +1,7 @@
 package com.ttdat.authservice.api.controllers;
 
+import com.ttdat.authservice.api.dto.PermissionDTO;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
-import com.ttdat.authservice.api.dto.response.PermissionDTO;
 import com.ttdat.authservice.application.services.PermissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.ttdat.authservice.application.queryhandlers;
 
-import com.ttdat.authservice.api.dto.response.PermissionDTO;
+import com.ttdat.authservice.api.dto.PermissionDTO;
 import com.ttdat.authservice.application.mappers.PermissionMapper;
 import com.ttdat.authservice.application.queries.FindAllPermissionQuery;
 import com.ttdat.authservice.domain.repositories.PermissionRepository;

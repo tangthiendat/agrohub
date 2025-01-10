@@ -1,4 +1,4 @@
-package com.ttdat.authservice.api.dto.response;
+package com.ttdat.authservice.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;

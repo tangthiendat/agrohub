@@ -20,6 +20,8 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
 axon:
   axonserver:
     servers: ${AXON_SERVER}
