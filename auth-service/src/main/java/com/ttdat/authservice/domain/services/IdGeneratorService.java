@@ -12,4 +12,8 @@ public class IdGeneratorService {
     public Long generatePermissionId() {
         return jdbcTemplate.queryForObject("SELECT nextval('permissions_seq')", Long.class);
     }
+
+    public Long generateRoleId() {
+        return jdbcTemplate.queryForObject("SELECT nextval('roles_seq')", Long.class);
+    }
 }

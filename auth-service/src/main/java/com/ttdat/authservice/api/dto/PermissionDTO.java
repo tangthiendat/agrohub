@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,6 +19,7 @@ public class PermissionDTO {
     String permissionName;
 
     String description;
+
     @NotBlank(message = "API path is required")
     String apiPath;
 

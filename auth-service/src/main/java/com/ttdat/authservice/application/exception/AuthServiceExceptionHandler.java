@@ -40,20 +40,20 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
                         .build());
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ApiError apiError = ApiError.builder()
-                .errorCode(ex.getErrorCode().getCode())
-                .errorType(ex.getErrorCode().getErrorType())
-                .message(ex.getErrorCode().getMessage())
-                .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.builder()
-                        .status(HttpStatus.NOT_FOUND.value())
-                        .message(ex.getMessage())
-                        .error(apiError)
-                        .build());
-    }
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+//        ApiError apiError = ApiError.builder()
+//                .errorCode(ex.getErrorCode().getCode())
+//                .errorType(ex.getErrorCode().getErrorType())
+//                .message(ex.getErrorCode().getMessage())
+//                .build();
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                .body(ApiResponse.builder()
+//                        .status(HttpStatus.NOT_FOUND.value())
+//                        .message(ex.getMessage())
+//                        .error(apiError)
+//                        .build());
+//    }
 
     @ExceptionHandler(CommandExecutionException.class)
     public ResponseEntity<ApiResponse<Object>> handleCommandExecutionException(CommandExecutionException ex) {

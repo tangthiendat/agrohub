@@ -25,11 +25,16 @@ spring:
 axon:
   axonserver:
     servers: ${AXON_SERVER}
+  serializer:
+    general: jackson
+    messages: jackson
   eventhandling:
     processors:
       user-group:
         mode: subscribing
       permission-group:
+        mode: subscribing
+      role-group:
         mode: subscribing
 application:
   security:

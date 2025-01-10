@@ -1,11 +1,11 @@
 package com.ttdat.authservice.domain.entities;
 
 import com.ttdat.authservice.infrastructure.audit.Auditable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,4 +28,7 @@ public class Permission extends Auditable {
     String httpMethod;
 
     String module;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "permissions")
+    List<Role> roles;
 }
