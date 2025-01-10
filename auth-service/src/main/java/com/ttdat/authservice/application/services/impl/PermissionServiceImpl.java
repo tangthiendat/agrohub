@@ -2,6 +2,7 @@ package com.ttdat.authservice.application.services.impl;
 
 import com.ttdat.authservice.api.dto.response.PermissionDTO;
 import com.ttdat.authservice.application.commands.permission.CreatePermissionCommand;
+import com.ttdat.authservice.application.commands.permission.DeletePermissionCommand;
 import com.ttdat.authservice.application.commands.permission.UpdatePermissionCommand;
 import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.services.PermissionService;
@@ -37,5 +38,13 @@ public class PermissionServiceImpl implements PermissionService {
                 .module(permissionDTO.getModule())
                 .build();
         commandGateway.sendAndWait(updatePermissionCommand);
+    }
+
+    @Override
+    public void deletePermission(Long id) {
+        DeletePermissionCommand deletePermissionCommand = DeletePermissionCommand.builder()
+                .permissionId(id)
+                .build();
+        commandGateway.sendAndWait(deletePermissionCommand);
     }
 }

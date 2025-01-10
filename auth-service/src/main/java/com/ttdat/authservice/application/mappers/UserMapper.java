@@ -2,7 +2,7 @@ package com.ttdat.authservice.application.mappers;
 
 import com.ttdat.authservice.api.dto.response.UserDTO;
 import com.ttdat.authservice.domain.entities.User;
-import com.ttdat.authservice.domain.events.UserCreatedEvent;
+import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

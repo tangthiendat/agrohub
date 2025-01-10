@@ -1,4 +1,4 @@
-package com.ttdat.authservice.domain.events;
+package com.ttdat.authservice.domain.events.user;
 
 import com.ttdat.authservice.domain.entities.Gender;
 import lombok.AllArgsConstructor;

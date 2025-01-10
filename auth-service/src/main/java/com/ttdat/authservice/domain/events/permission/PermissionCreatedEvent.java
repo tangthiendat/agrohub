@@ -1,4 +1,4 @@
-package com.ttdat.authservice.domain.events;
+package com.ttdat.authservice.domain.events.permission;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class PermissionUpdatedEvent {
+public class PermissionCreatedEvent {
     Long permissionId;
     String permissionName;
     String description;

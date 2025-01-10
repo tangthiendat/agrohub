@@ -4,8 +4,9 @@ import com.ttdat.authservice.application.exception.ErrorCode;
 import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.PermissionMapper;
 import com.ttdat.authservice.domain.entities.Permission;
-import com.ttdat.authservice.domain.events.PermissionCreatedEvent;
-import com.ttdat.authservice.domain.events.PermissionUpdatedEvent;
+import com.ttdat.authservice.domain.events.permission.PermissionCreatedEvent;
+import com.ttdat.authservice.domain.events.permission.PermissionDeletedEvent;
+import com.ttdat.authservice.domain.events.permission.PermissionUpdatedEvent;
 import com.ttdat.authservice.domain.repositories.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -31,5 +32,12 @@ public class PermissionEventHandler {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
         permissionMapper.updatePermissionFromEvent(permission, permissionUpdatedEvent);
         permissionRepository.save(permission);
+    }
+
+    @EventHandler
+    public void on(PermissionDeletedEvent permissionDeletedEvent) {
+        Permission permission = permissionRepository.findById(permissionDeletedEvent.getPermissionId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
+        permissionRepository.delete(permission);
     }
 }

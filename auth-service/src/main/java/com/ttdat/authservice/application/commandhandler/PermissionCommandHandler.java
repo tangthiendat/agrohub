@@ -1,9 +1,11 @@
 package com.ttdat.authservice.application.commandhandler;
 
 import com.ttdat.authservice.application.commands.permission.CreatePermissionCommand;
+import com.ttdat.authservice.application.commands.permission.DeletePermissionCommand;
 import com.ttdat.authservice.application.commands.permission.UpdatePermissionCommand;
-import com.ttdat.authservice.domain.events.PermissionCreatedEvent;
-import com.ttdat.authservice.domain.events.PermissionUpdatedEvent;
+import com.ttdat.authservice.domain.events.permission.PermissionCreatedEvent;
+import com.ttdat.authservice.domain.events.permission.PermissionDeletedEvent;
+import com.ttdat.authservice.domain.events.permission.PermissionUpdatedEvent;
 import com.ttdat.authservice.domain.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -41,5 +43,13 @@ public class PermissionCommandHandler {
                 .module(updatePermissionCommand.getModule())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(permissionUpdatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(DeletePermissionCommand deletePermissionCommand) {
+        PermissionDeletedEvent permissionDeletedEvent = PermissionDeletedEvent.builder()
+                .permissionId(deletePermissionCommand.getPermissionId())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(permissionDeletedEvent));
     }
 }

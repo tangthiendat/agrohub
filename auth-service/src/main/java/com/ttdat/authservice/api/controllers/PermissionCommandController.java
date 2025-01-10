@@ -35,4 +35,14 @@ public class PermissionCommandController {
                 .message("Permission updated successfully")
                 .build());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> deletePermission(@PathVariable Long id) {
+        permissionService.deletePermission(id);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Permission deleted successfully")
+                .build());
+    }
 }

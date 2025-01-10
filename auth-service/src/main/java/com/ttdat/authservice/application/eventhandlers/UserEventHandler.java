@@ -2,7 +2,7 @@ package com.ttdat.authservice.application.eventhandlers;
 
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.domain.entities.User;
-import com.ttdat.authservice.domain.events.UserCreatedEvent;
+import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
 import com.ttdat.authservice.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;

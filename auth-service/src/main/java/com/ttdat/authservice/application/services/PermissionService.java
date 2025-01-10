@@ -8,4 +8,6 @@ public interface PermissionService {
     void createPermission(PermissionDTO permissionDTO);
 
     void updatePermission(Long id, PermissionDTO permissionDTO) throws ResourceNotFoundException;
+
+    void deletePermission(Long id);
 }
