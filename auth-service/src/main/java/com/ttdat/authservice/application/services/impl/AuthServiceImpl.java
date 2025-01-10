@@ -1,8 +1,8 @@
 package com.ttdat.authservice.application.services.impl;
 
+import com.ttdat.authservice.api.dto.UserDTO;
 import com.ttdat.authservice.api.dto.request.LoginRequest;
 import com.ttdat.authservice.api.dto.response.LoginResponse;
-import com.ttdat.authservice.api.dto.response.UserDTO;
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.application.queries.FindUserByEmailQuery;
 import com.ttdat.authservice.application.services.AuthService;

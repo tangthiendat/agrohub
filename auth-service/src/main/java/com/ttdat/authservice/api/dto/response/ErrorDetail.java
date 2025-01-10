@@ -5,9 +5,10 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginResponse {
-    String accessToken;
+public class ErrorDetail {
+    String field;
+    String message;
 }

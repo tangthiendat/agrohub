@@ -20,13 +20,22 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
 axon:
   axonserver:
     servers: ${AXON_SERVER}
+  serializer:
+    general: jackson
+    messages: jackson
   eventhandling:
     processors:
       user-group:
-        mode: tracking
+        mode: subscribing
+      permission-group:
+        mode: subscribing
+      role-group:
+        mode: subscribing
 application:
   security:
     rsa:

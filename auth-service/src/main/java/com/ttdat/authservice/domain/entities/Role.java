@@ -18,16 +18,20 @@ import java.util.List;
 public class Role implements GrantedAuthority {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_seq")
-    @SequenceGenerator(name = "role_id_seq", sequenceName = "roles_seq", allocationSize = 1)
     Long roleId;
 
     String roleName;
+
+    boolean active;
+
     String description;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "permission_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    List<Permission> permissions;
 
     @OneToMany(mappedBy = "role")
     List<User> users;
-
 
     @Override
     public String getAuthority() {

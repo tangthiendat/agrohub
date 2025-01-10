@@ -21,11 +21,16 @@ import java.util.UUID;
 public class User implements UserDetails {
     @Id
     UUID userId;
+
     String fullName;
+
     @Enumerated(EnumType.STRING)
     Gender gender;
+
     String email;
+
     String password;
+
     String phoneNumber;
 
     @ManyToOne

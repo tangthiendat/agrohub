@@ -1,4 +1,4 @@
-package com.ttdat.authservice.api.controllers;
+package com.ttdat.authservice.api.controllers.command;
 
 import com.ttdat.authservice.api.dto.request.LoginRequest;
 import com.ttdat.authservice.api.dto.response.ApiResponse;

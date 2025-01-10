@@ -14,6 +14,8 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
+  redis:
+    driver: local
 
 networks:
   agrohub:
@@ -145,6 +147,16 @@ services:
       - "5433:5432"
     volumes:
       - ${DOCKER_DATA}/ct553/auth-service:/var/lib/postgresql/data
+    networks:
+      - agrohub
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: ct553-redis
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
     networks:
       - agrohub
 
