@@ -28,6 +28,7 @@ axon:
   serializer:
     general: jackson
     messages: jackson
+    events: jackson
   eventhandling:
     processors:
       user-group:

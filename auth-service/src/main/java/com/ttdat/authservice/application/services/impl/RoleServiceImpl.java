@@ -3,6 +3,7 @@ package com.ttdat.authservice.application.services.impl;
 import com.ttdat.authservice.api.dto.PermissionDTO;
 import com.ttdat.authservice.api.dto.RoleDTO;
 import com.ttdat.authservice.application.commands.role.CreateRoleCommand;
+import com.ttdat.authservice.application.commands.role.UpdateRoleCommand;
 import com.ttdat.authservice.application.services.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -27,5 +28,20 @@ public class RoleServiceImpl implements RoleService {
                 .permissionIds(permissionIds)
                 .build();
         commandGateway.sendAndWait(createRoleCommand);
+    }
+
+    @Override
+    public void updateRole(Long id, RoleDTO roleDTO) {
+        List<Long> permissionIds = roleDTO.getPermissions().stream()
+                .map(PermissionDTO::getPermissionId)
+                .toList();
+        UpdateRoleCommand updateRoleCommand = UpdateRoleCommand.builder()
+                .roleId(id)
+                .roleName(roleDTO.getRoleName())
+                .description(roleDTO.getDescription())
+                .active(roleDTO.isActive())
+                .permissionIds(permissionIds)
+                .build();
+        commandGateway.sendAndWait(updateRoleCommand);
     }
 }

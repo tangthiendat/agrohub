@@ -1,7 +1,9 @@
 package com.ttdat.authservice.application.commandhandler;
 
 import com.ttdat.authservice.application.commands.role.CreateRoleCommand;
+import com.ttdat.authservice.application.commands.role.UpdateRoleCommand;
 import com.ttdat.authservice.domain.events.role.RoleCreatedEvent;
+import com.ttdat.authservice.domain.events.role.RoleUpdatedEvent;
 import com.ttdat.authservice.domain.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -25,6 +27,18 @@ public class RoleCommandHandler {
                 .permissionIds(createRoleCommand.getPermissionIds())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(roleCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateRoleCommand updateRoleCommand) {
+        RoleUpdatedEvent roleUpdatedEvent = RoleUpdatedEvent.builder()
+                .roleId(updateRoleCommand.getRoleId())
+                .roleName(updateRoleCommand.getRoleName())
+                .description(updateRoleCommand.getDescription())
+                .active(updateRoleCommand.isActive())
+                .permissionIds(updateRoleCommand.getPermissionIds())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(roleUpdatedEvent));
     }
 
 }

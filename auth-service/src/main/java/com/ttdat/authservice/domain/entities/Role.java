@@ -1,5 +1,6 @@
 package com.ttdat.authservice.domain.entities;
 
+import com.ttdat.authservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Role implements GrantedAuthority {
+public class Role extends Auditable implements GrantedAuthority {
 
     @Id
     Long roleId;

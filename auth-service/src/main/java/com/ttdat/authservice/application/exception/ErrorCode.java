@@ -11,6 +11,8 @@ public enum ErrorCode {
 
     EMAIL_NOT_FOUND("USR-001", "User email not found", ErrorType.AUTHENTICATION),
 
+    ROLE_NOT_FOUND("ROL-001", "Role not found", ErrorType.RESOURCE),
+
     PERMISSION_NOT_FOUND("PER-001", "Permission not found", ErrorType.RESOURCE),;
 
     private final String code;
