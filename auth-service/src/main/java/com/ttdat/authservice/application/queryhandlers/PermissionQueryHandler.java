@@ -61,12 +61,12 @@ public class PermissionQueryHandler {
 
     private Specification<Permission> getPermissionPageSpec(Map<String, String> filterParams) {
         Specification<Permission> spec = Specification.where(null);
-        List<FilterCriteria> methodCriteria = filterUtils.getFilterCriteria(filterParams, "method");
+        List<FilterCriteria> methodCriteria = filterUtils.getFilterCriteria(filterParams, "httpMethod");
         List<FilterCriteria> moduleCriteria = filterUtils.getFilterCriteria(filterParams, "module");
         Specification<Permission> methodSpec = Specification.where(null);
         for (FilterCriteria criteria : methodCriteria) {
             methodSpec = methodSpec.or(((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("method"), criteria.getValue())));
+                    criteriaBuilder.equal(root.get("httpMethod"), criteria.getValue())));
         }
         Specification<Permission> moduleSpec = Specification.where(null);
         for (FilterCriteria criteria : moduleCriteria) {

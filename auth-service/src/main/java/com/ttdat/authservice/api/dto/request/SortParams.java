@@ -9,6 +9,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SortParams {
-    String sortBy = "createdAt";
-    String direction = "desc";
+    String sortBy;
+    String direction;
 }

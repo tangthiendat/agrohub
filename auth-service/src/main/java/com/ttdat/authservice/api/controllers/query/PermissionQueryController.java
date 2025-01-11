@@ -7,15 +7,13 @@ import com.ttdat.authservice.api.dto.response.ApiResponse;
 import com.ttdat.authservice.api.dto.response.PermissionPageResult;
 import com.ttdat.authservice.application.queries.permission.GetAllPermissionsQuery;
 import com.ttdat.authservice.application.queries.permission.GetPermissionPageQuery;
+import com.ttdat.authservice.infrastructure.utils.RequestParamsUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PermissionQueryController {
     private final QueryGateway queryGateway;
+    private final RequestParamsUtils requestParamsUtils;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<PermissionDTO>>> getPermissions() {
@@ -39,9 +38,9 @@ public class PermissionQueryController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<PermissionPageResult>> getPermissionPage(@ModelAttribute PaginationParams paginationParams,
-                                                                              @ModelAttribute SortParams sortParams,
-                                                                              @ModelAttribute Map<String, String> filterParams) {
+    public ResponseEntity<ApiResponse<PermissionPageResult>> getPermissionPage(@RequestParam Map<String, String> filterParams) {
+        PaginationParams paginationParams = requestParamsUtils.getPaginationParams(filterParams);
+        SortParams sortParams = requestParamsUtils.getSortParams(filterParams);
         GetPermissionPageQuery getPermissionPageQuery = GetPermissionPageQuery.builder()
                 .paginationParams(paginationParams)
                 .sortParams(sortParams)
