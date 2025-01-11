@@ -1,6 +1,6 @@
 package com.ttdat.authservice.api.controllers.query;
 
-import com.ttdat.authservice.api.dto.PermissionDTO;
+import com.ttdat.authservice.api.dto.common.PermissionDTO;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
 import com.ttdat.authservice.application.queries.FindAllPermissionQuery;
 import lombok.RequiredArgsConstructor;

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -19,12 +20,14 @@ public class RoleEventHandler {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
 
+    @Transactional
     @EventHandler
     public void on(RoleCreatedEvent roleCreatedEvent) {
         Role role = roleMapper.toRole(roleCreatedEvent);
         roleRepository.save(role);
     }
 
+    @Transactional
     @EventHandler
     public void on(RoleUpdatedEvent roleUpdatedEvent) {
         Role role = roleRepository.findById(roleUpdatedEvent.getRoleId())

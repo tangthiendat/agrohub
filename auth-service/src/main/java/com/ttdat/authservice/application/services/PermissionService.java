@@ -1,7 +1,7 @@
 package com.ttdat.authservice.application.services;
 
 
-import com.ttdat.authservice.api.dto.PermissionDTO;
+import com.ttdat.authservice.api.dto.common.PermissionDTO;
 
 public interface PermissionService {
     void createPermission(PermissionDTO permissionDTO);

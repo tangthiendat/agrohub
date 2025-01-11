@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginRequest {
-    String email;
-    String password;
+public class SortParams {
+    String sortBy = "createdAt";
+    String direction = "desc";
 }

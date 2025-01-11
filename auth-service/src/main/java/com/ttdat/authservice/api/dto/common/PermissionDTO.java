@@ -1,9 +1,11 @@
-package com.ttdat.authservice.api.dto;
+package com.ttdat.authservice.api.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -26,4 +28,8 @@ public class PermissionDTO {
 
     @NotBlank(message = "Module is required")
     String module;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }

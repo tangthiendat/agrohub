@@ -1,6 +1,6 @@
 package com.ttdat.authservice.application.services.impl;
 
-import com.ttdat.authservice.api.dto.UserDTO;
+import com.ttdat.authservice.api.dto.response.UserDTO;
 import com.ttdat.authservice.application.commands.user.CreateUserCommand;
 import com.ttdat.authservice.application.services.UserService;
 import lombok.RequiredArgsConstructor;

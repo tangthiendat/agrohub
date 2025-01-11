@@ -1,7 +1,7 @@
 package com.ttdat.authservice.api.controllers.command;
 
-import com.ttdat.authservice.api.dto.UserDTO;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
+import com.ttdat.authservice.api.dto.response.UserDTO;
 import com.ttdat.authservice.application.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

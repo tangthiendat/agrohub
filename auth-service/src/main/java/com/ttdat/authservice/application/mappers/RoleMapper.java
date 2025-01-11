@@ -1,6 +1,6 @@
 package com.ttdat.authservice.application.mappers;
 
-import com.ttdat.authservice.api.dto.RoleDTO;
+import com.ttdat.authservice.api.dto.common.RoleDTO;
 import com.ttdat.authservice.domain.entities.Role;
 import com.ttdat.authservice.domain.events.role.RoleCreatedEvent;
 import com.ttdat.authservice.domain.events.role.RoleUpdatedEvent;

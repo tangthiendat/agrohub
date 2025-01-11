@@ -1,23 +1,17 @@
 package com.ttdat.authservice.api.dto.response;
 
 import com.ttdat.authservice.api.dto.common.RoleDTO;
-import com.ttdat.authservice.domain.entities.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDTO {
-    UUID userId;
-    String fullName;
-    String email;
-    Gender gender;
-    String password;
-    String phoneNumber;
-    RoleDTO role;
+public class RolePageResult {
+    PaginationMeta meta;
+    List<RoleDTO> content;
 }

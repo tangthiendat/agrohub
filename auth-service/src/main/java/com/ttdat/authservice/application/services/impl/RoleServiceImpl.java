@@ -1,7 +1,7 @@
 package com.ttdat.authservice.application.services.impl;
 
-import com.ttdat.authservice.api.dto.PermissionDTO;
-import com.ttdat.authservice.api.dto.RoleDTO;
+import com.ttdat.authservice.api.dto.common.PermissionDTO;
+import com.ttdat.authservice.api.dto.common.RoleDTO;
 import com.ttdat.authservice.application.commands.role.CreateRoleCommand;
 import com.ttdat.authservice.application.commands.role.UpdateRoleCommand;
 import com.ttdat.authservice.application.services.RoleService;
