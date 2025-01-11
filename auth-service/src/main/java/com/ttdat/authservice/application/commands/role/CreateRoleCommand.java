@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class CreateRoleCommand {
     String roleName;
     boolean active;

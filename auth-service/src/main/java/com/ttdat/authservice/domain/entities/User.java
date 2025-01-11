@@ -1,5 +1,6 @@
 package com.ttdat.authservice.domain.entities;
 
+import com.ttdat.authservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "users")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User implements UserDetails {
+public class User extends Auditable implements UserDetails {
     @Id
     UUID userId;
 
@@ -26,6 +27,8 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     Gender gender;
+
+    boolean active;
 
     String email;
 

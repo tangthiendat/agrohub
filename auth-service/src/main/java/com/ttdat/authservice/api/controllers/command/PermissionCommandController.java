@@ -26,7 +26,7 @@ public class PermissionCommandController {
                         .build());
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Object>> updatePermission(@Valid @PathVariable Long id, @RequestBody PermissionDTO permissionDTO) {
         permissionService.updatePermission(id, permissionDTO);
         return ResponseEntity.ok(ApiResponse.builder()

@@ -1,7 +1,9 @@
 package com.ttdat.authservice.application.commandhandler;
 
 import com.ttdat.authservice.application.commands.user.CreateUserCommand;
+import com.ttdat.authservice.application.commands.user.UpdateUserCommand;
 import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
+import com.ttdat.authservice.domain.events.user.UserUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;
@@ -16,7 +18,7 @@ public class UserCommandHandler {
     private final EventBus eventBus;
 
     @CommandHandler
-    public void handle(CreateUserCommand createUserCommand){
+    public void handle(CreateUserCommand createUserCommand) {
         UserCreatedEvent userCreatedEvent = UserCreatedEvent.builder()
                 .userId(UUID.randomUUID())
                 .fullName(createUserCommand.getFullName())
@@ -27,5 +29,18 @@ public class UserCommandHandler {
                 .roleId(createUserCommand.getRoleId())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(userCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateUserCommand updateUserCommand) {
+        UserUpdatedEvent userUpdatedEvent = UserUpdatedEvent.builder()
+                .userId(updateUserCommand.getUserId())
+                .fullName(updateUserCommand.getFullName())
+                .gender(updateUserCommand.getGender())
+                .email(updateUserCommand.getEmail())
+                .phoneNumber(updateUserCommand.getPhoneNumber())
+                .roleId(updateUserCommand.getRoleId())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(userUpdatedEvent));
     }
 }

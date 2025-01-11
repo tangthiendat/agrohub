@@ -26,7 +26,7 @@ public class RoleCommandController {
                         .build());
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Object>> updateRole(@Valid @PathVariable Long id, @RequestBody RoleDTO roleDTO) {
         roleService.updateRole(id, roleDTO);
         return ResponseEntity.ok(ApiResponse.builder()

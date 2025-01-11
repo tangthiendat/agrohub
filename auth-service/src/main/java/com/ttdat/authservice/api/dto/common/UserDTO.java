@@ -15,6 +15,7 @@ public class UserDTO {
     UUID userId;
     String fullName;
     String email;
+    boolean active;
     Gender gender;
     String password;
     String phoneNumber;

@@ -27,8 +27,10 @@ public class Role extends Auditable implements GrantedAuthority {
 
     String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "permission_role", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @ManyToMany
+    @JoinTable(name = "permission_role",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id"))
     List<Permission> permissions;
 
     @OneToMany(mappedBy = "role")

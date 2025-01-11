@@ -22,6 +22,7 @@ spring:
       ddl-auto: update
   jackson:
     default-property-inclusion: non_null
+    property-naming-strategy: SNAKE_CASE
 axon:
   axonserver:
     servers: ${AXON_SERVER}
