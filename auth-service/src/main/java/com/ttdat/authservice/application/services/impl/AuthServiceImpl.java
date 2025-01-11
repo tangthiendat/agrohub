@@ -4,7 +4,7 @@ import com.ttdat.authservice.api.dto.common.UserDTO;
 import com.ttdat.authservice.api.dto.request.LoginRequest;
 import com.ttdat.authservice.api.dto.response.LoginResponse;
 import com.ttdat.authservice.application.mappers.UserMapper;
-import com.ttdat.authservice.application.queries.GetUserByEmailQuery;
+import com.ttdat.authservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.authservice.application.services.AuthService;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.infrastructure.utils.JwtUtils;

@@ -1,4 +1,4 @@
-package com.ttdat.authservice.application.queries;
+package com.ttdat.authservice.application.queries.permission;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,17 +13,18 @@ import java.util.Map;
 @Getter
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class GetRolePageQuery {
+public class GetPermissionPageQuery {
     PaginationParams paginationParams;
     SortParams sortParams;
     Map<String, String> filterParams;
 
     @JsonCreator
-    public GetRolePageQuery(@JsonProperty("paginationParams") PaginationParams paginationParams,
+    public GetPermissionPageQuery(@JsonProperty("paginationParams") PaginationParams paginationParams,
                             @JsonProperty("sortParams") SortParams sortParams,
                             @JsonProperty("filterParams") Map<String, String> filterParams) {
         this.paginationParams = paginationParams;
         this.sortParams = sortParams;
         this.filterParams = filterParams;
     }
+
 }

@@ -2,7 +2,7 @@ package com.ttdat.authservice.application.queryhandlers;
 
 import com.ttdat.authservice.api.dto.common.UserDTO;
 import com.ttdat.authservice.application.mappers.UserMapper;
-import com.ttdat.authservice.application.queries.GetUserByEmailQuery;
+import com.ttdat.authservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.authservice.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;

@@ -1,4 +1,4 @@
-package com.ttdat.authservice.application.queries;
+package com.ttdat.authservice.application.queries.role;
 
 import lombok.Builder;
 import lombok.Getter;
