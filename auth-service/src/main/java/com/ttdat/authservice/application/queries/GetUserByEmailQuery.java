@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @AllArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
-public class FindUserByEmailQuery {
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+public class GetUserByEmailQuery {
     String email;
 }

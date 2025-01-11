@@ -1,6 +1,5 @@
-package com.ttdat.authservice.api.dto.response;
+package com.ttdat.authservice.api.dto.common;
 
-import com.ttdat.authservice.api.dto.common.RoleDTO;
 import com.ttdat.authservice.domain.entities.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

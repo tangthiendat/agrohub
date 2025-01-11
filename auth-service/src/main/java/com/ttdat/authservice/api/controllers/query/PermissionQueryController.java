@@ -2,7 +2,7 @@ package com.ttdat.authservice.api.controllers.query;
 
 import com.ttdat.authservice.api.dto.common.PermissionDTO;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
-import com.ttdat.authservice.application.queries.FindAllPermissionQuery;
+import com.ttdat.authservice.application.queries.GetAllPermissionsQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
@@ -22,7 +22,8 @@ public class PermissionQueryController {
 
     @GetMapping("/all")
     public ResponseEntity<ApiResponse<List<PermissionDTO>>> findAllPermissions() {
-        List<PermissionDTO> permissions = queryGateway.query(new FindAllPermissionQuery(), ResponseTypes.multipleInstancesOf(PermissionDTO.class)).join();
+        GetAllPermissionsQuery getAllPermissionsQuery = GetAllPermissionsQuery.builder().build();
+        List<PermissionDTO> permissions = queryGateway.query(getAllPermissionsQuery, ResponseTypes.multipleInstancesOf(PermissionDTO.class)).join();
         return ResponseEntity.ok(ApiResponse.<List<PermissionDTO>>builder()
                 .status(HttpStatus.OK.value())
                 .message("Permissions retrieved successfully")

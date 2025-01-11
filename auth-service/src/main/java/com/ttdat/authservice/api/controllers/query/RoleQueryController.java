@@ -3,7 +3,9 @@ package com.ttdat.authservice.api.controllers.query;
 import com.ttdat.authservice.api.dto.request.PaginationParams;
 import com.ttdat.authservice.api.dto.request.SortParams;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
+import com.ttdat.authservice.api.dto.response.RoleOption;
 import com.ttdat.authservice.api.dto.response.RolePageResult;
+import com.ttdat.authservice.application.queries.GetAllRolesQuery;
 import com.ttdat.authservice.application.queries.GetRolePageQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -22,6 +25,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RoleQueryController {
     private final QueryGateway queryGateway;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<RoleOption>>> getRoles() {
+        GetAllRolesQuery getAllRolesQuery = GetAllRolesQuery.builder().build();
+        List<RoleOption> roles = queryGateway.query(getAllRolesQuery, ResponseTypes.multipleInstancesOf(RoleOption.class)).join();
+        return ResponseEntity.ok(ApiResponse.<List<RoleOption>>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Roles fetched successfully")
+                .payload(roles)
+                .build());
+    }
 
     @GetMapping("/page")
     public ResponseEntity<ApiResponse<RolePageResult>> getRolePage(@ModelAttribute PaginationParams paginationParams,
@@ -36,7 +51,7 @@ public class RoleQueryController {
         return ResponseEntity.ok(ApiResponse.<RolePageResult>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
-                .message("Roles fetched successfully")
+                .message("Role page fetched successfully")
                 .payload(roles)
                 .build());
     }
