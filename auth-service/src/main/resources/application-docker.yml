@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /auth-service
+
+spring:
+  application:
+    name: auth-service
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+  jackson:
+    default-property-inclusion: non_null
+    property-naming-strategy: SNAKE_CASE
+axon:
+  axonserver:
+    servers: ${AXON_SERVER}
+  serializer:
+    general: jackson
+    messages: jackson
+    events: jackson
+  eventhandling:
+    processors:
+      user-group:
+        mode: subscribing
+      permission-group:
+        mode: subscribing
+      role-group:
+        mode: subscribing
+application:
+  security:
+    rsa:
+      rsa-public-key: classpath:certs/public-key.pem
+      rsa-private-key: classpath:certs/private-key.pem
+    jwt:
+      access-token-validity-in-seconds: 604800 # 1 day
+      refresh-token-validity-in-seconds: 604800 # 7 days

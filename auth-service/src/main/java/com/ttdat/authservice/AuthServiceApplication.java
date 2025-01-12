@@ -11,7 +11,7 @@ public class AuthServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication springApplication = new SpringApplication(AuthServiceApplication.class);
-        springApplication.addInitializers(new DotEnvApplicationContextInitializer());
+        springApplication.addInitializers(new DotEnvApplicationContextInitializer(".env.dev"));
         springApplication.run(args);
     }
 
