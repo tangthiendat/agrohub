@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,6 +37,22 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
                 .body(ApiResponse.builder()
                         .status(HttpStatus.NOT_FOUND.value())
                         .message(ex.getMessage())
+                        .error(apiError)
+                        .build());
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ApiResponse<Object>> handleDisabledException(DisabledException ex) {
+        ApiError apiError = ApiError.builder()
+                .errorCode(ErrorCode.ACCOUNT_DISABLED.getCode())
+                .errorType(ErrorCode.ACCOUNT_DISABLED.getErrorType())
+                .message(ErrorCode.ACCOUNT_DISABLED.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .message(ErrorCode.ACCOUNT_DISABLED.getMessage())
                         .error(apiError)
                         .build());
     }
