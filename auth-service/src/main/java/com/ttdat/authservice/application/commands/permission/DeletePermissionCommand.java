@@ -1,14 +1,20 @@
 package com.ttdat.authservice.application.commands.permission;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Builder
-@AllArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class DeletePermissionCommand {
     Long permissionId;
+
+    @JsonCreator
+    public DeletePermissionCommand(@JsonProperty("permissionId") Long permissionId) {
+        this.permissionId = permissionId;
+    }
+
 }

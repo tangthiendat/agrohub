@@ -22,12 +22,14 @@ spring:
       ddl-auto: update
   jackson:
     default-property-inclusion: non_null
+    property-naming-strategy: SNAKE_CASE
 axon:
   axonserver:
     servers: ${AXON_SERVER}
   serializer:
     general: jackson
     messages: jackson
+    events: jackson
   eventhandling:
     processors:
       user-group:

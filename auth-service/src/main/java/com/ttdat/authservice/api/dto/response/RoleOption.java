@@ -1,4 +1,4 @@
-package com.ttdat.authservice.api.dto.request;
+package com.ttdat.authservice.api.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginRequest {
-    String email;
-    String password;
+public class RoleOption {
+    Long roleId;
+    String roleName;
+    boolean active;
+    String description;
 }

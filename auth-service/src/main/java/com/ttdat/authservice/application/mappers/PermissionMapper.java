@@ -1,6 +1,6 @@
 package com.ttdat.authservice.application.mappers;
 
-import com.ttdat.authservice.api.dto.PermissionDTO;
+import com.ttdat.authservice.api.dto.common.PermissionDTO;
 import com.ttdat.authservice.domain.entities.Permission;
 import com.ttdat.authservice.domain.events.permission.PermissionCreatedEvent;
 import com.ttdat.authservice.domain.events.permission.PermissionUpdatedEvent;

@@ -1,4 +1,4 @@
-package com.ttdat.authservice.api.dto;
+package com.ttdat.authservice.api.dto.common;
 
 import com.ttdat.authservice.domain.entities.Gender;
 import lombok.*;
@@ -15,6 +15,7 @@ public class UserDTO {
     UUID userId;
     String fullName;
     String email;
+    boolean active;
     Gender gender;
     String password;
     String phoneNumber;

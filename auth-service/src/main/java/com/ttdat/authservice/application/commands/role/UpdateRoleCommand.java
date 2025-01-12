@@ -11,18 +11,20 @@ import java.util.List;
 @Getter
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CreateRoleCommand {
+public class UpdateRoleCommand {
+    Long roleId;
     String roleName;
     boolean active;
     String description;
     List<Long> permissionIds;
 
     @JsonCreator
-    public CreateRoleCommand(
-            @JsonProperty("roleName") String roleName,
-            @JsonProperty("active") boolean active,
-            @JsonProperty("description") String description,
-            @JsonProperty("permissionIds") List<Long> permissionIds){
+    public UpdateRoleCommand(@JsonProperty("roleId") Long roleId,
+                             @JsonProperty("roleName") String roleName,
+                             @JsonProperty("active") boolean active,
+                             @JsonProperty("description") String description,
+                             @JsonProperty("permissionIds") List<Long> permissionIds) {
+        this.roleId = roleId;
         this.roleName = roleName;
         this.active = active;
         this.description = description;

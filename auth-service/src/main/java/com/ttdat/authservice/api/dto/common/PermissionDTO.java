@@ -1,18 +1,16 @@
-package com.ttdat.authservice.api.dto;
+package com.ttdat.authservice.api.dto.common;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PermissionDTO {
     Long permissionId;
     @NotBlank(message = "Permission name is required")
@@ -28,4 +26,8 @@ public class PermissionDTO {
 
     @NotBlank(message = "Module is required")
     String module;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }

@@ -1,4 +1,4 @@
-package com.ttdat.authservice.application.queries;
+package com.ttdat.authservice.application.queries.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Builder
 @AllArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
-public class FindUserByEmailQuery {
+@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+public class GetUserByEmailQuery {
     String email;
 }

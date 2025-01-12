@@ -1,12 +1,12 @@
 package com.ttdat.authservice.api.controllers.query;
 
-import com.ttdat.authservice.api.dto.common.PermissionDTO;
 import com.ttdat.authservice.api.dto.request.PaginationParams;
 import com.ttdat.authservice.api.dto.request.SortParams;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
-import com.ttdat.authservice.api.dto.response.PermissionPageResult;
-import com.ttdat.authservice.application.queries.permission.GetAllPermissionsQuery;
-import com.ttdat.authservice.application.queries.permission.GetPermissionPageQuery;
+import com.ttdat.authservice.api.dto.response.RoleOption;
+import com.ttdat.authservice.api.dto.response.RolePageResult;
+import com.ttdat.authservice.application.queries.role.GetAllRolesQuery;
+import com.ttdat.authservice.application.queries.role.GetRolePageQuery;
 import com.ttdat.authservice.infrastructure.utils.RequestParamsUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
@@ -22,39 +22,39 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/permissions")
+@RequestMapping("/api/v1/roles")
 @RequiredArgsConstructor
-public class PermissionQueryController {
+public class RoleQueryController {
     private final QueryGateway queryGateway;
     private final RequestParamsUtils requestParamsUtils;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PermissionDTO>>> getPermissions() {
-        GetAllPermissionsQuery getAllPermissionsQuery = GetAllPermissionsQuery.builder().build();
-        List<PermissionDTO> permissions = queryGateway.query(getAllPermissionsQuery, ResponseTypes.multipleInstancesOf(PermissionDTO.class)).join();
-        return ResponseEntity.ok(ApiResponse.<List<PermissionDTO>>builder()
+    public ResponseEntity<ApiResponse<List<RoleOption>>> getRoles() {
+        GetAllRolesQuery getAllRolesQuery = GetAllRolesQuery.builder().build();
+        List<RoleOption> roles = queryGateway.query(getAllRolesQuery, ResponseTypes.multipleInstancesOf(RoleOption.class)).join();
+        return ResponseEntity.ok(ApiResponse.<List<RoleOption>>builder()
                 .status(HttpStatus.OK.value())
-                .message("Permissions retrieved successfully")
                 .success(true)
-                .payload(permissions)
+                .message("Roles fetched successfully")
+                .payload(roles)
                 .build());
     }
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<PermissionPageResult>> getPermissionPage(@RequestParam Map<String, String> filterParams) {
+    public ResponseEntity<ApiResponse<RolePageResult>> getRolePage(@RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = requestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = requestParamsUtils.getSortParams(filterParams);
-        GetPermissionPageQuery getPermissionPageQuery = GetPermissionPageQuery.builder()
+        GetRolePageQuery getRolePageQuery = GetRolePageQuery.builder()
                 .paginationParams(paginationParams)
                 .sortParams(sortParams)
                 .filterParams(filterParams)
                 .build();
-        PermissionPageResult permissionPage = queryGateway.query(getPermissionPageQuery, ResponseTypes.instanceOf(PermissionPageResult.class)).join();
-        return ResponseEntity.ok(ApiResponse.<PermissionPageResult>builder()
+        RolePageResult roles = queryGateway.query(getRolePageQuery, ResponseTypes.instanceOf(RolePageResult.class)).join();
+        return ResponseEntity.ok(ApiResponse.<RolePageResult>builder()
                 .status(HttpStatus.OK.value())
-                .message("Permission page retrieved successfully")
                 .success(true)
-                .payload(permissionPage)
+                .message("Role page fetched successfully")
+                .payload(roles)
                 .build());
     }
 }
