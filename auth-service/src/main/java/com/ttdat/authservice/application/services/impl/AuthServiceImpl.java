@@ -1,8 +1,8 @@
 package com.ttdat.authservice.application.services.impl;
 
 import com.ttdat.authservice.api.dto.common.UserDTO;
-import com.ttdat.authservice.api.dto.request.LoginRequest;
-import com.ttdat.authservice.api.dto.response.LoginResponse;
+import com.ttdat.authservice.api.dto.request.AuthRequest;
+import com.ttdat.authservice.api.dto.response.AuthResponse;
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.authservice.application.services.AuthService;
@@ -30,12 +30,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final TokenBlacklistService tokenBlacklistService;
     @Override
-    public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
+    public AuthResponse login(AuthRequest authRequest, HttpServletResponse response) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
         );
         GetUserByEmailQuery getUserByEmailQuery = GetUserByEmailQuery.builder()
-                .email(loginRequest.getEmail())
+                .email(authRequest.getEmail())
                 .build();
         User user = userMapper.toEntity(
                 queryGateway.query(getUserByEmailQuery, ResponseTypes.instanceOf(UserDTO.class)).join()
@@ -51,8 +51,7 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
 
         response.addCookie(refreshTokenCookie);
-
-        return LoginResponse.builder()
+        return AuthResponse.builder()
                 .accessToken(accessToken)
                 .build();
     }
@@ -76,5 +75,19 @@ public class AuthServiceImpl implements AuthService {
         refreshTokenCookie.setMaxAge(0);
 
         response.addCookie(refreshTokenCookie);
+    }
+
+    @Override
+    public AuthResponse refreshAccessToken(String refreshToken) {
+        String email = jwtUtils.getUsername(refreshToken);
+        GetUserByEmailQuery getUserByEmailQuery = GetUserByEmailQuery.builder()
+                .email(email)
+                .build();
+        User user = userMapper.toEntity(
+                queryGateway.query(getUserByEmailQuery, ResponseTypes.instanceOf(UserDTO.class)).join()
+        );
+        return AuthResponse.builder()
+                .accessToken(jwtUtils.generateRefreshToken(user))
+                .build();
     }
 }

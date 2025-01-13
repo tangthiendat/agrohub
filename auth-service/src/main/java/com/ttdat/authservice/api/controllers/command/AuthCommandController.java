@@ -1,8 +1,8 @@
 package com.ttdat.authservice.api.controllers.command;
 
-import com.ttdat.authservice.api.dto.request.LoginRequest;
+import com.ttdat.authservice.api.dto.request.AuthRequest;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
-import com.ttdat.authservice.api.dto.response.LoginResponse;
+import com.ttdat.authservice.api.dto.response.AuthResponse;
 import com.ttdat.authservice.application.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ public class AuthCommandController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginRequest loginRequest,
-                                                            HttpServletResponse response) {
-        return ResponseEntity.ok(ApiResponse.<LoginResponse>builder()
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest authRequest,
+                                                           HttpServletResponse response) {
+        return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Login successful")
-                .payload(authService.login(loginRequest, response))
+                .payload(authService.login(authRequest, response))
                 .build());
     }
 
@@ -34,6 +34,16 @@ public class AuthCommandController {
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Logout successful")
+                .build());
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<ApiResponse<AuthResponse>> refreshToken(@CookieValue("refresh_token") String refreshToken) {
+        return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Refresh token successful")
+                .payload(authService.refreshAccessToken(refreshToken))
                 .build());
     }
 

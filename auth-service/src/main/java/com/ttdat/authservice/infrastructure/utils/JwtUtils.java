@@ -50,16 +50,16 @@ public class JwtUtils {
     }
 
     public String getTokenId(String token) {
-        return getJwtToken(token).getClaim("jti");
+        return getJwtToken(token).getId();
     }
 
     public Instant getTokenExpiration(String token) {
         return getJwtToken(token).getExpiresAt();
     }
 
-//    public String getUsername(Jwt jwtToken) {
-//        return jwtToken.getSubject();
-//    }
+    public String getUsername(String token) {
+        return getJwtToken(token).getSubject();
+    }
 //
 //    private boolean isTokenExpired(Jwt jwtToken) {
 //        return Objects.requireNonNull(jwtToken.getExpiresAt()).isBefore(Instant.now());
