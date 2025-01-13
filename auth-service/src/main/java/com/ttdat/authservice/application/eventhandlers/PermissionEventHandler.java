@@ -22,7 +22,7 @@ public class PermissionEventHandler {
 
     @EventHandler
     public void on(PermissionCreatedEvent permissionCreatedEvent) {
-        Permission permission = permissionMapper.toPermission(permissionCreatedEvent);
+        Permission permission = permissionMapper.toEntity(permissionCreatedEvent);
         permissionRepository.save(permission);
     }
 
@@ -30,7 +30,7 @@ public class PermissionEventHandler {
     public void on(PermissionUpdatedEvent permissionUpdatedEvent) {
         Permission permission = permissionRepository.findById(permissionUpdatedEvent.getPermissionId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
-        permissionMapper.updatePermissionFromEvent(permission, permissionUpdatedEvent);
+        permissionMapper.updateEntityFromEvent(permission, permissionUpdatedEvent);
         permissionRepository.save(permission);
     }
 

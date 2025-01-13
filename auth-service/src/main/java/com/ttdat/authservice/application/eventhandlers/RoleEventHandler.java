@@ -23,7 +23,7 @@ public class RoleEventHandler {
     @Transactional
     @EventHandler
     public void on(RoleCreatedEvent roleCreatedEvent) {
-        Role role = roleMapper.toRole(roleCreatedEvent);
+        Role role = roleMapper.toEntity(roleCreatedEvent);
         roleRepository.save(role);
     }
 
@@ -32,7 +32,7 @@ public class RoleEventHandler {
     public void on(RoleUpdatedEvent roleUpdatedEvent) {
         Role role = roleRepository.findById(roleUpdatedEvent.getRoleId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND));
-        roleMapper.updateRoleFromEvent(role, roleUpdatedEvent);
+        roleMapper.updateEntityFromEvent(role, roleUpdatedEvent);
         roleRepository.save(role);
     }
 }

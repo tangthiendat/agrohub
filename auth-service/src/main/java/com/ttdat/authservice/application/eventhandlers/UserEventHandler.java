@@ -23,7 +23,7 @@ public class UserEventHandler {
 
     @EventHandler
     public void on(UserCreatedEvent userCreatedEvent) {
-        User user = userMapper.toUser(userCreatedEvent);
+        User user = userMapper.toEntity(userCreatedEvent);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -32,7 +32,7 @@ public class UserEventHandler {
     public void on(UserUpdatedEvent userUpdatedEvent) {
         User user = userRepository.findById(userUpdatedEvent.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
-        userMapper.updateUserFromEvent(user, userUpdatedEvent);
+        userMapper.updateEntityFromEvent(user, userUpdatedEvent);
         userRepository.save(user);
     }
 }

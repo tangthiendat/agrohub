@@ -9,10 +9,10 @@ public enum ErrorCode {
     INVALID_INPUT("AGH-101", "Invalid input", ErrorType.VALIDATION),
 
     UNAUTHORIZED("AGH-201", "Unauthorized", ErrorType.AUTHENTICATION),
-    EMAIL_NOT_FOUND("AGH-202", "User email not found", ErrorType.AUTHENTICATION),
-    ACCOUNT_DISABLED("AGH-203", "Account is disabled", ErrorType.AUTHENTICATION),
-    TOKEN_NOT_VALID("AGH-204", "Token not valid", ErrorType.AUTHENTICATION),
+    ACCOUNT_DISABLED("AGH-202", "Account is disabled", ErrorType.AUTHENTICATION),
+    TOKEN_NOT_VALID("AGH-203", "Token not valid", ErrorType.AUTHENTICATION),
 
+    EMAIL_NOT_FOUND("AGH-301", "User email not found", ErrorType.RESOURCE),
     USER_NOT_FOUND("AGH-302", "User not found", ErrorType.RESOURCE),
     ROLE_NOT_FOUND("AGH-303", "Role not found", ErrorType.RESOURCE),
     PERMISSION_NOT_FOUND("AGH-304", "Permission not found", ErrorType.RESOURCE),

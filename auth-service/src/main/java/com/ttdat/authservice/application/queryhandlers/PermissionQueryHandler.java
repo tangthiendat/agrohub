@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -31,10 +30,7 @@ public class PermissionQueryHandler {
 
     @QueryHandler
     public List<PermissionDTO> handle(GetAllPermissionsQuery query) {
-        return permissionRepository.findAll()
-                .stream()
-                .map(permissionMapper::toPermissionDTO)
-                .collect(Collectors.toList());
+        return permissionMapper.toDTOs(permissionRepository.findAll());
     }
 
     @QueryHandler
@@ -53,9 +49,7 @@ public class PermissionQueryHandler {
                 .build();
         return PermissionPageResult.builder()
                 .meta(paginationMeta)
-                .content(permissionPage.getContent().stream()
-                        .map(permissionMapper::toPermissionDTO)
-                        .toList())
+                .content(permissionMapper.toDTOs(permissionPage.getContent()))
                 .build();
     }
 

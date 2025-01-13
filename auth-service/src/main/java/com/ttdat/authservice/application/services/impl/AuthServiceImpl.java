@@ -7,7 +7,6 @@ import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.authservice.application.services.AuthService;
 import com.ttdat.authservice.domain.entities.User;
-import com.ttdat.authservice.infrastructure.services.RedisService;
 import com.ttdat.authservice.infrastructure.utils.JwtUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         GetUserByEmailQuery getUserByEmailQuery = GetUserByEmailQuery.builder()
                 .email(loginRequest.getEmail())
                 .build();
-        User user = userMapper.toUser(
+        User user = userMapper.toEntity(
                 queryGateway.query(getUserByEmailQuery, ResponseTypes.instanceOf(UserDTO.class)).join()
         );
         String accessToken = jwtUtils.generateAccessToken(user);
