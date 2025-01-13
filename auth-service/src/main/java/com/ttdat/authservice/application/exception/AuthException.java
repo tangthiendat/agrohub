@@ -1,8 +1,9 @@
 package com.ttdat.authservice.application.exception;
 
-import org.springframework.security.core.AuthenticationException;
+import lombok.Getter;
 
-public class AuthException extends AuthenticationException {
+@Getter
+public class AuthException extends RuntimeException {
     private final ErrorCode errorCode;
 
     public AuthException(ErrorCode errorCode) {

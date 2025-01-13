@@ -57,6 +57,21 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
                         .build());
     }
 
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ApiResponse<Object>> handleAuthException(AuthException ex) {
+        ApiError apiError = ApiError.builder()
+                .errorCode(ex.getErrorCode().getCode())
+                .errorType(ex.getErrorCode().getErrorType())
+                .message(ex.getErrorCode().getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .message(ex.getMessage())
+                        .error(apiError)
+                        .build());
+    }
+
 //    @ExceptionHandler(ResourceNotFoundException.class)
 //    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
 //        ApiError apiError = ApiError.builder()

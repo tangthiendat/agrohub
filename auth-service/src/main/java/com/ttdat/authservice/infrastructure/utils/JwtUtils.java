@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -36,6 +36,7 @@ public class JwtUtils {
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(Instant.now())
+                .id(UUID.randomUUID().toString())
                 .issuer("CT553-Auth-Service")
                 .expiresAt(Instant.now().plus(tokenDurationInSeconds, ChronoUnit.SECONDS))
                 .build();
@@ -43,15 +44,28 @@ public class JwtUtils {
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claimsSet)).getTokenValue();
     }
 
-    public String getUsername(Jwt jwtToken) {
-        return jwtToken.getSubject();
+    private Jwt getJwtToken(String token) {
+        JwtDecoder jwtDecoder = applicationContext.getBean(JwtDecoder.class);
+        return jwtDecoder.decode(token);
     }
 
-    private boolean isTokenExpired(Jwt jwtToken) {
-        return Objects.requireNonNull(jwtToken.getExpiresAt()).isBefore(Instant.now());
+    public String getTokenId(String token) {
+        return getJwtToken(token).getClaim("jti");
     }
 
-    public boolean isTokenValid(Jwt jwtToken, UserDetails userDetails) {
-        return !isTokenExpired(jwtToken) && getUsername(jwtToken).equals(userDetails.getUsername());
+    public Instant getTokenExpiration(String token) {
+        return getJwtToken(token).getExpiresAt();
     }
+
+//    public String getUsername(Jwt jwtToken) {
+//        return jwtToken.getSubject();
+//    }
+//
+//    private boolean isTokenExpired(Jwt jwtToken) {
+//        return Objects.requireNonNull(jwtToken.getExpiresAt()).isBefore(Instant.now());
+//    }
+//
+//    public boolean isTokenValid(Jwt jwtToken, UserDetails userDetails) {
+//        return !isTokenExpired(jwtToken) && getUsername(jwtToken).equals(userDetails.getUsername());
+//    }
 }
