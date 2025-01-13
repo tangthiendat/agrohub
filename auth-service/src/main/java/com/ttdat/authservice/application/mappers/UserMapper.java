@@ -4,28 +4,25 @@ import com.ttdat.authservice.api.dto.common.UserDTO;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
 import com.ttdat.authservice.domain.events.user.UserUpdatedEvent;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Mappings;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class})
-public interface UserMapper {
-    @Mappings({
-            @Mapping(target = "password", ignore = true),
-            @Mapping(target = "role.permissions", ignore = true)
-    })
-    UserDTO toUserDTO(User user);
+public interface UserMapper extends EntityMapper<UserDTO, User> {
 
-    User toUser(UserDTO userDTO);
+    @Override
+    @Mapping(target = "password", ignore = true)
+    UserDTO toDTO(User user);
+
+    User toEntity(UserDTO userDTO);
 
     @Mapping(target = "role.roleId", source = "roleId")
-    User toUser(UserCreatedEvent userCreatedEvent);
+    User toEntity(UserCreatedEvent userCreatedEvent);
 
     @Mappings({
             @Mapping(target = "role.roleId", source = "roleId"),
             @Mapping(target = "password", ignore = true),
             @Mapping(target = "role.permissions", ignore = true)
     })
-    void updateUserFromEvent(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent);
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    void updateEntityFromEvent(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent);
 }

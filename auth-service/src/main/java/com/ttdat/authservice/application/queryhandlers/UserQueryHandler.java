@@ -3,6 +3,8 @@ package com.ttdat.authservice.application.queryhandlers;
 import com.ttdat.authservice.api.dto.common.UserDTO;
 import com.ttdat.authservice.api.dto.response.PaginationMeta;
 import com.ttdat.authservice.api.dto.response.UserPageResult;
+import com.ttdat.authservice.application.exception.ErrorCode;
+import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.authservice.application.queries.user.GetUserPageQuery;
@@ -27,9 +29,9 @@ public class UserQueryHandler {
 
     @QueryHandler
     public UserDTO handle(GetUserByEmailQuery query){
-        return userRepository.findByEmail(query.getEmail())
-                .map(userMapper::toUserDTO)
-                .orElse(null);
+        User user = userRepository.findByEmail(query.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.EMAIL_NOT_FOUND));
+        return userMapper.toDTO(user);
     }
 
     @QueryHandler
@@ -47,9 +49,7 @@ public class UserQueryHandler {
                 .build();
         return UserPageResult.builder()
                 .meta(paginationMeta)
-                .content(userPage.getContent().stream()
-                        .map(userMapper::toUserDTO)
-                        .toList())
+                .content(userMapper.toDTOs(userPage.getContent()))
                 .build();
     }
 }

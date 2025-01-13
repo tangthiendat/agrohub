@@ -6,6 +6,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.ttdat.authservice.infrastructure.filters.JwtBlacklistFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.Collections;
@@ -36,6 +38,7 @@ import java.util.List;
 public class SecurityConfig {
     private final RSAKeyRecord rsaKeyRecord;
     private final ProjectAuthenticationEntryPoint projectAuthenticationEntryPoint;
+    private final JwtBlacklistFilter jwtBlacklistFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -52,7 +55,6 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/api/v1/users").permitAll()
                                 .requestMatchers("/api/v1/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -63,6 +65,7 @@ public class SecurityConfig {
                         oauth2.jwt(Customizer.withDefaults())
                                 .authenticationEntryPoint(projectAuthenticationEntryPoint)
                 )
+                .addFilterBefore(jwtBlacklistFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();

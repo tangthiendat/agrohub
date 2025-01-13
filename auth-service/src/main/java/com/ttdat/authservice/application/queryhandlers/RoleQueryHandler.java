@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -28,10 +27,7 @@ public class RoleQueryHandler {
 
     @QueryHandler
     public List<RoleOption> handle(GetAllRolesQuery query) {
-        return roleRepository.findAll()
-                .stream()
-                .map(roleMapper::toRoleOption)
-                .collect(Collectors.toList());
+        return roleMapper.toRoleOptions(roleRepository.findAll());
     }
 
     @QueryHandler
@@ -50,9 +46,7 @@ public class RoleQueryHandler {
                 .build();
         return RolePageResult.builder()
                 .meta(paginationMeta)
-                .content(rolePage.getContent().stream()
-                        .map(roleMapper::toRoleDTO)
-                        .toList())
+                .content(roleMapper.toDTOs(rolePage.getContent()))
                 .build();
     }
 

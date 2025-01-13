@@ -49,4 +49,9 @@ public class User extends Auditable implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+    @Override
+    public boolean isEnabled() {
+        return active;
+    }
 }

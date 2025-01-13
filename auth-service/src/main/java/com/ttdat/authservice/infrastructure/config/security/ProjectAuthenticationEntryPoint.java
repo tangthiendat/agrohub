@@ -1,7 +1,9 @@
 package com.ttdat.authservice.infrastructure.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ttdat.authservice.api.dto.response.ApiError;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
+import com.ttdat.authservice.application.exception.ErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,13 +30,17 @@ public class ProjectAuthenticationEntryPoint implements AuthenticationEntryPoint
         delegate.commence(request, response, authException);
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
+        ApiError error = ApiError.builder()
+                .errorCode(ErrorCode.UNAUTHORIZED.getCode())
+                .errorType(ErrorCode.UNAUTHORIZED.getErrorType())
+                .message(authException.getMessage())
+                .build();
         ApiResponse<Object> res = ApiResponse.builder()
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .success(false)
-                .message(authException.getMessage())
+                .message(ErrorCode.UNAUTHORIZED.getMessage())
+                .error(error)
                 .build();
-
         mapper.writeValue(response.getWriter(), res);
     }
 }
