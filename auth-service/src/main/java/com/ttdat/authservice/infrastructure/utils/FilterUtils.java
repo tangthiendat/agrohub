@@ -18,7 +18,7 @@ public class FilterUtils {
             Sort.Order currentSortOrder = new Sort.Order(Sort.Direction.fromString(sortParams.getDirection()), sortParams.getSortBy());
             sortOrders.add(currentSortOrder);
         }
-        Sort.Order updatedAtOrder = new Sort.Order(Sort.Direction.fromString("asc"), "updatedAt");
+        Sort.Order updatedAtOrder = new Sort.Order(Sort.Direction.fromString("desc"), "updatedAt");
         sortOrders.add(updatedAtOrder);
         return sortOrders;
     }
