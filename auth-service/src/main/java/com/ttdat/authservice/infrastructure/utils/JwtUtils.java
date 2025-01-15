@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -60,12 +61,12 @@ public class JwtUtils {
     public String getUsername(String token) {
         return getJwtToken(token).getSubject();
     }
-//
-//    private boolean isTokenExpired(Jwt jwtToken) {
-//        return Objects.requireNonNull(jwtToken.getExpiresAt()).isBefore(Instant.now());
-//    }
-//
-//    public boolean isTokenValid(Jwt jwtToken, UserDetails userDetails) {
-//        return !isTokenExpired(jwtToken) && getUsername(jwtToken).equals(userDetails.getUsername());
-//    }
+
+    private boolean isTokenExpired(String token) {
+        return Objects.requireNonNull(getTokenExpiration(token)).isBefore(Instant.now());
+    }
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        return !isTokenExpired(token) && getUsername(token).equals(userDetails.getUsername());
+    }
 }
