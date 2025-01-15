@@ -30,7 +30,7 @@ public class JwtBlacklistFilter extends OncePerRequestFilter {
             String token = authHeader.substring(7);
             String tokenId = jwtUtils.getTokenId(token);
             if(tokenBlacklistService.isBlacklisted(tokenId)) {
-                throw new AuthException(ErrorCode.TOKEN_REVOKED);
+                throw new AuthException(ErrorCode.TOKEN_NOT_VALID);
             }
         }
         filterChain.doFilter(request, response);

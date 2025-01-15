@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -68,6 +69,21 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
                 .body(ApiResponse.builder()
                         .status(HttpStatus.UNAUTHORIZED.value())
                         .message(ex.getMessage())
+                        .error(apiError)
+                        .build());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBadCredentialsException(BadCredentialsException ex) {
+        ApiError apiError = ApiError.builder()
+                .errorCode(ErrorCode.INVALID_CREDENTIALS.getCode())
+                .errorType(ErrorCode.INVALID_CREDENTIALS.getErrorType())
+                .message(ErrorCode.INVALID_CREDENTIALS.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .message(ErrorCode.INVALID_CREDENTIALS.getMessage())
                         .error(apiError)
                         .build());
     }
