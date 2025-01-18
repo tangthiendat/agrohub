@@ -12,6 +12,7 @@ public enum ErrorCode {
     ACCOUNT_DISABLED("AGH-202", "Account is disabled", ErrorType.AUTHENTICATION),
     INVALID_CREDENTIALS("AGH-203", "Invalid credentials", ErrorType.AUTHENTICATION),
     TOKEN_NOT_VALID("AGH-204", "Token not valid", ErrorType.AUTHENTICATION),
+    ACCESS_DENIED("AGH-205", "You do not have permission to perform this action", ErrorType.AUTHENTICATION),
 
     EMAIL_NOT_FOUND("AGH-301", "User email not found", ErrorType.RESOURCE),
     USER_NOT_FOUND("AGH-302", "User not found", ErrorType.RESOURCE),
