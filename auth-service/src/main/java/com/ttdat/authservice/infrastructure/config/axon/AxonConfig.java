@@ -4,7 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ttdat.authservice.application.errorhandler.PermissionGroupErrorHandler;
+import com.ttdat.authservice.infrastructure.interceptor.SecurityContextDispatchInterceptor;
+import com.ttdat.authservice.infrastructure.interceptor.SecurityContextHandlerInterceptor;
 import org.axonframework.config.ConfigurerModule;
+import org.axonframework.queryhandling.QueryBus;
+import org.axonframework.queryhandling.SimpleQueryBus;
 import org.axonframework.serialization.Serializer;
 import org.axonframework.serialization.json.JacksonSerializer;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AxonConfig {
+
 
     @Bean
     public ConfigurerModule processingGroupErrorHandlingConfigurerModule() {
@@ -34,5 +39,15 @@ public class AxonConfig {
                 .objectMapper(objectMapper)
                 .build();
     }
+
+
+    @Bean
+    public QueryBus queryBus() {
+        SimpleQueryBus queryBus = SimpleQueryBus.builder().build();
+        queryBus.registerDispatchInterceptor(new SecurityContextDispatchInterceptor());
+        queryBus.registerHandlerInterceptor(new SecurityContextHandlerInterceptor());
+        return queryBus;
+    }
+
 
 }

@@ -13,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import javax.annotation.Nonnull;
 
 @Slf4j
-public class PermissionGroupErrorHandler implements ListenerInvocationErrorHandler {
+public class PermissionGroupErrorHandler implements ListenerInvocationErrorHandler{
     @Override
     public void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event, @Nonnull EventMessageHandler eventHandler) throws Exception {
         if(exception instanceof ResourceNotFoundException) {
