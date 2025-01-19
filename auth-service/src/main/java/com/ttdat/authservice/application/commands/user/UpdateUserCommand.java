@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +19,7 @@ public class UpdateUserCommand {
     Gender gender;
     boolean active;
     String email;
+    LocalDate dob;
     String phoneNumber;
     Long roleId;
 
@@ -27,6 +29,7 @@ public class UpdateUserCommand {
                              @JsonProperty("gender") Gender gender,
                              @JsonProperty("active") boolean active,
                              @JsonProperty("email") String email,
+                             @JsonProperty("dob") LocalDate dob,
                              @JsonProperty("phoneNumber") String phoneNumber,
                              @JsonProperty("roleId") Long roleId) {
         this.userId = userId;
@@ -34,6 +37,7 @@ public class UpdateUserCommand {
         this.active = active;
         this.gender = gender;
         this.email = email;
+        this.dob = dob;
         this.phoneNumber = phoneNumber;
         this.roleId = roleId;
     }
