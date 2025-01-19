@@ -1,6 +1,9 @@
 package com.ttdat.authservice.application.queryhandlers;
 
+import com.ttdat.authservice.application.exception.ErrorCode;
+import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.queries.auth.CheckPermissionQuery;
+import com.ttdat.authservice.application.queries.auth.GetAuthenticationByIdQuery;
 import com.ttdat.authservice.application.queries.auth.IsTokenBlacklistedQuery;
 import com.ttdat.authservice.domain.entities.Role;
 import com.ttdat.authservice.domain.entities.User;
@@ -9,10 +12,13 @@ import com.ttdat.authservice.domain.services.TokenBlacklistService;
 import com.ttdat.authservice.infrastructure.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Component
@@ -45,4 +51,12 @@ public class AuthQueryHandler {
         String tokenId = jwtUtils.getTokenId(query.getToken());
         return tokenBlacklistService.isBlacklisted(tokenId);
     }
+
+    @QueryHandler
+    public Authentication handle(GetAuthenticationByIdQuery query){
+        User user = userRepository.findById(UUID.fromString(query.getUserId()))
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+        return new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
+    }
+
 }
