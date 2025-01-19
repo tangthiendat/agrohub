@@ -1,16 +1,15 @@
 package com.ttdat.authservice.infrastructure.utils;
 
+import com.ttdat.authservice.domain.entities.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -24,18 +23,18 @@ public class JwtUtils {
     @Value("${application.security.jwt.refresh-token-validity-in-seconds}")
     private long refreshTokenDurationInSeconds;
 
-    public String generateAccessToken(UserDetails userDetails) {
-        return generateJwtToken(userDetails, accessTokenDurationInSeconds);
+    public String generateAccessToken(User user) {
+        return generateJwtToken(user, accessTokenDurationInSeconds);
     }
 
-    public String generateRefreshToken(UserDetails userDetails) {
-        return generateJwtToken(userDetails, refreshTokenDurationInSeconds);
+    public String generateRefreshToken(User user) {
+        return generateJwtToken(user, refreshTokenDurationInSeconds);
     }
 
-    private String generateJwtToken(UserDetails userDetails, long tokenDurationInSeconds) {
+    private String generateJwtToken(User user, long tokenDurationInSeconds) {
         JwtEncoder jwtEncoder = applicationContext.getBean(JwtEncoder.class);
         JwtClaimsSet claimsSet = JwtClaimsSet.builder()
-                .subject(userDetails.getUsername())
+                .subject(user.getUserId().toString())
                 .issuedAt(Instant.now())
                 .id(UUID.randomUUID().toString())
                 .issuer("CT553-Auth-Service")
@@ -58,15 +57,15 @@ public class JwtUtils {
         return getJwtToken(token).getExpiresAt();
     }
 
-    public String getUsername(String token) {
+    public String getUserId(String token) {
         return getJwtToken(token).getSubject();
     }
 
-    private boolean isTokenExpired(String token) {
-        return Objects.requireNonNull(getTokenExpiration(token)).isBefore(Instant.now());
-    }
-
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        return !isTokenExpired(token) && getUsername(token).equals(userDetails.getUsername());
-    }
+//    private boolean isTokenExpired(String token) {
+//        return Objects.requireNonNull(getTokenExpiration(token)).isBefore(Instant.now());
+//    }
+//
+//    public boolean isTokenValid(String token, UserDetails userDetails) {
+//        return !isTokenExpired(token) && getUserId(token).equals(userDetails.getUserId());
+//    }
 }
