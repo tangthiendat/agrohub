@@ -1,6 +1,7 @@
 package com.ttdat.authservice.application.eventhandlers;
 
 import com.ttdat.authservice.application.exception.ErrorCode;
+import com.ttdat.authservice.application.exception.ResourceInUseException;
 import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.PermissionMapper;
 import com.ttdat.authservice.domain.entities.Permission;
@@ -40,6 +41,9 @@ public class PermissionEventHandler {
     @Transactional
     @EventHandler
     public void on(PermissionDeletedEvent permissionDeletedEvent) {
+        if(permissionRepository.isPermissionInUse(permissionDeletedEvent.getPermissionId())) {
+            throw new ResourceInUseException(ErrorCode.PERMISSION_IN_USE);
+        }
         Permission permission = permissionRepository.findById(permissionDeletedEvent.getPermissionId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
         permissionRepository.delete(permission);

@@ -29,17 +29,17 @@ public class PermissionQueryHandler {
     private final FilterUtils filterUtils;
 
     @QueryHandler
-    public List<PermissionDTO> handle(GetAllPermissionsQuery query) {
+    public List<PermissionDTO> handle(GetAllPermissionsQuery getAllPermissionsQuery) {
         return permissionMapper.toDTOs(permissionRepository.findAll());
     }
 
     @QueryHandler
-    public PermissionPageResult handle(GetPermissionPageQuery query) {
-        List<Sort.Order> sortOrders = filterUtils.toSortOrders(query.getSortParams());
-        int page = query.getPaginationParams().getPage();
-        int pageSize = query.getPaginationParams().getPageSize();
+    public PermissionPageResult handle(GetPermissionPageQuery getPermissionPageQuery) {
+        List<Sort.Order> sortOrders = filterUtils.toSortOrders(getPermissionPageQuery.getSortParams());
+        int page = getPermissionPageQuery.getPaginationParams().getPage();
+        int pageSize = getPermissionPageQuery.getPaginationParams().getPageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
-        Specification<Permission> spec = getPermissionPageSpec(query.getFilterParams());
+        Specification<Permission> spec = getPermissionPageSpec(getPermissionPageQuery.getFilterParams());
         org.springframework.data.domain.Page<Permission> permissionPage = permissionRepository.findAll(spec, pageable);
         PaginationMeta paginationMeta = PaginationMeta.builder()
                 .page(permissionPage.getNumber() + 1)

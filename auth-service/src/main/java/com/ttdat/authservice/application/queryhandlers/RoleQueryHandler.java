@@ -31,10 +31,10 @@ public class RoleQueryHandler {
     }
 
     @QueryHandler
-    public RolePageResult handle(GetRolePageQuery query) {
-        List<Sort.Order> sortOrders = filterUtils.toSortOrders(query.getSortParams());
-        int page = query.getPaginationParams().getPage();
-        int pageSize = query.getPaginationParams().getPageSize();
+    public RolePageResult handle(GetRolePageQuery getRolePageQuery) {
+        List<Sort.Order> sortOrders = filterUtils.toSortOrders(getRolePageQuery.getSortParams());
+        int page = getRolePageQuery.getPaginationParams().getPage();
+        int pageSize = getRolePageQuery.getPaginationParams().getPageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
         org.springframework.data.domain.Page<Role> rolePage = roleRepository.findAll(pageable);
 

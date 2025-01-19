@@ -19,6 +19,7 @@ public enum ErrorCode {
     ROLE_NOT_FOUND("AGH-303", "Role not found", ErrorType.RESOURCE),
     PERMISSION_NOT_FOUND("AGH-304", "Permission not found", ErrorType.RESOURCE),
     EMAIL_ALREADY_EXISTS("AGH-305", "User with this email already exists", ErrorType.RESOURCE),
+    PERMISSION_IN_USE("AGH-306", "Permission is in use", ErrorType.RESOURCE),
 
     INTERNAL_SERVER_ERROR("AGH-501", "Internal server error", ErrorType.SYSTEM),;
 

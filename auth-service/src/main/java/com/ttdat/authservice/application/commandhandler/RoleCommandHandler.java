@@ -2,7 +2,9 @@ package com.ttdat.authservice.application.commandhandler;
 
 import com.ttdat.authservice.application.commands.role.CreateRoleCommand;
 import com.ttdat.authservice.application.commands.role.UpdateRoleCommand;
+import com.ttdat.authservice.application.commands.role.UpdateRoleStatusCommand;
 import com.ttdat.authservice.domain.events.role.RoleCreatedEvent;
+import com.ttdat.authservice.domain.events.role.RoleStatusUpdatedEvent;
 import com.ttdat.authservice.domain.events.role.RoleUpdatedEvent;
 import com.ttdat.authservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,15 @@ public class RoleCommandHandler {
                 .permissionIds(updateRoleCommand.getPermissionIds())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(roleUpdatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateRoleStatusCommand updateRoleStatusCommand) {
+        RoleStatusUpdatedEvent roleStatusUpdatedEvent = RoleStatusUpdatedEvent.builder()
+                .roleId(updateRoleStatusCommand.getRoleId())
+                .active(updateRoleStatusCommand.isActive())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(roleStatusUpdatedEvent));
     }
 
 }
