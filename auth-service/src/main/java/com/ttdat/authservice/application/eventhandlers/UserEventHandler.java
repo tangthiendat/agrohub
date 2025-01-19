@@ -1,5 +1,6 @@
 package com.ttdat.authservice.application.eventhandlers;
 
+import com.ttdat.authservice.application.exception.DuplicateResourceException;
 import com.ttdat.authservice.application.exception.ErrorCode;
 import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.UserMapper;
@@ -26,6 +27,9 @@ public class UserEventHandler {
     @Transactional
     @EventHandler
     public void on(UserCreatedEvent userCreatedEvent) {
+        if (userRepository.existsByEmail(userCreatedEvent.getEmail())) {
+            throw new DuplicateResourceException(ErrorCode.EMAIL_ALREADY_EXISTS);
+        }
         User user = userMapper.toEntity(userCreatedEvent);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
