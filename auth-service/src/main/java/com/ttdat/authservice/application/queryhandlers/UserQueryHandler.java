@@ -7,6 +7,7 @@ import com.ttdat.authservice.application.exception.ErrorCode;
 import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.application.queries.user.GetUserByEmailQuery;
+import com.ttdat.authservice.application.queries.user.GetUserByIdQuery;
 import com.ttdat.authservice.application.queries.user.GetUserPageQuery;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.domain.repositories.UserRepository;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -31,6 +33,13 @@ public class UserQueryHandler {
     public UserDTO handle(GetUserByEmailQuery query){
         User user = userRepository.findByEmail(query.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.EMAIL_NOT_FOUND));
+        return userMapper.toDTO(user);
+    }
+
+    @QueryHandler
+    public UserDTO handle(GetUserByIdQuery query){
+        User user = userRepository.findById(UUID.fromString(query.getUserId()))
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toDTO(user);
     }
 
