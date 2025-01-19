@@ -3,7 +3,7 @@ package com.ttdat.authservice.infrastructure.config.axon;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.ttdat.authservice.application.errorhandler.PermissionGroupErrorHandler;
+import com.ttdat.authservice.application.errorhandler.AuthServiceEventErrorHandler;
 import com.ttdat.authservice.infrastructure.interceptor.SecurityContextDispatchInterceptor;
 import com.ttdat.authservice.infrastructure.interceptor.SecurityContextHandlerInterceptor;
 import org.axonframework.config.ConfigurerModule;
@@ -22,10 +22,13 @@ public class AxonConfig {
     public ConfigurerModule processingGroupErrorHandlingConfigurerModule() {
         return configurer -> configurer.eventProcessing(processingConfigurer ->
                 processingConfigurer
-                        .registerListenerInvocationErrorHandler(
-                                "permission-group",
-                                conf -> new PermissionGroupErrorHandler()
+                        .registerDefaultListenerInvocationErrorHandler(
+                                conf -> new AuthServiceEventErrorHandler()
                         )
+//                        .registerListenerInvocationErrorHandler(
+//                                "permission-group",
+//                                conf -> new PermissionGroupErrorHandler()
+//                        )
         );
     }
 
@@ -40,7 +43,6 @@ public class AxonConfig {
                 .build();
     }
 
-
     @Bean
     public QueryBus queryBus() {
         SimpleQueryBus queryBus = SimpleQueryBus.builder().build();
@@ -48,6 +50,5 @@ public class AxonConfig {
         queryBus.registerHandlerInterceptor(new SecurityContextHandlerInterceptor());
         return queryBus;
     }
-
 
 }

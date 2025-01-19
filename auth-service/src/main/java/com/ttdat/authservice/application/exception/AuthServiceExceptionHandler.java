@@ -5,6 +5,8 @@ import com.ttdat.authservice.api.dto.response.ApiResponse;
 import com.ttdat.authservice.api.dto.response.ErrorDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandExecutionException;
+import org.axonframework.queryhandling.QueryExecutionException;
+import org.hibernate.QueryException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -88,20 +91,20 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
                         .build());
     }
 
-//    @ExceptionHandler(ResourceNotFoundException.class)
-//    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
-//        ApiError apiError = ApiError.builder()
-//                .errorCode(ex.getErrorCode().getCode())
-//                .errorType(ex.getErrorCode().getErrorType())
-//                .message(ex.getErrorCode().getMessage())
-//                .build();
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                .body(ApiResponse.builder()
-//                        .status(HttpStatus.NOT_FOUND.value())
-//                        .message(ex.getMessage())
-//                        .error(apiError)
-//                        .build());
-//    }
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ApiError apiError = ApiError.builder()
+                .errorCode(ex.getErrorCode().getCode())
+                .errorType(ex.getErrorCode().getErrorType())
+                .message(ex.getErrorCode().getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .message(ex.getMessage())
+                        .error(apiError)
+                        .build());
+    }
 
     @ExceptionHandler(CommandExecutionException.class)
     public ResponseEntity<ApiResponse<Object>> handleCommandExecutionException(CommandExecutionException ex) {
@@ -110,6 +113,14 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
             ApiResponse<Object> apiResponse = (ApiResponse<Object>) exDetails.get();
             return ResponseEntity.status(HttpStatus.valueOf(apiResponse.getStatus()))
                     .body(apiResponse);
+        }
+        return handleException(ex);
+    }
+
+    @ExceptionHandler(CompletionException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCompletionException(CompletionException ex) {
+        if (ex.getCause() instanceof ResourceNotFoundException) {
+            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause());
         }
         return handleException(ex);
     }
