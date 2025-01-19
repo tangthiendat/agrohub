@@ -5,8 +5,6 @@ import com.ttdat.authservice.api.dto.response.ApiResponse;
 import com.ttdat.authservice.api.dto.response.ErrorDetail;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.queryhandling.QueryExecutionException;
-import org.hibernate.QueryException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

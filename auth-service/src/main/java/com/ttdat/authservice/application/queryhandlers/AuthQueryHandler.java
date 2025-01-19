@@ -1,9 +1,12 @@
 package com.ttdat.authservice.application.queryhandlers;
 
 import com.ttdat.authservice.application.queries.auth.CheckPermissionQuery;
+import com.ttdat.authservice.application.queries.auth.IsTokenBlacklistedQuery;
 import com.ttdat.authservice.domain.entities.Role;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.domain.repositories.UserRepository;
+import com.ttdat.authservice.domain.services.TokenBlacklistService;
+import com.ttdat.authservice.infrastructure.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +19,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthQueryHandler {
     private final UserRepository userRepository;
+    private final TokenBlacklistService tokenBlacklistService;
+    private final JwtUtils jwtUtils;
 
     @QueryHandler
     public boolean handle(CheckPermissionQuery query){
@@ -33,5 +38,11 @@ public class AuthQueryHandler {
             }
         }
         return false;
+    }
+
+    @QueryHandler
+    public boolean handle(IsTokenBlacklistedQuery query){
+        String tokenId = jwtUtils.getTokenId(query.getToken());
+        return tokenBlacklistService.isBlacklisted(tokenId);
     }
 }
