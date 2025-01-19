@@ -1,6 +1,7 @@
 package com.ttdat.authservice.api.controllers.command;
 
 import com.ttdat.authservice.api.dto.common.RoleDTO;
+import com.ttdat.authservice.api.dto.request.UpdateRoleStatusRequest;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
 import com.ttdat.authservice.application.services.RoleService;
 import jakarta.validation.Valid;
@@ -33,6 +34,16 @@ public class RoleCommandController {
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Role updated successfully")
+                .build());
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<Object>> updateRoleStatus(@Valid @PathVariable Long id, @RequestBody UpdateRoleStatusRequest updateRoleStatusRequest) {
+        roleService.updateRoleStatus(id, updateRoleStatusRequest);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Role status updated successfully")
                 .build());
     }
 
