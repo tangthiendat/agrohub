@@ -44,10 +44,10 @@ public class RoleCommandHandler {
     }
 
     @CommandHandler
-    public void handle(UpdateRoleStatusCommand command) {
+    public void handle(UpdateRoleStatusCommand updateRoleStatusCommand) {
         RoleStatusUpdatedEvent roleStatusUpdatedEvent = RoleStatusUpdatedEvent.builder()
-                .roleId(command.getRoleId())
-                .active(command.isActive())
+                .roleId(updateRoleStatusCommand.getRoleId())
+                .active(updateRoleStatusCommand.isActive())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(roleStatusUpdatedEvent));
     }

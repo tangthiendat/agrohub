@@ -29,7 +29,7 @@ public class AuthQueryHandler {
     private final JwtUtils jwtUtils;
 
     @QueryHandler
-    public boolean handle(CheckPermissionQuery query){
+    public boolean handle(CheckPermissionQuery checkPermissionQuery){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         if (email != null) {
             Optional<User> optionalUser = userRepository.findByEmail(email);
@@ -38,8 +38,8 @@ public class AuthQueryHandler {
                 Role role = user.getRole();
                 if (role != null) {
                     return role.getPermissions().stream()
-                            .anyMatch(permission -> permission.getApiPath().equals(query.getPath())
-                                    && permission.getHttpMethod().equals(query.getHttpMethod())) && role.isActive();
+                            .anyMatch(permission -> permission.getApiPath().equals(checkPermissionQuery.getPath())
+                                    && permission.getHttpMethod().equals(checkPermissionQuery.getHttpMethod())) && role.isActive();
                 }
             }
         }
@@ -47,14 +47,14 @@ public class AuthQueryHandler {
     }
 
     @QueryHandler
-    public boolean handle(IsTokenBlacklistedQuery query){
-        String tokenId = jwtUtils.getTokenId(query.getToken());
+    public boolean handle(IsTokenBlacklistedQuery isTokenBlacklistedQuery){
+        String tokenId = jwtUtils.getTokenId(isTokenBlacklistedQuery.getToken());
         return tokenBlacklistService.isBlacklisted(tokenId);
     }
 
     @QueryHandler
-    public Authentication handle(GetAuthenticationByIdQuery query){
-        User user = userRepository.findById(UUID.fromString(query.getUserId()))
+    public Authentication handle(GetAuthenticationByIdQuery getAuthenticationByIdQuery){
+        User user = userRepository.findById(UUID.fromString(getAuthenticationByIdQuery.getUserId()))
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
         return new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
     }

@@ -30,24 +30,24 @@ public class UserQueryHandler {
     private final FilterUtils filterUtils;
 
     @QueryHandler
-    public UserDTO handle(GetUserByEmailQuery query){
-        User user = userRepository.findByEmail(query.getEmail())
+    public UserDTO handle(GetUserByEmailQuery getUserByEmailQuery){
+        User user = userRepository.findByEmail(getUserByEmailQuery.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.EMAIL_NOT_FOUND));
         return userMapper.toDTO(user);
     }
 
     @QueryHandler
-    public UserDTO handle(GetUserByIdQuery query){
-        User user = userRepository.findById(UUID.fromString(query.getUserId()))
+    public UserDTO handle(GetUserByIdQuery getUserByIdQuery){
+        User user = userRepository.findById(UUID.fromString(getUserByIdQuery.getUserId()))
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toDTO(user);
     }
 
     @QueryHandler
-    public UserPageResult handle(GetUserPageQuery query){
-        List<Sort.Order> sortOrders = filterUtils.toSortOrders(query.getSortParams());
-        int page = query.getPaginationParams().getPage();
-        int pageSize = query.getPaginationParams().getPageSize();
+    public UserPageResult handle(GetUserPageQuery getUserPageQuery){
+        List<Sort.Order> sortOrders = filterUtils.toSortOrders(getUserPageQuery.getSortParams());
+        int page = getUserPageQuery.getPaginationParams().getPage();
+        int pageSize = getUserPageQuery.getPaginationParams().getPageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
         org.springframework.data.domain.Page<User> userPage = userRepository.findAll(pageable);
         PaginationMeta paginationMeta = PaginationMeta.builder()
