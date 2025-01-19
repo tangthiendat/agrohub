@@ -36,7 +36,7 @@ public class AuthServiceEventErrorHandler implements ListenerInvocationErrorHand
             ApiError apiError = ApiError.builder()
                     .errorCode(duplicateResourceException.getErrorCode().getCode())
                     .errorType(duplicateResourceException.getErrorCode().getErrorType())
-                    .message(duplicateResourceException.getErrorCode().getMessage())
+                    .message("Resource already exists")
                     .build();
             ApiResponse<Object> apiResponse = ApiResponse.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
