@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -19,6 +20,7 @@ public class UserCreatedEvent {
     String fullName;
     Gender gender;
     String email;
+    LocalDate dob;
     String password;
     String phoneNumber;
     Long roleId;
