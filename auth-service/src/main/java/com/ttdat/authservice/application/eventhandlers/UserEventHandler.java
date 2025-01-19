@@ -5,6 +5,7 @@ import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
+import com.ttdat.authservice.domain.events.user.UserStatusUpdatedEvent;
 import com.ttdat.authservice.domain.events.user.UserUpdatedEvent;
 import com.ttdat.authservice.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class UserEventHandler {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Transactional
     @EventHandler
     public void on(UserCreatedEvent userCreatedEvent) {
         User user = userMapper.toEntity(userCreatedEvent);
@@ -28,11 +31,21 @@ public class UserEventHandler {
         userRepository.save(user);
     }
 
+    @Transactional
     @EventHandler
     public void on(UserUpdatedEvent userUpdatedEvent) {
         User user = userRepository.findById(userUpdatedEvent.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
         userMapper.updateEntityFromEvent(user, userUpdatedEvent);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    @EventHandler
+    public void on(UserStatusUpdatedEvent userStatusUpdatedEvent){
+        User user = userRepository.findById(userStatusUpdatedEvent.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+        user.setActive(userStatusUpdatedEvent.isActive());
         userRepository.save(user);
     }
 }

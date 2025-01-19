@@ -1,12 +1,13 @@
-package com.ttdat.authservice.domain.services;
+package com.ttdat.authservice.infrastructure.services.impl;
 
+import com.ttdat.authservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class IdGeneratorService {
+public class IdGeneratorServiceImpl implements IdGeneratorService {
     private final JdbcTemplate jdbcTemplate;
 
     public Long generatePermissionId() {

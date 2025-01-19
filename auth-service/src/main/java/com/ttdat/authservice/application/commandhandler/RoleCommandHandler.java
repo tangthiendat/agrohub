@@ -4,7 +4,7 @@ import com.ttdat.authservice.application.commands.role.CreateRoleCommand;
 import com.ttdat.authservice.application.commands.role.UpdateRoleCommand;
 import com.ttdat.authservice.domain.events.role.RoleCreatedEvent;
 import com.ttdat.authservice.domain.events.role.RoleUpdatedEvent;
-import com.ttdat.authservice.domain.services.IdGeneratorService;
+import com.ttdat.authservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;

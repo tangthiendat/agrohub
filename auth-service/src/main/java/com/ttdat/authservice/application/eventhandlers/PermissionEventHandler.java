@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -20,12 +21,14 @@ public class PermissionEventHandler {
     private final PermissionRepository permissionRepository;
     private final PermissionMapper permissionMapper;
 
+    @Transactional
     @EventHandler
     public void on(PermissionCreatedEvent permissionCreatedEvent) {
         Permission permission = permissionMapper.toEntity(permissionCreatedEvent);
         permissionRepository.save(permission);
     }
 
+    @Transactional
     @EventHandler
     public void on(PermissionUpdatedEvent permissionUpdatedEvent) {
         Permission permission = permissionRepository.findById(permissionUpdatedEvent.getPermissionId())
@@ -34,6 +37,7 @@ public class PermissionEventHandler {
         permissionRepository.save(permission);
     }
 
+    @Transactional
     @EventHandler
     public void on(PermissionDeletedEvent permissionDeletedEvent) {
         Permission permission = permissionRepository.findById(permissionDeletedEvent.getPermissionId())
