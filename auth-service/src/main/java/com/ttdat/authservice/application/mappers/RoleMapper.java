@@ -9,7 +9,9 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {PermissionMapper.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
+        uses = {PermissionMapper.class},
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface RoleMapper extends EntityMapper<RoleDTO, Role> {
 
     List<RoleOption> toRoleOptions(List<Role> roles);

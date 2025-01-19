@@ -9,7 +9,7 @@ import org.mapstruct.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PermissionMapper extends EntityMapper<PermissionDTO, Permission> {
     Permission toEntity(PermissionCreatedEvent permissionCreatedEvent);
 

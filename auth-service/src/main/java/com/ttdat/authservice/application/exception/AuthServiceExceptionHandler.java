@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletionException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -72,20 +74,35 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
                         .build());
     }
 
-//    @ExceptionHandler(ResourceNotFoundException.class)
-//    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
-//        ApiError apiError = ApiError.builder()
-//                .errorCode(ex.getErrorCode().getCode())
-//                .errorType(ex.getErrorCode().getErrorType())
-//                .message(ex.getErrorCode().getMessage())
-//                .build();
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                .body(ApiResponse.builder()
-//                        .status(HttpStatus.NOT_FOUND.value())
-//                        .message(ex.getMessage())
-//                        .error(apiError)
-//                        .build());
-//    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<Object>> handleBadCredentialsException(BadCredentialsException ex) {
+        ApiError apiError = ApiError.builder()
+                .errorCode(ErrorCode.INVALID_CREDENTIALS.getCode())
+                .errorType(ErrorCode.INVALID_CREDENTIALS.getErrorType())
+                .message(ErrorCode.INVALID_CREDENTIALS.getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.UNAUTHORIZED.value())
+                        .message(ErrorCode.INVALID_CREDENTIALS.getMessage())
+                        .error(apiError)
+                        .build());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ApiError apiError = ApiError.builder()
+                .errorCode(ex.getErrorCode().getCode())
+                .errorType(ex.getErrorCode().getErrorType())
+                .message(ex.getErrorCode().getMessage())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.NOT_FOUND.value())
+                        .message(ex.getMessage())
+                        .error(apiError)
+                        .build());
+    }
 
     @ExceptionHandler(CommandExecutionException.class)
     public ResponseEntity<ApiResponse<Object>> handleCommandExecutionException(CommandExecutionException ex) {
@@ -94,6 +111,14 @@ public class AuthServiceExceptionHandler extends ResponseEntityExceptionHandler 
             ApiResponse<Object> apiResponse = (ApiResponse<Object>) exDetails.get();
             return ResponseEntity.status(HttpStatus.valueOf(apiResponse.getStatus()))
                     .body(apiResponse);
+        }
+        return handleException(ex);
+    }
+
+    @ExceptionHandler(CompletionException.class)
+    public ResponseEntity<ApiResponse<Object>> handleCompletionException(CompletionException ex) {
+        if (ex.getCause() instanceof ResourceNotFoundException) {
+            return handleResourceNotFoundException((ResourceNotFoundException) ex.getCause());
         }
         return handleException(ex);
     }

@@ -13,12 +13,11 @@ import org.springframework.http.HttpStatus;
 import javax.annotation.Nonnull;
 
 @Slf4j
-public class PermissionGroupErrorHandler implements ListenerInvocationErrorHandler {
+public class AuthServiceEventErrorHandler implements ListenerInvocationErrorHandler{
     @Override
-    public void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event, @Nonnull EventMessageHandler eventHandler) throws Exception {
+    public void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event, @Nonnull EventMessageHandler eventHandler) {
         if(exception instanceof ResourceNotFoundException) {
             ResourceNotFoundException resourceNotFoundException = (ResourceNotFoundException) exception;
-            log.error("Resource not found exception message: {}", exception.getMessage());
             ApiError apiError = ApiError.builder()
                     .errorCode(resourceNotFoundException.getErrorCode().getCode())
                     .errorType(resourceNotFoundException.getErrorCode().getErrorType())
@@ -31,6 +30,5 @@ public class PermissionGroupErrorHandler implements ListenerInvocationErrorHandl
                     .build();
             throw new CommandExecutionException("Resource not found", exception, apiResponse);
         }
-
     }
 }

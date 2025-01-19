@@ -6,7 +6,9 @@ import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
 import com.ttdat.authservice.domain.events.user.UserUpdatedEvent;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class})
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
+        uses = {RoleMapper.class},
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface UserMapper extends EntityMapper<UserDTO, User> {
 
     @Override

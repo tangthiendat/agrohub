@@ -5,6 +5,7 @@ import com.ttdat.authservice.api.dto.request.AuthRequest;
 import com.ttdat.authservice.api.dto.response.AuthResponse;
 import com.ttdat.authservice.application.mappers.UserMapper;
 import com.ttdat.authservice.application.queries.user.GetUserByEmailQuery;
+import com.ttdat.authservice.application.queries.user.GetUserByIdQuery;
 import com.ttdat.authservice.application.services.AuthService;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.domain.services.TokenBlacklistService;
@@ -79,12 +80,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse refreshAccessToken(String refreshToken) {
-        String email = jwtUtils.getUsername(refreshToken);
-        GetUserByEmailQuery getUserByEmailQuery = GetUserByEmailQuery.builder()
-                .email(email)
+        String userId = jwtUtils.getUserId(refreshToken);
+        GetUserByIdQuery getUserByIdQuery = GetUserByIdQuery.builder()
+                .userId(userId)
                 .build();
         User user = userMapper.toEntity(
-                queryGateway.query(getUserByEmailQuery, ResponseTypes.instanceOf(UserDTO.class)).join()
+                queryGateway.query(getUserByIdQuery, ResponseTypes.instanceOf(UserDTO.class)).join()
         );
         return AuthResponse.builder()
                 .accessToken(jwtUtils.generateRefreshToken(user))
