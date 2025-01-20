@@ -28,12 +28,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         String userId = request.getHeader("X-User-ID");
-        GetAuthenticationByIdQuery query = GetAuthenticationByIdQuery.builder()
-                .userId(userId)
-                .build();
-        Authentication authentication = queryGateway.query(query, ResponseTypes.instanceOf(Authentication.class)).join();
-        if(authentication != null){
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(userId != null){
+            GetAuthenticationByIdQuery query = GetAuthenticationByIdQuery.builder()
+                    .userId(userId)
+                    .build();
+            Authentication authentication = queryGateway.query(query, ResponseTypes.instanceOf(Authentication.class)).join();
+            if(authentication != null){
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request, response);
     }
