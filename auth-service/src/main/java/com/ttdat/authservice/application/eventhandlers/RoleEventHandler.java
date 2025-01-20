@@ -5,6 +5,7 @@ import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.RoleMapper;
 import com.ttdat.authservice.domain.entities.Role;
 import com.ttdat.authservice.domain.events.role.RoleCreatedEvent;
+import com.ttdat.authservice.domain.events.role.RoleStatusUpdatedEvent;
 import com.ttdat.authservice.domain.events.role.RoleUpdatedEvent;
 import com.ttdat.authservice.domain.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,15 @@ public class RoleEventHandler {
         Role role = roleRepository.findById(roleUpdatedEvent.getRoleId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND));
         roleMapper.updateEntityFromEvent(role, roleUpdatedEvent);
+        roleRepository.save(role);
+    }
+
+    @Transactional
+    @EventHandler
+    public void on(RoleStatusUpdatedEvent roleStatusUpdatedEvent) {
+        Role role = roleRepository.findById(roleStatusUpdatedEvent.getRoleId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND));
+        role.setActive(roleStatusUpdatedEvent.isActive());
         roleRepository.save(role);
     }
 }

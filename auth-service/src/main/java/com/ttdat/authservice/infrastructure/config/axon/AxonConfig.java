@@ -38,6 +38,7 @@ public class AxonConfig {
         objectMapper.registerModule(new JavaTimeModule()); // Handle Java 8 Date/Time types
         objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
         objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         return JacksonSerializer.builder()
                 .objectMapper(objectMapper)
                 .build();

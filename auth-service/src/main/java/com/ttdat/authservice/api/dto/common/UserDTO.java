@@ -4,6 +4,7 @@ import com.ttdat.authservice.domain.entities.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class UserDTO {
     UUID userId;
     String fullName;
+    LocalDate dob;
     String email;
     boolean active;
     Gender gender;

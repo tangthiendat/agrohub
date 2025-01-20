@@ -1,6 +1,7 @@
 package com.ttdat.authservice.api.controllers.command;
 
 import com.ttdat.authservice.api.dto.common.UserDTO;
+import com.ttdat.authservice.api.dto.request.UpdateUserStatusRequest;
 import com.ttdat.authservice.api.dto.response.ApiResponse;
 import com.ttdat.authservice.application.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,16 @@ public class UserCommandController {
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("User updated successfully")
+                .build());
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<Object>> updateUserStatus(@PathVariable UUID id, @RequestBody UpdateUserStatusRequest updateUserStatusRequest) {
+        userService.updateUserStatus(id, updateUserStatusRequest);
+        return ResponseEntity.ok(ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("User status updated successfully")
                 .build());
     }
 

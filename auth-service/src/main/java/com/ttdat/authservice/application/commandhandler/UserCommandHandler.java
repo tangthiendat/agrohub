@@ -2,7 +2,9 @@ package com.ttdat.authservice.application.commandhandler;
 
 import com.ttdat.authservice.application.commands.user.CreateUserCommand;
 import com.ttdat.authservice.application.commands.user.UpdateUserCommand;
+import com.ttdat.authservice.application.commands.user.UpdateUserStatusCommand;
 import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
+import com.ttdat.authservice.domain.events.user.UserStatusUpdatedEvent;
 import com.ttdat.authservice.domain.events.user.UserUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -24,6 +26,7 @@ public class UserCommandHandler {
                 .fullName(createUserCommand.getFullName())
                 .gender(createUserCommand.getGender())
                 .email(createUserCommand.getEmail())
+                .dob(createUserCommand.getDob())
                 .password(createUserCommand.getPassword())
                 .phoneNumber(createUserCommand.getPhoneNumber())
                 .roleId(createUserCommand.getRoleId())
@@ -38,9 +41,19 @@ public class UserCommandHandler {
                 .fullName(updateUserCommand.getFullName())
                 .gender(updateUserCommand.getGender())
                 .email(updateUserCommand.getEmail())
+                .dob(updateUserCommand.getDob())
                 .phoneNumber(updateUserCommand.getPhoneNumber())
                 .roleId(updateUserCommand.getRoleId())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(userUpdatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateUserStatusCommand updateUserStatusCommand) {
+        UserStatusUpdatedEvent userStatusUpdatedEvent = UserStatusUpdatedEvent.builder()
+                .userId(updateUserStatusCommand.getUserId())
+                .active(updateUserStatusCommand.isActive())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(userStatusUpdatedEvent));
     }
 }

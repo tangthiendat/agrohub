@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +25,8 @@ public class User extends Auditable implements UserDetails {
     UUID userId;
 
     String fullName;
+
+    LocalDate dob;
 
     @Enumerated(EnumType.STRING)
     Gender gender;
