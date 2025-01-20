@@ -68,7 +68,7 @@ public class SecurityConfig {
                                 .authenticationEntryPoint(projectAuthenticationEntryPoint)
                 )
                 .addFilterBefore(jwtBlacklistFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(jwtAuthFilter, JwtBlacklistFilter.class)
+//                .addFilterAfter(jwtAuthFilter, JwtBlacklistFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();

@@ -19,7 +19,8 @@ public class SecurityContextHandlerInterceptor implements MessageHandlerIntercep
         }
         try {
             return interceptorChain.proceed();
-        } finally {
+        }
+        finally {
             SecurityContextHolder.clearContext();
         }
     }

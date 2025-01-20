@@ -30,7 +30,8 @@ public class AuthQueryHandler {
 
     @QueryHandler
     public boolean handle(CheckPermissionQuery checkPermissionQuery){
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
         if (email != null) {
             Optional<User> optionalUser = userRepository.findByEmail(email);
             if (optionalUser.isPresent()) {

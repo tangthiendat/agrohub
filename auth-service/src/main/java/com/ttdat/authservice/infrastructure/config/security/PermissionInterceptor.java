@@ -33,7 +33,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
                 .path(path)
                 .httpMethod(httpMethod)
                 .build();
-//        log.info("Checking permission for path: {} and method: {}", path, httpMethod);
         boolean isAllowed = queryGateway.query(query, ResponseTypes.instanceOf(Boolean.class)).join();
         if (!isAllowed) {
             throw new AuthException(ErrorCode.ACCESS_DENIED);
