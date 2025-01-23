@@ -20,9 +20,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void createRole(RoleDTO roleDTO) {
-        List<Long> permissionIds = roleDTO.getPermissions().stream()
-                .map(PermissionDTO::getPermissionId)
-                .toList();
+        List<Long> permissionIds = roleDTO.getPermissions() != null ?
+                roleDTO.getPermissions().stream()
+                        .map(PermissionDTO::getPermissionId)
+                        .toList() :
+                List.of();
         CreateRoleCommand createRoleCommand = CreateRoleCommand.builder()
                 .roleName(roleDTO.getRoleName())
                 .description(roleDTO.getDescription())
@@ -34,9 +36,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void updateRole(Long id, RoleDTO roleDTO) {
-        List<Long> permissionIds = roleDTO.getPermissions().stream()
-                .map(PermissionDTO::getPermissionId)
-                .toList();
+        List<Long> permissionIds = roleDTO.getPermissions() != null ?
+                roleDTO.getPermissions().stream()
+                        .map(PermissionDTO::getPermissionId)
+                        .toList() :
+                List.of();
         UpdateRoleCommand updateRoleCommand = UpdateRoleCommand.builder()
                 .roleId(id)
                 .roleName(roleDTO.getRoleName())
