@@ -13,6 +13,7 @@ import Access from "../Access";
 import { PERMISSIONS } from "../../../common/constants";
 import UpdateRole from "./UpdateRole";
 import { Module } from "../../../common/enums";
+import UpdateRoleStatus from "./UpdateRoleStatus";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -174,6 +175,12 @@ const RoleTable: React.FC = () => {
           {/* <ViewRole role={record} /> */}
           <Access permission={PERMISSIONS[Module.ROLE].UPDATE} hideChildren>
             <UpdateRole role={record} />
+          </Access>
+          <Access
+            permission={PERMISSIONS[Module.ROLE].UPDATE_STATUS}
+            hideChildren
+          >
+            <UpdateRoleStatus role={record} />
           </Access>
         </Space>
       ),

@@ -15,6 +15,7 @@ interface IRoleService {
   ): Promise<ApiResponse<Page<IRole>>>;
   create(newRole: Omit<IRole, "roleId">): Promise<ApiResponse<void>>;
   update(roleId: number, updatedRole: IRole): Promise<ApiResponse<void>>;
+  updateStatus(roleId: number, active: boolean): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/roles", {
@@ -43,6 +44,13 @@ class RoleService implements IRoleService {
 
   async update(roleId: number, updatedRole: IRole): Promise<ApiResponse<void>> {
     return (await apiClient.put(`/${roleId}`, updatedRole)).data;
+  }
+
+  async updateStatus(
+    roleId: number,
+    active: boolean,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.patch(`/${roleId}/status`, { active })).data;
   }
 }
 
