@@ -13,6 +13,8 @@ interface IRoleService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IRole>>>;
+  create(newRole: Omit<IRole, "roleId">): Promise<ApiResponse<void>>;
+  update(roleId: number, updatedRole: IRole): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/roles", {
@@ -33,6 +35,14 @@ class RoleService implements IRoleService {
         },
       })
     ).data;
+  }
+
+  async create(newRole: Omit<IRole, "roleId">): Promise<ApiResponse<void>> {
+    return (await apiClient.post("", newRole)).data;
+  }
+
+  async update(roleId: number, updatedRole: IRole): Promise<ApiResponse<void>> {
+    return (await apiClient.put(`/${roleId}`, updatedRole)).data;
   }
 }
 

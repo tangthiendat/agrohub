@@ -2,6 +2,7 @@ import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
 import Access from "../features/auth/Access";
+import AddRole from "../features/auth/roles/AddRole";
 import RoleTable from "../features/auth/roles/RoleTable";
 
 const Roles: React.FC = () => {
@@ -11,11 +12,9 @@ const Roles: React.FC = () => {
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Vai trò</h2>
-          {/* <Access
-            permission={PERMISSIONS[Module.PERMISSION].CREATE}
-            hideChildren
-          >
-          </Access> */}
+          <Access permission={PERMISSIONS[Module.ROLE].CREATE} hideChildren>
+            <AddRole />
+          </Access>
         </div>
         <RoleTable />
       </div>

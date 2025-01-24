@@ -10,6 +10,7 @@ import {
 import { createApiClient } from "../../config/axios/api-client";
 
 interface IPermissionService {
+  getAll(): Promise<ApiResponse<IPermission[]>>;
   getPage(
     pagination: PaginationParams,
     filter?: PermissionFilterCriteria,
@@ -33,6 +34,10 @@ const apiClient: AxiosInstance = createApiClient(
 );
 
 class PermissionService implements IPermissionService {
+  async getAll(): Promise<ApiResponse<IPermission[]>> {
+    return (await apiClient.get("")).data;
+  }
+
   async getPage(
     pagination: PaginationParams,
     filter?: PermissionFilterCriteria,
