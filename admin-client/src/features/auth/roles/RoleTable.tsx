@@ -9,6 +9,10 @@ import { IRole, SortParams } from "../../../interfaces";
 import { formatTimestamp } from "../../../utils/datetime";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import Access from "../Access";
+import { PERMISSIONS } from "../../../common/constants";
+import UpdateRole from "./UpdateRole";
+import { Module } from "../../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -164,15 +168,13 @@ const RoleTable: React.FC = () => {
     {
       title: "Hành động",
       key: "action",
-      align: "center",
       width: "10%",
       render: (record: IRole) => (
         <Space>
           {/* <ViewRole role={record} /> */}
-          {/* <Access permission={PERMISSIONS[Module.ROLES].UPDATE} hideChildren>
+          <Access permission={PERMISSIONS[Module.ROLE].UPDATE} hideChildren>
             <UpdateRole role={record} />
-          </Access> */}
-          {/* <DeleteRole roleId={record.roleId} /> */}
+          </Access>
         </Space>
       ),
     },

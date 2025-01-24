@@ -4,7 +4,7 @@ import { TableProps } from "antd/lib";
 import { HttpMethod, Module } from "../../../common/enums";
 import { IPermission, IRole } from "../../../interfaces";
 import { getFilterIconColor, getHttpMethodColor } from "../../../utils/color";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   form: FormInstance<IRole>;
@@ -22,6 +22,14 @@ const RolePermissions: React.FC<Props> = ({
   const [currentSelectedRowKeys, setCurrentSelectedRowKeys] = useState<
     React.Key[]
   >([]);
+
+  useEffect(() => {
+    if (roleToUpdate) {
+      setCurrentSelectedRowKeys(
+        roleToUpdate.permissions.map((permission) => permission.permissionId),
+      );
+    }
+  }, [roleToUpdate]);
 
   const columns: TableProps<IPermission>["columns"] = [
     {

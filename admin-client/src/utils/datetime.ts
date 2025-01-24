@@ -9,5 +9,5 @@ export function isInDateRange(
 }
 
 export function formatTimestamp(timestamp: string): string {
-  return dayjs(timestamp).format("DD/MM/YYYY HH:mm:ss");
+  return dayjs(timestamp).tz().format("DD/MM/YYYY HH:mm:ss");
 }

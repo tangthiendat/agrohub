@@ -68,12 +68,9 @@ const UpdateRoleForm: React.FC<Props> = ({
 
   function handleFinish() {
     if (roleToUpdate) {
-      const updatedRole = {
-        ...roleToUpdate,
-        ...form.getFieldsValue(true),
-      };
+      const updatedRole = form.getFieldsValue(true);
       updateRole(
-        { roleId: roleToUpdate.roleId, updatedRole },
+        { roleId: roleToUpdate.roleId, updatedRole: updatedRole },
         {
           onSuccess: () => {
             toast.success("Cập nhật vai trò thành công");
