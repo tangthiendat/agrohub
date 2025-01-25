@@ -125,9 +125,9 @@ const RolePermissions: React.FC<Props> = ({
         showSizeChanger: true,
         showTotal: (total) => `Tổng ${total} quyền hạn`,
       }}
-      rowSelection={rowSelection}
+      rowSelection={viewOnly ? undefined : rowSelection}
       onRow={(record: IPermission) => ({
-        onClick: () => selectRow(record),
+        onClick: () => !viewOnly && selectRow(record),
       })}
       size="small"
       rowClassName={(_, index) =>

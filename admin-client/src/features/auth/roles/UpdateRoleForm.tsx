@@ -30,6 +30,7 @@ const UpdateRoleForm: React.FC<Props> = ({
   const { data, isLoading } = useQuery({
     queryKey: ["permissions"],
     queryFn: permissionService.getAll,
+    enabled: !viewOnly,
   });
 
   const { mutate: createRole, isPending: isCreating } = useMutation({
@@ -140,7 +141,9 @@ const UpdateRoleForm: React.FC<Props> = ({
             <RolePermissions
               form={form}
               roleToUpdate={roleToUpdate}
-              permissions={data?.payload || []}
+              permissions={
+                viewOnly ? roleToUpdate?.permissions || [] : data?.payload || []
+              }
               viewOnly={viewOnly}
             />
           </Card>
