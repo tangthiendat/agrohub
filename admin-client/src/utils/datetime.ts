@@ -11,3 +11,7 @@ export function isInDateRange(
 export function formatTimestamp(timestamp: string): string {
   return dayjs(timestamp).tz().format("DD/MM/YYYY HH:mm:ss");
 }
+
+export function formatDate(date: string): string {
+  return dayjs(date).tz().format("DD/MM/YYYY");
+}

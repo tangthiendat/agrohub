@@ -1,19 +1,19 @@
+import { useEffect, useState } from "react";
 import { FilterFilled } from "@ant-design/icons";
 import { FormInstance, Table, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import { HttpMethod, Module } from "../../../common/enums";
 import { IPermission, IRole } from "../../../interfaces";
 import { getFilterIconColor, getHttpMethodColor } from "../../../utils/color";
-import { useEffect, useState } from "react";
 
-interface Props {
+interface RolePermissionsProps {
   form: FormInstance<IRole>;
   roleToUpdate?: IRole;
   permissions: IPermission[];
   viewOnly: boolean;
 }
 
-const RolePermissions: React.FC<Props> = ({
+const RolePermissions: React.FC<RolePermissionsProps> = ({
   form,
   roleToUpdate,
   permissions,

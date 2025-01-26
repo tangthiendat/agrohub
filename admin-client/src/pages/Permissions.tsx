@@ -1,9 +1,9 @@
-import { PERMISSIONS } from "../common/constants";
-import { Module } from "../common/enums";
-import { useTitle } from "../common/hooks";
 import Access from "../features/auth/Access";
 import AddPermission from "../features/auth/permissions/AddPermission";
 import PermissionTable from "../features/auth/permissions/PermissionTable";
+import { PERMISSIONS } from "../common/constants";
+import { Module } from "../common/enums";
+import { useTitle } from "../common/hooks";
 
 const Permissions: React.FC = () => {
   useTitle("Quyền hạn");

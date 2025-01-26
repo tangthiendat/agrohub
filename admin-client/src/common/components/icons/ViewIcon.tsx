@@ -1,12 +1,12 @@
 import { EyeOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 
-interface Props {
+interface ViewIconProps {
   onClick: () => void;
   tooltipTitle?: string;
 }
 
-const ViewDetailsIcon: React.FC<Props> = ({ onClick, tooltipTitle }) => {
+const ViewIcon: React.FC<ViewIconProps> = ({ onClick, tooltipTitle }) => {
   return (
     <Tooltip title={tooltipTitle}>
       <EyeOutlined
@@ -17,4 +17,4 @@ const ViewDetailsIcon: React.FC<Props> = ({ onClick, tooltipTitle }) => {
   );
 };
 
-export default ViewDetailsIcon;
+export default ViewIcon;

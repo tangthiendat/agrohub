@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { IRole } from "../../../interfaces";
-import ViewDetailsIcon from "../../../common/components/icons/ViewDetailsIcon";
 import { Modal } from "antd";
 import UpdateRoleForm from "./UpdateRoleForm";
+import ViewIcon from "../../../common/components/icons/ViewIcon";
+import { IRole } from "../../../interfaces";
 
 interface Props {
   role: IRole;
@@ -20,7 +20,7 @@ const ViewRole: React.FC<Props> = ({ role }) => {
   };
   return (
     <>
-      <ViewDetailsIcon onClick={handleOpenModal} />
+      <ViewIcon onClick={handleOpenModal} />
       <Modal
         open={isOpenModal}
         width="75%"

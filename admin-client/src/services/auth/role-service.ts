@@ -13,6 +13,7 @@ interface IRoleService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IRole>>>;
+  getAll(): Promise<ApiResponse<Omit<IRole, "permissions">[]>>;
   create(newRole: Omit<IRole, "roleId">): Promise<ApiResponse<void>>;
   update(roleId: number, updatedRole: IRole): Promise<ApiResponse<void>>;
   updateStatus(roleId: number, active: boolean): Promise<ApiResponse<void>>;
@@ -36,6 +37,10 @@ class RoleService implements IRoleService {
         },
       })
     ).data;
+  }
+
+  async getAll(): Promise<ApiResponse<Omit<IRole, "permissions">[]>> {
+    return (await apiClient.get("")).data;
   }
 
   async create(newRole: Omit<IRole, "roleId">): Promise<ApiResponse<void>> {

@@ -9,6 +9,9 @@ import { SorterResult } from "antd/es/table/interface";
 import { GetProp } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import Access from "../Access";
+import UpdatePermission from "./UpdatePermission";
+import ViewPermission from "./ViewPermission";
 import { PERMISSIONS } from "../../../common/constants";
 import { HttpMethod, Module } from "../../../common/enums";
 import {
@@ -30,9 +33,6 @@ import {
   getDefaultSortOrder,
   getSortDirection,
 } from "../../../utils/filter";
-import Access from "../Access";
-import UpdatePermission from "./UpdatePermission";
-import ViewPermission from "./ViewPermission";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -75,7 +75,7 @@ const PermissionTable: React.FC = () => {
         );
       }
     }),
-    queryFn: () => permissionService.getPage(pagination, filter, sort),
+    queryFn: () => permissionService.getPage(pagination, sort, filter),
   });
 
   useEffect(() => {

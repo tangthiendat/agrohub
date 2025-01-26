@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { IPermission } from "../../../interfaces";
-import EditIcon from "../../../common/components/icons/EditIcon";
 import { Modal } from "antd";
+import EditIcon from "../../../common/components/icons/EditIcon";
 import UpdatePermissionForm from "./UpdatePermissionForm";
+import { IPermission } from "../../../interfaces";
 
-interface Props {
+interface UpdatePermissionProps {
   permission: IPermission;
 }
 
-const UpdatePermission: React.FC<Props> = ({ permission }) => {
+const UpdatePermission: React.FC<UpdatePermissionProps> = ({ permission }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {

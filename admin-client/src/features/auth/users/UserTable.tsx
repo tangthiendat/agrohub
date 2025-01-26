@@ -2,32 +2,32 @@ import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
 import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router";
+import ViewUser from "./ViewUser";
 import Access from "../Access";
-import ViewRole from "./ViewRole";
-import UpdateRole from "./UpdateRole";
-import UpdateRoleStatus from "./UpdateRoleStatus";
-import { roleService } from "../../../services/auth/role-service";
-import { IRole, SortParams } from "../../../interfaces";
-import { formatTimestamp } from "../../../utils/datetime";
+import UpdateUser from "./UpdateUser";
+import { GENDER_NAME, PERMISSIONS } from "../../../common/constants";
+import { Gender, Module } from "../../../common/enums";
+import { IUser, SortParams } from "../../../interfaces";
+import { userService } from "../../../services";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
+import { formatDate } from "../../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
-import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
+import UpdateUserStatus from "./UpdateUserStatus";
 
 interface TableParams {
   pagination: TablePaginationConfig;
 }
 
-const RoleTable: React.FC = () => {
+const UserTable: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
-      showTotal: (total) => `Tổng ${total} vai trò`,
+      showTotal: (total) => `Tổng ${total} người dùng`,
     },
   }));
 
@@ -42,7 +42,7 @@ const RoleTable: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["roles", pagination, sort].filter((key) => {
+    queryKey: ["users", pagination, sort].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -51,23 +51,10 @@ const RoleTable: React.FC = () => {
         );
       }
     }),
-    queryFn: () => roleService.getPage(pagination, sort),
+    queryFn: () => userService.getPage(pagination, sort),
   });
 
-  useEffect(() => {
-    if (data) {
-      setTableParams((prev) => ({
-        ...prev,
-        pagination: {
-          ...prev.pagination,
-          total: data.payload?.meta.totalElements,
-          showTotal: (total) => `Tổng ${total} vai trò`,
-        },
-      }));
-    }
-  }, [data]);
-
-  const handleTableChange: TableProps<IRole>["onChange"] = (
+  const handleTableChange: TableProps<IUser>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -105,43 +92,26 @@ const RoleTable: React.FC = () => {
     setSearchParams(searchParams);
   };
 
-  const columns: TableProps<IRole>["columns"] = [
+  const columns: TableProps<IUser>["columns"] = [
     {
-      title: "ID",
-      dataIndex: "roleId",
-      key: "roleId",
-      width: "5%",
+      title: "Họ và tên",
+      key: "fullName",
+      dataIndex: "fullName",
+      width: "18%",
     },
     {
-      title: "Tên",
-      dataIndex: "roleName",
-      key: "roleName",
+      title: "Giới tính",
+      dataIndex: "gender",
+      key: "gender",
+      width: "8%",
+      render: (gender: Gender) => GENDER_NAME[gender],
+    },
+    {
+      title: "Ngày sinh",
+      dataIndex: "dob",
+      key: "dob",
       width: "10%",
-    },
-    {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
-      width: "30%",
-    },
-    {
-      title: "Trạng thái",
-      dataIndex: "active",
-      key: "active",
-      width: "15%",
-      render: (active: boolean) => (
-        <Tag color={active ? "green" : "red"}>
-          {active ? "Đã kích hoạt" : "Chưa kích hoạt"}
-        </Tag>
-      ),
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: "15%",
-      render: (createdAt: string) =>
-        createdAt ? formatTimestamp(createdAt) : "",
+      render: (dob: string) => dob && formatDate(dob),
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
       sortIcon: ({ sortOrder }) => (
@@ -152,49 +122,62 @@ const RoleTable: React.FC = () => {
       ),
     },
     {
-      title: "Ngày cập nhật",
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      width: "15%",
-      render: (updatedAt: string) =>
-        updatedAt ? formatTimestamp(updatedAt) : "",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
-      sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
-          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-        </div>
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      width: "18%",
+    },
+    {
+      key: "active",
+      title: "Trạng thái",
+      dataIndex: "active",
+      width: "12%",
+      render: (active: boolean) => (
+        <Tag color={active ? "green" : "red"}>
+          {active ? "Đã kích hoạt" : "Chưa kích hoạt"}
+        </Tag>
       ),
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+      width: "10%",
+    },
+    {
+      title: "Vai trò",
+      dataIndex: "role",
+      key: "role",
+      width: "10%",
+      render: (role) => role.roleName,
     },
     {
       title: "Hành động",
       key: "action",
-      width: "10%",
-      render: (record: IRole) => (
+      render: (record: IUser) => (
         <Space>
-          <ViewRole role={record} />
-          <Access permission={PERMISSIONS[Module.ROLE].UPDATE} hideChildren>
-            <UpdateRole role={record} />
+          <ViewUser user={record} />
+          <Access permission={PERMISSIONS[Module.USER].UPDATE} hideChildren>
+            <UpdateUser user={record} />
           </Access>
           <Access
-            permission={PERMISSIONS[Module.ROLE].UPDATE_STATUS}
+            permission={PERMISSIONS[Module.USER].UPDATE_STATUS}
             hideChildren
           >
-            <UpdateRoleStatus role={record} />
+            <UpdateUserStatus user={record} />
           </Access>
         </Space>
       ),
     },
   ];
+
   return (
     <Table
-      rowKey={(role: IRole) => role.roleId}
-      dataSource={data?.payload?.content}
-      columns={columns}
-      pagination={tableParams.pagination}
       bordered={false}
-      size="middle"
+      columns={columns}
+      rowKey={(record: IUser) => record.userId}
+      pagination={tableParams.pagination}
+      dataSource={data?.payload?.content}
       rowClassName={(_, index) =>
         index % 2 === 0 ? "table-row-light" : "table-row-gray"
       }
@@ -204,8 +187,9 @@ const RoleTable: React.FC = () => {
         tip: "Đang tải dữ liệu...",
       }}
       onChange={handleTableChange}
+      size="middle"
     />
   );
 };
 
-export default RoleTable;
+export default UserTable;

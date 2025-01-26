@@ -1,15 +1,15 @@
-import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
 import { useState } from "react";
+import { IUser } from "../../../interfaces";
+import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
 import ViewIcon from "../../../common/components/icons/ViewIcon";
-import { IPermission } from "../../../interfaces";
-import { getHttpMethodColor } from "../../../utils/color";
+import { GENDER_NAME } from "../../../common/constants";
 import { formatTimestamp } from "../../../utils/datetime";
 
 interface Props {
-  permission: IPermission;
+  user: IUser;
 }
 
-const ViewPermission: React.FC<Props> = ({ permission }) => {
+const ViewUser: React.FC<Props> = ({ user }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   function showDrawer(): void {
@@ -22,59 +22,62 @@ const ViewPermission: React.FC<Props> = ({ permission }) => {
 
   const items: DescriptionsProps["items"] = [
     {
-      key: "id",
+      key: "userId",
       label: "ID",
       span: "filled",
-      children: permission.permissionId,
+      children: user.userId,
     },
     {
-      key: "permissionName",
-      label: "Tên quyền hạn",
+      key: "fullName",
+      label: "Họ và tên",
       span: "filled",
-      children: permission.permissionName,
+      children: user.fullName,
     },
     {
-      key: "apiPath",
-      label: "Đường dẫn API",
+      key: "gender",
+      label: "Giới tính",
       span: "filled",
-      children: permission.apiPath,
+      children: GENDER_NAME[user.gender],
     },
     {
-      key: "httpMethod",
-      label: "Phương thức",
+      key: "email",
+      label: "Email",
+      span: "filled",
+      children: user.email,
+    },
+    {
+      key: "phoneNumber",
+      label: "Số điện thoại",
+      span: "filled",
+      children: user.phoneNumber,
+    },
+    {
+      key: "active",
+      label: "Trạng thái",
       span: "filled",
       children: (
-        <Tag
-          className="font-bold"
-          color={getHttpMethodColor(permission.httpMethod)}
-        >
-          {permission.httpMethod}
+        <Tag color={user.active ? "green" : "red"}>
+          {user.active ? "Đã kích hoạt" : "Chưa kích hoạt"}
         </Tag>
       ),
     },
     {
-      key: "module",
-      label: "Module",
+      key: "role",
+      label: "Vai trò",
       span: "filled",
-      children: permission.module,
-    },
-    {
-      key: "description",
-      label: "Mô tả",
-      span: "filled",
-      children: permission.description,
+      children: user.role.roleName,
     },
     {
       key: "createdAt",
       label: "Ngày tạo",
       span: "filled",
-      children: permission.createdAt && formatTimestamp(permission.createdAt),
+      children: user.createdAt && formatTimestamp(user.createdAt),
     },
     {
       key: "updatedAt",
       label: "Ngày cập nhật",
       span: "filled",
-      children: permission.updatedAt && formatTimestamp(permission.updatedAt),
+      children: user.updatedAt && formatTimestamp(user.updatedAt),
     },
   ];
   return (
@@ -99,4 +102,4 @@ const ViewPermission: React.FC<Props> = ({ permission }) => {
   );
 };
 
-export default ViewPermission;
+export default ViewUser;

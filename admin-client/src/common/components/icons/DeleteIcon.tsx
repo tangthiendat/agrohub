@@ -1,12 +1,12 @@
 import { DeleteOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 
-interface Props {
+interface DeleteIconProps {
   onClick?: () => void;
   tooltipTitle?: string;
 }
 
-const DeleteIcon: React.FC<Props> = ({ onClick, tooltipTitle }) => {
+const DeleteIcon: React.FC<DeleteIconProps> = ({ onClick, tooltipTitle }) => {
   return (
     <Tooltip title={tooltipTitle}>
       <DeleteOutlined

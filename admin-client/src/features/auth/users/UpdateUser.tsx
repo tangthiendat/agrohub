@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Modal } from "antd";
+import UpdateUserForm from "./UpdateUserForm";
 import EditIcon from "../../../common/components/icons/EditIcon";
-import UpdateRoleForm from "./UpdateRoleForm";
-import { IRole } from "../../../interfaces";
+import { IUser } from "../../../interfaces";
 
-interface UpdateRoleProps {
-  role: IRole;
+interface UpdateUserProps {
+  user: IUser;
 }
 
-const UpdateRole: React.FC<UpdateRoleProps> = ({ role }) => {
+const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {
@@ -24,16 +24,16 @@ const UpdateRole: React.FC<UpdateRoleProps> = ({ role }) => {
       <EditIcon onClick={handleOpenModal} tooltipTitle="Chỉnh sửa" />
       <Modal
         open={isOpenModal}
-        width="75%"
-        title={<span className="text-lg">Chỉnh sửa quyền hạn</span>}
+        width="50%"
+        title={<span className="text-lg">Chỉnh sửa người dùng</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateRoleForm roleToUpdate={role} onCancel={handleCloseModal} />
+        <UpdateUserForm userToUpdate={user} onCancel={handleCloseModal} />
       </Modal>
     </>
   );
 };
 
-export default UpdateRole;
+export default UpdateUser;

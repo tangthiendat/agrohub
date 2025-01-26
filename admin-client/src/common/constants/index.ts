@@ -1,5 +1,6 @@
 export * from "./notification";
 export * from "./permission";
+export * from "./user";
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 

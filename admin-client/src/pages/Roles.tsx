@@ -1,9 +1,9 @@
-import { PERMISSIONS } from "../common/constants";
-import { Module } from "../common/enums";
-import { useTitle } from "../common/hooks";
 import Access from "../features/auth/Access";
 import AddRole from "../features/auth/roles/AddRole";
 import RoleTable from "../features/auth/roles/RoleTable";
+import { PERMISSIONS } from "../common/constants";
+import { Module } from "../common/enums";
+import { useTitle } from "../common/hooks";
 
 const Roles: React.FC = () => {
   useTitle("Vai trò");
