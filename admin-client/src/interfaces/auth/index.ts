@@ -1,4 +1,4 @@
-import { Gender, HttpMethod } from "../common";
+import { Gender, HttpMethod } from "../../common/enums";
 
 export interface IAuthRequest {
   email: string;
@@ -32,6 +32,8 @@ export interface IRole {
 export interface IUser {
   userId: number;
   fullName: string;
+  email: string;
+  password?: string;
   dob: string;
   gender: Gender;
   active: boolean;

@@ -1,13 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
+import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { useState } from "react";
 import { useSearchParams } from "react-router";
+import ViewUser from "./ViewUser";
 import { GENDER_NAME } from "../../../common/constants";
 import { Gender } from "../../../common/enums";
 import { IUser, SortParams } from "../../../interfaces";
 import { userService } from "../../../services";
-import { getSortDirection } from "../../../utils/filter";
+import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
+import { formatDate } from "../../../utils/datetime";
+import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -90,7 +94,7 @@ const UserTable: React.FC = () => {
       title: "Họ và tên",
       key: "fullName",
       dataIndex: "fullName",
-      width: "20%",
+      width: "18%",
     },
     {
       title: "Giới tính",
@@ -100,10 +104,25 @@ const UserTable: React.FC = () => {
       render: (gender: Gender) => GENDER_NAME[gender],
     },
     {
+      title: "Ngày sinh",
+      dataIndex: "dob",
+      key: "dob",
+      width: "10%",
+      render: (dob: string) => formatDate(dob),
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
+    },
+    {
       title: "Email",
       dataIndex: "email",
       key: "email",
-      width: "23%",
+      width: "18%",
     },
     {
       key: "active",
@@ -120,7 +139,7 @@ const UserTable: React.FC = () => {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
-      width: "12%",
+      width: "10%",
     },
     {
       title: "Vai trò",
@@ -167,8 +186,8 @@ const UserTable: React.FC = () => {
       key: "action",
       render: (record: IUser) => (
         <Space>
-          {/* <ViewUser user={record} />
-          <Access permission={PERMISSIONS[Module.USERS].UPDATE} hideChildren>
+          <ViewUser user={record} />
+          {/* <Access permission={PERMISSIONS[Module.USERS].UPDATE} hideChildren>
             <UpdateUser user={record} />
           </Access> */}
         </Space>
