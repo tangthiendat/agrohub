@@ -19,6 +19,7 @@ public class UserCreatedEvent {
     UUID userId;
     String fullName;
     Gender gender;
+    boolean active;
     String email;
     LocalDate dob;
     String password;
