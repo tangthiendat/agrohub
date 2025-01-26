@@ -5,11 +5,11 @@ import ViewIcon from "../../../common/components/icons/ViewIcon";
 import { GENDER_NAME } from "../../../common/constants";
 import { formatTimestamp } from "../../../utils/datetime";
 
-interface Props {
+interface ViewUserProps {
   user: IUser;
 }
 
-const ViewUser: React.FC<Props> = ({ user }) => {
+const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   function showDrawer(): void {

@@ -5,11 +5,11 @@ import { IPermission } from "../../../interfaces";
 import { getHttpMethodColor } from "../../../utils/color";
 import { formatTimestamp } from "../../../utils/datetime";
 
-interface Props {
+interface ViewPermissionProps {
   permission: IPermission;
 }
 
-const ViewPermission: React.FC<Props> = ({ permission }) => {
+const ViewPermission: React.FC<ViewPermissionProps> = ({ permission }) => {
   const [open, setOpen] = useState<boolean>(false);
 
   function showDrawer(): void {

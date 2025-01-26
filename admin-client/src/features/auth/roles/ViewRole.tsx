@@ -4,11 +4,11 @@ import UpdateRoleForm from "./UpdateRoleForm";
 import ViewIcon from "../../../common/components/icons/ViewIcon";
 import { IRole } from "../../../interfaces";
 
-interface Props {
+interface ViewRoleProps {
   role: IRole;
 }
 
-const ViewRole: React.FC<Props> = ({ role }) => {
+const ViewRole: React.FC<ViewRoleProps> = ({ role }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {
