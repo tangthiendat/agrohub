@@ -5,8 +5,10 @@ import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { useState } from "react";
 import { useSearchParams } from "react-router";
 import ViewUser from "./ViewUser";
-import { GENDER_NAME } from "../../../common/constants";
-import { Gender } from "../../../common/enums";
+import Access from "../Access";
+import UpdateUser from "./UpdateUser";
+import { GENDER_NAME, PERMISSIONS } from "../../../common/constants";
+import { Gender, Module } from "../../../common/enums";
 import { IUser, SortParams } from "../../../interfaces";
 import { userService } from "../../../services";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
@@ -108,7 +110,7 @@ const UserTable: React.FC = () => {
       dataIndex: "dob",
       key: "dob",
       width: "10%",
-      render: (dob: string) => formatDate(dob),
+      render: (dob: string) => dob && formatDate(dob),
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
       sortIcon: ({ sortOrder }) => (
@@ -187,9 +189,9 @@ const UserTable: React.FC = () => {
       render: (record: IUser) => (
         <Space>
           <ViewUser user={record} />
-          {/* <Access permission={PERMISSIONS[Module.USERS].UPDATE} hideChildren>
+          <Access permission={PERMISSIONS[Module.USER].UPDATE} hideChildren>
             <UpdateUser user={record} />
-          </Access> */}
+          </Access>
         </Space>
       ),
     },

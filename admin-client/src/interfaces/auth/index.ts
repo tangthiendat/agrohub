@@ -30,7 +30,7 @@ export interface IRole {
 }
 
 export interface IUser {
-  userId: number;
+  userId: string;
   fullName: string;
   email: string;
   password?: string;

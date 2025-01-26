@@ -17,6 +17,7 @@ interface IUserService {
     filter?: PermissionFilterCriteria,
   ): Promise<ApiResponse<Page<IUser>>>;
   create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<void>>;
+  update(userId: string, updatedUser: IUser): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/users", {
@@ -47,6 +48,10 @@ class UserService implements IUserService {
 
   async create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<void>> {
     return (await apiClient.post("", newUser)).data;
+  }
+
+  async update(userId: string, updatedUser: IUser): Promise<ApiResponse<void>> {
+    return (await apiClient.put(`/${userId}`, updatedUser)).data;
   }
 }
 

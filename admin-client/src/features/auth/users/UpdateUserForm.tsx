@@ -17,10 +17,16 @@ import { GENDER_NAME } from "../../../common/constants";
 import { IUser } from "../../../interfaces";
 import { userService } from "../../../services";
 import { roleService } from "../../../services/auth/role-service";
+import { useEffect } from "react";
 
 interface Props {
   userToUpdate?: IUser;
   onCancel: () => void;
+}
+
+interface UpdateUserArgs {
+  userId: string;
+  user: IUser;
 }
 
 const genderOptions = Object.entries(GENDER_NAME).map(
@@ -33,6 +39,14 @@ const genderOptions = Object.entries(GENDER_NAME).map(
 const UpdateUserForm: React.FC<Props> = ({ userToUpdate, onCancel }) => {
   const [form] = Form.useForm<IUser>();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (userToUpdate) {
+      form.setFieldsValue({
+        ...userToUpdate,
+      });
+    }
+  }, [userToUpdate, form]);
 
   const { data: roleOptions, isLoading: isRolesLoading } = useQuery({
     queryKey: ["roles"],
@@ -58,13 +72,38 @@ const UpdateUserForm: React.FC<Props> = ({ userToUpdate, onCancel }) => {
     },
   });
 
+  const { mutate: updateUser, isPending: isUpdating } = useMutation({
+    mutationFn: ({ userId, user }: UpdateUserArgs) =>
+      userService.update(userId, user),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("users");
+        },
+      });
+    },
+  });
+
   const disabledDate: DatePickerProps["disabledDate"] = (current) => {
     return current && dayjs(current).isAfter(dayjs().endOf("day"));
   };
 
   function handleFinish(values: IUser) {
     if (userToUpdate) {
-      console.log("update user");
+      const updatedUser = { ...userToUpdate, ...values };
+      updateUser(
+        { userId: userToUpdate.userId, user: updatedUser },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật người dùng thành công");
+            onCancel();
+            form.resetFields();
+          },
+          onError: () => {
+            toast.error("Cập nhật người dùng thất bại");
+          },
+        },
+      );
     } else {
       const newUser = values;
       console.log(newUser);
@@ -125,7 +164,7 @@ const UpdateUserForm: React.FC<Props> = ({ userToUpdate, onCancel }) => {
         <Form.Item
           className="flex-1"
           label="Ngày sinh"
-          name="dateOfBirth"
+          name="dob"
           rules={[
             {
               required: true,
@@ -227,11 +266,15 @@ const UpdateUserForm: React.FC<Props> = ({ userToUpdate, onCancel }) => {
 
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel} loading={isCreating}>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
             Hủy
           </Button>
 
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {userToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
