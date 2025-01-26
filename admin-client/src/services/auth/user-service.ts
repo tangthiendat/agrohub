@@ -16,6 +16,7 @@ interface IUserService {
     sort?: SortParams,
     filter?: PermissionFilterCriteria,
   ): Promise<ApiResponse<Page<IUser>>>;
+  create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/users", {
@@ -42,6 +43,10 @@ class UserService implements IUserService {
         },
       })
     ).data;
+  }
+
+  async create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<void>> {
+    return (await apiClient.post("", newUser)).data;
   }
 }
 
