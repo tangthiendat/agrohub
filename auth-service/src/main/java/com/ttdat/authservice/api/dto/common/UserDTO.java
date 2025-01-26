@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -14,12 +15,24 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDTO {
     UUID userId;
+
     String fullName;
+
     LocalDate dob;
+
     String email;
+
     boolean active;
+
     Gender gender;
+
     String password;
+
     String phoneNumber;
+
     RoleDTO role;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }
