@@ -18,6 +18,7 @@ interface IUserService {
   ): Promise<ApiResponse<Page<IUser>>>;
   create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<void>>;
   update(userId: string, updatedUser: IUser): Promise<ApiResponse<void>>;
+  updateStatus(userId: string, active: boolean): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/users", {
@@ -52,6 +53,13 @@ class UserService implements IUserService {
 
   async update(userId: string, updatedUser: IUser): Promise<ApiResponse<void>> {
     return (await apiClient.put(`/${userId}`, updatedUser)).data;
+  }
+
+  async updateStatus(
+    userId: string,
+    active: boolean,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.patch(`/${userId}/status`, { active })).data;
   }
 }
 

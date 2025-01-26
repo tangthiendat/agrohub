@@ -14,6 +14,7 @@ import { userService } from "../../../services";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
 import { formatDate } from "../../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import UpdateUserStatus from "./UpdateUserStatus";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -150,39 +151,6 @@ const UserTable: React.FC = () => {
       width: "10%",
       render: (role) => role.roleName,
     },
-
-    // {
-    //   key: "createdAt",
-    //   title: "Ngày tạo",
-    //   dataIndex: "createdAt",
-    //   width: "15%",
-    //   render: (createdAt: string) =>
-    //     createdAt ? formatTimestamp(createdAt) : "",
-    //   sorter: true,
-    //   defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
-    //   sortIcon: ({ sortOrder }) => (
-    //     <div className="flex flex-col text-[10px]">
-    //       <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-    //       <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   key: "updatedAt",
-    //   title: "Ngày cập nhật",
-    //   dataIndex: "updatedAt",
-    //   width: "15%",
-    //   render: (updatedAt: string) =>
-    //     updatedAt ? formatTimestamp(updatedAt) : "",
-    //   sorter: true,
-    //   defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
-    //   sortIcon: ({ sortOrder }) => (
-    //     <div className="flex flex-col text-[10px]">
-    //       <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-    //       <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-    //     </div>
-    //   ),
-    // },
     {
       title: "Hành động",
       key: "action",
@@ -191,6 +159,12 @@ const UserTable: React.FC = () => {
           <ViewUser user={record} />
           <Access permission={PERMISSIONS[Module.USER].UPDATE} hideChildren>
             <UpdateUser user={record} />
+          </Access>
+          <Access
+            permission={PERMISSIONS[Module.USER].UPDATE_STATUS}
+            hideChildren
+          >
+            <UpdateUserStatus user={record} />
           </Access>
         </Space>
       ),
