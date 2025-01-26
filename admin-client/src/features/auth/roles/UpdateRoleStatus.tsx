@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { IRole } from "../../../interfaces";
 import { roleService } from "../../../services/auth/role-service";
 
-interface Props {
+interface UpdateRoleStatusProps {
   role: IRole;
 }
 
@@ -13,7 +13,7 @@ interface UpdateRoleStatusArgs {
   active: boolean;
 }
 
-const UpdateRoleStatus: React.FC<Props> = ({ role }) => {
+const UpdateRoleStatus: React.FC<UpdateRoleStatusProps> = ({ role }) => {
   const queryClient = useQueryClient();
   const { mutate: updateRoleStatus, isPending: isUpdating } = useMutation({
     mutationFn: ({ roleId, active }: UpdateRoleStatusArgs) =>

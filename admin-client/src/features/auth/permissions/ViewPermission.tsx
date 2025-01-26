@@ -1,6 +1,6 @@
 import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
 import { useState } from "react";
-import ViewDetailsIcon from "../../../common/components/icons/ViewDetailsIcon";
+import ViewIcon from "../../../common/components/icons/ViewIcon";
 import { IPermission } from "../../../interfaces";
 import { getHttpMethodColor } from "../../../utils/color";
 import { formatTimestamp } from "../../../utils/datetime";
@@ -79,7 +79,7 @@ const ViewPermission: React.FC<Props> = ({ permission }) => {
   ];
   return (
     <>
-      <ViewDetailsIcon onClick={showDrawer} tooltipTitle="Xem chi tiết" />
+      <ViewIcon onClick={showDrawer} tooltipTitle="Xem chi tiết" />
       <Drawer
         width="40%"
         open={open}

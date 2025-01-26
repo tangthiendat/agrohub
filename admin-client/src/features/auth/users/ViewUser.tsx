@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { IUser } from "../../../interfaces";
 import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
-import ViewDetailsIcon from "../../../common/components/icons/ViewDetailsIcon";
+import ViewIcon from "../../../common/components/icons/ViewIcon";
 import { GENDER_NAME } from "../../../common/constants";
 import { formatTimestamp } from "../../../utils/datetime";
 
@@ -82,7 +82,7 @@ const ViewUser: React.FC<Props> = ({ user }) => {
   ];
   return (
     <>
-      <ViewDetailsIcon onClick={showDrawer} tooltipTitle="Xem chi tiết" />
+      <ViewIcon onClick={showDrawer} tooltipTitle="Xem chi tiết" />
       <Drawer
         width="40%"
         open={open}

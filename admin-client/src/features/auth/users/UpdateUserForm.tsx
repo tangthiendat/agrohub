@@ -19,7 +19,7 @@ import { userService } from "../../../services";
 import { roleService } from "../../../services/auth/role-service";
 import { useEffect } from "react";
 
-interface Props {
+interface UpdateUserFormProps {
   userToUpdate?: IUser;
   onCancel: () => void;
 }
@@ -36,7 +36,10 @@ const genderOptions = Object.entries(GENDER_NAME).map(
   }),
 );
 
-const UpdateUserForm: React.FC<Props> = ({ userToUpdate, onCancel }) => {
+const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
+  userToUpdate,
+  onCancel,
+}) => {
   const [form] = Form.useForm<IUser>();
   const queryClient = useQueryClient();
 

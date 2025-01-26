@@ -1,12 +1,12 @@
 import { Tooltip } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 
-interface Props {
+interface EditIconProps {
   onClick: () => void;
   tooltipTitle?: string;
 }
 
-const EditIcon: React.FC<Props> = ({ onClick, tooltipTitle }) => {
+const EditIcon: React.FC<EditIconProps> = ({ onClick, tooltipTitle }) => {
   return (
     <Tooltip title={tooltipTitle}>
       <EditOutlined

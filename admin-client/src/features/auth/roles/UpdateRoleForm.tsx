@@ -8,7 +8,7 @@ import { IRole } from "../../../interfaces";
 import { permissionService } from "../../../services";
 import { roleService } from "../../../services/auth/role-service";
 
-interface Props {
+interface UpdateRoleProps {
   roleToUpdate?: IRole;
   onCancel: () => void;
   viewOnly?: boolean;
@@ -19,7 +19,7 @@ interface UpdateRoleArgs {
   updatedRole: IRole;
 }
 
-const UpdateRoleForm: React.FC<Props> = ({
+const UpdateRoleForm: React.FC<UpdateRoleProps> = ({
   roleToUpdate,
   onCancel,
   viewOnly = false,

@@ -5,11 +5,13 @@ import DeleteIcon from "../../../common/components/icons/DeleteIcon";
 import { permissionService } from "../../../services";
 import { getNotificationMessage } from "../../../utils/notification";
 
-interface Props {
+interface DeletePermissionProps {
   permissionId: number;
 }
 
-const DeletePermission: React.FC<Props> = ({ permissionId }) => {
+const DeletePermission: React.FC<DeletePermissionProps> = ({
+  permissionId,
+}) => {
   const queryClient = useQueryClient();
 
   const { mutate: deletePermission, isPending: isDeleting } = useMutation({

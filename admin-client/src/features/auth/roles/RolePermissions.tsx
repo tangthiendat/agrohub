@@ -6,14 +6,14 @@ import { HttpMethod, Module } from "../../../common/enums";
 import { IPermission, IRole } from "../../../interfaces";
 import { getFilterIconColor, getHttpMethodColor } from "../../../utils/color";
 
-interface Props {
+interface RolePermissionsProps {
   form: FormInstance<IRole>;
   roleToUpdate?: IRole;
   permissions: IPermission[];
   viewOnly: boolean;
 }
 
-const RolePermissions: React.FC<Props> = ({
+const RolePermissions: React.FC<RolePermissionsProps> = ({
   form,
   roleToUpdate,
   permissions,

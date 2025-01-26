@@ -4,11 +4,11 @@ import UpdateUserForm from "./UpdateUserForm";
 import EditIcon from "../../../common/components/icons/EditIcon";
 import { IUser } from "../../../interfaces";
 
-interface Props {
+interface UpdateUserProps {
   user: IUser;
 }
 
-const UpdateUser: React.FC<Props> = ({ user }) => {
+const UpdateUser: React.FC<UpdateUserProps> = ({ user }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {

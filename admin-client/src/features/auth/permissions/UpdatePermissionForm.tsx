@@ -6,7 +6,7 @@ import { HttpMethod, Module } from "../../../common/enums";
 import { IPermission } from "../../../interfaces";
 import { permissionService } from "../../../services";
 
-interface Props {
+interface UpdatePermissionFormProps {
   permissionToUpdate?: IPermission;
   onCancel: () => void;
 }
@@ -26,7 +26,7 @@ const moduleOptions = Object.values(Module).map((module: string) => ({
   label: module,
 }));
 
-const UpdatePermissionForm: React.FC<Props> = ({
+const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
   permissionToUpdate,
   onCancel,
 }) => {

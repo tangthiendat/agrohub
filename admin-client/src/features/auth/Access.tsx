@@ -3,12 +3,12 @@ import NotPermitted from "./NotPermitted";
 import { useLoggedInUser } from "../../common/hooks";
 import { HttpMethod } from "../../common/enums";
 
-interface Props extends PropsWithChildren {
+interface AccessProps extends PropsWithChildren {
   hideChildren?: boolean;
   permission: { apiPath: string; httpMethod: HttpMethod };
 }
 
-const Access: React.FC<Props> = ({
+const Access: React.FC<AccessProps> = ({
   children,
   hideChildren = false,
   permission,

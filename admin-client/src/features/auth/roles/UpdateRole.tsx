@@ -4,11 +4,11 @@ import EditIcon from "../../../common/components/icons/EditIcon";
 import UpdateRoleForm from "./UpdateRoleForm";
 import { IRole } from "../../../interfaces";
 
-interface Props {
+interface UpdateRoleProps {
   role: IRole;
 }
 
-const UpdateRole: React.FC<Props> = ({ role }) => {
+const UpdateRole: React.FC<UpdateRoleProps> = ({ role }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {
