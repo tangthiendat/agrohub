@@ -10,7 +10,7 @@ COPY src ./src
 
 RUN mvn package -DskipTests
 
-FROM eclipse-temurin:21.0.3_9-jre-jammy
+FROM eclipse-temurin:21-jre-alpine
 
 RUN unlink /etc/localtime;ln -s  /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
 
