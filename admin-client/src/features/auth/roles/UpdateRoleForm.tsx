@@ -1,12 +1,12 @@
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { Button, Card, Col, Form, Input, Row, Space, Switch } from "antd";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Loading from "../../../common/components/Loading";
+import RolePermissions from "./RolePermissions";
 import { IRole } from "../../../interfaces";
 import { permissionService } from "../../../services";
 import { roleService } from "../../../services/auth/role-service";
-import { useEffect } from "react";
-import toast from "react-hot-toast";
-import Loading from "../../../common/components/Loading";
-import RolePermissions from "./RolePermissions";
 
 interface Props {
   roleToUpdate?: IRole;

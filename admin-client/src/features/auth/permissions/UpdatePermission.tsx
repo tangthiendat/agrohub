@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { IPermission } from "../../../interfaces";
-import EditIcon from "../../../common/components/icons/EditIcon";
 import { Modal } from "antd";
+import EditIcon from "../../../common/components/icons/EditIcon";
 import UpdatePermissionForm from "./UpdatePermissionForm";
+import { IPermission } from "../../../interfaces";
 
 interface Props {
   permission: IPermission;

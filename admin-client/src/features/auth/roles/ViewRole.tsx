@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { IRole } from "../../../interfaces";
-import ViewDetailsIcon from "../../../common/components/icons/ViewDetailsIcon";
 import { Modal } from "antd";
 import UpdateRoleForm from "./UpdateRoleForm";
+import ViewDetailsIcon from "../../../common/components/icons/ViewDetailsIcon";
+import { IRole } from "../../../interfaces";
 
 interface Props {
   role: IRole;

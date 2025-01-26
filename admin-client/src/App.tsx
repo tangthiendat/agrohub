@@ -8,12 +8,12 @@ import isBetween from "dayjs/plugin/isBetween";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import { Toaster } from "react-hot-toast";
+import AppRouter from "./router/AppRouter";
 import {
   COLOR_PRIMARY,
   COLOR_SECONDARY,
   VIETNAM_TIMEZONE,
 } from "./common/constants";
-import AppRouter from "./router/AppRouter";
 
 dayjs.locale("vi");
 dayjs.extend(utc);

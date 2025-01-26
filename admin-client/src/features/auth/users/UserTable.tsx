@@ -1,16 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router";
 import { useState } from "react";
+import { useSearchParams } from "react-router";
+import { GENDER_NAME } from "../../../common/constants";
+import { Gender } from "../../../common/enums";
 import { IUser, SortParams } from "../../../interfaces";
 import { userService } from "../../../services";
-import { formatTimestamp } from "../../../utils/datetime";
-import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
-import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
-import { Gender } from "../../../common/enums";
-import { GENDER_NAME } from "../../../common/constants";
+import { getSortDirection } from "../../../utils/filter";
 
 interface TableParams {
   pagination: TablePaginationConfig;

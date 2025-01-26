@@ -4,17 +4,17 @@ import { TableProps } from "antd/lib";
 import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import Access from "../Access";
+import ViewRole from "./ViewRole";
+import UpdateRole from "./UpdateRole";
+import UpdateRoleStatus from "./UpdateRoleStatus";
 import { roleService } from "../../../services/auth/role-service";
 import { IRole, SortParams } from "../../../interfaces";
 import { formatTimestamp } from "../../../utils/datetime";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
-import Access from "../Access";
 import { PERMISSIONS } from "../../../common/constants";
-import UpdateRole from "./UpdateRole";
 import { Module } from "../../../common/enums";
-import UpdateRoleStatus from "./UpdateRoleStatus";
-import ViewRole from "./ViewRole";
 
 interface TableParams {
   pagination: TablePaginationConfig;

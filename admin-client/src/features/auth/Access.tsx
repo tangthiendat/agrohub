@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useState } from "react";
-import { HttpMethod } from "../../common/enums";
-import { useLoggedInUser } from "../../common/hooks";
 import NotPermitted from "./NotPermitted";
+import { useLoggedInUser } from "../../common/hooks";
+import { HttpMethod } from "../../common/enums";
 
 interface Props extends PropsWithChildren {
   hideChildren?: boolean;
