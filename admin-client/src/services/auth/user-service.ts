@@ -5,8 +5,8 @@ import {
   IUser,
   Page,
   PaginationParams,
-  PermissionFilterCriteria,
   SortParams,
+  UserFilterCriteria,
 } from "../../interfaces";
 
 interface IUserService {
@@ -14,7 +14,7 @@ interface IUserService {
   getPage(
     pagination: PaginationParams,
     sort?: SortParams,
-    filter?: PermissionFilterCriteria,
+    filter?: UserFilterCriteria,
   ): Promise<ApiResponse<Page<IUser>>>;
   create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<void>>;
   update(userId: string, updatedUser: IUser): Promise<ApiResponse<void>>;
@@ -33,7 +33,7 @@ class UserService implements IUserService {
   async getPage(
     pagination: PaginationParams,
     sort?: SortParams,
-    filter?: PermissionFilterCriteria,
+    filter?: UserFilterCriteria,
   ): Promise<ApiResponse<Page<IUser>>> {
     return (
       await apiClient.get("/page", {

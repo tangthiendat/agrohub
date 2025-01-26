@@ -1,6 +1,7 @@
 package com.ttdat.authservice.application.mappers;
 
 import com.ttdat.authservice.api.dto.common.UserDTO;
+import com.ttdat.authservice.domain.entities.Role;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
 import com.ttdat.authservice.domain.events.user.UserUpdatedEvent;
@@ -21,10 +22,19 @@ public interface UserMapper extends EntityMapper<UserDTO, User> {
     User toEntity(UserCreatedEvent userCreatedEvent);
 
     @Mappings({
-            @Mapping(target = "role.roleId", source = "roleId"),
+            @Mapping(target = "role", ignore = true),
             @Mapping(target = "password", ignore = true),
-            @Mapping(target = "role.permissions", ignore = true)
     })
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent);
+
+    @BeforeMapping
+    default void updateUserRole(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent) {
+        if (userUpdatedEvent.getRoleId() != null) {
+            Role role = user.getRole();
+            if (role == null || !role.getRoleId().equals(userUpdatedEvent.getRoleId())) {
+                user.setRole(Role.builder().roleId(userUpdatedEvent.getRoleId()).build());
+            }
+        }
+    }
 }

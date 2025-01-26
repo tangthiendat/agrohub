@@ -4,10 +4,12 @@ import com.ttdat.authservice.application.exception.DuplicateResourceException;
 import com.ttdat.authservice.application.exception.ErrorCode;
 import com.ttdat.authservice.application.exception.ResourceNotFoundException;
 import com.ttdat.authservice.application.mappers.UserMapper;
+import com.ttdat.authservice.domain.entities.Role;
 import com.ttdat.authservice.domain.entities.User;
 import com.ttdat.authservice.domain.events.user.UserCreatedEvent;
 import com.ttdat.authservice.domain.events.user.UserStatusUpdatedEvent;
 import com.ttdat.authservice.domain.events.user.UserUpdatedEvent;
+import com.ttdat.authservice.domain.repositories.RoleRepository;
 import com.ttdat.authservice.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserEventHandler {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
     @Transactional
