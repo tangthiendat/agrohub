@@ -75,7 +75,7 @@ const PermissionTable: React.FC = () => {
         );
       }
     }),
-    queryFn: () => permissionService.getPage(pagination, filter, sort),
+    queryFn: () => permissionService.getPage(pagination, sort, filter),
   });
 
   useEffect(() => {

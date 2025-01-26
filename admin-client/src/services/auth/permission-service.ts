@@ -13,8 +13,8 @@ interface IPermissionService {
   getAll(): Promise<ApiResponse<IPermission[]>>;
   getPage(
     pagination: PaginationParams,
-    filter?: PermissionFilterCriteria,
     sort?: SortParams,
+    filter?: PermissionFilterCriteria,
   ): Promise<ApiResponse<Page<IPermission>>>;
   create(
     newPermission: Omit<IPermission, "permissionId">,
@@ -40,8 +40,8 @@ class PermissionService implements IPermissionService {
 
   async getPage(
     pagination: PaginationParams,
-    filter?: PermissionFilterCriteria,
     sort?: SortParams,
+    filter?: PermissionFilterCriteria,
   ): Promise<ApiResponse<Page<IPermission>>> {
     return (
       await apiClient.get("/page", {
