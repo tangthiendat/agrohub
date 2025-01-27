@@ -1,26 +1,43 @@
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { TableProps } from "antd/lib";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import ViewUser from "./ViewUser";
-import Access from "../Access";
-import UpdateUser from "./UpdateUser";
 import { GENDER_NAME, PERMISSIONS } from "../../../common/constants";
 import { Gender, Module } from "../../../common/enums";
-import { IUser, SortParams } from "../../../interfaces";
-import { userService } from "../../../services";
-import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
+import { IUser, Page } from "../../../interfaces";
+import { roleService } from "../../../services/auth/role-service";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../../utils/color";
 import { formatDate } from "../../../utils/datetime";
-import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../../utils/filter";
+import Access from "../Access";
+import UpdateUser from "./UpdateUser";
 import UpdateUserStatus from "./UpdateUserStatus";
+import ViewUser from "./ViewUser";
+
+interface UserTableProps {
+  userPage?: Page<IUser>;
+  isLoading: boolean;
+}
 
 interface TableParams {
   pagination: TablePaginationConfig;
 }
 
-const UserTable: React.FC = () => {
+const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
@@ -31,28 +48,31 @@ const UserTable: React.FC = () => {
     },
   }));
 
-  const pagination = {
-    page: Number(searchParams.get("page")) || 1,
-    pageSize: Number(searchParams.get("pageSize")) || 10,
-  };
-
-  const sort: SortParams = {
-    sortBy: searchParams.get("sortBy") || "",
-    direction: searchParams.get("direction") || "",
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["users", pagination, sort].filter((key) => {
-      if (typeof key === "string") {
-        return key !== "";
-      } else if (key instanceof Object) {
-        return Object.values(key).some(
-          (value) => value !== undefined && value !== "",
-        );
+  const { data: roleOptions, isLoading: isRolesLoading } = useQuery({
+    queryKey: ["roles"],
+    queryFn: roleService.getAll,
+    select: (data) => {
+      if (data.payload) {
+        return data.payload.map((role) => ({
+          value: role.roleName,
+          text: role.roleName,
+        }));
       }
-    }),
-    queryFn: () => userService.getPage(pagination, sort),
+    },
   });
+
+  useEffect(() => {
+    if (userPage) {
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          total: userPage.meta?.totalElements || 0,
+          showTotal: (total) => `Tổng ${total} sân bay`,
+        },
+      }));
+    }
+  }, [userPage]);
 
   const handleTableChange: TableProps<IUser>["onChange"] = (
     pagination,
@@ -67,6 +87,20 @@ const UserTable: React.FC = () => {
     }));
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          searchParams.set(key, value.join(","));
+        } else {
+          if (value) {
+            searchParams.set(key, `${value}`);
+          } else {
+            searchParams.delete(key);
+          }
+        }
+      });
+    }
 
     let sortBy;
     let direction;
@@ -105,6 +139,14 @@ const UserTable: React.FC = () => {
       key: "gender",
       width: "8%",
       render: (gender: Gender) => GENDER_NAME[gender],
+      filters: Object.entries(GENDER_NAME).map(([key, value]) => ({
+        text: value,
+        value: key,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "gender"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
     },
     {
       title: "Ngày sinh",
@@ -137,6 +179,20 @@ const UserTable: React.FC = () => {
           {active ? "Đã kích hoạt" : "Chưa kích hoạt"}
         </Tag>
       ),
+      filters: [
+        {
+          text: "Đã kích hoạt",
+          value: true,
+        },
+        {
+          text: "Chưa kích hoạt",
+          value: false,
+        },
+      ],
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "active"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
     },
     {
       title: "Số điện thoại",
@@ -150,6 +206,11 @@ const UserTable: React.FC = () => {
       key: "role",
       width: "10%",
       render: (role) => role.roleName,
+      filters: roleOptions,
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "role"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
     },
     {
       title: "Hành động",
@@ -177,13 +238,13 @@ const UserTable: React.FC = () => {
       columns={columns}
       rowKey={(record: IUser) => record.userId}
       pagination={tableParams.pagination}
-      dataSource={data?.payload?.content}
+      dataSource={userPage?.content}
       rowClassName={(_, index) =>
         index % 2 === 0 ? "table-row-light" : "table-row-gray"
       }
       rowHoverable={false}
       loading={{
-        spinning: isLoading,
+        spinning: isLoading || isRolesLoading,
         tip: "Đang tải dữ liệu...",
       }}
       onChange={handleTableChange}

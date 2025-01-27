@@ -23,7 +23,7 @@ public class FilterUtils {
         return sortOrders;
     }
 
-    public List<FilterCriteria> getFilterCriteria(Map<String, String> filters, String key) {
+    public List<FilterCriteria> getFilterCriteriaList(Map<String, String> filters, String key) {
         List<FilterCriteria> filterCriteriaList = new ArrayList<>();
         String value = filters.get(key);
         if(value != null && !value.isEmpty()) {

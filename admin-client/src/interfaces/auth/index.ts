@@ -47,3 +47,10 @@ export interface PermissionFilterCriteria {
   httpMethod?: string;
   module?: string;
 }
+
+export interface UserFilterCriteria {
+  gender?: string;
+  query?: string;
+  active?: boolean;
+  role?: string;
+}

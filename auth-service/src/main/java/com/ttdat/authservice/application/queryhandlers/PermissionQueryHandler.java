@@ -39,8 +39,8 @@ public class PermissionQueryHandler {
         int page = getPermissionPageQuery.getPaginationParams().getPage();
         int pageSize = getPermissionPageQuery.getPaginationParams().getPageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
-        Specification<Permission> spec = getPermissionPageSpec(getPermissionPageQuery.getFilterParams());
-        org.springframework.data.domain.Page<Permission> permissionPage = permissionRepository.findAll(spec, pageable);
+        Specification<Permission> permissionPageSpec = getPermissionPageSpec(getPermissionPageQuery.getFilterParams());
+        org.springframework.data.domain.Page<Permission> permissionPage = permissionRepository.findAll(permissionPageSpec, pageable);
         PaginationMeta paginationMeta = PaginationMeta.builder()
                 .page(permissionPage.getNumber() + 1)
                 .pageSize(permissionPage.getSize())
@@ -54,21 +54,26 @@ public class PermissionQueryHandler {
     }
 
     private Specification<Permission> getPermissionPageSpec(Map<String, String> filterParams) {
-        Specification<Permission> spec = Specification.where(null);
-        List<FilterCriteria> methodCriteria = filterUtils.getFilterCriteria(filterParams, "httpMethod");
-        List<FilterCriteria> moduleCriteria = filterUtils.getFilterCriteria(filterParams, "module");
-        Specification<Permission> methodSpec = Specification.where(null);
-        for (FilterCriteria criteria : methodCriteria) {
-            methodSpec = methodSpec.or(((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("httpMethod"), criteria.getValue())));
+        Specification<Permission> permissionPageSpec = Specification.where(null);
+        if(filterParams.containsKey("httpMethod")){
+            List<FilterCriteria> methodCriteria = filterUtils.getFilterCriteriaList(filterParams, "httpMethod");
+            Specification<Permission> methodSpec = methodCriteria.stream()
+                    .map(criteria -> (Specification<Permission>) (root, query, criteriaBuilder) ->
+                            criteriaBuilder.equal(root.get("httpMethod"), criteria.getValue()))
+                    .reduce(Specification::or)
+                    .orElse(Specification.where(null));
+            permissionPageSpec = permissionPageSpec.and(methodSpec);
         }
-        Specification<Permission> moduleSpec = Specification.where(null);
-        for (FilterCriteria criteria : moduleCriteria) {
-            moduleSpec = moduleSpec.or(((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("module"), criteria.getValue())));
+        if(filterParams.containsKey("method")){
+            List<FilterCriteria> moduleCriteria = filterUtils.getFilterCriteriaList(filterParams, "module");
+            Specification<Permission> moduleSpec = moduleCriteria.stream()
+                    .map(criteria -> (Specification<Permission>) (root, query, criteriaBuilder) ->
+                            criteriaBuilder.equal(root.get("module"), criteria.getValue()))
+                    .reduce(Specification::or)
+                    .orElse(Specification.where(null));
+            permissionPageSpec = permissionPageSpec.and(moduleSpec);
         }
-        spec = spec.and(methodSpec).and(moduleSpec);
-        return spec;
+        return permissionPageSpec;
     }
 
 }
