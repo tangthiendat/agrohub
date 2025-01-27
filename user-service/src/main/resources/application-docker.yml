@@ -1,11 +1,13 @@
 server:
   port: 8080
   servlet:
-    context-path: /auth-service
+    context-path: /user-service
 
 spring:
+  main:
+    allow-bean-definition-overriding: true
   application:
-    name: auth-service
+    name: user-service
   threads:
     virtual:
       enabled: true

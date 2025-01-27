@@ -7,7 +7,7 @@ interface IAuthService {
   logout(): Promise<ApiResponse<void>>;
 }
 
-const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/auth", {
+const apiClient: AxiosInstance = createApiClient("api/v1/auth", {
   auth: false,
 });
 class AuthService implements IAuthService {
