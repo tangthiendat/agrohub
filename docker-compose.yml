@@ -2,12 +2,12 @@ networks:
   agrohub:
     external: true
 services:
-  auth-service:
-    build: ./auth-service
-    image: agrohub/auth-service:dev
-    container_name: auth-service
+  user-service:
+    build: ./user-service
+    image: agrohub/user-service:dev
+    container_name: user-service
     env_file:
-      - ./auth-service/.env.docker
+      - ./user-service/.env.docker
     ports:
       - "8080:8080"
     networks:
