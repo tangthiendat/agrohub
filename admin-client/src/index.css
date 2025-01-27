@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  html {
+    height: 100%;
+    line-height: 1.2;
+  }
+
+  body {
+    min-width: 440px;
+  }
+
+  .logo-font {
+    font-family: "Tomorrow", sans-serif;
+  }
+
+  .card {
+    @apply bg-white px-6 py-4;
+  }
+
+  .table-row-light,
+  .table-row-light .ant-table-cell.ant-table-column-sort {
+    @apply bg-white;
+  }
+
+  .table-row-gray,
+  .table-row-gray .ant-table-cell.ant-table-column-sort {
+    @apply bg-gray-100;
+  }
+}

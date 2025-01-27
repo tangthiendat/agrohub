@@ -126,6 +126,8 @@ services:
     image: axoniq/axonserver
     container_name: axon-server
     hostname: axonserver
+    environment:
+      AXONIQ_AXONSERVER_STANDALONE: true
     volumes:
       - ${DOCKER_DATA}/ct553/axon-server/data:/data
       - ${DOCKER_DATA}/ct553/axon-server/event:/eventdata
