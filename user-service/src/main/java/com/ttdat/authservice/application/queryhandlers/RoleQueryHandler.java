@@ -23,7 +23,6 @@ import java.util.List;
 public class RoleQueryHandler {
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
-    private final FilterUtils filterUtils;
 
     @QueryHandler
     public List<RoleOption> handle(GetAllRolesQuery query) {
@@ -32,7 +31,7 @@ public class RoleQueryHandler {
 
     @QueryHandler
     public RolePageResult handle(GetRolePageQuery getRolePageQuery) {
-        List<Sort.Order> sortOrders = filterUtils.toSortOrders(getRolePageQuery.getSortParams());
+        List<Sort.Order> sortOrders = FilterUtils.toSortOrders(getRolePageQuery.getSortParams());
         int page = getRolePageQuery.getPaginationParams().getPage();
         int pageSize = getRolePageQuery.getPaginationParams().getPageSize();
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
