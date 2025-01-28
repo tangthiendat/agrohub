@@ -139,19 +139,16 @@ services:
     networks:
       - agrohub
 
-  auth-service-db:
-    image: postgres:16.4-alpine
-    container_name: auth-service-db
+  user-service-db:
+    image: mariadb:11-noble
+    container_name: user-service-db
     environment:
-      POSTGRES_DB: auth_service
-      POSTGRES_USER: auth_service
-      POSTGRES_PASSWORD: 123456
+      MARIADB_DATABASE: user_service
+      MARIADB_ROOT_PASSWORD: 123456
     ports:
-      - "5433:5433"
+      - "3306:3306"
     volumes:
-      - ${DOCKER_DATA}/ct553/auth-service:/var/lib/postgresql/data
-      - ./config/auth-service-db.conf:/etc/postgresql/auth-service-db.conf
-    command: postgres -c config_file=/etc/postgresql/auth-service-db.conf
+      - ${DOCKER_DATA}/ct553/user-service:/var/lib/mysql:Z
     networks:
       - agrohub
 

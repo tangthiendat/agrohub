@@ -64,7 +64,7 @@ public class PermissionQueryHandler {
                     .orElse(Specification.where(null));
             permissionPageSpec = permissionPageSpec.and(methodSpec);
         }
-        if(filterParams.containsKey("method")){
+        if(filterParams.containsKey("module")){
             List<FilterCriteria> moduleCriteria = filterUtils.getFilterCriteriaList(filterParams, "module");
             Specification<Permission> moduleSpec = moduleCriteria.stream()
                     .map(criteria -> (Specification<Permission>) (root, query, criteriaBuilder) ->

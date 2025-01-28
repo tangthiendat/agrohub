@@ -105,8 +105,7 @@ public class UserQueryHandler {
             Specification<User> querySpec = (root, query, criteriaBuilder) -> {
                 String likePattern = "%" + searchValue + "%";
                 return criteriaBuilder.or(
-                        criteriaBuilder.like(criteriaBuilder.function("unaccent", String.class, criteriaBuilder.lower(root.get("fullName"))),
-                                likePattern),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("fullName")), likePattern),
                         criteriaBuilder.like(root.get("email"), likePattern),
                         criteriaBuilder.like(root.get("phoneNumber"), likePattern)
                 );

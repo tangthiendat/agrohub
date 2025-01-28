@@ -11,8 +11,8 @@
     <groupId>com.ttdat</groupId>
     <artifactId>auth-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>auth-service</name>
-    <description>auth-service</description>
+    <name>user-service</name>
+    <description>user-service</description>
     <url/>
     <licenses>
         <license/>
@@ -53,17 +53,23 @@
             <optional>true</optional>
             <version>3.4.1</version>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.postgresql</groupId>-->
+        <!--            <artifactId>postgresql</artifactId>-->
+        <!--            <scope>runtime</scope>-->
+        <!--            <version>42.7.4</version>-->
+        <!--        </dependency>-->
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
             <scope>runtime</scope>
-            <version>42.7.4</version>
+            <version>3.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
             <scope>provided</scope>
+            <version>1.18.36</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>

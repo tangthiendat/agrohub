@@ -37,7 +37,7 @@ public class JwtUtils {
                 .subject(user.getUserId().toString())
                 .issuedAt(Instant.now())
                 .id(UUID.randomUUID().toString())
-                .issuer("CT553-Auth-Service")
+                .issuer("AGROHUB-User-Service")
                 .expiresAt(Instant.now().plus(tokenDurationInSeconds, ChronoUnit.SECONDS))
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(SignatureAlgorithm.RS256).build();

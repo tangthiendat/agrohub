@@ -19,7 +19,7 @@ public class AxonConfig {
 
 
     @Bean
-    public ConfigurerModule processingGroupErrorHandlingConfigurerModule() {
+    public ConfigurerModule errorHandlingConfigurerModule() {
         return configurer -> configurer.eventProcessing(processingConfigurer ->
                 processingConfigurer
                         .registerDefaultListenerInvocationErrorHandler(

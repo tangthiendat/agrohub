@@ -17,6 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Permission extends Auditable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long permissionId;
 
     String permissionName;
