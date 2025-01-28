@@ -19,6 +19,7 @@ import java.util.List;
 public class Role extends Auditable implements GrantedAuthority {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long roleId;
 
     String roleName;

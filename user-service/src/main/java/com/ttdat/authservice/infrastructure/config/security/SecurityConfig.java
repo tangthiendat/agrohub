@@ -57,7 +57,8 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(requests ->
                         requests
-                                .requestMatchers("/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/auth/login",
+                                        "/api/v1/auth/refresh-token").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
@@ -68,7 +69,7 @@ public class SecurityConfig {
                                 .authenticationEntryPoint(projectAuthenticationEntryPoint)
                 )
                 .addFilterBefore(jwtBlacklistFilter, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterAfter(jwtAuthFilter, JwtBlacklistFilter.class)
+//                .addFilterAfter(jwtAuthFilter, JwtBlacklistFilter.class)s
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();
