@@ -3,7 +3,6 @@ package com.ttdat.authservice.infrastructure.config.security;
 import com.ttdat.authservice.application.exception.AuthException;
 import com.ttdat.authservice.application.exception.ErrorCode;
 import com.ttdat.authservice.application.queries.auth.CheckPermissionQuery;
-import com.ttdat.authservice.domain.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +18,13 @@ import org.springframework.web.servlet.HandlerMapping;
 @Component
 @RequiredArgsConstructor
 public class PermissionInterceptor implements HandlerInterceptor {
-    private final UserRepository userRepository;
     private final QueryGateway queryGateway;
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request,
                              @NonNull HttpServletResponse response,
                              @NonNull Object handler)  {
-        String contextPath = request.getContextPath();
-        String path = contextPath + request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        String path = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
         String httpMethod = request.getMethod();
         CheckPermissionQuery query = CheckPermissionQuery.builder()
                 .path(path)

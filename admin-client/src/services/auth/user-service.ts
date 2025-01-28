@@ -21,7 +21,7 @@ interface IUserService {
   updateStatus(userId: string, active: boolean): Promise<ApiResponse<void>>;
 }
 
-const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/users", {
+const apiClient: AxiosInstance = createApiClient("api/v1/users", {
   auth: true,
 });
 

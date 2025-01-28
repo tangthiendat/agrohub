@@ -32,7 +32,7 @@ const Users: React.FC = () => {
         : searchParams.get("active") == "false"
           ? false
           : undefined,
-    role: searchParams.get("role") || undefined,
+    roleName: searchParams.get("roleName") || undefined,
   };
 
   const { data, isLoading } = useQuery({

@@ -26,12 +26,9 @@ interface IPermissionService {
   delete(permissionId: number): Promise<ApiResponse<void>>;
 }
 
-const apiClient: AxiosInstance = createApiClient(
-  "auth-service/api/v1/permissions",
-  {
-    auth: true,
-  },
-);
+const apiClient: AxiosInstance = createApiClient("api/v1/permissions", {
+  auth: true,
+});
 
 class PermissionService implements IPermissionService {
   async getAll(): Promise<ApiResponse<IPermission[]>> {

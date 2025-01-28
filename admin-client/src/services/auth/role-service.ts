@@ -19,7 +19,7 @@ interface IRoleService {
   updateStatus(roleId: number, active: boolean): Promise<ApiResponse<void>>;
 }
 
-const apiClient: AxiosInstance = createApiClient("auth-service/api/v1/roles", {
+const apiClient: AxiosInstance = createApiClient("api/v1/roles", {
   auth: true,
 });
 

@@ -1,6 +1,9 @@
 package com.ttdat.authservice.infrastructure.services;
 
 public interface IdGeneratorService {
-    public Long generatePermissionId();
-    public Long generateRoleId();
+    Long generatePermissionId();
+
+    Long generateRoleId();
+
+    Long getNextId(String tableName);
 }

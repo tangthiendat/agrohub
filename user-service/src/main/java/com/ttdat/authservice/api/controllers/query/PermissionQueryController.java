@@ -26,7 +26,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PermissionQueryController {
     private final QueryGateway queryGateway;
-    private final RequestParamsUtils requestParamsUtils;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<PermissionDTO>>> getPermissions() {
@@ -42,8 +41,8 @@ public class PermissionQueryController {
 
     @GetMapping("/page")
     public ResponseEntity<ApiResponse<PermissionPageResult>> getPermissionPage(@RequestParam Map<String, String> filterParams) {
-        PaginationParams paginationParams = requestParamsUtils.getPaginationParams(filterParams);
-        SortParams sortParams = requestParamsUtils.getSortParams(filterParams);
+        PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
+        SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetPermissionPageQuery getPermissionPageQuery = GetPermissionPageQuery.builder()
                 .paginationParams(paginationParams)
                 .sortParams(sortParams)
