@@ -91,11 +91,20 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
+          if (key === "role") {
+            searchParams.set("roleName", value.join(","));
+          }
           searchParams.set(key, value.join(","));
         } else {
           if (value) {
+            if (key === "role") {
+              searchParams.set("roleName", `${value}`);
+            }
             searchParams.set(key, `${value}`);
           } else {
+            if (key === "role") {
+              searchParams.delete("roleName");
+            }
             searchParams.delete(key);
           }
         }

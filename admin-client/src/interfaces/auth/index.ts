@@ -52,5 +52,5 @@ export interface UserFilterCriteria {
   gender?: string;
   query?: string;
   active?: boolean;
-  role?: string;
+  roleName?: string;
 }

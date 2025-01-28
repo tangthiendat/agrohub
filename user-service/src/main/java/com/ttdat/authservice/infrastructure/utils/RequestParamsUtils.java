@@ -9,7 +9,10 @@ import java.util.Map;
 @Component
 public class RequestParamsUtils {
 
-    public PaginationParams getPaginationParams(Map<String, String> requestParams) {
+    private RequestParamsUtils() {
+    }
+
+    public static PaginationParams getPaginationParams(Map<String, String> requestParams) {
         int page = Integer.parseInt(requestParams.getOrDefault("page", "1"));
         int pageSize = Integer.parseInt(requestParams.getOrDefault("pageSize", "10"));
         requestParams.remove("page");
@@ -20,7 +23,7 @@ public class RequestParamsUtils {
                 .build();
     }
 
-    public SortParams getSortParams(Map<String, String> requestParams) {
+    public static SortParams getSortParams(Map<String, String> requestParams) {
         String sortBy = requestParams.getOrDefault("sortBy", "createdAt");
         String direction = requestParams.getOrDefault("direction", "desc");
         requestParams.remove("sortBy");

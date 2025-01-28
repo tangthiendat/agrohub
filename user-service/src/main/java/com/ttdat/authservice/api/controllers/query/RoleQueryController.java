@@ -26,7 +26,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RoleQueryController {
     private final QueryGateway queryGateway;
-    private final RequestParamsUtils requestParamsUtils;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<RoleOption>>> getRoles() {
@@ -42,8 +41,8 @@ public class RoleQueryController {
 
     @GetMapping("/page")
     public ResponseEntity<ApiResponse<RolePageResult>> getRolePage(@RequestParam Map<String, String> filterParams) {
-        PaginationParams paginationParams = requestParamsUtils.getPaginationParams(filterParams);
-        SortParams sortParams = requestParamsUtils.getSortParams(filterParams);
+        PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
+        SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetRolePageQuery getRolePageQuery = GetRolePageQuery.builder()
                 .paginationParams(paginationParams)
                 .sortParams(sortParams)
