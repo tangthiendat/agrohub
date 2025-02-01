@@ -6,7 +6,6 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.ttdat.userservice.infrastructure.filters.JwtAuthFilter;
 import com.ttdat.userservice.infrastructure.filters.JwtBlacklistFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -40,7 +39,6 @@ public class SecurityConfig {
     private final RSAKeyRecord rsaKeyRecord;
     private final ProjectAuthenticationEntryPoint projectAuthenticationEntryPoint;
     private final JwtBlacklistFilter jwtBlacklistFilter;
-    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -69,7 +67,6 @@ public class SecurityConfig {
                                 .authenticationEntryPoint(projectAuthenticationEntryPoint)
                 )
                 .addFilterBefore(jwtBlacklistFilter, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterAfter(jwtAuthFilter, JwtBlacklistFilter.class)s
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();
