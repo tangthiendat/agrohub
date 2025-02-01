@@ -16,11 +16,11 @@ RUN unlink /etc/localtime;ln -s  /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/local
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar /app/auth-service.jar
+COPY --from=build /app/target/*.jar /app/user-service.jar
 
 EXPOSE 8080
 
 ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
 ENV SPRING_PROFILES_ACTIVE="docker"
 
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTIONS} -jar /app/auth-service.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTIONS} -jar /app/user-service.jar"]
