@@ -1,8 +1,6 @@
 package com.ttdat.userservice.infrastructure.filters;
 
-import com.ttdat.userservice.application.exception.AuthException;
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.queries.auth.IsTokenBlacklistedQuery;
+import com.ttdat.userservice.application.queries.auth.GetAuthenticationByIdQuery;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,8 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,24 +20,24 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@Order(1)
+@Order(2)
 @RequiredArgsConstructor
-public class JwtBlacklistFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
     private final QueryGateway queryGateway;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException, AuthException {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            IsTokenBlacklistedQuery isTokenBlacklistedQuery = IsTokenBlacklistedQuery.builder()
-                    .token(token)
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+        String userId = request.getHeader("X-User-ID");
+        if(userId != null){
+            GetAuthenticationByIdQuery query = GetAuthenticationByIdQuery.builder()
+                    .userId(userId)
                     .build();
-            boolean isBlacklisted = queryGateway.query(isTokenBlacklistedQuery, ResponseTypes.instanceOf(Boolean.class)).join();
-            if(isBlacklisted) {
-                throw new AuthException(ErrorCode.TOKEN_NOT_VALID);
+            Authentication authentication = queryGateway.query(query, ResponseTypes.instanceOf(Authentication.class)).join();
+            if(authentication != null){
+                log.info("Authentication from JwtAuthFilter: {}", authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
         filterChain.doFilter(request, response);
