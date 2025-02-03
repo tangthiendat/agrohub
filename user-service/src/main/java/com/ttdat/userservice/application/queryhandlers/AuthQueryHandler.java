@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,20 +32,10 @@ public class AuthQueryHandler {
     @QueryHandler
     public boolean handle(CheckPermissionQuery checkPermissionQuery){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        if (email != null) {
-            Optional<User> optionalUser = userRepository.findByEmail(email);
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                Role role = user.getRole();
-                if (role != null) {
-                    return role.getPermissions().stream()
-                            .anyMatch(permission -> permission.getApiPath().equals(checkPermissionQuery.getPath())
-                                    && permission.getHttpMethod().equals(checkPermissionQuery.getHttpMethod())) && role.isActive();
-                }
-            }
-        }
-        return false;
+        Role authRole = ((List<Role>) authentication.getAuthorities()).getFirst();
+        return authRole.isActive() && authRole.getPermissions().stream()
+                .anyMatch(permission -> permission.getApiPath().equals(checkPermissionQuery.getPath())
+                        && permission.getHttpMethod().equals(checkPermissionQuery.getHttpMethod()));
     }
 
     @QueryHandler

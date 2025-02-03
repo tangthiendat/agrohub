@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
@@ -26,6 +28,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
                              @NonNull Object handler)  {
         String path = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
         String httpMethod = request.getMethod();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CheckPermissionQuery query = CheckPermissionQuery.builder()
                 .path(path)
                 .httpMethod(httpMethod)

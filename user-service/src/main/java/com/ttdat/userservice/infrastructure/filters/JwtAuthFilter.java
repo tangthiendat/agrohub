@@ -36,7 +36,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     .build();
             Authentication authentication = queryGateway.query(query, ResponseTypes.instanceOf(Authentication.class)).join();
             if(authentication != null){
-                log.info("Authentication from JwtAuthFilter: {}", authentication);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
