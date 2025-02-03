@@ -1,7 +1,7 @@
 package com.ttdat.userservice.application.queryhandlers;
 
+import com.ttdat.core.api.dto.response.PaginationMeta;
 import com.ttdat.userservice.api.dto.common.PermissionDTO;
-import com.ttdat.userservice.api.dto.response.PaginationMeta;
 import com.ttdat.userservice.api.dto.response.PermissionPageResult;
 import com.ttdat.userservice.application.mappers.PermissionMapper;
 import com.ttdat.userservice.application.queries.permission.GetAllPermissionsQuery;

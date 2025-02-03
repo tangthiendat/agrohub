@@ -2,8 +2,8 @@ package com.ttdat.userservice.application.queries.role;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ttdat.userservice.api.dto.request.PaginationParams;
-import com.ttdat.userservice.api.dto.request.SortParams;
+import com.ttdat.core.api.dto.request.PaginationParams;
+import com.ttdat.core.api.dto.request.SortParams;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;

@@ -1,7 +1,7 @@
 package com.ttdat.userservice.application.eventhandlers;
 
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.exception.ResourceNotFoundException;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.userservice.application.mappers.RoleMapper;
 import com.ttdat.userservice.domain.entities.Role;
 import com.ttdat.userservice.domain.events.role.RoleCreatedEvent;

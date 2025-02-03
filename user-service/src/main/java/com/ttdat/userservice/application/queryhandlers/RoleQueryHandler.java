@@ -1,6 +1,6 @@
 package com.ttdat.userservice.application.queryhandlers;
 
-import com.ttdat.userservice.api.dto.response.PaginationMeta;
+import com.ttdat.core.api.dto.response.PaginationMeta;
 import com.ttdat.userservice.api.dto.response.RoleOption;
 import com.ttdat.userservice.api.dto.response.RolePageResult;
 import com.ttdat.userservice.application.mappers.RoleMapper;

@@ -1,5 +1,6 @@
 package com.ttdat.userservice.application.mappers;
 
+import com.ttdat.core.api.dto.response.AuthRole;
 import com.ttdat.userservice.api.dto.common.RoleDTO;
 import com.ttdat.userservice.api.dto.response.RoleOption;
 import com.ttdat.userservice.domain.entities.Role;
@@ -15,6 +16,8 @@ import java.util.List;
 public interface RoleMapper extends EntityMapper<RoleDTO, Role> {
 
     List<RoleOption> toRoleOptions(List<Role> roles);
+
+    AuthRole toAuthRole(Role role);
 
     @Mapping(target = "permissions", source = "permissionIds", qualifiedByName = "permissionIdsToEntities")
     Role toEntity(RoleCreatedEvent roleCreatedEvent);

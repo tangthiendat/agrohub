@@ -1,10 +1,10 @@
 package com.ttdat.userservice.application.queryhandlers;
 
+import com.ttdat.core.api.dto.response.PaginationMeta;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.userservice.api.dto.common.UserDTO;
-import com.ttdat.userservice.api.dto.response.PaginationMeta;
 import com.ttdat.userservice.api.dto.response.UserPageResult;
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.exception.ResourceNotFoundException;
 import com.ttdat.userservice.application.mappers.UserMapper;
 import com.ttdat.userservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.userservice.application.queries.user.GetUserByIdQuery;

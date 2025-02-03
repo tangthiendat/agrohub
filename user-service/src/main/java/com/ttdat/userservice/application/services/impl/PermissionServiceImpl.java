@@ -1,10 +1,10 @@
 package com.ttdat.userservice.application.services.impl;
 
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.userservice.api.dto.common.PermissionDTO;
 import com.ttdat.userservice.application.commands.permission.CreatePermissionCommand;
 import com.ttdat.userservice.application.commands.permission.DeletePermissionCommand;
 import com.ttdat.userservice.application.commands.permission.UpdatePermissionCommand;
-import com.ttdat.userservice.application.exception.ResourceNotFoundException;
 import com.ttdat.userservice.application.services.PermissionService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;

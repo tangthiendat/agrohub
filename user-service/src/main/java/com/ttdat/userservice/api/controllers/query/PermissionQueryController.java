@@ -1,9 +1,9 @@
 package com.ttdat.userservice.api.controllers.query;
 
+import com.ttdat.core.api.dto.request.PaginationParams;
+import com.ttdat.core.api.dto.request.SortParams;
+import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.common.PermissionDTO;
-import com.ttdat.userservice.api.dto.request.PaginationParams;
-import com.ttdat.userservice.api.dto.request.SortParams;
-import com.ttdat.userservice.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.response.PermissionPageResult;
 import com.ttdat.userservice.application.queries.permission.GetAllPermissionsQuery;
 import com.ttdat.userservice.application.queries.permission.GetPermissionPageQuery;

@@ -1,8 +1,8 @@
 package com.ttdat.userservice.api.controllers.query;
 
-import com.ttdat.userservice.api.dto.request.PaginationParams;
-import com.ttdat.userservice.api.dto.request.SortParams;
-import com.ttdat.userservice.api.dto.response.ApiResponse;
+import com.ttdat.core.api.dto.request.PaginationParams;
+import com.ttdat.core.api.dto.request.SortParams;
+import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.response.RoleOption;
 import com.ttdat.userservice.api.dto.response.RolePageResult;
 import com.ttdat.userservice.application.queries.role.GetAllRolesQuery;

@@ -1,8 +1,8 @@
 package com.ttdat.userservice.infrastructure.filters;
 
-import com.ttdat.userservice.application.exception.AuthException;
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.queries.auth.IsTokenBlacklistedQuery;
+import com.ttdat.core.application.exceptions.AuthException;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.queries.auth.IsTokenBlacklistedQuery;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,6 @@ import java.io.IOException;
 
 @Slf4j
 @Component
-@Order(1)
 @RequiredArgsConstructor
 public class JwtBlacklistFilter extends OncePerRequestFilter {
     private final QueryGateway queryGateway;

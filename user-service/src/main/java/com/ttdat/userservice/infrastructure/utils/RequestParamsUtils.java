@@ -1,7 +1,7 @@
 package com.ttdat.userservice.infrastructure.utils;
 
-import com.ttdat.userservice.api.dto.request.PaginationParams;
-import com.ttdat.userservice.api.dto.request.SortParams;
+import com.ttdat.core.api.dto.request.PaginationParams;
+import com.ttdat.core.api.dto.request.SortParams;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

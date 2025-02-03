@@ -1,7 +1,7 @@
 package com.ttdat.userservice.infrastructure.utils;
 
-import com.ttdat.userservice.api.dto.request.FilterCriteria;
-import com.ttdat.userservice.api.dto.request.SortParams;
+import com.ttdat.core.api.dto.request.FilterCriteria;
+import com.ttdat.core.api.dto.request.SortParams;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;

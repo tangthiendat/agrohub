@@ -95,6 +95,11 @@
             <artifactId>dotenv-java</artifactId>
             <version>3.1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.ttdat</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

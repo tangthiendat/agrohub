@@ -1,8 +1,8 @@
 package com.ttdat.userservice.infrastructure.config.security;
 
-import com.ttdat.userservice.application.exception.AuthException;
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.queries.auth.CheckPermissionQuery;
+import com.ttdat.core.application.exceptions.AuthException;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.queries.auth.CheckPermissionQuery;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

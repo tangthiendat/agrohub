@@ -1,8 +1,11 @@
 package com.ttdat.userservice.application.exception;
 
-import com.ttdat.userservice.api.dto.response.ApiError;
-import com.ttdat.userservice.api.dto.response.ApiResponse;
-import com.ttdat.userservice.api.dto.response.ErrorDetail;
+import com.ttdat.core.api.dto.response.ApiError;
+import com.ttdat.core.api.dto.response.ApiResponse;
+import com.ttdat.core.api.dto.response.ErrorDetail;
+import com.ttdat.core.application.exceptions.AuthException;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.springframework.http.HttpHeaders;

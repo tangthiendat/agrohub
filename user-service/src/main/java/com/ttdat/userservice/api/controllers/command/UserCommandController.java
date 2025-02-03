@@ -1,8 +1,8 @@
 package com.ttdat.userservice.api.controllers.command;
 
+import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.api.dto.request.UpdateUserStatusRequest;
-import com.ttdat.userservice.api.dto.response.ApiResponse;
 import com.ttdat.userservice.application.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

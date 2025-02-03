@@ -1,9 +1,9 @@
 package com.ttdat.userservice.api.controllers.query;
 
+import com.ttdat.core.api.dto.request.PaginationParams;
+import com.ttdat.core.api.dto.request.SortParams;
+import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.common.UserDTO;
-import com.ttdat.userservice.api.dto.request.PaginationParams;
-import com.ttdat.userservice.api.dto.request.SortParams;
-import com.ttdat.userservice.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.response.UserPageResult;
 import com.ttdat.userservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.userservice.application.queries.user.GetUserPageQuery;
@@ -26,12 +26,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserQueryController {
     private final QueryGateway queryGateway;
-    private final RequestParamsUtils requestParamsUtils;
 
     @GetMapping("/page")
     public ResponseEntity<ApiResponse<UserPageResult>> getUserPage(@RequestParam Map<String, String> filterParams) {
-        PaginationParams paginationParams = requestParamsUtils.getPaginationParams(filterParams);
-        SortParams sortParams = requestParamsUtils.getSortParams(filterParams);
+        PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
+        SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetUserPageQuery getUserPageQuery = GetUserPageQuery.builder()
                 .paginationParams(paginationParams)
                 .sortParams(sortParams)

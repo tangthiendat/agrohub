@@ -1,10 +1,11 @@
 package com.ttdat.userservice.application.queryhandlers;
 
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.exception.ResourceNotFoundException;
-import com.ttdat.userservice.application.queries.auth.CheckPermissionQuery;
-import com.ttdat.userservice.application.queries.auth.GetAuthenticationByIdQuery;
-import com.ttdat.userservice.application.queries.auth.IsTokenBlacklistedQuery;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.core.application.queries.auth.CheckPermissionQuery;
+import com.ttdat.core.application.queries.auth.GetAuthenticationByIdQuery;
+import com.ttdat.core.application.queries.auth.IsTokenBlacklistedQuery;
+import com.ttdat.userservice.application.mappers.UserMapper;
 import com.ttdat.userservice.domain.entities.Role;
 import com.ttdat.userservice.domain.entities.User;
 import com.ttdat.userservice.domain.repositories.UserRepository;
@@ -26,6 +27,7 @@ public class AuthQueryHandler {
     private final UserRepository userRepository;
     private final TokenBlacklistService tokenBlacklistService;
     private final JwtUtils jwtUtils;
+    private final UserMapper userMapper;
 
     @QueryHandler
     public boolean handle(CheckPermissionQuery checkPermissionQuery){
@@ -51,5 +53,12 @@ public class AuthQueryHandler {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
         return new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities());
     }
+
+//    @QueryHandler
+//    public AuthUser handle(GetAuthenticationByIdQuery getAuthenticationByIdQuery){
+//        User user = userRepository.findById(UUID.fromString(getAuthenticationByIdQuery.getUserId()))
+//                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+//        return userMapper.toAuthUser(user);
+//    }
 
 }

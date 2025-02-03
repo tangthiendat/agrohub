@@ -1,7 +1,7 @@
 package com.ttdat.userservice.api.controllers.command;
 
+import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.common.PermissionDTO;
-import com.ttdat.userservice.api.dto.response.ApiResponse;
 import com.ttdat.userservice.application.services.PermissionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

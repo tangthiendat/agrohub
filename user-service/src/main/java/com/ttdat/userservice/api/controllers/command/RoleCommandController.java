@@ -1,8 +1,8 @@
 package com.ttdat.userservice.api.controllers.command;
 
+import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.common.RoleDTO;
 import com.ttdat.userservice.api.dto.request.UpdateRoleStatusRequest;
-import com.ttdat.userservice.api.dto.response.ApiResponse;
 import com.ttdat.userservice.application.services.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

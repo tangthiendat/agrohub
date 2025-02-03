@@ -1,6 +1,6 @@
 package com.ttdat.userservice.application.services.impl;
 
-import com.ttdat.userservice.application.exception.ErrorCode;
+import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.userservice.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

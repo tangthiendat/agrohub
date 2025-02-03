@@ -112,6 +112,11 @@
             <artifactId>kryo</artifactId>
             <version>5.6.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.ttdat</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

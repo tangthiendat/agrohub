@@ -1,14 +1,13 @@
 package com.ttdat.userservice.application.eventhandlers;
 
-import com.ttdat.userservice.application.exception.DuplicateResourceException;
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.exception.ResourceNotFoundException;
+import com.ttdat.core.application.exceptions.DuplicateResourceException;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.userservice.application.mappers.UserMapper;
 import com.ttdat.userservice.domain.entities.User;
 import com.ttdat.userservice.domain.events.user.UserCreatedEvent;
 import com.ttdat.userservice.domain.events.user.UserStatusUpdatedEvent;
 import com.ttdat.userservice.domain.events.user.UserUpdatedEvent;
-import com.ttdat.userservice.domain.repositories.RoleRepository;
 import com.ttdat.userservice.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserEventHandler {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
 
     @Transactional

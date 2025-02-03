@@ -1,5 +1,6 @@
 package com.ttdat.userservice.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ttdat.userservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,6 +35,7 @@ public class Role extends Auditable implements GrantedAuthority {
             inverseJoinColumns = @JoinColumn(name = "permission_id"))
     List<Permission> permissions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "role")
     List<User> users;
 

@@ -1,5 +1,6 @@
 package com.ttdat.userservice.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ttdat.userservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,6 +31,7 @@ public class Permission extends Auditable {
 
     String module;
 
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "permissions")
     List<Role> roles;
 }

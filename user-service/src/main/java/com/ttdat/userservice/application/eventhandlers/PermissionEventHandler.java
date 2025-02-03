@@ -1,8 +1,8 @@
 package com.ttdat.userservice.application.eventhandlers;
 
-import com.ttdat.userservice.application.exception.ErrorCode;
-import com.ttdat.userservice.application.exception.ResourceInUseException;
-import com.ttdat.userservice.application.exception.ResourceNotFoundException;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceInUseException;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.userservice.application.mappers.PermissionMapper;
 import com.ttdat.userservice.domain.entities.Permission;
 import com.ttdat.userservice.domain.events.permission.PermissionCreatedEvent;

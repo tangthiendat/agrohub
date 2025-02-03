@@ -39,7 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final RSAKeyRecord rsaKeyRecord;
-    private final ProjectAuthenticationEntryPoint projectAuthenticationEntryPoint;
+    private final UserServiceAuthenticationEntryPoint userServiceAuthenticationEntryPoint;
     private final JwtBlacklistFilter jwtBlacklistFilter;
     private final JwtAuthFilter jwtAuthFilter;
 
@@ -67,7 +67,7 @@ public class SecurityConfig {
                 )
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(Customizer.withDefaults())
-                                .authenticationEntryPoint(projectAuthenticationEntryPoint)
+                                .authenticationEntryPoint(userServiceAuthenticationEntryPoint)
                 )
                 .addFilterBefore(jwtBlacklistFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(jwtAuthFilter, BearerTokenAuthenticationFilter.class)
