@@ -32,7 +32,10 @@ public class AuthQueryHandler {
     @QueryHandler
     public boolean handle(CheckPermissionQuery checkPermissionQuery){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Role authRole = ((List<Role>) authentication.getAuthorities()).getFirst();
+        Role authRole = (Role) authentication.getAuthorities().stream().findFirst().orElse(null);
+        if(authRole == null){
+            return false;
+        }
         return authRole.isActive() && authRole.getPermissions().stream()
                 .anyMatch(permission -> permission.getApiPath().equals(checkPermissionQuery.getPath())
                         && permission.getHttpMethod().equals(checkPermissionQuery.getHttpMethod()));
