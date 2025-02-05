@@ -18,8 +18,8 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public void set(String key, Object value, long timeoutMillis) {
-        redisTemplate.opsForValue().set(key, value, timeoutMillis, TimeUnit.MILLISECONDS);
+    public void set(String key, Object value, long timeout, TimeUnit timeUnit) {
+        redisTemplate.opsForValue().set(key, value, timeout, timeUnit);
     }
 
     @Override

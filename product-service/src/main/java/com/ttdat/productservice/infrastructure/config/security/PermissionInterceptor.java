@@ -32,7 +32,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
         String userId = authentication.getName();
         CheckPermissionQuery query = CheckPermissionQuery.builder()
                 .userId(userId)
-                .path(path)
+                .apiPath(path)
                 .httpMethod(httpMethod)
                 .build();
         boolean isAllowed = queryGateway.query(query, ResponseTypes.instanceOf(Boolean.class)).join();

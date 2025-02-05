@@ -1,14 +1,18 @@
 package com.ttdat.userservice.application.services.impl;
 
+import com.ttdat.core.api.dto.response.AuthRole;
 import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.api.dto.request.AuthRequest;
 import com.ttdat.userservice.api.dto.response.AuthResponse;
+import com.ttdat.userservice.application.constants.RedisKeys;
+import com.ttdat.userservice.application.mappers.RoleMapper;
 import com.ttdat.userservice.application.mappers.UserMapper;
 import com.ttdat.userservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.userservice.application.queries.user.GetUserByIdQuery;
 import com.ttdat.userservice.application.services.AuthService;
 import com.ttdat.userservice.domain.entities.User;
 import com.ttdat.userservice.domain.services.TokenBlacklistService;
+import com.ttdat.userservice.infrastructure.services.RedisService;
 import com.ttdat.userservice.infrastructure.utils.JwtUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,15 +25,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final CommandGateway commandGateway;
     private final QueryGateway queryGateway;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
     private final TokenBlacklistService tokenBlacklistService;
+    private final RedisService redisService;
+    private final RoleMapper roleMapper;
+
     @Override
     public AuthResponse login(AuthRequest authRequest, HttpServletResponse response) {
         authenticationManager.authenticate(
@@ -43,6 +51,11 @@ public class AuthServiceImpl implements AuthService {
         );
         String accessToken = jwtUtils.generateAccessToken(user);
         String refreshToken = jwtUtils.generateRefreshToken(user);
+
+        String userRoleKey = RedisKeys.USER_PREFIX + user.getUserId() + ":role";
+        AuthRole authRole = roleMapper.toAuthRole(user.getRole());
+
+        redisService.set(userRoleKey, authRole, 5, TimeUnit.MINUTES);
 
         // Store refresh token in http only cookie
         Cookie refreshTokenCookie = new Cookie("refresh_token", refreshToken);
@@ -62,11 +75,14 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.clearContext();
         String token = authHeader.substring(7);
         String tokenId = jwtUtils.getTokenId(token);
+        String userId = jwtUtils.getUserId(token);
         long timeToExpire = jwtUtils.getTokenExpiration(token).toEpochMilli() - System.currentTimeMillis();
         if (timeToExpire > 0) {
             String tokenKey = "token" + ":" + tokenId;
             tokenBlacklistService.blacklistToken(tokenKey, timeToExpire);
         }
+
+        redisService.delete(RedisKeys.USER_PREFIX + userId + ":role");
 
         // Remove refresh token from http only cookie
         Cookie refreshTokenCookie = new Cookie("refresh_token", "");

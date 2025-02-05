@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class CheckPermissionQuery {
     String userId;
-    String path;
+    String apiPath;
     String httpMethod;
+
 }
