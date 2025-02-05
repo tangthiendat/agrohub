@@ -31,3 +31,5 @@ application:
   security:
     rsa:
       rsa-public-key: classpath:certs/public-key.pem
+cloudinary:
+  url: ${CLOUDINARY_URL}
