@@ -53,7 +53,7 @@ public class AxonConfig {
     public QueryBus queryBus(AxonServerConnectionManager axonServerConnectionManager,
                              AxonServerConfiguration axonServerConfiguration,
                              QueryUpdateEmitter queryUpdateEmitter) {
-        AxonServerQueryBus queryBus = AxonServerQueryBus.builder()
+        return AxonServerQueryBus.builder()
                 .configuration(axonServerConfiguration)
                 .axonServerConnectionManager(axonServerConnectionManager)
                 .messageSerializer(messageSerializer())
@@ -63,6 +63,5 @@ public class AxonConfig {
                         .queryUpdateEmitter(queryUpdateEmitter)
                         .build())
                 .build();
-        return queryBus;
     }
 }

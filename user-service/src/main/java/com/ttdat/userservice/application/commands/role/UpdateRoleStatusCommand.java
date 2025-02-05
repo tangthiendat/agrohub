@@ -1,22 +1,19 @@
 package com.ttdat.userservice.application.commands.role;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class UpdateRoleStatusCommand {
     Long roleId;
     boolean active;
-
-    @JsonCreator
-    public UpdateRoleStatusCommand(@JsonProperty("roleId") Long roleId,
-                                   @JsonProperty("active") boolean active) {
-        this.roleId = roleId;
-        this.active = active;
-    }
 }

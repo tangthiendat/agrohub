@@ -1,30 +1,24 @@
 package com.ttdat.userservice.application.queries.permission;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Map;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class GetPermissionPageQuery {
     PaginationParams paginationParams;
     SortParams sortParams;
     Map<String, String> filterParams;
-
-    @JsonCreator
-    public GetPermissionPageQuery(@JsonProperty("paginationParams") PaginationParams paginationParams,
-                            @JsonProperty("sortParams") SortParams sortParams,
-                            @JsonProperty("filterParams") Map<String, String> filterParams) {
-        this.paginationParams = paginationParams;
-        this.sortParams = sortParams;
-        this.filterParams = filterParams;
-    }
-
 }

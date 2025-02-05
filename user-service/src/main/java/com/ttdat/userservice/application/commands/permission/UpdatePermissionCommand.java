@@ -1,14 +1,18 @@
 package com.ttdat.userservice.application.commands.permission;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class UpdatePermissionCommand {
     Long permissionId;
     String permissionName;
@@ -16,19 +20,4 @@ public class UpdatePermissionCommand {
     String apiPath;
     String httpMethod;
     String module;
-
-    @JsonCreator
-    public UpdatePermissionCommand(@JsonProperty("permissionId") Long permissionId,
-                                   @JsonProperty("permissionName") String permissionName,
-                                   @JsonProperty("description") String description,
-                                   @JsonProperty("apiPath") String apiPath,
-                                   @JsonProperty("httpMethod") String httpMethod,
-                                   @JsonProperty("module") String module) {
-        this.permissionId = permissionId;
-        this.permissionName = permissionName;
-        this.description = description;
-        this.apiPath = apiPath;
-        this.httpMethod = httpMethod;
-        this.module = module;
-    }
 }
