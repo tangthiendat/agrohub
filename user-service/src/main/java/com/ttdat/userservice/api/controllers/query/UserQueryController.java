@@ -5,7 +5,7 @@ import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.api.dto.response.UserPageResult;
-import com.ttdat.userservice.application.queries.user.GetUserByEmailQuery;
+import com.ttdat.userservice.application.queries.user.GetUserByIdQuery;
 import com.ttdat.userservice.application.queries.user.GetUserPageQuery;
 import com.ttdat.userservice.infrastructure.utils.RequestParamsUtils;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +47,11 @@ public class UserQueryController {
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserDTO>> getMe(Authentication authentication) {
-        GetUserByEmailQuery getUserByEmailQuery = GetUserByEmailQuery.builder()
-                .email(authentication.getName())
+        String userId = authentication.getName();
+        GetUserByIdQuery getUserByIdQuery = GetUserByIdQuery.builder()
+                .userId(userId)
                 .build();
-        UserDTO user = queryGateway.query(getUserByEmailQuery, ResponseTypes.instanceOf(UserDTO.class)).join();
+        UserDTO user = queryGateway.query(getUserByIdQuery, ResponseTypes.instanceOf(UserDTO.class)).join();
         return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
