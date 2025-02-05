@@ -1,11 +1,15 @@
+#Use this dockerfile if you not have Maven installed on your local machine
 FROM maven:3.9-eclipse-temurin-21-alpine AS build
 
 WORKDIR /app
 
 COPY pom.xml .
-COPY src ./src
+COPY core/ core/
+COPY user-service/ user-service/
+COPY product-service/ product-service/
 
-RUN mvn clean install -DskipTests
+#Build only user-service and its dependent modules
+RUN mvn clean package -DskipTests -pl user-service -am
 
 FROM eclipse-temurin:21-jre-alpine
 
@@ -13,7 +17,7 @@ RUN unlink /etc/localtime;ln -s  /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/local
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar /app/user-service.jar
+COPY --from=build /app/user-service/target/*.jar /app/user-service.jar
 
 EXPOSE 8080
 

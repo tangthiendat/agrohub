@@ -3,7 +3,9 @@ networks:
     external: true
 services:
   user-service:
-    build: ./user-service
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile.dev
     image: agrohub/user-service:dev
     container_name: user-service
     env_file:
