@@ -1,8 +1,8 @@
 package com.ttdat.core.api.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
@@ -11,12 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthRole implements GrantedAuthority {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class AuthRole{
     String roleName;
+    boolean active;
     List<AuthPermission> permissions;
-
-    @Override
-    public String getAuthority() {
-        return roleName;
-    }
 }

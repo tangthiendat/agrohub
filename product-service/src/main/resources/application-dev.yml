@@ -27,3 +27,7 @@ axon:
     general: jackson
     messages: jackson
     events: jackson
+application:
+  security:
+    rsa:
+      rsa-public-key: classpath:certs/public-key.pem

@@ -1,6 +1,5 @@
 package com.ttdat.userservice.application.mappers;
 
-import com.ttdat.core.api.dto.response.AuthUser;
 import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.domain.entities.Role;
 import com.ttdat.userservice.domain.entities.User;
@@ -16,8 +15,6 @@ public interface UserMapper extends EntityMapper<UserDTO, User> {
     @Override
     @Mapping(target = "password", ignore = true)
     UserDTO toDTO(User user);
-
-    AuthUser toAuthUser(User user);
 
     User toEntity(UserDTO userDTO);
 

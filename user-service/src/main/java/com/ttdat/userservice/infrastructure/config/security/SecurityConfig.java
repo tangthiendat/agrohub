@@ -6,26 +6,25 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.ttdat.userservice.infrastructure.filters.JwtAuthFilter;
 import com.ttdat.userservice.infrastructure.filters.JwtBlacklistFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -41,7 +40,6 @@ public class SecurityConfig {
     private final RSAKeyRecord rsaKeyRecord;
     private final UserServiceAuthenticationEntryPoint userServiceAuthenticationEntryPoint;
     private final JwtBlacklistFilter jwtBlacklistFilter;
-    private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -66,14 +64,22 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(Customizer.withDefaults())
-                                .authenticationEntryPoint(userServiceAuthenticationEntryPoint)
-                )
+                        oauth2.jwt(jwtConfig ->
+                                jwtConfig.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                        ).authenticationEntryPoint(userServiceAuthenticationEntryPoint))
                 .addFilterBefore(jwtBlacklistFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(jwtAuthFilter, BearerTokenAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable);
 
         return http.build();
+    }
+
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            String roleClaim = jwt.getClaimAsString("role");
+            return List.of(new SimpleGrantedAuthority("ROLE_" + roleClaim));
+        });
+        return jwtAuthenticationConverter;
     }
 
     @Bean

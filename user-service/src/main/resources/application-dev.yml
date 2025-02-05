@@ -54,7 +54,3 @@ application:
     jwt:
       access-token-validity-in-seconds: 604800 # 1 day
       refresh-token-validity-in-seconds: 604800 # 7 days
-logging:
-    level:
-        org:
-          axonframework: DEBUG

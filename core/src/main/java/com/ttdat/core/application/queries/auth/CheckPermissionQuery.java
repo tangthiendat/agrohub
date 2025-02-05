@@ -1,23 +1,20 @@
 package com.ttdat.core.application.queries.auth;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class CheckPermissionQuery {
+    String userId;
     String path;
     String httpMethod;
-
-    @JsonCreator
-    public CheckPermissionQuery(@JsonProperty("path") String path,
-                                @JsonProperty("httpMethod") String httpMethod) {
-        this.path = path;
-        this.httpMethod = httpMethod;
-    }
 }

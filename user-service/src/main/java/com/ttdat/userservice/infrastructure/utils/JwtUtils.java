@@ -39,6 +39,7 @@ public class JwtUtils {
                 .id(UUID.randomUUID().toString())
                 .issuer("https://agrohub-user-service.ttdat.com")
                 .expiresAt(Instant.now().plus(tokenDurationInSeconds, ChronoUnit.SECONDS))
+                .claim("role", user.getRole().getRoleName())
                 .build();
         JwsHeader jwsHeader = JwsHeader.with(SignatureAlgorithm.RS256).build();
         return jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claimsSet)).getTokenValue();
