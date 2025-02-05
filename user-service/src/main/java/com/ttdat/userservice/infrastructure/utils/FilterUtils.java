@@ -15,12 +15,12 @@ public class FilterUtils {
 
     public static List<Sort.Order> toSortOrders(SortParams sortParams) {
         List<Sort.Order> sortOrders = new ArrayList<>();
+        Sort.Order updatedAtOrder = new Sort.Order(Sort.Direction.fromString("desc"), "updatedAt");
+        sortOrders.add(updatedAtOrder);
         if(sortParams != null) {
             Sort.Order currentSortOrder = new Sort.Order(Sort.Direction.fromString(sortParams.getDirection()), sortParams.getSortBy());
             sortOrders.add(currentSortOrder);
         }
-        Sort.Order updatedAtOrder = new Sort.Order(Sort.Direction.fromString("desc"), "updatedAt");
-        sortOrders.add(updatedAtOrder);
         return sortOrders;
     }
 
