@@ -3,7 +3,7 @@ x-kong-config: &kong-env
   KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
   KONG_PG_HOST: kong-db
   KONG_PG_USER: ${KONG_PG_USER:-kong}
-  KONG_PG_PASSWORD_FILE: /run/secrets/kong_postgres_password
+  KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
 
 volumes:
   kong_prefix_vol:
@@ -26,13 +26,10 @@ services:
     image: "${KONG_DOCKER_TAG:-kong:3.9}"
     container_name: kong-migrations
     command: kong migrations bootstrap
-    profiles: ["database"]
     depends_on:
       - kong-db
     environment:
       <<: *kong-env
-    secrets:
-      - kong_postgres_password
     networks:
       - agrohub
     restart: on-failure
@@ -41,18 +38,15 @@ services:
     image: "${KONG_DOCKER_TAG:-kong:3.9}"
     container_name: kong-migrations-up
     command: kong migrations up && kong migrations finish
-    profiles: ["database"]
     depends_on:
       - kong-db
     environment:
       <<: *kong-env
-    secrets:
-      - kong_postgres_password
     networks:
       - agrohub
     restart: on-failure
 
-  kong:
+  kong-internal:
     image: "${KONG_DOCKER_TAG:-kong:3.9}"
     user: "${KONG_USER:-kong}"
     container_name: kong-internal
@@ -68,8 +62,6 @@ services:
       KONG_PREFIX: ${KONG_PREFIX:-/var/run/kong}
       KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
       KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES: resty.jwt
-    secrets:
-      - kong_postgres_password
     networks:
       - agrohub
     ports:
@@ -85,11 +77,6 @@ services:
       - "8001:8001/tcp"
       - "8444:8444/tcp"
       - "8002:8002/tcp"
-    healthcheck:
-      test: ["CMD", "kong", "health"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
     restart: on-failure:5
     read_only: true
     volumes:
@@ -101,19 +88,11 @@ services:
 
   kong-db:
     image: postgres:16.4-alpine
-    profiles: ["database"]
     container_name: kong-db
     environment:
       POSTGRES_DB: ${KONG_PG_DATABASE:-kong}
       POSTGRES_USER: ${KONG_PG_USER:-kong}
-      POSTGRES_PASSWORD_FILE: /run/secrets/kong_postgres_password
-    secrets:
-      - kong_postgres_password
-    healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${KONG_PG_DATABASE:-kong}", "-U", "${KONG_PG_USER:-kong}"]
-      interval: 30s
-      timeout: 30s
-      retries: 3
+      POSTGRES_PASSWORD: ${KONG_PG_PASSWORD:-kong}
     restart: on-failure
     stdin_open: true
     tty: true
@@ -136,6 +115,16 @@ services:
       - "8024:8024"
       - "8124:8124"
       - "8224:8224"
+    networks:
+      - agrohub
+
+  redis:
+    image: redis/redis-stack-server:7.4.0-v2
+    container_name: redis
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
     networks:
       - agrohub
 
@@ -166,17 +155,3 @@ services:
     command: --defaults-extra-file=/etc/mysql/conf.d/product-service-db.cnf
     networks:
       - agrohub
-
-  redis:
-    image: redis/redis-stack-server:7.4.0-v2
-    container_name: redis
-    volumes:
-      - redis:/data
-    ports:
-      - "6379:6379"
-    networks:
-      - agrohub
-
-secrets:
-  kong_postgres_password:
-    file: ./KONG_POSTGRES_PASSWORD.txt
