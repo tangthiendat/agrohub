@@ -1,4 +1,4 @@
-package com.ttdat.userservice.application.queryhandlers;
+package com.ttdat.userservice.application.handlers.query;
 
 import com.ttdat.core.api.dto.response.PaginationMeta;
 import com.ttdat.userservice.api.dto.common.PermissionDTO;

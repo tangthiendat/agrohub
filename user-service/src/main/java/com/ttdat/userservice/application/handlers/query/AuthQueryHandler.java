@@ -1,4 +1,4 @@
-package com.ttdat.userservice.application.queryhandlers;
+package com.ttdat.userservice.application.handlers.query;
 
 import com.ttdat.core.api.dto.response.AuthRole;
 import com.ttdat.core.application.exceptions.ErrorCode;

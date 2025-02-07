@@ -1,4 +1,4 @@
-package com.ttdat.userservice.application.eventhandlers;
+package com.ttdat.userservice.application.handlers.event;
 
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceInUseException;

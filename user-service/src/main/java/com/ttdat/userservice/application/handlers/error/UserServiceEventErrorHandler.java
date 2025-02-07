@@ -1,4 +1,4 @@
-package com.ttdat.userservice.application.errorhandler;
+package com.ttdat.userservice.application.handlers.error;
 
 import com.ttdat.core.api.dto.response.ApiError;
 import com.ttdat.core.api.dto.response.ApiResponse;

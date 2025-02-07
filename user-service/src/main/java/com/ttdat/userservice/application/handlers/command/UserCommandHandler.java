@@ -1,4 +1,4 @@
-package com.ttdat.userservice.application.commandhandler;
+package com.ttdat.userservice.application.handlers.command;
 
 import com.ttdat.userservice.application.commands.user.CreateUserCommand;
 import com.ttdat.userservice.application.commands.user.UpdateUserCommand;

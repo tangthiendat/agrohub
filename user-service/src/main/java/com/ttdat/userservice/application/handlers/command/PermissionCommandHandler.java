@@ -1,4 +1,4 @@
-package com.ttdat.userservice.application.commandhandler;
+package com.ttdat.userservice.application.handlers.command;
 
 import com.ttdat.userservice.application.commands.permission.CreatePermissionCommand;
 import com.ttdat.userservice.application.commands.permission.DeletePermissionCommand;
