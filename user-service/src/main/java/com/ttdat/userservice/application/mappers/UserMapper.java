@@ -8,8 +8,8 @@ import com.ttdat.userservice.domain.events.user.UserUpdatedEvent;
 import org.mapstruct.*;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {RoleMapper.class},
-        injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+        injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+        uses = {RoleMapper.class})
 public interface UserMapper extends EntityMapper<UserDTO, User> {
 
     @Override
@@ -21,10 +21,8 @@ public interface UserMapper extends EntityMapper<UserDTO, User> {
     @Mapping(target = "role.roleId", source = "roleId")
     User toEntity(UserCreatedEvent userCreatedEvent);
 
-    @Mappings({
-            @Mapping(target = "role", ignore = true),
-            @Mapping(target = "password", ignore = true),
-    })
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "password", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent);
 
