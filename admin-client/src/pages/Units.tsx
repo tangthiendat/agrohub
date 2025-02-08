@@ -3,6 +3,7 @@ import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
 import AddUnit from "../features/unit/AddUnit";
+import UnitTable from "../features/unit/UnitTable";
 
 const Units: React.FC = () => {
   useTitle("Đơn vị tính");
@@ -15,7 +16,7 @@ const Units: React.FC = () => {
             <AddUnit />
           </Access>
         </div>
-        {/* <CategoryTable /> */}
+        <UnitTable />
       </div>
     </Access>
   );
