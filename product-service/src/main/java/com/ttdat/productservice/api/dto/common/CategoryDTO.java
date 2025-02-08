@@ -1,5 +1,6 @@
 package com.ttdat.productservice.api.dto.common;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class CategoryDTO {
     Long categoryId;
 
+    @NotBlank(message = "Category name is required")
     String categoryName;
 
     LocalDateTime createdAt;

@@ -31,6 +31,8 @@ axon:
     processors:
       unit-group:
         mode: subscribing
+      category-group:
+        mode: subscribing
 application:
   security:
     rsa:

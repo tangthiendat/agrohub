@@ -27,6 +27,12 @@ axon:
     general: jackson
     messages: jackson
     events: jackson
+  eventhandling:
+    processors:
+      unit-group:
+        mode: subscribing
+      category-group:
+        mode: subscribing
 application:
   security:
     rsa:
