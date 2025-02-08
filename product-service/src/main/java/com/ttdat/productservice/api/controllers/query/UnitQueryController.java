@@ -31,12 +31,13 @@ public class UnitQueryController {
     public ResponseEntity<ApiResponse<List<UnitDTO>>> getUnits() {
         GetAllUnitsQuery getAllUnitsQuery = GetAllUnitsQuery.builder().build();
         List<UnitDTO> units = queryGateway.query(getAllUnitsQuery, ResponseTypes.multipleInstancesOf(UnitDTO.class)).join();
-        return ResponseEntity.ok(ApiResponse.<List<UnitDTO>>builder()
-                .status(HttpStatus.OK.value())
-                .message("Units retrieved successfully")
-                .success(true)
-                .payload(units)
-                .build());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.<List<UnitDTO>>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Units retrieved successfully")
+                        .success(true)
+                        .payload(units)
+                        .build());
     }
 
     @GetMapping("/page")
@@ -48,12 +49,13 @@ public class UnitQueryController {
                 .sortParams(sortParams)
                 .build();
         UnitPageResult unitPageResult = queryGateway.query(getUnitPageQuery, ResponseTypes.instanceOf(UnitPageResult.class)).join();
-        return ResponseEntity.ok(ApiResponse.<UnitPageResult>builder()
-                .status(HttpStatus.OK.value())
-                .message("Unit page retrieved successfully")
-                .success(true)
-                .payload(unitPageResult)
-                .build());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.<UnitPageResult>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Unit page retrieved successfully")
+                        .success(true)
+                        .payload(unitPageResult)
+                        .build());
     }
 
 }
