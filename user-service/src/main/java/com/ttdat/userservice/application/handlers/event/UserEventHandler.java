@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 @ProcessingGroup("user-group")
@@ -42,11 +44,15 @@ public class UserEventHandler {
         userRepository.save(user);
     }
 
+    private User getUserById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+    }
+
     @Transactional
     @EventHandler
     public void on(UserUpdatedEvent userUpdatedEvent) {
-        User user = userRepository.findById(userUpdatedEvent.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+        User user = getUserById(userUpdatedEvent.getUserId());
         userMapper.updateEntityFromEvent(user, userUpdatedEvent);
         userRepository.save(user);
         deleteUsersRoleCache();
@@ -55,8 +61,7 @@ public class UserEventHandler {
     @Transactional
     @EventHandler
     public void on(UserStatusUpdatedEvent userStatusUpdatedEvent){
-        User user = userRepository.findById(userStatusUpdatedEvent.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+        User user = getUserById(userStatusUpdatedEvent.getUserId());
         user.setActive(userStatusUpdatedEvent.isActive());
         userRepository.save(user);
         deleteUsersRoleCache();

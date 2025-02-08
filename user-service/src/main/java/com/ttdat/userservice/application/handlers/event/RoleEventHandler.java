@@ -35,11 +35,15 @@ public class RoleEventHandler {
         roleRepository.save(role);
     }
 
+    private Role getRoleById(Long roleId) {
+        return roleRepository.findById(roleId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND));
+    }
+
     @Transactional
     @EventHandler
     public void on(RoleUpdatedEvent roleUpdatedEvent) {
-        Role role = roleRepository.findById(roleUpdatedEvent.getRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND));
+        Role role = getRoleById(roleUpdatedEvent.getRoleId());
         roleMapper.updateEntityFromEvent(role, roleUpdatedEvent);
         roleRepository.save(role);
         deleteUsersRoleCache();
@@ -48,8 +52,7 @@ public class RoleEventHandler {
     @Transactional
     @EventHandler
     public void on(RoleStatusUpdatedEvent roleStatusUpdatedEvent) {
-        Role role = roleRepository.findById(roleStatusUpdatedEvent.getRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.ROLE_NOT_FOUND));
+        Role role = getRoleById(roleStatusUpdatedEvent.getRoleId());
         role.setActive(roleStatusUpdatedEvent.isActive());
         roleRepository.save(role);
         deleteUsersRoleCache();

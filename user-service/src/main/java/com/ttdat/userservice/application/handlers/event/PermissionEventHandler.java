@@ -37,11 +37,15 @@ public class PermissionEventHandler {
         deleteUsersRoleCache();
     }
 
+    private Permission getPermissionById(Long permissionId) {
+        return permissionRepository.findById(permissionId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
+    }
+
     @Transactional
     @EventHandler
     public void on(PermissionUpdatedEvent permissionUpdatedEvent) {
-        Permission permission = permissionRepository.findById(permissionUpdatedEvent.getPermissionId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
+        Permission permission = getPermissionById(permissionUpdatedEvent.getPermissionId());
         permissionMapper.updateEntityFromEvent(permission, permissionUpdatedEvent);
         permissionRepository.save(permission);
         deleteUsersRoleCache();
@@ -53,8 +57,7 @@ public class PermissionEventHandler {
         if(permissionRepository.isPermissionInUse(permissionDeletedEvent.getPermissionId())) {
             throw new ResourceInUseException(ErrorCode.PERMISSION_IN_USE);
         }
-        Permission permission = permissionRepository.findById(permissionDeletedEvent.getPermissionId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
+        Permission permission = getPermissionById(permissionDeletedEvent.getPermissionId());
         permissionRepository.delete(permission);
         deleteUsersRoleCache();
     }
