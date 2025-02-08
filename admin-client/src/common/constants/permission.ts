@@ -85,4 +85,22 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PUT,
     },
   },
+  [Module.UNIT]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/units/page",
+      httpMethod: HttpMethod.GET,
+    },
+    GET_ALL: {
+      apiPath: "/api/v1/units",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/units",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/units/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
 };

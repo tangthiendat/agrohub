@@ -8,6 +8,7 @@ import { IUser } from "../../../interfaces";
 import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
 import { FaList } from "react-icons/fa6";
+import { FiPackage } from "react-icons/fi";
 
 export function useMenuItems(user?: IUser): MenuProps["items"] {
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
@@ -44,7 +45,13 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           item.httpMethod === PERMISSIONS[Module.CATEGORY].GET_PAGE.httpMethod,
       );
 
-      const hasItemListChildren: boolean = Boolean(viewCategories);
+      const viewUnits = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.UNIT].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.UNIT].GET_PAGE.httpMethod,
+      );
+
+      const hasItemListChildren: boolean = Boolean(viewCategories || viewUnits);
 
       const menuItems = [
         {
@@ -109,6 +116,11 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           ),
                           key: "categories",
                           icon: <MdCategory />,
+                        },
+                        {
+                          label: <NavLink to="/units">Đơn vị tính</NavLink>,
+                          key: "units",
+                          icon: <FiPackage />,
                         },
                       ]
                     : []),
