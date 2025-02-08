@@ -14,15 +14,15 @@ services:
       - "8080:8080"
     networks:
       - agrohub
-#  product-service:
-#    build:
-#      context: .
-#      dockerfile: product-service/Dockerfile.dev
-#    image: agrohub/product-service:dev
-#    container_name: product-service
-#    env_file:
-#      - product-service/.env.docker
-#    ports:
-#      - "8081:8081"
-#    networks:
-#      - agrohub
+  product-service:
+    build:
+      context: .
+      dockerfile: product-service/Dockerfile.dev
+    image: agrohub/product-service:dev
+    container_name: product-service
+    env_file:
+      - product-service/.env.docker
+    ports:
+      - "8081:8081"
+    networks:
+      - agrohub
