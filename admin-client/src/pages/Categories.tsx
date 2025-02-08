@@ -3,6 +3,7 @@ import AddCategory from "../features/category/AddCategory";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
+import CategoryTable from "../features/category/CategoryTable";
 
 const Categories = () => {
   useTitle("Loại sản phẩm");
@@ -15,7 +16,7 @@ const Categories = () => {
             <AddCategory />
           </Access>
         </div>
-        {/* <PermissionTable /> */}
+        <CategoryTable />
       </div>
     </Access>
   );
