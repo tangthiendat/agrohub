@@ -8,13 +8,12 @@ import com.ttdat.userservice.application.queries.permission.GetAllPermissionsQue
 import com.ttdat.userservice.application.queries.permission.GetPermissionPageQuery;
 import com.ttdat.userservice.domain.entities.Permission;
 import com.ttdat.userservice.domain.repositories.PermissionRepository;
-import com.ttdat.userservice.infrastructure.utils.FilterUtils;
+import com.ttdat.userservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.userservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -34,18 +33,10 @@ public class PermissionQueryHandler {
 
     @QueryHandler
     public PermissionPageResult handle(GetPermissionPageQuery getPermissionPageQuery) {
-        List<Sort.Order> sortOrders = FilterUtils.toSortOrders(getPermissionPageQuery.getSortParams());
-        int page = getPermissionPageQuery.getPaginationParams().getPage();
-        int pageSize = getPermissionPageQuery.getPaginationParams().getPageSize();
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
+        Pageable pageable = PaginationUtils.getPageable(getPermissionPageQuery.getPaginationParams(), getPermissionPageQuery.getSortParams());
         Specification<Permission> permissionPageSpec = getPermissionPageSpec(getPermissionPageQuery.getFilterParams());
-        org.springframework.data.domain.Page<Permission> permissionPage = permissionRepository.findAll(permissionPageSpec, pageable);
-        PaginationMeta paginationMeta = PaginationMeta.builder()
-                .page(permissionPage.getNumber() + 1)
-                .pageSize(permissionPage.getSize())
-                .totalElements(permissionPage.getTotalElements())
-                .totalPages(permissionPage.getTotalPages())
-                .build();
+        Page<Permission> permissionPage = permissionRepository.findAll(permissionPageSpec, pageable);
+        PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(permissionPage);
         return PermissionPageResult.builder()
                 .meta(paginationMeta)
                 .content(permissionMapper.toDTOs(permissionPage.getContent()))

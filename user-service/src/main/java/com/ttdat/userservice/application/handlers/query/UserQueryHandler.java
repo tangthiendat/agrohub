@@ -11,17 +11,15 @@ import com.ttdat.userservice.application.queries.user.GetUserByIdQuery;
 import com.ttdat.userservice.application.queries.user.GetUserPageQuery;
 import com.ttdat.userservice.domain.entities.User;
 import com.ttdat.userservice.domain.repositories.UserRepository;
-import com.ttdat.userservice.infrastructure.utils.FilterUtils;
+import com.ttdat.userservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.userservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -47,18 +45,10 @@ public class UserQueryHandler {
 
     @QueryHandler
     public UserPageResult handle(GetUserPageQuery getUserPageQuery){
-        List<Sort.Order> sortOrders = FilterUtils.toSortOrders(getUserPageQuery.getSortParams());
-        int page = getUserPageQuery.getPaginationParams().getPage();
-        int pageSize = getUserPageQuery.getPaginationParams().getPageSize();
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
+        Pageable pageable = PaginationUtils.getPageable(getUserPageQuery.getPaginationParams(), getUserPageQuery.getSortParams());
         Specification<User> userPageSpec = getUserPageSpec(getUserPageQuery.getFilterParams());
-        org.springframework.data.domain.Page<User> userPage = userRepository.findAll(userPageSpec, pageable);
-        PaginationMeta paginationMeta = PaginationMeta.builder()
-                .page(userPage.getNumber() + 1)
-                .pageSize(userPage.getSize())
-                .totalElements(userPage.getTotalElements())
-                .totalPages(userPage.getTotalPages())
-                .build();
+        Page<User> userPage = userRepository.findAll(userPageSpec, pageable);
+        PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(userPage);
         return UserPageResult.builder()
                 .meta(paginationMeta)
                 .content(userMapper.toDTOs(userPage.getContent()))

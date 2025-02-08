@@ -1,4 +1,4 @@
-package com.ttdat.productservice.infrastructure.utils;
+package com.ttdat.core.infrastructure.utils;
 
 import com.ttdat.core.api.dto.request.FilterCriteria;
 

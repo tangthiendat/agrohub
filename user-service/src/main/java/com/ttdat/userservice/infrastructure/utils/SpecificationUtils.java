@@ -1,6 +1,7 @@
 package com.ttdat.userservice.infrastructure.utils;
 
 import com.ttdat.core.api.dto.request.FilterCriteria;
+import com.ttdat.core.infrastructure.utils.FilterUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;

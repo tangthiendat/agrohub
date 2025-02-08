@@ -37,7 +37,5 @@ public class CategoryQueryHandler {
                 .meta(paginationMeta)
                 .content(categoryMapper.toDTOs(categoryPage.getContent()))
                 .build();
-
-
     }
 }

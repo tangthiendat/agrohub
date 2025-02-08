@@ -8,12 +8,11 @@ import com.ttdat.userservice.application.queries.role.GetAllRolesQuery;
 import com.ttdat.userservice.application.queries.role.GetRolePageQuery;
 import com.ttdat.userservice.domain.entities.Role;
 import com.ttdat.userservice.domain.repositories.RoleRepository;
-import com.ttdat.userservice.infrastructure.utils.FilterUtils;
+import com.ttdat.userservice.infrastructure.utils.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,18 +30,9 @@ public class RoleQueryHandler {
 
     @QueryHandler
     public RolePageResult handle(GetRolePageQuery getRolePageQuery) {
-        List<Sort.Order> sortOrders = FilterUtils.toSortOrders(getRolePageQuery.getSortParams());
-        int page = getRolePageQuery.getPaginationParams().getPage();
-        int pageSize = getRolePageQuery.getPaginationParams().getPageSize();
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
-        org.springframework.data.domain.Page<Role> rolePage = roleRepository.findAll(pageable);
-
-        PaginationMeta paginationMeta = PaginationMeta.builder()
-                .page(rolePage.getNumber() + 1)
-                .pageSize(rolePage.getSize())
-                .totalElements(rolePage.getTotalElements())
-                .totalPages(rolePage.getTotalPages())
-                .build();
+        Pageable pageable = PaginationUtils.getPageable(getRolePageQuery.getPaginationParams(), getRolePageQuery.getSortParams());
+        Page<Role> rolePage = roleRepository.findAll(pageable);
+        PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(rolePage);
         return RolePageResult.builder()
                 .meta(paginationMeta)
                 .content(roleMapper.toDTOs(rolePage.getContent()))
