@@ -17,6 +17,8 @@ public class UnitDTO {
     @NotBlank(message = "Unit name is required")
     String unitName;
 
+    String description;
+
     LocalDateTime createdAt;
 
     LocalDateTime updatedAt;

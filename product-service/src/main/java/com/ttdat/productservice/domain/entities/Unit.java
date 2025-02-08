@@ -23,6 +23,8 @@ public class Unit extends Auditable {
 
     String unitName;
 
+    String description;
+
     @OneToMany(mappedBy = "unit")
     List<ProductUnit> productUnits;
 }

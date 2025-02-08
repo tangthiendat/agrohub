@@ -16,4 +16,5 @@ import lombok.experimental.FieldDefaults;
 public class UpdateUnitCommand {
     Long unitId;
     String unitName;
+    String description;
 }

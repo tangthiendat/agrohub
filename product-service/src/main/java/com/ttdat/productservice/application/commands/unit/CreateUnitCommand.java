@@ -15,5 +15,5 @@ import lombok.experimental.FieldDefaults;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class CreateUnitCommand {
     String unitName;
-    Double conversionFactor;
+    String description;
 }

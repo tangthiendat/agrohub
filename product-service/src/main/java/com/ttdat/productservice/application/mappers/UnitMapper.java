@@ -1,6 +1,8 @@
 package com.ttdat.productservice.application.mappers;
 
 import com.ttdat.productservice.api.dto.common.UnitDTO;
+import com.ttdat.productservice.application.commands.unit.CreateUnitCommand;
+import com.ttdat.productservice.application.commands.unit.UpdateUnitCommand;
 import com.ttdat.productservice.domain.entities.Unit;
 import com.ttdat.productservice.domain.events.unit.UnitCreatedEvent;
 import com.ttdat.productservice.domain.events.unit.UnitUpdatedEvent;
@@ -13,4 +15,14 @@ public interface UnitMapper extends EntityMapper<UnitDTO, Unit> {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget Unit unit, UnitUpdatedEvent unitUpdatedEvent);
+
+    CreateUnitCommand toCommand(UnitDTO unitDTO);
+
+    @Mapping(source = "id", target = "unitId")
+    UpdateUnitCommand toCommand(Long id, UnitDTO unitDTO);
+
+    @Mapping(source = "id", target = "unitId")
+    UnitCreatedEvent toEvent(Long id,CreateUnitCommand createUnitCommand);
+
+    UnitUpdatedEvent toEvent(UpdateUnitCommand updateUnitCommand);
 }

@@ -2,6 +2,7 @@ package com.ttdat.productservice.application.handlers.command;
 
 import com.ttdat.productservice.application.commands.unit.CreateUnitCommand;
 import com.ttdat.productservice.application.commands.unit.UpdateUnitCommand;
+import com.ttdat.productservice.application.mappers.UnitMapper;
 import com.ttdat.productservice.domain.events.unit.UnitCreatedEvent;
 import com.ttdat.productservice.domain.events.unit.UnitUpdatedEvent;
 import com.ttdat.productservice.infrastructure.services.IdGeneratorService;
@@ -16,22 +17,18 @@ import org.springframework.stereotype.Service;
 public class UnitCommandHandler {
     private final EventBus eventBus;
     private final IdGeneratorService idGeneratorService;
+    private final UnitMapper unitMapper;
 
     @CommandHandler
     public void handleCreateUnitCommand(CreateUnitCommand createUnitCommand) {
-        UnitCreatedEvent unitCreatedEvent = UnitCreatedEvent.builder()
-                .unitId(idGeneratorService.generateUnitId())
-                .unitName(createUnitCommand.getUnitName())
-                .build();
+        Long unitId = idGeneratorService.generateUnitId();
+        UnitCreatedEvent unitCreatedEvent = unitMapper.toEvent(unitId, createUnitCommand);
         eventBus.publish(GenericEventMessage.asEventMessage(unitCreatedEvent));
     }
 
     @CommandHandler
     public void handleUpdateUnitCommand(UpdateUnitCommand updateUnitCommand) {
-        UnitUpdatedEvent unitUpdatedEvent = UnitUpdatedEvent.builder()
-                .unitId(updateUnitCommand.getUnitId())
-                .unitName(updateUnitCommand.getUnitName())
-                .build();
+        UnitUpdatedEvent unitUpdatedEvent = unitMapper.toEvent(updateUnitCommand);
         eventBus.publish(GenericEventMessage.asEventMessage(unitUpdatedEvent));
     }
 }

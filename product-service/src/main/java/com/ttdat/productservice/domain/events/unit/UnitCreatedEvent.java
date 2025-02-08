@@ -14,4 +14,5 @@ import lombok.experimental.FieldDefaults;
 public class UnitCreatedEvent {
     Long unitId;
     String unitName;
+    String description;
 }
