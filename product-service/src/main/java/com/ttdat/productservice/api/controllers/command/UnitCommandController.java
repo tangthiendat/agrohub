@@ -6,10 +6,7 @@ import com.ttdat.productservice.application.services.UnitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/units")
@@ -24,6 +21,16 @@ public class UnitCommandController {
                 .status(HttpStatus.CREATED.value())
                 .success(true)
                 .message("Unit created successfully")
+                .build();
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<Object> updateUnit(@PathVariable Long id, @Valid @RequestBody UnitDTO unitDTO){
+        unitService.updateUnit(id, unitDTO);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Unit updated successfully")
                 .build();
     }
 }
