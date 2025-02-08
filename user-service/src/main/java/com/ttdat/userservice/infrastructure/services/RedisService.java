@@ -7,5 +7,6 @@ public interface RedisService {
     void set(String key, Object value, long timeout, TimeUnit timeUnit);
     Object get(String key);
     boolean hasKey(String key);
-    boolean delete(String key);
+    void delete(String key);
+    void deleteWithPattern(String pattern);
 }

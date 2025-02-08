@@ -33,7 +33,12 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public boolean delete(String key) {
-        return Boolean.TRUE.equals(redisTemplate.delete(key));
+    public void delete(String key) {
+        redisTemplate.delete(key);
+    }
+
+    @Override
+    public void deleteWithPattern(String pattern) {
+        redisTemplate.delete(redisTemplate.keys(pattern));
     }
 }

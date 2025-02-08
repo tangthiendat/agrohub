@@ -3,12 +3,14 @@ package com.ttdat.userservice.application.handlers.event;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceInUseException;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.userservice.application.constants.RedisKeys;
 import com.ttdat.userservice.application.mappers.PermissionMapper;
 import com.ttdat.userservice.domain.entities.Permission;
 import com.ttdat.userservice.domain.events.permission.PermissionCreatedEvent;
 import com.ttdat.userservice.domain.events.permission.PermissionDeletedEvent;
 import com.ttdat.userservice.domain.events.permission.PermissionUpdatedEvent;
 import com.ttdat.userservice.domain.repositories.PermissionRepository;
+import com.ttdat.userservice.infrastructure.services.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -21,12 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class PermissionEventHandler {
     private final PermissionRepository permissionRepository;
     private final PermissionMapper permissionMapper;
+    private final RedisService redisService;
+
+    private void deleteUsersRoleCache() {
+        redisService.deleteWithPattern(RedisKeys.USER_PREFIX + ":*:role");
+    }
 
     @Transactional
     @EventHandler
     public void on(PermissionCreatedEvent permissionCreatedEvent) {
         Permission permission = permissionMapper.toEntity(permissionCreatedEvent);
         permissionRepository.save(permission);
+        deleteUsersRoleCache();
     }
 
     @Transactional
@@ -36,6 +44,7 @@ public class PermissionEventHandler {
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
         permissionMapper.updateEntityFromEvent(permission, permissionUpdatedEvent);
         permissionRepository.save(permission);
+        deleteUsersRoleCache();
     }
 
     @Transactional
@@ -47,5 +56,6 @@ public class PermissionEventHandler {
         Permission permission = permissionRepository.findById(permissionDeletedEvent.getPermissionId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PERMISSION_NOT_FOUND));
         permissionRepository.delete(permission);
+        deleteUsersRoleCache();
     }
 }

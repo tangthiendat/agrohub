@@ -39,7 +39,7 @@ public class AuthQueryHandler {
     }
 
     private AuthRole getAuthRole(String userId) {
-        String userRoleKey = RedisKeys.USER_PREFIX + userId + ":role";
+        String userRoleKey = RedisKeys.USER_PREFIX + ":" + userId + ":role";
         AuthRole authRole = (AuthRole) redisService.get(userRoleKey);
         if (authRole == null) {
             User user = userRepository.findById(UUID.fromString(userId))
