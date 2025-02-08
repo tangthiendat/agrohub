@@ -1,5 +1,7 @@
 package com.ttdat.productservice.application.handlers.event;
 
+import com.ttdat.core.application.exceptions.DuplicateResourceException;
+import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.productservice.application.mappers.UnitMapper;
 import com.ttdat.productservice.domain.entities.Unit;
 import com.ttdat.productservice.domain.events.unit.UnitCreatedEvent;
@@ -16,6 +18,9 @@ public class UnitEventHandler {
 
     @EventHandler
     public void handle(UnitCreatedEvent unitCreatedEvent) {
+        if (unitRepository.existsByUnitName(unitCreatedEvent.getUnitName())) {
+            throw new DuplicateResourceException(ErrorCode.UNIT_ALREADY_EXISTS);
+        }
         Unit unit = unitMapper.toEntity(unitCreatedEvent);
         unitRepository.save(unit);
     }
