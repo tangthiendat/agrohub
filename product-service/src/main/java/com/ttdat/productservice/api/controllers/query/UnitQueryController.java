@@ -4,8 +4,10 @@ import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
+import com.ttdat.productservice.api.dto.common.UnitDTO;
 import com.ttdat.productservice.api.dto.response.UnitPageResult;
-import com.ttdat.productservice.application.queries.GetUnitPageQuery;
+import com.ttdat.productservice.application.queries.unit.GetAllUnitsQuery;
+import com.ttdat.productservice.application.queries.unit.GetUnitPageQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,6 +27,17 @@ import java.util.Map;
 public class UnitQueryController {
     private final QueryGateway queryGateway;
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<UnitDTO>>> getUnits() {
+        GetAllUnitsQuery getAllUnitsQuery = GetAllUnitsQuery.builder().build();
+        List<UnitDTO> units = queryGateway.query(getAllUnitsQuery, ResponseTypes.multipleInstancesOf(UnitDTO.class)).join();
+        return ResponseEntity.ok(ApiResponse.<List<UnitDTO>>builder()
+                .status(HttpStatus.OK.value())
+                .message("Units retrieved successfully")
+                .success(true)
+                .payload(units)
+                .build());
+    }
 
     @GetMapping("/page")
     public ResponseEntity<ApiResponse<UnitPageResult>> getUnitPage(@RequestParam Map<String, String> filterParams) {
