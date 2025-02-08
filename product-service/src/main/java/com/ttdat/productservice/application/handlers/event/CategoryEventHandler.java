@@ -2,9 +2,11 @@ package com.ttdat.productservice.application.handlers.event;
 
 import com.ttdat.core.application.exceptions.DuplicateResourceException;
 import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.productservice.application.mappers.CategoryMapper;
 import com.ttdat.productservice.domain.entities.Category;
 import com.ttdat.productservice.domain.events.category.CategoryCreatedEvent;
+import com.ttdat.productservice.domain.events.category.CategoryUpdatedEvent;
 import com.ttdat.productservice.domain.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -26,6 +28,19 @@ public class CategoryEventHandler {
             throw new DuplicateResourceException(ErrorCode.CATEGORY_ALREADY_EXISTS);
         }
         Category category = categoryMapper.toEntity(categoryCreatedEvent);
+        categoryRepository.save(category);
+    }
+
+    private Category getCategoryById(Long categoryId){
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
+    }
+
+    @Transactional
+    @EventHandler
+    public void handle(CategoryUpdatedEvent categoryUpdatedEvent) {
+        Category category = getCategoryById(categoryUpdatedEvent.getCategoryId());
+        categoryMapper.updateEntityFromEvent(category, categoryUpdatedEvent);
         categoryRepository.save(category);
     }
 }

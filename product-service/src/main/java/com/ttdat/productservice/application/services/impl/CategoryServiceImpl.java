@@ -2,6 +2,7 @@ package com.ttdat.productservice.application.services.impl;
 
 import com.ttdat.productservice.api.dto.common.CategoryDTO;
 import com.ttdat.productservice.application.commands.category.CreateCategoryCommand;
+import com.ttdat.productservice.application.commands.category.UpdateCategoryCommand;
 import com.ttdat.productservice.application.mappers.CategoryMapper;
 import com.ttdat.productservice.application.services.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -18,5 +19,11 @@ public class CategoryServiceImpl implements CategoryService {
     public void createCategory(CategoryDTO categoryDTO) {
         CreateCategoryCommand createCategoryCommand = categoryMapper.toCommand(categoryDTO);
         commandGateway.sendAndWait(createCategoryCommand);
+    }
+
+    @Override
+    public void updateCategory(Long id, CategoryDTO categoryDTO) {
+        UpdateCategoryCommand updateCategoryCommand = categoryMapper.toCommand(id, categoryDTO);
+        commandGateway.sendAndWait(updateCategoryCommand);
     }
 }

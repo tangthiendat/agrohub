@@ -1,8 +1,10 @@
 package com.ttdat.productservice.application.handlers.command;
 
 import com.ttdat.productservice.application.commands.category.CreateCategoryCommand;
+import com.ttdat.productservice.application.commands.category.UpdateCategoryCommand;
 import com.ttdat.productservice.application.mappers.CategoryMapper;
 import com.ttdat.productservice.domain.events.category.CategoryCreatedEvent;
+import com.ttdat.productservice.domain.events.category.CategoryUpdatedEvent;
 import com.ttdat.productservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -22,5 +24,11 @@ public class CategoryCommandHandler {
         Long categoryId = idGeneratorService.generateCategoryId();
         CategoryCreatedEvent categoryCreatedEvent = categoryMapper.toEvent(categoryId, createCategoryCommand);
         eventBus.publish(GenericEventMessage.asEventMessage(categoryCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateCategoryCommand updateCategoryCommand) {
+        CategoryUpdatedEvent categoryUpdatedEvent = categoryMapper.toEvent(updateCategoryCommand);
+        eventBus.publish(GenericEventMessage.asEventMessage(categoryUpdatedEvent));
     }
 }
