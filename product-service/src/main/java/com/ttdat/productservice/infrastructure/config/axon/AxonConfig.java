@@ -3,9 +3,11 @@ package com.ttdat.productservice.infrastructure.config.axon;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ttdat.productservice.application.handlers.error.ProductServiceEventErrorHandler;
 import org.axonframework.axonserver.connector.AxonServerConfiguration;
 import org.axonframework.axonserver.connector.AxonServerConnectionManager;
 import org.axonframework.axonserver.connector.query.AxonServerQueryBus;
+import org.axonframework.config.ConfigurerModule;
 import org.axonframework.queryhandling.QueryBus;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.queryhandling.SimpleQueryBus;
@@ -16,6 +18,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AxonConfig {
+
+    @Bean
+    public ConfigurerModule errorHandlingConfigurerModule() {
+        return configurer -> configurer.eventProcessing(processingConfigurer ->
+                        processingConfigurer
+                                .registerDefaultListenerInvocationErrorHandler(
+                                        conf -> new ProductServiceEventErrorHandler()
+                                )
+        );
+    }
+
     @Bean
     public Serializer messageSerializer() {
         ObjectMapper objectMapper = new ObjectMapper();

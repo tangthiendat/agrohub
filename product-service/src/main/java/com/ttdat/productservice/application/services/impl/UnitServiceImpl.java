@@ -17,6 +17,6 @@ public class UnitServiceImpl implements UnitService {
         CreateUnitCommand createUnitCommand = CreateUnitCommand.builder()
                 .unitName(unitDTO.getUnitName())
                 .build();
-        commandGateway.send(createUnitCommand);
+        commandGateway.sendAndWait(createUnitCommand);
     }
 }

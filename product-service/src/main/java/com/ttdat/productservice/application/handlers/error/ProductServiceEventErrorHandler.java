@@ -1,4 +1,4 @@
-package com.ttdat.userservice.application.handlers.error;
+package com.ttdat.productservice.application.handlers.error;
 
 import com.ttdat.core.api.dto.response.ApiError;
 import com.ttdat.core.api.dto.response.ApiResponse;
@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import javax.annotation.Nonnull;
 
 @Slf4j
-public class UserServiceEventErrorHandler implements ListenerInvocationErrorHandler{
+public class ProductServiceEventErrorHandler implements ListenerInvocationErrorHandler{
     @Override
     public void onError(@Nonnull Exception exception, @Nonnull EventMessage<?> event, @Nonnull EventMessageHandler eventHandler) {
         if(exception instanceof ResourceNotFoundException) {
