@@ -1,17 +1,21 @@
 package com.ttdat.userservice.application.commands.user;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ttdat.userservice.domain.entities.Gender;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Getter
+@Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class CreateUserCommand {
     String fullName;
     Gender gender;
@@ -21,24 +25,4 @@ public class CreateUserCommand {
     String password;
     String phoneNumber;
     Long roleId;
-
-    @JsonCreator
-    public CreateUserCommand(@JsonProperty("fullName") String fullName,
-                             @JsonProperty("gender") Gender gender,
-                             @JsonProperty("active") boolean active,
-                             @JsonProperty("email") String email,
-                             @JsonProperty("dob") LocalDate dob,
-                             @JsonProperty("password") String password,
-                             @JsonProperty("phoneNumber") String phoneNumber,
-                             @JsonProperty("roleId") Long roleId) {
-        this.fullName = fullName;
-        this.active = active;
-        this.gender = gender;
-        this.email = email;
-        this.dob = dob;
-        this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.roleId = roleId;
-    }
-
 }
