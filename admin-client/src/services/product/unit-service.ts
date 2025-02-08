@@ -14,6 +14,7 @@ interface IUnitService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IUnit>>>;
+  update(unitId: number, updatedUnit: IUnit): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/units", {
@@ -38,6 +39,10 @@ class UnitService implements IUnitService {
         },
       })
     ).data;
+  }
+
+  async update(unitId: number, updatedUnit: IUnit): Promise<ApiResponse<void>> {
+    return (await apiClient.put(`/${unitId}`, updatedUnit)).data;
   }
 }
 

@@ -1,14 +1,18 @@
-import { Table, TablePaginationConfig } from "antd";
 import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import { useQuery } from "@tanstack/react-query";
+import { Space, Table, TablePaginationConfig } from "antd";
+import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { TableProps } from "antd/lib";
-import { useQuery } from "@tanstack/react-query";
+import Access from "../auth/Access";
+import UpdateUnit from "./UpdateUnit";
+import { Module } from "../../common/enums";
+import { PERMISSIONS } from "../../common/constants";
 import { IUnit, PaginationParams, SortParams } from "../../interfaces";
 import { unitService } from "../../services";
-import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
-import { formatTimestamp } from "../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../utils/color";
+import { formatTimestamp } from "../../utils/datetime";
+import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -36,7 +40,7 @@ const UnitTable: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["categories", pagination, sort].filter((key) => {
+    queryKey: ["units", pagination, sort].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -150,18 +154,18 @@ const UnitTable: React.FC = () => {
         </div>
       ),
     },
-    // {
-    //   title: "Hành động",
-    //   key: "action",
-    //   width: "15%",
-    //   render: (record: IUnit) => (
-    //     // <Space>
-    //     //   <Access permission={PERMISSIONS[Module.CATEGORY].UPDATE} hideChildren>
-    //     //     <UpdateCategory category={record} />
-    //     //   </Access>
-    //     // </Space>
-    //   ),
-    // },
+    {
+      title: "Hành động",
+      key: "action",
+      width: "15%",
+      render: (record: IUnit) => (
+        <Space>
+          <Access permission={PERMISSIONS[Module.UNIT].UPDATE} hideChildren>
+            <UpdateUnit unit={record} />
+          </Access>
+        </Space>
+      ),
+    },
   ];
 
   return (

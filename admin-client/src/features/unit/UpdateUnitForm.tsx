@@ -1,12 +1,18 @@
-import { Button, Col, Form, Input, Row, Space } from "antd";
-import { IRole, IUnit } from "../../interfaces";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { unitService } from "../../services/product/unit-service";
+import { Button, Form, Input, Space } from "antd";
 import toast from "react-hot-toast";
+import { IUnit } from "../../interfaces";
+import { unitService } from "../../services";
+import { useEffect } from "react";
 
 interface UpdateUnitFormProps {
   unitToUpdate?: IUnit;
   onCancel: () => void;
+}
+
+interface UpdateUnitArgs {
+  unitId: number;
+  updatedUnit: IUnit;
 }
 
 const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({
@@ -27,24 +33,42 @@ const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({
     },
   });
 
+  const { mutate: updateUnit, isPending: isUpdating } = useMutation({
+    mutationFn: ({ unitId, updatedUnit }: UpdateUnitArgs) =>
+      unitService.update(unitId, updatedUnit),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("units");
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (unitToUpdate) {
+      form.setFieldsValue(unitToUpdate);
+    }
+  }, [form, unitToUpdate]);
+
   function handleFinish(values: IUnit) {
     if (unitToUpdate) {
-      // updateCategory(
-      //   {
-      //     categoryId: categoryToUpdate.categoryId,
-      //     updatedCategory: values,
-      //   },
-      //   {
-      //     onSuccess: () => {
-      //       toast.success("Cập nhật loại sản phẩm thành công");
-      //       onCancel();
-      //       form.resetFields();
-      //     },
-      //     onError: () => {
-      //       toast.error("Cập nhật loại sản phẩm thất bại");
-      //     },
-      //   },
-      // );
+      updateUnit(
+        {
+          unitId: unitToUpdate.unitId,
+          updatedUnit: values,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật loại sản phẩm thành công");
+            onCancel();
+            form.resetFields();
+          },
+          onError: () => {
+            toast.error("Cập nhật loại sản phẩm thất bại");
+          },
+        },
+      );
     } else {
       createUnit(values, {
         onSuccess: () => {
@@ -80,10 +104,14 @@ const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({
 
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel} loading={isCreating}>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
             Hủy
           </Button>
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {unitToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
