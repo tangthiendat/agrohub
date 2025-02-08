@@ -1,4 +1,5 @@
 import { Gender, HttpMethod } from "../../common/enums";
+import { Auditable } from "../common";
 
 export interface IAuthRequest {
   email: string;
@@ -8,28 +9,24 @@ export interface IAuthResponse {
   accessToken: string;
 }
 
-export interface IPermission {
+export interface IPermission extends Auditable {
   permissionId: number;
   permissionName: string;
   apiPath: string;
   httpMethod: HttpMethod;
   module: string;
   description?: string;
-  createdAt: string;
-  updatedAt?: string;
 }
 
-export interface IRole {
+export interface IRole extends Auditable {
   roleId: number;
   roleName: string;
   active: boolean;
   description?: string;
   permissions: IPermission[];
-  createdAt: string;
-  updatedAt?: string;
 }
 
-export interface IUser {
+export interface IUser extends Auditable {
   userId: string;
   fullName: string;
   email: string;
@@ -39,8 +36,6 @@ export interface IUser {
   active: boolean;
   phoneNumber: string;
   role: IRole;
-  createdAt: string;
-  updatedAt?: string;
 }
 
 export interface PermissionFilterCriteria {

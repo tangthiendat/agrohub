@@ -39,3 +39,8 @@ export interface SortParams {
   sortBy: string;
   direction: string;
 }
+
+export interface Auditable {
+  createdAt?: string;
+  updatedAt?: string;
+}

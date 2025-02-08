@@ -1,12 +1,13 @@
 import { MenuProps } from "antd";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
-import { MdDashboard } from "react-icons/md";
+import { MdCategory, MdDashboard } from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { FaKey, FaUserCog, FaUsers } from "react-icons/fa";
 import { IUser } from "../../../interfaces";
 import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
+import { FaList } from "react-icons/fa6";
 
 export function useMenuItems(user?: IUser): MenuProps["items"] {
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
@@ -36,6 +37,15 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
       const hasAuthChildren: boolean = Boolean(
         viewUsers || viewRoles || viewPermissions,
       );
+
+      const viewCategories = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.CATEGORY].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.CATEGORY].GET_PAGE.httpMethod,
+      );
+
+      const hasItemListChildren: boolean = Boolean(viewCategories);
+
       const menuItems = [
         {
           label: (
@@ -77,6 +87,28 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           label: <NavLink to="/permissions">Quyền hạn</NavLink>,
                           key: "permissions",
                           icon: <FaKey />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasItemListChildren
+          ? [
+              {
+                label: "Danh mục",
+                key: "itemList",
+                icon: <FaList />,
+                children: [
+                  ...(viewCategories
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/categories">Loại sản phẩm</NavLink>
+                          ),
+                          key: "categories",
+                          icon: <MdCategory />,
                         },
                       ]
                     : []),

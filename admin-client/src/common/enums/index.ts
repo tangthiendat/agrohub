@@ -18,6 +18,8 @@ export enum Module {
   USER = "USER",
   ROLE = "ROLE",
   PERMISSION = "PERMISSION",
+  CATEGORY = "CATEGORY",
+  UNIT = "UNIT",
 }
 
 export enum Gender {

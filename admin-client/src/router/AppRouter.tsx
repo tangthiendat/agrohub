@@ -7,6 +7,7 @@ import Home from "../pages/Home";
 import Users from "../pages/Users";
 import Roles from "../pages/Roles";
 import Permissions from "../pages/Permissions";
+import Categories from "../pages/Categories";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "/permissions",
         element: <Permissions />,
+      },
+      {
+        path: "/categories",
+        element: <Categories />,
       },
     ],
   },
