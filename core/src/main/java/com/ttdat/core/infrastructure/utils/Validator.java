@@ -1,4 +1,4 @@
-package com.ttdat.productservice.infrastructure.utils;
+package com.ttdat.core.infrastructure.utils;
 
 public class Validator {
 

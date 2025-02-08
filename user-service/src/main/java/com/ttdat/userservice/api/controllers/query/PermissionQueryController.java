@@ -7,7 +7,7 @@ import com.ttdat.userservice.api.dto.common.PermissionDTO;
 import com.ttdat.userservice.api.dto.response.PermissionPageResult;
 import com.ttdat.userservice.application.queries.permission.GetAllPermissionsQuery;
 import com.ttdat.userservice.application.queries.permission.GetPermissionPageQuery;
-import com.ttdat.userservice.infrastructure.utils.RequestParamsUtils;
+import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;

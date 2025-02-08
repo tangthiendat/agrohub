@@ -7,7 +7,7 @@ import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.api.dto.response.UserPageResult;
 import com.ttdat.userservice.application.queries.user.GetUserByIdQuery;
 import com.ttdat.userservice.application.queries.user.GetUserPageQuery;
-import com.ttdat.userservice.infrastructure.utils.RequestParamsUtils;
+import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;

@@ -1,4 +1,4 @@
-package com.ttdat.userservice.infrastructure.utils;
+package com.ttdat.core.infrastructure.utils;
 
 import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;

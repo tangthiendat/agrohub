@@ -7,7 +7,7 @@ import com.ttdat.userservice.api.dto.response.RoleOption;
 import com.ttdat.userservice.api.dto.response.RolePageResult;
 import com.ttdat.userservice.application.queries.role.GetAllRolesQuery;
 import com.ttdat.userservice.application.queries.role.GetRolePageQuery;
-import com.ttdat.userservice.infrastructure.utils.RequestParamsUtils;
+import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
