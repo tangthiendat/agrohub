@@ -8,12 +8,11 @@ import com.ttdat.productservice.application.queries.unit.GetAllUnitsQuery;
 import com.ttdat.productservice.application.queries.unit.GetUnitPageQuery;
 import com.ttdat.productservice.domain.entities.Unit;
 import com.ttdat.productservice.domain.repositories.UnitRepository;
-import com.ttdat.productservice.infrastructure.utils.FilterUtils;
+import com.ttdat.productservice.infrastructure.utils.PaginationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,18 +30,9 @@ public class UnitQueryHandler {
 
     @QueryHandler
     public UnitPageResult handle(GetUnitPageQuery getUnitPageQuery) {
-        List<Sort.Order> sortOrders = FilterUtils.toSortOrders(getUnitPageQuery.getSortParams());
-        int page = getUnitPageQuery.getPaginationParams().getPage();
-        int pageSize = getUnitPageQuery.getPaginationParams().getPageSize();
-        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by(sortOrders));
-        org.springframework.data.domain.Page<Unit> unitPage = unitRepository.findAll(pageable);
-
-        PaginationMeta paginationMeta = PaginationMeta.builder()
-                .page(unitPage.getNumber() + 1)
-                .pageSize(unitPage.getSize())
-                .totalElements(unitPage.getTotalElements())
-                .totalPages(unitPage.getTotalPages())
-                .build();
+        Pageable pageable = PaginationUtils.getPageable(getUnitPageQuery.getPaginationParams(), getUnitPageQuery.getSortParams());
+        Page<Unit> unitPage = unitRepository.findAll(pageable);
+        PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(unitPage);
         return UnitPageResult.builder()
                 .meta(paginationMeta)
                 .content(unitMapper.toDTOs(unitPage.getContent()))
