@@ -16,7 +16,7 @@ public class ProductUnitPriceDTO {
 
     BigDecimal price;
 
-    LocalDate startDate;
+    LocalDate validFrom;
 
-    LocalDate endDate;
+    LocalDate validTo;
 }

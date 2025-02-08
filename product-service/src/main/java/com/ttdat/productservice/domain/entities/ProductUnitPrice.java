@@ -28,7 +28,7 @@ public class ProductUnitPrice {
     @Column(precision = 15, scale = 2)
     BigDecimal price;
 
-    LocalDate startDate;
+    LocalDate validFrom;
 
-    LocalDate endDate;
+    LocalDate validTo;
 }
