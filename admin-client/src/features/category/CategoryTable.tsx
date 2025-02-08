@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import Access from "../auth/Access";
+import UpdateCategory from "./UpdateCategory";
 import { ICategory, PaginationParams, SortParams } from "../../interfaces";
-import { categoryService } from "../../services/product/category-service";
+import { categoryService } from "../../services";
 import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
 import { formatTimestamp } from "../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../utils/color";
+import { PERMISSIONS } from "../../common/constants";
+import { Module } from "../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -150,9 +154,9 @@ const CategoryTable: React.FC = () => {
       width: "15%",
       render: (record: ICategory) => (
         <Space>
-          {/* <Access permission={PERMISSIONS[Module.ROLE].UPDATE} hideChildren>
-            <UpdateRole role={record} />
-          </Access> */}
+          <Access permission={PERMISSIONS[Module.CATEGORY].UPDATE} hideChildren>
+            <UpdateCategory category={record} />
+          </Access>
         </Space>
       ),
     },

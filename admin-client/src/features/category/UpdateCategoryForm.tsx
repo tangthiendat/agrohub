@@ -1,12 +1,18 @@
 import toast from "react-hot-toast";
 import { Button, Col, Form, Input, Row, Space } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { categoryService } from "../../services/product/category-service";
+import { categoryService } from "../../services";
 import { ICategory } from "../../interfaces";
+import { useEffect } from "react";
 
 interface UpdateCategoryFormProps {
   categoryToUpdate?: ICategory;
   onCancel: () => void;
+}
+
+interface UpdateCategoryArgs {
+  categoryId: number;
+  updatedCategory: ICategory;
 }
 
 const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
@@ -27,24 +33,42 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
     },
   });
 
+  const { mutate: updateCategory, isPending: isUpdating } = useMutation({
+    mutationFn: ({ categoryId, updatedCategory }: UpdateCategoryArgs) =>
+      categoryService.update(categoryId, updatedCategory),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("categories");
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (categoryToUpdate) {
+      form.setFieldsValue(categoryToUpdate);
+    }
+  }, [form, categoryToUpdate]);
+
   function handleFinish(values: ICategory) {
     if (categoryToUpdate) {
-      // updatePermission(
-      //   {
-      //     permissionId: permissionToUpdate.permissionId,
-      //     updatedPermission: values,
-      //   },
-      //   {
-      //     onSuccess: () => {
-      //       toast.success("Cập nhật quyền hạn thành công");
-      //       onCancel();
-      //       form.resetFields();
-      //     },
-      //     onError: () => {
-      //       toast.error("Cập nhật quyền hạn thất bại");
-      //     },
-      //   },
-      // );
+      updateCategory(
+        {
+          categoryId: categoryToUpdate.categoryId,
+          updatedCategory: values,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật loại sản phẩm thành công");
+            onCancel();
+            form.resetFields();
+          },
+          onError: () => {
+            toast.error("Cập nhật loại sản phẩm thất bại");
+          },
+        },
+      );
     } else {
       createCategory(values, {
         onSuccess: () => {
@@ -79,10 +103,14 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
       </Row>
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel} loading={isCreating}>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
             Hủy
           </Button>
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {categoryToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>

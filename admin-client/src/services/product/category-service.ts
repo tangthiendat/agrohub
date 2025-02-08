@@ -16,6 +16,10 @@ interface ICategoryService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<ICategory>>>;
+  update(
+    categoryId: number,
+    updatedCategory: ICategory,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/categories", {
@@ -42,6 +46,13 @@ class CategoryService implements ICategoryService {
         },
       })
     ).data;
+  }
+
+  async update(
+    categoryId: number,
+    updatedCategory: ICategory,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.put(`/${categoryId}`, updatedCategory)).data;
   }
 }
 
