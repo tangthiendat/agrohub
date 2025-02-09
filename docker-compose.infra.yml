@@ -98,6 +98,8 @@ services:
     tty: true
     networks:
       - agrohub
+    ports:
+      - "5432:5432"
     volumes:
       - ${DOCKER_DATA}/ct553/kong-internal:/var/lib/postgresql/data
       
