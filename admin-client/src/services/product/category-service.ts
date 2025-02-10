@@ -16,6 +16,7 @@ interface ICategoryService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<ICategory>>>;
+  getAll(): Promise<ApiResponse<ICategory[]>>;
   update(
     categoryId: number,
     updatedCategory: ICategory,
@@ -46,6 +47,10 @@ class CategoryService implements ICategoryService {
         },
       })
     ).data;
+  }
+
+  async getAll(): Promise<ApiResponse<ICategory[]>> {
+    return (await apiClient.get("")).data;
   }
 
   async update(

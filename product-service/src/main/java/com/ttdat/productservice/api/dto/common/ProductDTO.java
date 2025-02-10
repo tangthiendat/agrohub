@@ -39,7 +39,7 @@ public class ProductDTO {
 
     String packaging;
 
-    String safetyGuidelines;
+    String safetyInstructions;
 
     String hazardClassification;
 

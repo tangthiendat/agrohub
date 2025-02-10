@@ -103,4 +103,18 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PUT,
     },
   },
+  [Module.PRODUCT]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/products/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/products",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/products/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
 };

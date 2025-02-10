@@ -1,3 +1,5 @@
+import { GetProp, UploadProps } from "antd";
+
 export interface ErrorDetail {
   field: string;
   message: string;
@@ -44,3 +46,5 @@ export interface Auditable {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];

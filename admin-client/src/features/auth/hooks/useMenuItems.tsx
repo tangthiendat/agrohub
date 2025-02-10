@@ -1,7 +1,7 @@
 import { MenuProps } from "antd";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
-import { MdCategory, MdDashboard } from "react-icons/md";
+import { MdCategory, MdDashboard, MdInventory } from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { FaKey, FaUserCog, FaUsers } from "react-icons/fa";
 import { IUser } from "../../../interfaces";
@@ -51,7 +51,15 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           item.httpMethod === PERMISSIONS[Module.UNIT].GET_PAGE.httpMethod,
       );
 
-      const hasItemListChildren: boolean = Boolean(viewCategories || viewUnits);
+      const viewProducts = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.PRODUCT].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.PRODUCT].GET_PAGE.httpMethod,
+      );
+
+      const hasItemListChildren: boolean = Boolean(
+        viewCategories || viewUnits || viewProducts,
+      );
 
       const menuItems = [
         {
@@ -117,10 +125,23 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           key: "categories",
                           icon: <MdCategory />,
                         },
+                      ]
+                    : []),
+                  ...(viewUnits
+                    ? [
                         {
                           label: <NavLink to="/units">Đơn vị tính</NavLink>,
                           key: "units",
                           icon: <FiPackage />,
+                        },
+                      ]
+                    : []),
+                  ...(viewProducts
+                    ? [
+                        {
+                          label: <NavLink to="/products">Sản phẩm</NavLink>,
+                          key: "products",
+                          icon: <MdInventory />,
                         },
                       ]
                     : []),

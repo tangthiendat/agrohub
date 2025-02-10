@@ -24,6 +24,8 @@ public class Product extends Auditable {
     @Column(length = 200)
     String productName;
 
+    Integer totalQuantity;
+
     @Column(length = 500)
     String description;
 
@@ -48,7 +50,7 @@ public class Product extends Auditable {
     String packaging;
 
     @Column(length = 500)
-    String safetyGuidelines;
+    String safetyInstructions;
 
     @Column(length = 200)
     String hazardClassification;

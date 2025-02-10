@@ -14,6 +14,7 @@ interface IUnitService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IUnit>>>;
+  getAll(): Promise<ApiResponse<IUnit[]>>;
   update(unitId: number, updatedUnit: IUnit): Promise<ApiResponse<void>>;
 }
 
@@ -39,6 +40,10 @@ class UnitService implements IUnitService {
         },
       })
     ).data;
+  }
+
+  async getAll(): Promise<ApiResponse<IUnit[]>> {
+    return (await apiClient.get("")).data;
   }
 
   async update(unitId: number, updatedUnit: IUnit): Promise<ApiResponse<void>> {
