@@ -11,17 +11,17 @@ import org.mapstruct.*;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface CategoryMapper extends EntityMapper<CategoryDTO, Category> {
-    CreateCategoryCommand toCommand(CategoryDTO categoryDTO);
+    @Mapping(source = "id", target = "categoryId")
+    CreateCategoryCommand toCreateCommand(Long id, CategoryDTO categoryDTO);
 
     @Mapping(source = "id", target = "categoryId")
-    CategoryCreatedEvent toEvent(Long id, CreateCategoryCommand createCategoryCommand);
+    UpdateCategoryCommand toUpdateCommand(Long id, CategoryDTO categoryDTO);
+
+    CategoryCreatedEvent toCreateEvent(CreateCategoryCommand createCategoryCommand);
+
+    CategoryUpdatedEvent toUpdateEvent(UpdateCategoryCommand updateCategoryCommand);
 
     Category toEntity(CategoryCreatedEvent categoryCreatedEvent);
-
-    @Mapping(source = "id", target = "categoryId")
-    UpdateCategoryCommand toCommand(Long id, CategoryDTO categoryDTO);
-
-    CategoryUpdatedEvent toEvent(UpdateCategoryCommand updateCategoryCommand);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget Category category, CategoryUpdatedEvent categoryUpdatedEvent);

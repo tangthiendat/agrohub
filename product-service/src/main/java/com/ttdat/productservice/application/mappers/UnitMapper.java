@@ -11,18 +11,20 @@ import org.mapstruct.*;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface UnitMapper extends EntityMapper<UnitDTO, Unit> {
+    @Mapping(source = "id", target = "unitId")
+    CreateUnitCommand toCreateCommand(Long id, UnitDTO unitDTO);
+
+    @Mapping(source = "id", target = "unitId")
+    UpdateUnitCommand toUpdateCommand(Long id, UnitDTO unitDTO);
+
+    UnitCreatedEvent toCreateEvent(CreateUnitCommand createUnitCommand);
+
+    UnitUpdatedEvent toUpdateEvent(UpdateUnitCommand updateUnitCommand);
+
     Unit toEntity(UnitCreatedEvent unitCreatedEvent);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget Unit unit, UnitUpdatedEvent unitUpdatedEvent);
 
-    CreateUnitCommand toCommand(UnitDTO unitDTO);
 
-    @Mapping(source = "id", target = "unitId")
-    UpdateUnitCommand toCommand(Long id, UnitDTO unitDTO);
-
-    @Mapping(source = "id", target = "unitId")
-    UnitCreatedEvent toEvent(Long id,CreateUnitCommand createUnitCommand);
-
-    UnitUpdatedEvent toEvent(UpdateUnitCommand updateUnitCommand);
 }

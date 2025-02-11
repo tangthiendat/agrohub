@@ -5,7 +5,6 @@ import com.ttdat.productservice.application.commands.category.UpdateCategoryComm
 import com.ttdat.productservice.application.mappers.CategoryMapper;
 import com.ttdat.productservice.domain.events.category.CategoryCreatedEvent;
 import com.ttdat.productservice.domain.events.category.CategoryUpdatedEvent;
-import com.ttdat.productservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;
@@ -17,18 +16,16 @@ import org.springframework.stereotype.Component;
 public class CategoryCommandHandler {
     private final EventBus eventBus;
     private final CategoryMapper categoryMapper;
-    private final IdGeneratorService idGeneratorService;
 
     @CommandHandler
     public void handle(CreateCategoryCommand createCategoryCommand) {
-        Long categoryId = idGeneratorService.generateCategoryId();
-        CategoryCreatedEvent categoryCreatedEvent = categoryMapper.toEvent(categoryId, createCategoryCommand);
+        CategoryCreatedEvent categoryCreatedEvent = categoryMapper.toCreateEvent(createCategoryCommand);
         eventBus.publish(GenericEventMessage.asEventMessage(categoryCreatedEvent));
     }
 
     @CommandHandler
     public void handle(UpdateCategoryCommand updateCategoryCommand) {
-        CategoryUpdatedEvent categoryUpdatedEvent = categoryMapper.toEvent(updateCategoryCommand);
+        CategoryUpdatedEvent categoryUpdatedEvent = categoryMapper.toUpdateEvent(updateCategoryCommand);
         eventBus.publish(GenericEventMessage.asEventMessage(categoryUpdatedEvent));
     }
 }
