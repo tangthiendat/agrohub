@@ -29,6 +29,7 @@ public class ProductDTO {
     CategoryDTO category;
 
     @Positive(message = "Default expiry days must be a positive number")
+    @NotNull(message = "Default expiry days is required")
     Integer defaultExpDays;
 
     String storageInstructions;

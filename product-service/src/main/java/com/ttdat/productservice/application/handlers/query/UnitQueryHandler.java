@@ -25,7 +25,7 @@ public class UnitQueryHandler {
 
     @QueryHandler
     public List<UnitDTO> handle(GetAllUnitsQuery getAllUnitsQuery) {
-        return unitMapper.toDTOs(unitRepository.findAll());
+        return unitMapper.toDTOList(unitRepository.findAll());
     }
 
     @QueryHandler
@@ -35,7 +35,7 @@ public class UnitQueryHandler {
         PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(unitPage);
         return UnitPageResult.builder()
                 .meta(paginationMeta)
-                .content(unitMapper.toDTOs(unitPage.getContent()))
+                .content(unitMapper.toDTOList(unitPage.getContent()))
                 .build();
     }
 }

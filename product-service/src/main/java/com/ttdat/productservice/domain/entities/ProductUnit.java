@@ -32,6 +32,6 @@ public class ProductUnit {
 
     boolean isDefault;
 
-    @OneToMany(mappedBy = "productUnit")
+    @OneToMany(mappedBy = "productUnit", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductUnitPrice> productUnitPrices;
 }

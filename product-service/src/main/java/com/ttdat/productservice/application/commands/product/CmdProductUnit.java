@@ -1,6 +1,7 @@
-package com.ttdat.productservice.api.dto.common;
+package com.ttdat.productservice.application.commands.product;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,15 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductUnitDTO {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class CmdProductUnit {
     String productUnitId;
 
-    UnitDTO unit;
+    Long unitId;
 
     Double conversionFactor;
 
-    @JsonProperty("is_default")
     boolean isDefault;
 
-    List<ProductUnitPriceDTO> productUnitPrices;
+    List<CmdProductUnitPrice> productUnitPrices;
 }

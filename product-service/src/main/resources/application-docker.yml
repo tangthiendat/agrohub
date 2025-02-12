@@ -29,6 +29,8 @@ axon:
     events: jackson
   eventhandling:
     processors:
+      product-group:
+        mode: subscribing
       unit-group:
         mode: subscribing
       category-group:

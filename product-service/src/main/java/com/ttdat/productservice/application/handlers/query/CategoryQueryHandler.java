@@ -25,7 +25,7 @@ public class CategoryQueryHandler {
 
     @QueryHandler
     public List<CategoryDTO> handle(GetAllCategoriesQuery getAllCategoriesQuery) {
-        return categoryMapper.toDTOs(categoryRepository.findAll());
+        return categoryMapper.toDTOList(categoryRepository.findAll());
     }
 
     @QueryHandler
@@ -35,7 +35,7 @@ public class CategoryQueryHandler {
         PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(categoryPage);
         return CategoryPageResult.builder()
                 .meta(paginationMeta)
-                .content(categoryMapper.toDTOs(categoryPage.getContent()))
+                .content(categoryMapper.toDTOList(categoryPage.getContent()))
                 .build();
     }
 }

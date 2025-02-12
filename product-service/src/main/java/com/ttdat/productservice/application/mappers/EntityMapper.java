@@ -11,5 +11,5 @@ import java.util.List;
 
 public interface EntityMapper<D,E>{
     D toDTO(E entity);
-    List<D> toDTOs(List<E> entities);
+    List<D> toDTOList(List<E> entities);
 }
