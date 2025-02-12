@@ -1,9 +1,7 @@
 package com.ttdat.productservice.application.handlers.event;
 
 import com.ttdat.productservice.application.mappers.ProductMapper;
-import com.ttdat.productservice.domain.entities.Category;
 import com.ttdat.productservice.domain.entities.Product;
-import com.ttdat.productservice.domain.entities.ProductUnit;
 import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
 import com.ttdat.productservice.domain.repositories.CategoryRepository;
 import com.ttdat.productservice.domain.repositories.ProductRepository;
