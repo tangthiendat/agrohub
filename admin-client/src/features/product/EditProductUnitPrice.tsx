@@ -27,15 +27,13 @@ const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
   };
   return (
     <div className="flex items-center gap-4">
-      <Input
-        readOnly
-        value={
-          currentProductUnitPrice?.price
-            ? formatCurrency(currentProductUnitPrice?.price)
-            : ""
-        }
-        addonAfter="VND"
-      />
+      {currentProductUnitPrice?.price && (
+        <Input
+          readOnly
+          value={formatCurrency(currentProductUnitPrice?.price)}
+          addonAfter="VND"
+        />
+      )}
 
       <EditIcon onClick={handleOpenModal} tooltipTitle="Chỉnh sửa giá" />
       <Modal

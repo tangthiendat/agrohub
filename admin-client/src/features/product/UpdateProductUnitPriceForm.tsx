@@ -31,7 +31,7 @@ const UpdateProductUnitPriceForm: React.FC<UpdateProductUnitPriceFormProps> = ({
     if (currentProductUnitPrice) {
       form.setFieldsValue(currentProductUnitPrice);
     }
-  }, [currentProductUnitPrice]);
+  }, [form, currentProductUnitPrice]);
 
   function handleFinish(values: IProductUnitPrice) {
     const product = productForm.getFieldsValue();
