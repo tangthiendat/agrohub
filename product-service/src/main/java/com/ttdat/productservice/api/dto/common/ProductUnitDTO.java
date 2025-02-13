@@ -18,7 +18,7 @@ public class ProductUnitDTO {
 
     Double conversionFactor;
 
-    @JsonProperty("is_default")
+    @JsonProperty("isDefault")
     boolean isDefault;
 
     List<ProductUnitPriceDTO> productUnitPrices;
