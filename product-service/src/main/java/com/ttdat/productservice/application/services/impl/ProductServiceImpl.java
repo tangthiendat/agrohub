@@ -15,13 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final CommandGateway commandGateway;
-
     private final CloudinaryService cloudinaryService;
 
     @Override
@@ -39,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
                                                     .validFrom(productUnitPrice.getValidFrom())
                                                     .validTo(productUnitPrice.getValidTo())
                                                     .build())
-                                            .collect(Collectors.toList())
+                                            .toList()
                                     : List.of();
                             return CmdProductUnit.builder()
                                     .productUnitId(RandomStringUtils.secure().nextAlphanumeric(12))
@@ -49,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
                                     .productUnitPrices(cmdProductUnitPrices)
                                     .build();
                         })
-                        .collect(Collectors.toList())
+                        .toList()
                 : List.of();
         CreateProductCommand createProductCommand = CreateProductCommand.builder()
                 .productId(productId)

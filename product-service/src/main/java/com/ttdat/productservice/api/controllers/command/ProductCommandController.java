@@ -20,9 +20,7 @@ import java.io.IOException;
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductCommandController {
-
     private final ProductService productService;
-
     private final ObjectMapper objectMapper;
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
