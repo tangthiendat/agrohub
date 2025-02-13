@@ -1,6 +1,5 @@
 package com.ttdat.productservice.application.handlers.query;
 
-import com.ttdat.core.api.dto.response.PaginationMeta;
 import com.ttdat.productservice.api.dto.common.CategoryDTO;
 import com.ttdat.productservice.api.dto.response.CategoryPageResult;
 import com.ttdat.productservice.application.mappers.CategoryMapper;
@@ -32,9 +31,8 @@ public class CategoryQueryHandler {
     public CategoryPageResult handle(GetCategoryPageQuery getCategoryPageQuery) {
         Pageable pageable = PaginationUtils.getPageable(getCategoryPageQuery.getPaginationParams(), getCategoryPageQuery.getSortParams());
         Page<Category> categoryPage = categoryRepository.findAll(pageable);
-        PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(categoryPage);
         return CategoryPageResult.builder()
-                .meta(paginationMeta)
+                .meta(PaginationUtils.getPaginationMeta(categoryPage))
                 .content(categoryMapper.toDTOList(categoryPage.getContent()))
                 .build();
     }

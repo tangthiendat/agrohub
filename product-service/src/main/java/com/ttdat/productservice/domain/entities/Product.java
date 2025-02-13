@@ -40,7 +40,7 @@ public class Product extends Auditable {
     @Column(length = 200)
     String storageInstructions;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ProductUnit> productUnits;
 
     @Enumerated(EnumType.STRING)
