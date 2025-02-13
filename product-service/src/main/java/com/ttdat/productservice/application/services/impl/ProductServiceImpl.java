@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
                             List<CmdProductUnitPrice> cmdProductUnitPrices = productUnit.getProductUnitPrices() != null ?
                                     productUnit.getProductUnitPrices().stream()
                                             .map(productUnitPrice -> CmdProductUnitPrice.builder()
-                                                    .productUnitPriceId(RandomStringUtils.secure().randomAlphanumeric(12))
+                                                    .productUnitPriceId(RandomStringUtils.secure().nextAlphanumeric(12))
                                                     .price(productUnitPrice.getPrice())
                                                     .validFrom(productUnitPrice.getValidFrom())
                                                     .validTo(productUnitPrice.getValidTo())
@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
                                             .collect(Collectors.toList())
                                     : List.of();
                             return CmdProductUnit.builder()
-                                    .productUnitId(RandomStringUtils.secure().randomAlphanumeric(12))
+                                    .productUnitId(RandomStringUtils.secure().nextAlphanumeric(12))
                                     .unitId(productUnit.getUnit().getUnitId())
                                     .conversionFactor(productUnit.getConversionFactor())
                                     .isDefault(productUnit.isDefault())
