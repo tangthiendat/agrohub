@@ -67,4 +67,54 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PATCH,
     },
   },
+  [Module.CATEGORY]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/categories/page",
+      httpMethod: HttpMethod.GET,
+    },
+    GET_ALL: {
+      apiPath: "/api/v1/categories",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/categories",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/categories/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
+  [Module.UNIT]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/units/page",
+      httpMethod: HttpMethod.GET,
+    },
+    GET_ALL: {
+      apiPath: "/api/v1/units",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/units",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/units/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
+  [Module.PRODUCT]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/products/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/products",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/products/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
 };

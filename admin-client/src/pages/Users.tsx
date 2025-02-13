@@ -66,7 +66,7 @@ const Users: React.FC = () => {
           <div className="w-[40%]">
             <div className="flex gap-3">
               <Search
-                placeholder="Nhập họ và tên, email hoặc số điện thoại"
+                placeholder="Nhập tên hoặc mã sản phẩm"
                 defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear

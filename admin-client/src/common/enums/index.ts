@@ -18,10 +18,19 @@ export enum Module {
   USER = "USER",
   ROLE = "ROLE",
   PERMISSION = "PERMISSION",
+  CATEGORY = "CATEGORY",
+  UNIT = "UNIT",
+  PRODUCT = "PRODUCT",
 }
 
 export enum Gender {
   MALE = "MALE",
   FEMALE = "FEMALE",
   OTHER = "OTHER",
+}
+
+export enum PhysicalState {
+  SOLID = "SOLID",
+  LIQUID = "LIQUID",
+  POWDER = "POWDER",
 }
