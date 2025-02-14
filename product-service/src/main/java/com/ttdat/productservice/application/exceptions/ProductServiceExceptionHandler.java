@@ -12,9 +12,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,38 +26,6 @@ import java.util.concurrent.CompletionException;
 @Slf4j
 public class ProductServiceExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<ApiResponse<Object>> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        ApiError apiError = ApiError.builder()
-                .errorCode(ErrorCode.EMAIL_NOT_FOUND.getCode())
-                .errorType(ErrorCode.EMAIL_NOT_FOUND.getErrorType())
-                .message(ex.getMessage())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ApiResponse.builder()
-                        .status(HttpStatus.NOT_FOUND.value())
-                        .message(ex.getMessage())
-                        .error(apiError)
-                        .build());
-    }
-
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<ApiResponse<Object>> handleDisabledException(DisabledException ex) {
-        ApiError apiError = ApiError.builder()
-                .errorCode(ErrorCode.ACCOUNT_DISABLED.getCode())
-                .errorType(ErrorCode.ACCOUNT_DISABLED.getErrorType())
-                .message(ErrorCode.ACCOUNT_DISABLED.getMessage())
-                .build();
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(ApiResponse.builder()
-                        .status(HttpStatus.FORBIDDEN.value())
-                        .message(ErrorCode.ACCOUNT_DISABLED.getMessage())
-                        .error(apiError)
-                        .build());
-    }
-
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<ApiResponse<Object>> handleAuthException(AuthException ex) {
         ApiError apiError = ApiError.builder()
@@ -72,21 +37,6 @@ public class ProductServiceExceptionHandler extends ResponseEntityExceptionHandl
                 .body(ApiResponse.builder()
                         .status(HttpStatus.UNAUTHORIZED.value())
                         .message(ex.getMessage())
-                        .error(apiError)
-                        .build());
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiResponse<Object>> handleBadCredentialsException(BadCredentialsException ex) {
-        ApiError apiError = ApiError.builder()
-                .errorCode(ErrorCode.INVALID_CREDENTIALS.getCode())
-                .errorType(ErrorCode.INVALID_CREDENTIALS.getErrorType())
-                .message(ErrorCode.INVALID_CREDENTIALS.getMessage())
-                .build();
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponse.builder()
-                        .status(HttpStatus.UNAUTHORIZED.value())
-                        .message(ErrorCode.INVALID_CREDENTIALS.getMessage())
                         .error(apiError)
                         .build());
     }
