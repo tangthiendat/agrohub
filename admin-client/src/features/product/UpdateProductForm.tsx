@@ -292,6 +292,14 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
           </div>
         </div>
 
+        <div className="flex items-center justify-between gap-10">
+          <div style={{ width: "calc(50% - 1.25rem)" }}>
+            <Form.Item label="Tổng số lượng sản phẩm" name="totalQuantity">
+              <InputNumber className="w-full" min={0} />
+            </Form.Item>
+          </div>
+        </div>
+
         <Typography.Title level={5} className="mb-2">
           Đặc điểm kỹ thuật
         </Typography.Title>
@@ -309,7 +317,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                 },
               ]}
             >
-              <InputNumber className="w-full" />
+              <InputNumber className="w-full" min={0} />
             </Form.Item>
           </div>
 

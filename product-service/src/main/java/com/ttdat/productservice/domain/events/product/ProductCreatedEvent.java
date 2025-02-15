@@ -21,6 +21,8 @@ public class ProductCreatedEvent {
 
     String description;
 
+    Integer totalQuantity;
+
     String imageUrl;
 
     Long categoryId;

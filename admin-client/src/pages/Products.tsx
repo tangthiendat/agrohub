@@ -1,16 +1,44 @@
 import { useNavigate, useSearchParams } from "react-router";
 import { PlusOutlined } from "@ant-design/icons";
-import { useTitle } from "../common/hooks";
-import Access from "../features/auth/Access";
-import { PERMISSIONS } from "../common/constants";
-import { Module } from "../common/enums";
 import Search from "antd/es/input/Search";
 import { Button } from "antd";
+import Access from "../features/auth/Access";
+import { useTitle } from "../common/hooks";
+import { PERMISSIONS } from "../common/constants";
+import { Module } from "../common/enums";
+import { PaginationParams, SortParams } from "../interfaces";
+import { useQuery } from "@tanstack/react-query";
+import { productService, userService } from "../services";
+import ProductTable from "../features/product/ProductTable";
 
 const Products: React.FC = () => {
+  useTitle("Sản phẩm");
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  useTitle("Người dùng");
+
+  const pagination: PaginationParams = {
+    page: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("pageSize")) || 10,
+  };
+
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
+  };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["products", pagination, sort].filter((key) => {
+      if (typeof key === "string") {
+        return key !== "";
+      } else if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => productService.getPage(pagination, sort),
+  });
+
   return (
     <Access permission={PERMISSIONS[Module.PRODUCT].GET_PAGE}>
       <div className="card">
@@ -38,7 +66,7 @@ const Products: React.FC = () => {
             </Button>
           </Access>
         </div>
-        {/* <UserTable userPage={data?.payload} isLoading={isLoading} /> */}
+        <ProductTable productPage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );

@@ -22,6 +22,8 @@ public class CreateProductCommand {
 
     String description;
 
+    Integer totalQuantity;
+
     String imageUrl;
 
     Long categoryId;

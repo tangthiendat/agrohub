@@ -8,12 +8,16 @@ import UserTable from "../features/auth/users/UserTable";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
-import { SortParams, UserFilterCriteria } from "../interfaces";
+import {
+  PaginationParams,
+  SortParams,
+  UserFilterCriteria,
+} from "../interfaces";
 import { userService } from "../services";
 
 const Users: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const pagination = {
+  const pagination: PaginationParams = {
     page: Number(searchParams.get("page")) || 1,
     pageSize: Number(searchParams.get("pageSize")) || 10,
   };

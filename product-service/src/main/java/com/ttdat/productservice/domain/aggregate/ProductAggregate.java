@@ -1,4 +1,4 @@
-package com.ttdat.productservice.application.handlers.aggregate;
+package com.ttdat.productservice.domain.aggregate;
 
 import com.ttdat.productservice.application.commands.product.CreateProductCommand;
 import com.ttdat.productservice.domain.entities.PhysicalState;
@@ -76,6 +76,7 @@ public class ProductAggregate {
                 .productId(createProductCommand.getProductId())
                 .productName(createProductCommand.getProductName())
                 .description(createProductCommand.getDescription())
+                .totalQuantity(createProductCommand.getTotalQuantity())
                 .imageUrl(createProductCommand.getImageUrl())
                 .categoryId(createProductCommand.getCategoryId())
                 .defaultExpDays(createProductCommand.getDefaultExpDays())
