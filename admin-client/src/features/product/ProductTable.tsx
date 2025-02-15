@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Table, TablePaginationConfig } from "antd";
+import { Space, Table, TablePaginationConfig } from "antd";
 import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { TableProps } from "antd/lib";
+import ViewIcon from "../../common/components/icons/ViewIcon";
 import { IProduct, Page } from "../../interfaces";
 import { categoryService } from "../../services";
 import { formatTimestamp } from "../../utils/datetime";
@@ -24,6 +25,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
@@ -33,8 +35,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
     },
   }));
 
-  const { data: category, isLoading: isCategoriesLoading } = useQuery({
-    queryKey: ["roles"],
+  const { data: categoryOptions, isLoading: isCategoriesLoading } = useQuery({
+    queryKey: ["categories"],
     queryFn: categoryService.getAll,
     select: (data) => {
       if (data.payload) {
@@ -166,6 +168,11 @@ const ProductTable: React.FC<ProductTableProps> = ({
       title: "Hành động",
       key: "action",
       width: "10%",
+      render: (record: IProduct) => (
+        <Space>
+          <ViewIcon onClick={() => navigate(record.productId)} />
+        </Space>
+      ),
     },
   ];
 

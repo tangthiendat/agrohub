@@ -13,6 +13,7 @@ interface IProductService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IProduct>>>;
+  getById(productId: string): Promise<ApiResponse<IProduct>>;
   create(newProduct: FormData): Promise<ApiResponse<void>>;
 }
 
@@ -34,6 +35,10 @@ class ProductService implements IProductService {
         },
       })
     ).data;
+  }
+
+  async getById(productId: string): Promise<ApiResponse<IProduct>> {
+    return (await apiClient.get(`/${productId}`)).data;
   }
 
   async create(newProduct: FormData): Promise<ApiResponse<void>> {
