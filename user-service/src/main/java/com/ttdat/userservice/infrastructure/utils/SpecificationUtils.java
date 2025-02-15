@@ -38,8 +38,8 @@ public class SpecificationUtils {
                     .map(criteria -> (Specification<T>) (root, query, criteriaBuilder) -> {
                         if (fieldType == String.class) {
                             return criteriaBuilder.equal(root.get(joinFieldName).get(fieldName), criteria.getValue());
-                        } else if (fieldType == Boolean.class) {
-                            return criteriaBuilder.equal(root.get(joinFieldName).get(fieldName), Boolean.parseBoolean((String) criteria.getValue()));
+                        } else if (fieldType == Long.class) {
+                            return criteriaBuilder.equal(root.get(joinFieldName).get(fieldName), Long.parseLong((String) criteria.getValue()));
                         } else {
                             throw new UnsupportedOperationException("Field type not supported");
                         }

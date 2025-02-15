@@ -60,7 +60,7 @@ public class UserQueryHandler {
         userPageSpec = userPageSpec.and(SpecificationUtils.buildSpecification(filterParams, "fullName", String.class))
                 .and(SpecificationUtils.buildSpecification(filterParams, "gender", String.class))
                 .and(SpecificationUtils.buildSpecification(filterParams, "active", Boolean.class))
-                .and(SpecificationUtils.buildJoinSpecification(filterParams, "role", "roleName", String.class));
+                .and(SpecificationUtils.buildJoinSpecification(filterParams, "role", "roleId", Long.class));
         if (filterParams.containsKey("query")){
             String searchValue = filterParams.get("query").toLowerCase();
             Specification<User> querySpec = (root, query, criteriaBuilder) -> {
