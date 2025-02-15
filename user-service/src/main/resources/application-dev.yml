@@ -11,9 +11,6 @@ spring:
   threads:
     virtual:
       enabled: true
-  jackson:
-    default-property-inclusion: non_null
-    property-naming-strategy: SNAKE_CASE
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}

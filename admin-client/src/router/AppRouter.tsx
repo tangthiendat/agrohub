@@ -11,6 +11,7 @@ import Products from "../pages/Products";
 import Roles from "../pages/Roles";
 import Units from "../pages/Units";
 import Users from "../pages/Users";
+import ViewProduct from "../features/product/ViewProduct";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
           {
             path: "new",
             element: <NewProduct />,
+          },
+          {
+            path: ":id",
+            element: <ViewProduct />,
           },
         ],
       },

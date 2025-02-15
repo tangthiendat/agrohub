@@ -26,7 +26,7 @@ public interface UserMapper extends EntityMapper<UserDTO, User> {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent);
 
-    @BeforeMapping
+    @AfterMapping
     default void updateUserRole(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent) {
         if (userUpdatedEvent.getRoleId() != null) {
             Role role = user.getRole();

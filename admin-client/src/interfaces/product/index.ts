@@ -31,7 +31,8 @@ export interface IProduct extends Auditable {
   productId: string;
   productName: string;
   description?: string;
-  imgUrl?: string;
+  totalQuantity?: number;
+  imageUrl?: string;
   category: ICategory;
   defaultExpDays: number;
   storageInstructions?: string;

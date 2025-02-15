@@ -1,22 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormInstance, Input, Modal } from "antd";
 import EditIcon from "../../common/components/icons/EditIcon";
 import UpdateProductUnitPriceForm from "./UpdateProductUnitPriceForm";
 import { useProductUnitPrice } from "../../context/ProductUnitPriceContext";
 import { IProduct } from "../../interfaces";
 import { formatCurrency } from "../../utils/number";
+import ViewProductUnitPrices from "./ViewProductUnitPrices";
 
 interface EditProductUnitPriceProps {
   productForm: FormInstance<IProduct>;
   productUnitIndex: number;
+  viewOnly: boolean;
 }
 
 const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
   productForm,
   productUnitIndex,
+  viewOnly,
 }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const { currentProductUnitPrice } = useProductUnitPrice();
+  const { currentProductUnitPrice, setCurrentProductUnitPrice } =
+    useProductUnitPrice();
+
+  useEffect(() => {
+    if (viewOnly) {
+      const product = productForm.getFieldsValue();
+      const productUnit = product.productUnits[productUnitIndex];
+      setCurrentProductUnitPrice(
+        productUnit.productUnitPrices[productUnit.productUnitPrices.length - 1],
+      );
+    }
+  }, [viewOnly, productForm, productUnitIndex, setCurrentProductUnitPrice]);
 
   const handleOpenModal = () => {
     setIsOpenModal(true);
@@ -35,7 +49,15 @@ const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
         />
       )}
 
-      <EditIcon onClick={handleOpenModal} tooltipTitle="Chỉnh sửa giá" />
+      {viewOnly ? (
+        <ViewProductUnitPrices
+          key={productUnitIndex}
+          productForm={productForm}
+          productUnitIndex={productUnitIndex}
+        />
+      ) : (
+        <EditIcon onClick={handleOpenModal} tooltipTitle="Chỉnh sửa giá" />
+      )}
       <Modal
         open={isOpenModal}
         width="25%"

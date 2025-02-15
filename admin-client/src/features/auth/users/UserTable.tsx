@@ -54,7 +54,7 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
     select: (data) => {
       if (data.payload) {
         return data.payload.map((role) => ({
-          value: role.roleName,
+          value: role.roleId,
           text: role.roleName,
         }));
       }
@@ -68,7 +68,6 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
         pagination: {
           ...prev.pagination,
           total: userPage.meta?.totalElements || 0,
-          showTotal: (total) => `Tổng ${total} sân bay`,
         },
       }));
     }
@@ -90,24 +89,16 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
 
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          if (key === "role") {
-            searchParams.set("roleName", value.join(","));
-          }
-          searchParams.set(key, value.join(","));
-        } else {
-          if (value) {
-            if (key === "role") {
-              searchParams.set("roleName", `${value}`);
-            }
-            searchParams.set(key, `${value}`);
-          } else {
-            if (key === "role") {
-              searchParams.delete("roleName");
-            }
-            searchParams.delete(key);
-          }
+        const paramKey = key === "role" ? "roleId" : key;
+        if (!value) {
+          searchParams.delete(paramKey);
+          return;
         }
+        const paramValue = Array.isArray(value)
+          ? value.join(",")
+          : String(value);
+
+        searchParams.set(paramKey, paramValue);
       });
     }
 
@@ -164,7 +155,7 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
       width: "10%",
       render: (dob: string) => dob && formatDate(dob),
       sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+      defaultSortOrder: getDefaultSortOrder(searchParams, "dob"),
       sortIcon: ({ sortOrder }) => (
         <div className="flex flex-col text-[10px]">
           <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
@@ -216,10 +207,17 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
       width: "10%",
       render: (role) => role.roleName,
       filters: roleOptions,
-      defaultFilteredValue: getDefaultFilterValue(searchParams, "role"),
-      filterIcon: (filtered) => (
-        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "roleId")?.map(
+        (roleId) => Number(roleId),
       ),
+      filterIcon: () => {
+        const isFiltered = Boolean(
+          getDefaultFilterValue(searchParams, "roleId")?.length,
+        );
+        return (
+          <FilterFilled style={{ color: getFilterIconColor(isFiltered) }} />
+        );
+      },
     },
     {
       title: "Hành động",

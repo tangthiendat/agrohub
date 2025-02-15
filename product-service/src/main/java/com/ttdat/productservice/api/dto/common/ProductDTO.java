@@ -23,6 +23,8 @@ public class ProductDTO {
 
     String description;
 
+    Integer totalQuantity;
+
     String imageUrl;
 
     @NotNull(message = "Category is required")

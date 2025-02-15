@@ -1,4 +1,4 @@
-package com.ttdat.productservice.application.handlers.aggregate;
+package com.ttdat.productservice.domain.aggregate;
 
 import com.ttdat.productservice.application.commands.product.CreateProductCommand;
 import com.ttdat.productservice.domain.entities.PhysicalState;
@@ -15,7 +15,6 @@ import org.axonframework.modelling.command.AggregateLifecycle;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Aggregate(type = "ProductAggregate", snapshotTriggerDefinition = "productSnapshotTriggerDefinition")
@@ -62,7 +61,7 @@ public class ProductAggregate {
                                                     .validFrom(productUnitPrice.getValidFrom())
                                                     .validTo(productUnitPrice.getValidTo())
                                                     .build())
-                                            .collect(Collectors.toList())
+                                            .toList()
                                     : List.of();
                             return EvtProductUnit.builder()
                                     .productUnitId(productUnit.getProductUnitId())
@@ -71,12 +70,13 @@ public class ProductAggregate {
                                     .conversionFactor(productUnit.getConversionFactor())
                                     .isDefault(productUnit.isDefault())
                                     .build();
-                        }).collect(Collectors.toList())
+                        }).toList()
                 : List.of();
         ProductCreatedEvent productCreatedEvent = ProductCreatedEvent.builder()
                 .productId(createProductCommand.getProductId())
                 .productName(createProductCommand.getProductName())
                 .description(createProductCommand.getDescription())
+                .totalQuantity(createProductCommand.getTotalQuantity())
                 .imageUrl(createProductCommand.getImageUrl())
                 .categoryId(createProductCommand.getCategoryId())
                 .defaultExpDays(createProductCommand.getDefaultExpDays())

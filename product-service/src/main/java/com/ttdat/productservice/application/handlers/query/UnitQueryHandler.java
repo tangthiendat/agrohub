@@ -1,6 +1,5 @@
 package com.ttdat.productservice.application.handlers.query;
 
-import com.ttdat.core.api.dto.response.PaginationMeta;
 import com.ttdat.productservice.api.dto.common.UnitDTO;
 import com.ttdat.productservice.api.dto.response.UnitPageResult;
 import com.ttdat.productservice.application.mappers.UnitMapper;
@@ -32,9 +31,8 @@ public class UnitQueryHandler {
     public UnitPageResult handle(GetUnitPageQuery getUnitPageQuery) {
         Pageable pageable = PaginationUtils.getPageable(getUnitPageQuery.getPaginationParams(), getUnitPageQuery.getSortParams());
         Page<Unit> unitPage = unitRepository.findAll(pageable);
-        PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(unitPage);
         return UnitPageResult.builder()
-                .meta(paginationMeta)
+                .meta(PaginationUtils.getPaginationMeta(unitPage))
                 .content(unitMapper.toDTOList(unitPage.getContent()))
                 .build();
     }

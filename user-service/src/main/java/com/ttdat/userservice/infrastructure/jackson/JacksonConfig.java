@@ -1,4 +1,4 @@
-package com.ttdat.productservice.infrastructure.config.jackson;
+package com.ttdat.userservice.infrastructure.jackson;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

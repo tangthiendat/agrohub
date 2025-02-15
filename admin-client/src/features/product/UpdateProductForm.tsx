@@ -17,7 +17,7 @@ import {
   UploadFile,
   UploadProps,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditProductUnitPrice from "./EditProductUnitPrice";
 import { ProductUnitPriceContextProvider } from "../../context/ProductUnitPriceContext";
 import { PHYSICAL_STATE_NAME } from "../../common/constants/product";
@@ -36,6 +36,7 @@ import { getBase64 } from "../../utils/image";
 interface UpdateProductFormProps {
   productToUpdate?: IProduct;
   onCancel: () => void;
+  viewOnly?: boolean;
 }
 
 const physicalStateOptions = Object.entries(PHYSICAL_STATE_NAME).map(
@@ -48,6 +49,7 @@ const physicalStateOptions = Object.entries(PHYSICAL_STATE_NAME).map(
 const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   productToUpdate,
   onCancel,
+  viewOnly = false,
 }) => {
   useTitle("Thêm sản phẩm");
   const queryClient = useQueryClient();
@@ -56,6 +58,23 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string>("");
   const [modal, contextHolder] = Modal.useModal();
+
+  useEffect(() => {
+    if (productToUpdate) {
+      form.setFieldsValue(productToUpdate);
+      if (productToUpdate.imageUrl) {
+        setPreviewImage(productToUpdate.imageUrl);
+        setFileList([
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: productToUpdate.imageUrl,
+          },
+        ]);
+      }
+    }
+  }, [productToUpdate, form]);
 
   const { data: categoryOptions, isLoading: isCategoriesLoading } = useQuery({
     queryKey: ["categories"],
@@ -209,7 +228,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                 },
               ]}
             >
-              <Input />
+              <Input readOnly={viewOnly} />
             </Form.Item>
           </div>
 
@@ -225,6 +244,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
               ]}
             >
               <Select
+                disabled={viewOnly}
                 options={categoryOptions}
                 loading={isCategoriesLoading}
                 placeholder="Chọn loại sản phẩm"
@@ -236,7 +256,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         <div className="flex items-center justify-between gap-10">
           <div className="flex-1">
             <Form.Item label="Mô tả" name="description">
-              <Input.TextArea rows={4} />
+              <Input.TextArea readOnly={viewOnly} rows={4} />
             </Form.Item>
           </div>
           <div className="flex-1">
@@ -260,11 +280,15 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
             >
               <Upload
                 maxCount={1}
+                disabled={viewOnly}
                 listType="picture-card"
                 fileList={fileList}
                 beforeUpload={() => false} // Prevent automatic upload
                 onPreview={handlePreview}
                 onChange={handleUploadChange}
+                showUploadList={{
+                  showRemoveIcon: !viewOnly,
+                }}
               >
                 {fileList.length < 1 && (
                   <button
@@ -292,6 +316,14 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
           </div>
         </div>
 
+        <div className="flex items-center justify-between gap-10">
+          <div style={{ width: "calc(50% - 1.25rem)" }}>
+            <Form.Item label="Tổng số lượng sản phẩm" name="totalQuantity">
+              <InputNumber readOnly={viewOnly} className="w-full" min={0} />
+            </Form.Item>
+          </div>
+        </div>
+
         <Typography.Title level={5} className="mb-2">
           Đặc điểm kỹ thuật
         </Typography.Title>
@@ -309,13 +341,13 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                 },
               ]}
             >
-              <InputNumber className="w-full" />
+              <InputNumber readOnly={viewOnly} className="w-full" min={0} />
             </Form.Item>
           </div>
 
           <div className="flex-1">
             <Form.Item label="Điều kiện bảo quản" name="storageConditions">
-              <Input />
+              <Input readOnly={viewOnly} />
             </Form.Item>
           </div>
         </div>
@@ -333,6 +365,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
               ]}
             >
               <Select
+                disabled={viewOnly}
                 options={physicalStateOptions}
                 placeholder="Chọn trạng thái vật lý"
               />
@@ -341,7 +374,10 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
 
           <div className="flex-1">
             <Form.Item label="Quy cách đóng gói" name="packaging">
-              <Input placeholder="VD: 1kg, bao 50kg, chai 1L" />
+              <Input
+                readOnly={viewOnly}
+                placeholder="VD: 1kg, bao 50kg, chai 1L"
+              />
             </Form.Item>
           </div>
         </div>
@@ -353,13 +389,16 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         <div className="flex items-center justify-between gap-10">
           <div className="flex-1">
             <Form.Item label="Hướng dẫn an toàn" name="safetyInstructions">
-              <Input />
+              <Input readOnly={viewOnly} />
             </Form.Item>
           </div>
 
           <div className="flex-1">
             <Form.Item label="Phân loại nguy hiểm" name="hazardClassification">
-              <Input placeholder="VD: Độc hại, Gây kích ứng da" />
+              <Input
+                readOnly={viewOnly}
+                placeholder="VD: Độc hại, Gây kích ứng da"
+              />
             </Form.Item>
           </div>
         </div>
@@ -367,7 +406,10 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         <div className="flex items-center justify-between gap-10">
           <div style={{ width: "calc(50% - 1.25rem)" }}>
             <Form.Item label="Thiết bị bảo hộ cần thiết" name="ppeRequired">
-              <Input placeholder="VD: Găng tay, kính bảo hộ" />
+              <Input
+                readOnly={viewOnly}
+                placeholder="VD: Găng tay, kính bảo hộ"
+              />
             </Form.Item>
           </div>
         </div>
@@ -409,6 +451,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                             name={[unitField.name, "unit", "unitId"]}
                           >
                             <Select
+                              disabled={viewOnly}
                               options={unitOptions}
                               loading={isUnitsLoading}
                             />
@@ -418,6 +461,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                             name={[unitField.name, "conversionFactor"]}
                           >
                             <InputNumber
+                              readOnly={viewOnly}
                               className="w-full"
                               min={0}
                               max={1000000}
@@ -430,6 +474,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                                 key={unitField.name}
                                 productForm={form}
                                 productUnitIndex={unitField.name}
+                                viewOnly={viewOnly}
                               />
                             </ProductUnitPriceContextProvider>
                           </Form.Item>
@@ -440,6 +485,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                             valuePropName="checked"
                           >
                             <Switch
+                              disabled={viewOnly}
                               onChange={(checked: boolean) =>
                                 handleIsDefaultChange(checked, unitField.name)
                               }
@@ -447,17 +493,21 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                           </Form.Item>
 
                           <Form.Item className="basis-[5%]">
-                            <CloseOutlined
-                              onClick={() => removeUnit(unitField.name)}
-                            />
+                            {!viewOnly && (
+                              <CloseOutlined
+                                onClick={() => removeUnit(unitField.name)}
+                              />
+                            )}
                           </Form.Item>
                         </div>
                       );
                     })}
 
-                    <Button className="w-[150px]" onClick={() => addUnit()}>
-                      + Thêm đơn vị tính
-                    </Button>
+                    {!viewOnly && (
+                      <Button className="w-[150px]" onClick={() => addUnit()}>
+                        + Thêm đơn vị tính
+                      </Button>
+                    )}
                   </div>
                 </>
               );
@@ -465,16 +515,18 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
           </Form.List>
         </Form.Item>
 
-        <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
-          <Space>
-            <Button onClick={onCancel} loading={isCreating}>
-              Hủy
-            </Button>
-            <Button type="primary" htmlType="submit" loading={isCreating}>
-              {productToUpdate ? "Cập nhật" : "Thêm mới"}
-            </Button>
-          </Space>
-        </Form.Item>
+        {!viewOnly && (
+          <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
+            <Space>
+              <Button onClick={onCancel} loading={isCreating}>
+                Hủy
+              </Button>
+              <Button type="primary" htmlType="submit" loading={isCreating}>
+                {productToUpdate ? "Cập nhật" : "Thêm mới"}
+              </Button>
+            </Space>
+          </Form.Item>
+        )}
       </Form>
     </>
   );

@@ -15,13 +15,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final CommandGateway commandGateway;
-
     private final CloudinaryService cloudinaryService;
 
     @Override
@@ -34,22 +32,22 @@ public class ProductServiceImpl implements ProductService {
                             List<CmdProductUnitPrice> cmdProductUnitPrices = productUnit.getProductUnitPrices() != null ?
                                     productUnit.getProductUnitPrices().stream()
                                             .map(productUnitPrice -> CmdProductUnitPrice.builder()
-                                                    .productUnitPriceId(RandomStringUtils.secure().randomAlphanumeric(12))
+                                                    .productUnitPriceId(RandomStringUtils.secure().nextAlphanumeric(12))
                                                     .price(productUnitPrice.getPrice())
                                                     .validFrom(productUnitPrice.getValidFrom())
                                                     .validTo(productUnitPrice.getValidTo())
                                                     .build())
-                                            .collect(Collectors.toList())
+                                            .toList()
                                     : List.of();
                             return CmdProductUnit.builder()
-                                    .productUnitId(RandomStringUtils.secure().randomAlphanumeric(12))
+                                    .productUnitId(RandomStringUtils.secure().nextAlphanumeric(12))
                                     .unitId(productUnit.getUnit().getUnitId())
                                     .conversionFactor(productUnit.getConversionFactor())
                                     .isDefault(productUnit.isDefault())
                                     .productUnitPrices(cmdProductUnitPrices)
                                     .build();
                         })
-                        .collect(Collectors.toList())
+                        .toList()
                 : List.of();
         CreateProductCommand createProductCommand = CreateProductCommand.builder()
                 .productId(productId)
