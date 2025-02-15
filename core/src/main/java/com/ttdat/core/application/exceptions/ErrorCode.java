@@ -24,6 +24,7 @@ public enum ErrorCode {
     UNIT_ALREADY_EXISTS("AGH-308", "Unit with this name already exists", ErrorType.RESOURCE),
     CATEGORY_NOT_FOUND("AGH-309", "Category not found", ErrorType.RESOURCE),
     CATEGORY_ALREADY_EXISTS("AGH-310", "Category with this name already exists", ErrorType.RESOURCE),
+    PRODUCT_NOT_FOUND("AGH-311", "Product not found", ErrorType.RESOURCE),
 
     INTERNAL_SERVER_ERROR("AGH-501", "Internal server error", ErrorType.SYSTEM),;
 
