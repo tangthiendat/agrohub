@@ -89,27 +89,16 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
 
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          if (key === "role") {
-            searchParams.set("roleId", value.join(","));
-          } else {
-            searchParams.set(key, value.join(","));
-          }
-        } else {
-          if (value) {
-            if (key === "role") {
-              searchParams.set("roleId", `${value}`);
-            } else {
-              searchParams.set(key, `${value}`);
-            }
-          } else {
-            if (key === "role") {
-              searchParams.delete("roleId");
-            } else {
-              searchParams.delete(key);
-            }
-          }
+        const paramKey = key === "role" ? "roleId" : key;
+        if (!value) {
+          searchParams.delete(paramKey);
+          return;
         }
+        const paramValue = Array.isArray(value)
+          ? value.join(",")
+          : String(value);
+
+        searchParams.set(paramKey, paramValue);
       });
     }
 
