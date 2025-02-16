@@ -16,12 +16,9 @@ class AuthService implements IAuthService {
   }
 
   async logout(): Promise<ApiResponse<void>> {
-    const logoutApiClient: AxiosInstance = createApiClient(
-      "auth-service/api/v1/auth",
-      {
-        auth: true,
-      },
-    );
+    const logoutApiClient: AxiosInstance = createApiClient("api/v1/auth", {
+      auth: true,
+    });
     return (await logoutApiClient.post("/logout")).data;
   }
 }
