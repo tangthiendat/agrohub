@@ -4,6 +4,7 @@ import {
   IProduct,
   Page,
   PaginationParams,
+  ProductFilterCriteria,
   SortParams,
 } from "../../interfaces";
 import { createApiClient } from "../../config/axios/api-client";
@@ -12,6 +13,7 @@ interface IProductService {
   getPage(
     pagination: PaginationParams,
     sort?: SortParams,
+    filter?: ProductFilterCriteria,
   ): Promise<ApiResponse<Page<IProduct>>>;
   getById(productId: string): Promise<ApiResponse<IProduct>>;
   create(newProduct: FormData): Promise<ApiResponse<void>>;
@@ -25,11 +27,13 @@ class ProductService implements IProductService {
   async getPage(
     pagination: PaginationParams,
     sort?: SortParams,
+    filter?: ProductFilterCriteria,
   ): Promise<ApiResponse<Page<IProduct>>> {
     return (
       await apiClient.get("/page", {
         params: {
           ...pagination,
+          ...filter,
           sortBy: sort?.sortBy !== "" ? sort?.sortBy : undefined,
           direction: sort?.direction !== "" ? sort?.direction : undefined,
         },

@@ -6,10 +6,15 @@ import Access from "../features/auth/Access";
 import { useTitle } from "../common/hooks";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
-import { PaginationParams, SortParams } from "../interfaces";
+import {
+  PaginationParams,
+  ProductFilterCriteria,
+  SortParams,
+} from "../interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { productService, userService } from "../services";
 import ProductTable from "../features/product/ProductTable";
+import { SearchProps } from "antd/lib/input";
 
 const Products: React.FC = () => {
   useTitle("Sản phẩm");
@@ -26,8 +31,13 @@ const Products: React.FC = () => {
     direction: searchParams.get("direction") || "",
   };
 
+  const filter: ProductFilterCriteria = {
+    query: searchParams.get("query") || undefined,
+    categoryId: Number(searchParams.get("categoryId")) || undefined,
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["products", pagination, sort].filter((key) => {
+    queryKey: ["products", pagination, sort, filter].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -36,8 +46,17 @@ const Products: React.FC = () => {
         );
       }
     }),
-    queryFn: () => productService.getPage(pagination, sort),
+    queryFn: () => productService.getPage(pagination, sort, filter),
   });
+
+  const handleSearch: SearchProps["onSearch"] = (value) => {
+    if (value) {
+      searchParams.set("query", value);
+    } else {
+      searchParams.delete("query");
+    }
+    setSearchParams(searchParams);
+  };
 
   return (
     <Access permission={PERMISSIONS[Module.PRODUCT].GET_PAGE}>
@@ -51,7 +70,7 @@ const Products: React.FC = () => {
                 defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear
-                // onSearch={handleSearch}
+                onSearch={handleSearch}
               />
             </div>
           </div>

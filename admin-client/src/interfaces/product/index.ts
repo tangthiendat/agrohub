@@ -42,3 +42,8 @@ export interface IProduct extends Auditable {
   ppeRequired?: string;
   productUnits: IProductUnit[];
 }
+
+export interface ProductFilterCriteria {
+  query?: string;
+  categoryId?: number;
+}

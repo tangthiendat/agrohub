@@ -46,7 +46,8 @@ public class ProductQueryHandler {
                 String likePattern = "%" + searchValue + "%";
                 return criteriaBuilder.or(
                         criteriaBuilder.like(root.get("productId"), likePattern),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("productName")), likePattern)
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("productName")), likePattern),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("category").get("categoryName")), likePattern)
                 );
             };
             productPageSpec = productPageSpec.and(querySpec);
