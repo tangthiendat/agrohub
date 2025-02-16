@@ -49,15 +49,16 @@ const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
         />
       )}
 
-      {viewOnly ? (
-        <ViewProductUnitPrices
-          key={productUnitIndex}
-          productForm={productForm}
-          productUnitIndex={productUnitIndex}
-        />
-      ) : (
+      {!viewOnly && (
         <EditIcon onClick={handleOpenModal} tooltipTitle="Chỉnh sửa giá" />
       )}
+
+      <ViewProductUnitPrices
+        key={productUnitIndex}
+        productForm={productForm}
+        productUnitIndex={productUnitIndex}
+      />
+
       <Modal
         open={isOpenModal}
         width="25%"

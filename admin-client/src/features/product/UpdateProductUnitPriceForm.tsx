@@ -33,37 +33,37 @@ const UpdateProductUnitPriceForm: React.FC<UpdateProductUnitPriceFormProps> = ({
     }
   }, [form, currentProductUnitPrice]);
 
+  function updateProductUnitPrices(
+    productUnit: IProductUnit,
+    newPrice: IProductUnitPrice,
+  ): IProductUnitPrice[] {
+    const { productUnitPrices = [] } = productUnit;
+
+    if (productUnitPrices.length === 0) {
+      return [newPrice];
+    }
+
+    return productUnitPrices.map((price, index) =>
+      index === productUnitPrices.length - 1 ? newPrice : price,
+    );
+  }
+
   function handleFinish(values: IProductUnitPrice) {
     const product = productForm.getFieldsValue();
     setCurrentProductUnitPrice(values);
     productForm.setFieldsValue({
       ...product,
       productUnits: product.productUnits.map(
-        (productUnit: IProductUnit, index: number) => {
-          if (index === productUnitIndex) {
-            return {
-              ...productUnit,
-              productUnitPrices:
-                productUnit.productUnitPrices &&
-                productUnit.productUnitPrices.length > 0
-                  ? productUnit.productUnitPrices.map(
-                      (productUnitPrice: IProductUnitPrice, index: number) => {
-                        if (
-                          index ===
-                          productUnit.productUnitPrices.length - 1
-                        ) {
-                          return values;
-                        }
-                        return productUnitPrice;
-                      },
-                    )
-                  : [values],
-            };
-          }
-          return productUnit;
-        },
+        (productUnit: IProductUnit, index: number) =>
+          index === productUnitIndex
+            ? {
+                ...productUnit,
+                productUnitPrices: updateProductUnitPrices(productUnit, values),
+              }
+            : productUnit,
       ),
     });
+
     onCancel();
   }
 

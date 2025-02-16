@@ -18,8 +18,10 @@ const ProductUnitPriceTable: React.FC<ProductUnitPriceTableProps> = ({
   >([]);
 
   useEffect(() => {
-    const product = productForm.getFieldsValue();
-    const productUnit = product.productUnits[productUnitIndex];
+    const productUnit = productForm.getFieldValue([
+      "productUnits",
+      productUnitIndex,
+    ]);
     setProductUnitPrices(productUnit.productUnitPrices);
   }, [productForm, productUnitIndex]);
 

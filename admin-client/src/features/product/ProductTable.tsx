@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Space, Table, TablePaginationConfig } from "antd";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { useNavigate, useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { TableProps } from "antd/lib";
@@ -8,8 +12,16 @@ import ViewIcon from "../../common/components/icons/ViewIcon";
 import { IProduct, Page } from "../../interfaces";
 import { categoryService } from "../../services";
 import { formatTimestamp } from "../../utils/datetime";
-import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
-import { getSortDownIconColor, getSortUpIconColor } from "../../utils/color";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../utils/filter";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../utils/color";
 
 interface ProductTableProps {
   productPage?: Page<IProduct>;
@@ -41,8 +53,8 @@ const ProductTable: React.FC<ProductTableProps> = ({
     select: (data) => {
       if (data.payload) {
         return data.payload.map((category) => ({
-          value: category.categoryName,
-          text: category.categoryId,
+          value: category.categoryId,
+          text: category.categoryName,
         }));
       }
     },
@@ -73,6 +85,21 @@ const ProductTable: React.FC<ProductTableProps> = ({
     }));
     searchParams.set("page", String(pagination.current));
     searchParams.set("pageSize", String(pagination.pageSize));
+
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        const paramKey = key === "category" ? "categoryId" : key;
+        if (!value) {
+          searchParams.delete(paramKey);
+          return;
+        }
+        const paramValue = Array.isArray(value)
+          ? value.join(",")
+          : String(value);
+
+        searchParams.set(paramKey, paramValue);
+      });
+    }
 
     let sortBy;
     let direction;
@@ -131,6 +158,11 @@ const ProductTable: React.FC<ProductTableProps> = ({
       key: "category",
       width: "15%",
       render: (category) => category.categoryName,
+      filters: categoryOptions,
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "categoryId"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
     },
     {
       title: "Thời gian tạo",
