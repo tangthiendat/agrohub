@@ -13,12 +13,12 @@ AgroHub is a **management system for an agricultural supply warehouse chain**, d
 ## Local Development Architecture
 AgroHub is built using a **Spring Boot** microservices ecosystem and relies on **Axon Framework** for event sourcing, CQRS (Command Query Responsibility Segregation), and Saga pattern for distributed transaction management. The system also leverages **Kafka** for asynchronous messaging and Axon Server for event storage and query handling.
 
-![AgroHub - Local Development Architecture](https://github.com/user-attachments/assets/a3b98d1d-a154-4bd9-a180-6e4eeff82a09)
+![Agrohub - Local Development Architecture](https://github.com/user-attachments/assets/bc83efac-e56e-45cd-8a2e-116898be4b49)
 
 ## Key Features
 - **Event-Driven Architecture:** Uses Axon Framework with CQRS and Event Sourcing for reliable microservice interactions.
 - **Role-Based Access Control**: Secure authentication and authorization with role and permission-based access.
 - **Product & Customer Management**: Centralized product catalog and customer data with dynamic pricing and categorization.
-- **Inventory & Supply Chain Management:** Tracks stock level, automates warehouse transfers, and optimizes procurement workflows for efficiency.
+- **Inventory & Supply Chain Management:** Tracks stock levels, automates warehouse transfers, and optimizes procurement workflows for efficiency.
 - **Order & Sales Processing:** Manages sales orders, purchase orders, and fulfillment with event-driven consistency.
 - **Debt & Financial Management:** Handles invoices, supplier payments, outstanding debts, and transaction reconciliation.
