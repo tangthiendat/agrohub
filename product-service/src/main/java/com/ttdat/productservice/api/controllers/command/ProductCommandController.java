@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -35,4 +32,19 @@ public class ProductCommandController {
                         .message("Product created successfully")
                         .build());
     }
+
+    @PutMapping(value = "/{id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ApiResponse<Object>> updateProduct(@PathVariable("id") String productId,
+                                                             @RequestPart("product") String productJson,
+                                                             @RequestPart(value = "product_img", required = false) MultipartFile productImg) throws IOException {
+        ProductDTO productDTO = objectMapper.readValue(productJson, ProductDTO.class);
+        productService.updateProduct(productId, productDTO, productImg);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.OK.value())
+                        .success(true)
+                        .message("Product updated successfully")
+                        .build());
+    }
+
 }

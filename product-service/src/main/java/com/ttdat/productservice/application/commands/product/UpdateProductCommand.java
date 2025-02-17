@@ -1,18 +1,21 @@
-package com.ttdat.productservice.domain.events.product;
+package com.ttdat.productservice.application.commands.product;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ttdat.productservice.domain.entities.PhysicalState;
-import com.ttdat.productservice.domain.valueobject.EvtProductUnit;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductCreatedEvent {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class UpdateProductCommand {
+    @TargetAggregateIdentifier
     String productId;
 
     String productName;
@@ -29,7 +32,7 @@ public class ProductCreatedEvent {
 
     String storageInstructions;
 
-    List<EvtProductUnit> productUnits;
+    List<CmdProductUnit> productUnits;
 
     PhysicalState physicalState;
 
