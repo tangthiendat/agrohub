@@ -4,7 +4,7 @@ import { IProductUnitPrice } from "../interfaces";
 interface ProductUnitPriceContextValue {
   currentProductUnitPrice?: Partial<IProductUnitPrice>;
   setCurrentProductUnitPrice: React.Dispatch<
-    React.SetStateAction<Partial<IProductUnitPrice>>
+    React.SetStateAction<Partial<IProductUnitPrice> | undefined>
   >;
 }
 
@@ -15,7 +15,7 @@ const ProductUnitPriceContextProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
   const [currentProductUnitPrice, setCurrentProductUnitPrice] = useState<
-    Partial<IProductUnitPrice>
+    Partial<IProductUnitPrice> | undefined
   >({});
 
   return (

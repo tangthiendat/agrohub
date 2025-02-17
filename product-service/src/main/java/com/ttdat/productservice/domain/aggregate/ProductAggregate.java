@@ -1,8 +1,10 @@
 package com.ttdat.productservice.domain.aggregate;
 
 import com.ttdat.productservice.application.commands.product.CreateProductCommand;
+import com.ttdat.productservice.application.commands.product.UpdateProductCommand;
 import com.ttdat.productservice.domain.entities.PhysicalState;
 import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
+import com.ttdat.productservice.domain.events.product.ProductUpdatedEvent;
 import com.ttdat.productservice.domain.valueobject.EvtProductUnit;
 import com.ttdat.productservice.domain.valueobject.EvtProductUnitPrice;
 import lombok.RequiredArgsConstructor;
@@ -91,6 +93,49 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productCreatedEvent);
     }
 
+    @CommandHandler
+    public void handle(UpdateProductCommand updateProductCommand) {
+        List<EvtProductUnit> evtProductUnits = updateProductCommand.getProductUnits() != null ?
+                updateProductCommand.getProductUnits().stream()
+                        .map(productUnit -> {
+                            List<EvtProductUnitPrice> evtProductUnitPrices = productUnit.getProductUnitPrices() != null ?
+                                    productUnit.getProductUnitPrices().stream()
+                                            .map(productUnitPrice -> EvtProductUnitPrice.builder()
+                                                    .productUnitPriceId(productUnitPrice.getProductUnitPriceId())
+                                                    .price(productUnitPrice.getPrice())
+                                                    .validFrom(productUnitPrice.getValidFrom())
+                                                    .validTo(productUnitPrice.getValidTo())
+                                                    .build())
+                                            .toList()
+                                    : List.of();
+                            return EvtProductUnit.builder()
+                                    .productUnitId(productUnit.getProductUnitId())
+                                    .unitId(productUnit.getUnitId())
+                                    .productUnitPrices(evtProductUnitPrices)
+                                    .conversionFactor(productUnit.getConversionFactor())
+                                    .isDefault(productUnit.isDefault())
+                                    .build();
+                        }).toList()
+                : List.of();
+        ProductUpdatedEvent productUpdatedEvent = ProductUpdatedEvent.builder()
+                .productId(updateProductCommand.getProductId())
+                .productName(updateProductCommand.getProductName())
+                .description(updateProductCommand.getDescription())
+                .totalQuantity(updateProductCommand.getTotalQuantity())
+                .imageUrl(updateProductCommand.getImageUrl())
+                .categoryId(updateProductCommand.getCategoryId())
+                .defaultExpDays(updateProductCommand.getDefaultExpDays())
+                .storageInstructions(updateProductCommand.getStorageInstructions())
+                .productUnits(evtProductUnits)
+                .physicalState(updateProductCommand.getPhysicalState())
+                .packaging(updateProductCommand.getPackaging())
+                .safetyInstructions(updateProductCommand.getSafetyInstructions())
+                .hazardClassification(updateProductCommand.getHazardClassification())
+                .ppeRequired(updateProductCommand.getPpeRequired())
+                .build();
+        AggregateLifecycle.apply(productUpdatedEvent);
+    }
+
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.productId = productCreatedEvent.getProductId();
@@ -106,6 +151,22 @@ public class ProductAggregate {
         this.safetyInstructions = productCreatedEvent.getSafetyInstructions();
         this.hazardClassification = productCreatedEvent.getHazardClassification();
         this.ppeRequired = productCreatedEvent.getPpeRequired();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductUpdatedEvent productUpdatedEvent) {
+        this.productName = productUpdatedEvent.getProductName();
+        this.description = productUpdatedEvent.getDescription();
+        this.imageUrl = productUpdatedEvent.getImageUrl();
+        this.categoryId = productUpdatedEvent.getCategoryId();
+        this.defaultExpDays = productUpdatedEvent.getDefaultExpDays();
+        this.storageInstructions = productUpdatedEvent.getStorageInstructions();
+        this.productUnits = productUpdatedEvent.getProductUnits();
+        this.physicalState = productUpdatedEvent.getPhysicalState();
+        this.packaging = productUpdatedEvent.getPackaging();
+        this.safetyInstructions = productUpdatedEvent.getSafetyInstructions();
+        this.hazardClassification = productUpdatedEvent.getHazardClassification();
+        this.ppeRequired = productUpdatedEvent.getPpeRequired();
     }
 
 

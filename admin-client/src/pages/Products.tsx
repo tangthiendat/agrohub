@@ -1,7 +1,9 @@
 import { useNavigate, useSearchParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import { PlusOutlined } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import { Button } from "antd";
+import { SearchProps } from "antd/lib/input";
 import Access from "../features/auth/Access";
 import { useTitle } from "../common/hooks";
 import { PERMISSIONS } from "../common/constants";
@@ -11,10 +13,8 @@ import {
   ProductFilterCriteria,
   SortParams,
 } from "../interfaces";
-import { useQuery } from "@tanstack/react-query";
-import { productService, userService } from "../services";
+import { productService } from "../services";
 import ProductTable from "../features/product/ProductTable";
-import { SearchProps } from "antd/lib/input";
 
 const Products: React.FC = () => {
   useTitle("Sản phẩm");

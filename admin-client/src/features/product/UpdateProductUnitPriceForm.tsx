@@ -37,15 +37,37 @@ const UpdateProductUnitPriceForm: React.FC<UpdateProductUnitPriceFormProps> = ({
     productUnit: IProductUnit,
     newPrice: IProductUnitPrice,
   ): IProductUnitPrice[] {
-    const { productUnitPrices = [] } = productUnit;
+    const productUnitPrices = productUnit?.productUnitPrices || [];
 
     if (productUnitPrices.length === 0) {
       return [newPrice];
     }
 
-    return productUnitPrices.map((price, index) =>
-      index === productUnitPrices.length - 1 ? newPrice : price,
+    const newPUPriceIndex = productUnitPrices.findIndex(
+      (pup) =>
+        !pup?.productUnitPriceId &&
+        (pup.validTo == null || pup.validTo === undefined),
     );
+    // if already had newPUPrice, replace it
+    // else push newPrice to the end of the array
+    if (newPUPriceIndex !== -1) {
+      //set validTo for the last price if there is a last price
+      if (newPUPriceIndex > 0) {
+        productUnitPrices[newPUPriceIndex - 1].validTo = newPrice.validFrom;
+      }
+
+      productUnitPrices[newPUPriceIndex] = newPrice;
+    } else {
+      //set validTo for the last price
+      const lastPUPriceIndex = productUnitPrices.findIndex(
+        (pup) => pup.validTo == null || pup.validTo === undefined,
+      );
+      if (lastPUPriceIndex !== -1) {
+        productUnitPrices[lastPUPriceIndex].validTo = newPrice.validFrom;
+      }
+      productUnitPrices.push(newPrice);
+    }
+    return productUnitPrices;
   }
 
   function handleFinish(values: IProductUnitPrice) {

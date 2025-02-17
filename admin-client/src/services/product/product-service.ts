@@ -17,6 +17,10 @@ interface IProductService {
   ): Promise<ApiResponse<Page<IProduct>>>;
   getById(productId: string): Promise<ApiResponse<IProduct>>;
   create(newProduct: FormData): Promise<ApiResponse<void>>;
+  update(
+    productId: string,
+    updatedProduct: FormData,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/products", {
@@ -48,6 +52,19 @@ class ProductService implements IProductService {
   async create(newProduct: FormData): Promise<ApiResponse<void>> {
     return (
       await apiClient.post("", newProduct, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+    ).data;
+  }
+
+  async update(
+    productId: string,
+    updatedProduct: FormData,
+  ): Promise<ApiResponse<void>> {
+    return (
+      await apiClient.put(`/${productId}`, updatedProduct, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

@@ -7,4 +7,5 @@ import java.io.IOException;
 
 public interface ProductService {
     void createProduct(ProductDTO productDTO, MultipartFile productImg) throws IOException;
+    void updateProduct(String productId, ProductDTO productDTO, MultipartFile productImg) throws IOException;
 }

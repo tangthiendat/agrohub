@@ -12,6 +12,7 @@ import Roles from "../pages/Roles";
 import Units from "../pages/Units";
 import Users from "../pages/Users";
 import ViewProduct from "../features/product/ViewProduct";
+import EditProduct from "../features/product/EditProduct";
 
 const router = createBrowserRouter([
   {
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <ViewProduct />,
+          },
+          {
+            path: "update/:id",
+            element: <EditProduct />,
           },
         ],
       },
