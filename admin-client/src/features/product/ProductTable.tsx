@@ -22,6 +22,10 @@ import {
   getSortDownIconColor,
   getSortUpIconColor,
 } from "../../utils/color";
+import Access from "../auth/Access";
+import { PERMISSIONS } from "../../common/constants";
+import { Module } from "../../common/enums";
+import EditIcon from "../../common/components/icons/EditIcon";
 
 interface ProductTableProps {
   productPage?: Page<IProduct>;
@@ -203,6 +207,9 @@ const ProductTable: React.FC<ProductTableProps> = ({
       render: (record: IProduct) => (
         <Space>
           <ViewIcon onClick={() => navigate(record.productId)} />
+          <Access permission={PERMISSIONS[Module.PRODUCT].UPDATE} hideChildren>
+            <EditIcon onClick={() => navigate(`update/${record.productId}`)} />
+          </Access>
         </Space>
       ),
     },

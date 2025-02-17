@@ -32,11 +32,17 @@ import {
 } from "../../interfaces";
 import { categoryService, productService, unitService } from "../../services";
 import { getBase64 } from "../../utils/image";
+import { convertKeysToSnakeCase } from "../../utils/data";
 
 interface UpdateProductFormProps {
   productToUpdate?: IProduct;
   onCancel: () => void;
   viewOnly?: boolean;
+}
+
+interface UpdateProductArgs {
+  productId: string;
+  updatedProduct: FormData;
 }
 
 const physicalStateOptions = Object.entries(PHYSICAL_STATE_NAME).map(
@@ -58,6 +64,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string>("");
   const [modal, contextHolder] = Modal.useModal();
+  const isUpdateSession = !!productToUpdate;
 
   useEffect(() => {
     if (productToUpdate) {
@@ -113,6 +120,18 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
     },
   });
 
+  const { mutate: updateProduct, isPending: isUpdating } = useMutation({
+    mutationFn: ({ productId, updatedProduct }: UpdateProductArgs) =>
+      productService.update(productId, updatedProduct),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("products");
+        },
+      });
+    },
+  });
+
   async function handlePreview(file: UploadFile) {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
@@ -147,50 +166,79 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   }
 
   function handleFinish() {
-    if (productToUpdate) {
-      console.log("update product");
-    } else {
-      const productValues = form.getFieldsValue();
-      const hasProductUnit: boolean = productValues.productUnits?.length > 0;
-      //Check whether the product has a default unit
-      if (hasProductUnit) {
-        const hasBlankField: boolean = productValues.productUnits.some(
-          (productUnit) =>
-            !productUnit.unit?.unitId ||
-            !productUnit.conversionFactor ||
-            !productUnit.productUnitPrices ||
-            productUnit.productUnitPrices.length === 0,
-        );
-        if (hasBlankField) {
-          modal.error({
-            title: "Thiếu thông tin",
-            content: "Hãy điền đầy đủ thông tin cho các đơn vị tính.",
-            centered: true,
-          });
-          return;
-        }
-        const hasDefaultUnit: boolean = productValues.productUnits.some(
-          (productUnit) => productUnit.isDefault,
-        );
-        if (!hasDefaultUnit) {
-          modal.error({
-            title: "Thiếu thông tin",
-            content: "Hãy chọn một đơn vị tính mặc định cho sản phẩm.",
-            centered: true,
-          });
-          return;
-        }
-      } else {
+    const productValues = form.getFieldsValue();
+    const hasProductUnit: boolean = productValues.productUnits?.length > 0;
+    //Check whether the product has a default unit
+    if (hasProductUnit) {
+      const hasBlankField: boolean = productValues.productUnits.some(
+        (productUnit) =>
+          !productUnit.unit?.unitId ||
+          !productUnit.conversionFactor ||
+          !productUnit.productUnitPrices ||
+          productUnit.productUnitPrices.length === 0,
+      );
+      if (hasBlankField) {
         modal.error({
           title: "Thiếu thông tin",
-          content: "Hãy thêm ít nhất một đơn vị tính cho sản phẩm.",
+          content: "Hãy điền đầy đủ thông tin cho các đơn vị tính.",
           centered: true,
         });
         return;
       }
-
+      const hasDefaultUnit: boolean = productValues.productUnits.some(
+        (productUnit) => productUnit.isDefault,
+      );
+      if (!hasDefaultUnit) {
+        modal.error({
+          title: "Thiếu thông tin",
+          content: "Hãy chọn một đơn vị tính mặc định cho sản phẩm.",
+          centered: true,
+        });
+        return;
+      }
+    } else {
+      modal.error({
+        title: "Thiếu thông tin",
+        content: "Hãy thêm ít nhất một đơn vị tính cho sản phẩm.",
+        centered: true,
+      });
+      return;
+    }
+    if (productToUpdate) {
       const formData = new FormData();
-      formData.append("product", JSON.stringify(productValues));
+
+      formData.append(
+        "product",
+        JSON.stringify(convertKeysToSnakeCase(productValues)),
+      );
+      if (fileList.length > 0) {
+        formData.append("productImg", fileList[0].originFileObj as File);
+      }
+
+      updateProduct(
+        {
+          productId: productToUpdate.productId,
+          updatedProduct: formData,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật sản phẩm thành công");
+            onCancel();
+            form.resetFields();
+            setFileList([]);
+          },
+          onError: () => {
+            toast.error("Cập nhật sản phẩm thất bại");
+          },
+        },
+      );
+    } else {
+      const formData = new FormData();
+
+      formData.append(
+        "product",
+        JSON.stringify(convertKeysToSnakeCase(productValues)),
+      );
       if (fileList.length > 0) {
         formData.append("productImg", fileList[0].originFileObj as File);
       }
@@ -200,6 +248,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
           toast.success("Thêm sản phẩm thành công");
           onCancel();
           form.resetFields();
+          setFileList([]);
         },
         onError: () => {
           toast.error("Thêm sản phẩm thất bại");
@@ -475,6 +524,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                                 productForm={form}
                                 productUnitIndex={unitField.name}
                                 viewOnly={viewOnly}
+                                isUpdate={isUpdateSession}
                               />
                             </ProductUnitPriceContextProvider>
                           </Form.Item>
@@ -485,7 +535,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                             valuePropName="checked"
                           >
                             <Switch
-                              disabled={viewOnly}
+                              disabled={viewOnly || isUpdateSession}
                               onChange={(checked: boolean) =>
                                 handleIsDefaultChange(checked, unitField.name)
                               }
@@ -518,10 +568,14 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         {!viewOnly && (
           <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
             <Space>
-              <Button onClick={onCancel} loading={isCreating}>
+              <Button onClick={onCancel} loading={isCreating || isUpdating}>
                 Hủy
               </Button>
-              <Button type="primary" htmlType="submit" loading={isCreating}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isCreating || isUpdating}
+              >
                 {productToUpdate ? "Cập nhật" : "Thêm mới"}
               </Button>
             </Space>

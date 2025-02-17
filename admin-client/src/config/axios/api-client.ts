@@ -18,7 +18,7 @@ export function createApiClient(
     }),
     {
       ignoreParams: true,
-      ignoreHeaders: true,
+      // ignoreHeaders: true,
     },
   );
 

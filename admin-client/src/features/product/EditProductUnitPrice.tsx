@@ -3,7 +3,7 @@ import { FormInstance, Input, Modal } from "antd";
 import EditIcon from "../../common/components/icons/EditIcon";
 import UpdateProductUnitPriceForm from "./UpdateProductUnitPriceForm";
 import { useProductUnitPrice } from "../../context/ProductUnitPriceContext";
-import { IProduct } from "../../interfaces";
+import { IProduct, IProductUnit } from "../../interfaces";
 import { formatCurrency } from "../../utils/number";
 import ViewProductUnitPrices from "./ViewProductUnitPrices";
 
@@ -11,26 +11,41 @@ interface EditProductUnitPriceProps {
   productForm: FormInstance<IProduct>;
   productUnitIndex: number;
   viewOnly: boolean;
+  isUpdate?: boolean;
 }
 
 const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
   productForm,
   productUnitIndex,
   viewOnly,
+  isUpdate,
 }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const { currentProductUnitPrice, setCurrentProductUnitPrice } =
     useProductUnitPrice();
 
   useEffect(() => {
-    if (viewOnly) {
-      const product = productForm.getFieldsValue();
-      const productUnit = product.productUnits[productUnitIndex];
+    if (viewOnly || isUpdate) {
+      const productUnit: IProductUnit = productForm.getFieldValue([
+        "productUnits",
+        productUnitIndex,
+      ]);
       setCurrentProductUnitPrice(
-        productUnit.productUnitPrices[productUnit.productUnitPrices.length - 1],
+        productUnit?.productUnitPrices &&
+          productUnit.productUnitPrices.length > 0
+          ? productUnit.productUnitPrices[
+              productUnit.productUnitPrices.length - 1
+            ]
+          : undefined,
       );
     }
-  }, [viewOnly, productForm, productUnitIndex, setCurrentProductUnitPrice]);
+  }, [
+    viewOnly,
+    isUpdate,
+    productForm,
+    productUnitIndex,
+    setCurrentProductUnitPrice,
+  ]);
 
   const handleOpenModal = () => {
     setIsOpenModal(true);

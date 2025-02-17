@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FormInstance, Table, TableProps } from "antd";
-import { IProduct, IProductUnitPrice } from "../../interfaces";
+import { IProduct, IProductUnit, IProductUnitPrice } from "../../interfaces";
 import { formatDate } from "../../utils/datetime";
 import { formatCurrency } from "../../utils/number";
 
@@ -18,7 +18,7 @@ const ProductUnitPriceTable: React.FC<ProductUnitPriceTableProps> = ({
   >([]);
 
   useEffect(() => {
-    const productUnit = productForm.getFieldValue([
+    const productUnit: IProductUnit = productForm.getFieldValue([
       "productUnits",
       productUnitIndex,
     ]);
@@ -50,6 +50,7 @@ const ProductUnitPriceTable: React.FC<ProductUnitPriceTableProps> = ({
     <Table
       size="small"
       bordered={false}
+      rowKey={(record) => record.productUnitPriceId || crypto.randomUUID()}
       columns={columns}
       dataSource={productUnitPrices}
       pagination={{
