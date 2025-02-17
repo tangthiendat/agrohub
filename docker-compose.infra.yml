@@ -102,7 +102,7 @@ services:
       - "5432:5432"
     volumes:
       - ${DOCKER_DATA}/ct553/kong-internal:/var/lib/postgresql/data
-      
+
   axon-server:
     image: axoniq/axonserver:2024.2.2
     container_name: axon-server
@@ -142,7 +142,7 @@ services:
       - ${DOCKER_DATA}/ct553/user-service:/var/lib/mysql:Z
     networks:
       - agrohub
-    
+
   product-service-db:
     image: mariadb:11.6-noble
     container_name: product-service-db
@@ -157,3 +157,36 @@ services:
     command: --defaults-extra-file=/etc/mysql/conf.d/product-service-db.cnf
     networks:
       - agrohub
+
+  inventory-service-db:
+    image: postgres:16.4-alpine
+    container_name: inventory-service-db
+    environment:
+      POSTGRES_DB: inventory_service
+      POSTGRES_USER: inventory_service
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5433:5433"
+    volumes:
+      - ${DOCKER_DATA}/ct553/inventory-service:/var/lib/postgresql/data
+      - ./config/inventory-service-db.conf:/etc/postgresql/inventory-service-db.conf
+    command: -c config_file=/etc/postgresql/inventory-service-db.conf
+    networks:
+      - agrohub
+
+  purchase-service-db:
+    image: postgres:16.4-alpine
+    container_name: purchase-service-db
+    environment:
+      POSTGRES_DB: purchase_service
+      POSTGRES_USER: purchase_service
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5434:5434"
+    volumes:
+      - ${DOCKER_DATA}/ct553/purchase-service:/var/lib/postgresql/data
+      - ./config/purchase-service-db.conf:/etc/postgresql/purchase-service-db.conf
+    command: -c config_file=/etc/postgresql/purchase-service-db.conf
+    networks:
+      - agrohub
+
