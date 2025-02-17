@@ -3,7 +3,7 @@ x-kong-config: &kong-env
   KONG_PG_DATABASE: ${KONG_PG_DATABASE:-kong}
   KONG_PG_HOST: kong-db
   KONG_PG_USER: ${KONG_PG_USER:-kong}
-  KONG_PG_PASSWORD_FILE: /run/secrets/kong_postgres_password
+  KONG_PG_PASSWORD: ${KONG_PG_PASSWORD:-kong}
 
 volumes:
   kong_prefix_vol:
@@ -23,39 +23,33 @@ networks:
 
 services:
   kong-migrations:
-    image: "${KONG_DOCKER_TAG:-kong:latest}"
+    image: "${KONG_DOCKER_TAG:-kong:3.9}"
     container_name: kong-migrations
     command: kong migrations bootstrap
-    profiles: ["database"]
     depends_on:
       - kong-db
     environment:
       <<: *kong-env
-    secrets:
-      - kong_postgres_password
     networks:
       - agrohub
     restart: on-failure
 
   kong-migrations-up:
-    image: "${KONG_DOCKER_TAG:-kong:latest}"
+    image: "${KONG_DOCKER_TAG:-kong:3.9}"
     container_name: kong-migrations-up
     command: kong migrations up && kong migrations finish
-    profiles: ["database"]
     depends_on:
       - kong-db
     environment:
       <<: *kong-env
-    secrets:
-      - kong_postgres_password
     networks:
       - agrohub
     restart: on-failure
 
-  kong:
-    image: "${KONG_DOCKER_TAG:-kong:latest}"
+  kong-internal:
+    image: "${KONG_DOCKER_TAG:-kong:3.9}"
     user: "${KONG_USER:-kong}"
-    container_name: kong-gateway
+    container_name: kong-internal
     environment:
       <<: *kong-env
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
@@ -68,8 +62,6 @@ services:
       KONG_PREFIX: ${KONG_PREFIX:-/var/run/kong}
       KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
       KONG_UNTRUSTED_LUA_SANDBOX_REQUIRES: resty.jwt
-    secrets:
-      - kong_postgres_password
     networks:
       - agrohub
     ports:
@@ -85,11 +77,6 @@ services:
       - "8001:8001/tcp"
       - "8444:8444/tcp"
       - "8002:8002/tcp"
-    healthcheck:
-      test: ["CMD", "kong", "health"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
     restart: on-failure:5
     read_only: true
     volumes:
@@ -101,29 +88,23 @@ services:
 
   kong-db:
     image: postgres:16.4-alpine
-    profiles: ["database"]
     container_name: kong-db
     environment:
       POSTGRES_DB: ${KONG_PG_DATABASE:-kong}
       POSTGRES_USER: ${KONG_PG_USER:-kong}
-      POSTGRES_PASSWORD_FILE: /run/secrets/kong_postgres_password
-    secrets:
-      - kong_postgres_password
-    healthcheck:
-      test: ["CMD", "pg_isready", "-d", "${KONG_PG_DATABASE:-kong}", "-U", "${KONG_PG_USER:-kong}"]
-      interval: 30s
-      timeout: 30s
-      retries: 3
+      POSTGRES_PASSWORD: ${KONG_PG_PASSWORD:-kong}
     restart: on-failure
     stdin_open: true
     tty: true
     networks:
       - agrohub
+    ports:
+      - "5432:5432"
     volumes:
-      - ${DOCKER_DATA}/ct553/kong-gateway:/var/lib/postgresql/data
+      - ${DOCKER_DATA}/ct553/kong-internal:/var/lib/postgresql/data
       
   axon-server:
-    image: axoniq/axonserver
+    image: axoniq/axonserver:2024.2.2
     container_name: axon-server
     hostname: axonserver
     environment:
@@ -139,8 +120,18 @@ services:
     networks:
       - agrohub
 
+  redis:
+    image: redis/redis-stack-server:7.4.0-v2
+    container_name: redis
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - agrohub
+
   user-service-db:
-    image: mariadb:11-noble
+    image: mariadb:11.6-noble
     container_name: user-service-db
     environment:
       MARIADB_DATABASE: user_service
@@ -151,17 +142,18 @@ services:
       - ${DOCKER_DATA}/ct553/user-service:/var/lib/mysql:Z
     networks:
       - agrohub
-
-  redis:
-    image: redis/redis-stack-server:latest
-    container_name: redis
-    volumes:
-      - redis:/data
+    
+  product-service-db:
+    image: mariadb:11.6-noble
+    container_name: product-service-db
+    environment:
+      MARIADB_DATABASE: product_service
+      MARIADB_ROOT_PASSWORD: 123456
     ports:
-      - "6379:6379"
+      - "3307:3307"
+    volumes:
+      - ${DOCKER_DATA}/ct553/product-service:/var/lib/mysql:Z
+      - ./config/product-service-db.cnf:/etc/mysql/conf.d/product-service-db.cnf
+    command: --defaults-extra-file=/etc/mysql/conf.d/product-service-db.cnf
     networks:
       - agrohub
-
-secrets:
-  kong_postgres_password:
-    file: ./KONG_POSTGRES_PASSWORD.txt

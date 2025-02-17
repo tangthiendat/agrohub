@@ -4,10 +4,10 @@ server:
     context-path: /user-service
 
 spring:
-  main:
-    allow-bean-definition-overriding: true
   application:
     name: user-service
+  main:
+    allow-bean-definition-overriding: true
   threads:
     virtual:
       enabled: true
@@ -28,9 +28,6 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-  jackson:
-    default-property-inclusion: non_null
-    property-naming-strategy: SNAKE_CASE
 axon:
   axonserver:
     servers: ${AXON_SERVER}

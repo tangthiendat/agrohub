@@ -108,15 +108,14 @@ const PermissionTable: React.FC = () => {
 
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          searchParams.set(key, value.join(","));
-        } else {
-          if (value) {
-            searchParams.set(key, `${value}`);
-          } else {
-            searchParams.delete(key);
-          }
+        if (!value) {
+          searchParams.delete(key);
+          return;
         }
+        const paramValue = Array.isArray(value)
+          ? value.join(",")
+          : String(value);
+        searchParams.set(key, paramValue);
       });
     }
 
