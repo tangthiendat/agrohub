@@ -16,6 +16,24 @@ volumes:
       device: tmpfs
   redis:
     driver: local
+  axonserver-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DOCKER_DATA}/ct553/axon-server/data
+      o: bind
+  axonserver-events:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DOCKER_DATA}/ct553/axon-server/event
+      o: bind
+  axonserver-config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DOCKER_DATA}/ct553/axon-server/config
+      o: bind
 
 networks:
   agrohub:
@@ -110,9 +128,9 @@ services:
     environment:
       AXONIQ_AXONSERVER_STANDALONE: true
     volumes:
-      - ${DOCKER_DATA}/ct553/axon-server/data:/data
-      - ${DOCKER_DATA}/ct553/axon-server/event:/eventdata
-      - ${DOCKER_DATA}/ct553/axon-server/config:/config:ro
+      - axonserver-data:/data
+      - axonserver-events:/eventdata
+      - axonserver-config:/config:ro
     ports:
       - "8024:8024"
       - "8124:8124"
