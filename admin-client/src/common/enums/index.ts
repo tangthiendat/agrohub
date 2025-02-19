@@ -21,6 +21,7 @@ export enum Module {
   CATEGORY = "CATEGORY",
   UNIT = "UNIT",
   PRODUCT = "PRODUCT",
+  SUPPLIER = "SUPPLIER",
 }
 
 export enum Gender {

@@ -117,4 +117,22 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PUT,
     },
   },
+  [Module.SUPPLIER]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/suppliers/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/suppliers",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/suppliers/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+    UPDATE_STATUS: {
+      apiPath: "/api/v1/suppliers/{id}/status",
+      httpMethod: HttpMethod.PATCH,
+    },
+  },
 };

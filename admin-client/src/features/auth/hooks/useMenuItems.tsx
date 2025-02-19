@@ -7,7 +7,7 @@ import { FaKey, FaUserCog, FaUsers } from "react-icons/fa";
 import { IUser } from "../../../interfaces";
 import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
-import { FaList } from "react-icons/fa6";
+import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 
 export function useMenuItems(user?: IUser): MenuProps["items"] {
@@ -57,8 +57,14 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           item.httpMethod === PERMISSIONS[Module.PRODUCT].GET_PAGE.httpMethod,
       );
 
+      const viewSuppliers = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.SUPPLIER].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.SUPPLIER].GET_PAGE.httpMethod,
+      );
+
       const hasItemListChildren: boolean = Boolean(
-        viewCategories || viewUnits || viewProducts,
+        viewCategories || viewUnits || viewProducts || viewSuppliers,
       );
 
       const menuItems = [
@@ -142,6 +148,17 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           label: <NavLink to="/products">Sản phẩm</NavLink>,
                           key: "products",
                           icon: <MdInventory />,
+                        },
+                      ]
+                    : []),
+                  ...(viewSuppliers
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/suppliers">Nhà cung cấp</NavLink>
+                          ),
+                          key: "suppliers",
+                          icon: <FaBuilding />,
                         },
                       ]
                     : []),
