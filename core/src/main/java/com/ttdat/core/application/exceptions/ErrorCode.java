@@ -25,6 +25,9 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND("AGH-309", "Category not found", ErrorType.RESOURCE),
     CATEGORY_ALREADY_EXISTS("AGH-310", "Category with this name already exists", ErrorType.RESOURCE),
     PRODUCT_NOT_FOUND("AGH-311", "Product not found", ErrorType.RESOURCE),
+    PRODUCT_ALREADY_EXISTS("AGH-312", "Product with this name already exists", ErrorType.RESOURCE),
+    SUPPLIER_NOT_FOUND("AGH-313", "Supplier not found", ErrorType.RESOURCE),
+    SUPPLIER_ALREADY_EXISTS("AGH-314", "Supplier with this name already exists", ErrorType.RESOURCE),
 
     INTERNAL_SERVER_ERROR("AGH-501", "Internal server error", ErrorType.SYSTEM),;
 

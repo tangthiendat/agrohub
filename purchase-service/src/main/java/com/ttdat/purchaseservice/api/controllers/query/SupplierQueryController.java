@@ -1,4 +1,4 @@
-package com.ttdat.purchaseservice.api.query;
+package com.ttdat.purchaseservice.api.controllers.query;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
