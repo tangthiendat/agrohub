@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Space, Table, TablePaginationConfig } from "antd";
 import {
   CaretDownFilled,
@@ -163,10 +163,16 @@ const ProductTable: React.FC<ProductTableProps> = ({
       width: "15%",
       render: (category) => category.categoryName,
       filters: categoryOptions,
-      defaultFilteredValue: getDefaultFilterValue(searchParams, "categoryId"),
-      filterIcon: (filtered) => (
-        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      // defaultFilteredValue: getDefaultFilterValue(
+      //   searchParams,
+      //   "categoryId",
+      // )?.map((categoryId) => Number(categoryId)),
+      filteredValue: getDefaultFilterValue(searchParams, "categoryId")?.map(
+        (categoryId) => Number(categoryId),
       ),
+      filterIcon: (filtered: boolean) => {
+        return <FilterFilled style={{ color: getFilterIconColor(filtered) }} />;
+      },
     },
     {
       title: "Thời gian tạo",

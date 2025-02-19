@@ -207,16 +207,11 @@ const UserTable: React.FC<UserTableProps> = ({ userPage, isLoading }) => {
       width: "10%",
       render: (role) => role.roleName,
       filters: roleOptions,
-      defaultFilteredValue: getDefaultFilterValue(searchParams, "roleId")?.map(
+      filteredValue: getDefaultFilterValue(searchParams, "roleId")?.map(
         (roleId) => Number(roleId),
       ),
-      filterIcon: () => {
-        const isFiltered = Boolean(
-          getDefaultFilterValue(searchParams, "roleId")?.length,
-        );
-        return (
-          <FilterFilled style={{ color: getFilterIconColor(isFiltered) }} />
-        );
+      filterIcon: (filtered) => {
+        return <FilterFilled style={{ color: getFilterIconColor(filtered) }} />;
       },
     },
     {
