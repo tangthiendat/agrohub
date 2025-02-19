@@ -2,9 +2,11 @@ package com.ttdat.purchaseservice.application.handlers.event;
 
 import com.ttdat.core.application.exceptions.DuplicateResourceException;
 import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.purchaseservice.application.mappers.SupplierMapper;
 import com.ttdat.purchaseservice.domain.entities.Supplier;
 import com.ttdat.purchaseservice.domain.events.SupplierCreatedEvent;
+import com.ttdat.purchaseservice.domain.events.SupplierUpdatedEvent;
 import com.ttdat.purchaseservice.domain.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -26,6 +28,22 @@ public class SupplierEventHandler {
             throw new DuplicateResourceException(ErrorCode.SUPPLIER_ALREADY_EXISTS);
         }
         Supplier supplier = supplierMapper.toEntity(supplierCreatedEvent);
+        supplierRepository.save(supplier);
+    }
+
+    private Supplier getSupplierById(String supplierId) {
+        return supplierRepository.findById(supplierId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.SUPPLIER_NOT_FOUND));
+    }
+
+    @Transactional
+    @EventHandler
+    public void handle(SupplierUpdatedEvent supplierUpdatedEvent) {
+        Supplier supplier = getSupplierById(supplierUpdatedEvent.getSupplierId());
+        if(supplierRepository.existsBySupplierName(supplierUpdatedEvent.getSupplierName())) {
+            throw new DuplicateResourceException(ErrorCode.SUPPLIER_ALREADY_EXISTS);
+        }
+        supplierMapper.updateEntityFromEvent(supplier, supplierUpdatedEvent);
         supplierRepository.save(supplier);
     }
 }

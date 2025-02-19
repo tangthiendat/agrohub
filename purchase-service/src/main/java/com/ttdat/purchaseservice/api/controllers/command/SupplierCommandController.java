@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/suppliers")
@@ -28,6 +25,18 @@ public class SupplierCommandController {
                         .success(true)
                         .build()
                 );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> updateSupplier(@PathVariable String id, @Valid @RequestBody SupplierDTO supplierDTO) {
+        supplierService.updateSupplier(id, supplierDTO);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Supplier updated successfully")
+                        .success(true)
+                        .build()
+        );
     }
 
 }
