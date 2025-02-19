@@ -13,6 +13,7 @@ import Units from "../pages/Units";
 import Users from "../pages/Users";
 import ViewProduct from "../features/product/ViewProduct";
 import EditProduct from "../features/product/EditProduct";
+import Suppliers from "../pages/Suppliers";
 
 const router = createBrowserRouter([
   {
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
             element: <EditProduct />,
           },
         ],
+      },
+      {
+        path: "/suppliers",
+        element: <Suppliers />,
       },
     ],
   },
