@@ -7,6 +7,10 @@ import { ISupplier, Page } from "../../interfaces";
 import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
 import { formatTimestamp } from "../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../utils/color";
+import Access from "../auth/Access";
+import { PERMISSIONS } from "../../common/constants";
+import { Module } from "../../common/enums";
+import UpdateSupplier from "./UpdateSupplier";
 
 interface SupplierTableProps {
   supplierPage?: Page<ISupplier>;
@@ -158,6 +162,9 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
       render: (_, supplier) => (
         <Space>
           <ViewSupplier supplier={supplier} />
+          <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE}>
+            <UpdateSupplier supplier={supplier} />
+          </Access>
         </Space>
       ),
     },

@@ -18,6 +18,10 @@ interface ISupplierService {
     sort?: SortParams,
     filter?: SupplierFilterCriteria,
   ): Promise<ApiResponse<Page<ISupplier>>>;
+  update(
+    supplierId: string,
+    updatedSupplier: ISupplier,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/suppliers", {
@@ -46,6 +50,13 @@ class SupplierService implements ISupplierService {
         },
       })
     ).data;
+  }
+
+  async update(
+    supplierId: string,
+    updatedSupplier: ISupplier,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.put(`/${supplierId}`, updatedSupplier)).data;
   }
 }
 
