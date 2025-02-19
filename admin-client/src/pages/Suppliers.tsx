@@ -3,38 +3,43 @@ import Access from "../features/auth/Access";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import AddSupplier from "../features/supplier/AddSupplier";
+import { useSearchParams } from "react-router";
+import { PaginationParams, SortParams } from "../interfaces";
+import { useQuery } from "@tanstack/react-query";
+import { supplierService } from "../services";
+import SupplierTable from "../features/supplier/SupplierTable";
 
 const Suppliers: React.FC = () => {
   useTitle("Nhà cung cấp");
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // const pagination: PaginationParams = {
-  //   page: Number(searchParams.get("page")) || 1,
-  //   pageSize: Number(searchParams.get("pageSize")) || 10,
-  // };
+  const pagination: PaginationParams = {
+    page: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("pageSize")) || 10,
+  };
 
-  // const sort: SortParams = {
-  //   sortBy: searchParams.get("sortBy") || "",
-  //   direction: searchParams.get("direction") || "",
-  // };
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
+  };
 
   // const filter: SupplierFilterCriteria = {
   //   query: searchParams.get("query") || undefined,
   //   categoryId: Number(searchParams.get("categoryId")) || undefined,
   // };
 
-  // const { data, isLoading } = useQuery({
-  //   queryKey: ["supplier", pagination, sort, filter].filter((key) => {
-  //     if (typeof key === "string") {
-  //       return key !== "";
-  //     } else if (key instanceof Object) {
-  //       return Object.values(key).some(
-  //         (value) => value !== undefined && value !== "",
-  //       );
-  //     }
-  //   }),
-  //   queryFn: () => supplierService.getPage(pagination, sort, filter),
-  // });
+  const { data, isLoading } = useQuery({
+    queryKey: ["suppliers", pagination, sort].filter((key) => {
+      if (typeof key === "string") {
+        return key !== "";
+      } else if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => supplierService.getPage(pagination, sort),
+  });
 
   // const handleSearch: SearchProps["onSearch"] = (value) => {
   //   if (value) {
@@ -66,7 +71,7 @@ const Suppliers: React.FC = () => {
             <AddSupplier />
           </Access>
         </div>
-        {/* <ProductTable productPage={data?.payload} isLoading={isLoading} /> */}
+        <SupplierTable supplierPage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );
