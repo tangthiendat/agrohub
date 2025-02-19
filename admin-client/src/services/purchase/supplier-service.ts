@@ -22,6 +22,7 @@ interface ISupplierService {
     supplierId: string,
     updatedSupplier: ISupplier,
   ): Promise<ApiResponse<void>>;
+  updateStatus(supplierId: string, active: boolean): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/suppliers", {
@@ -57,6 +58,13 @@ class SupplierService implements ISupplierService {
     updatedSupplier: ISupplier,
   ): Promise<ApiResponse<void>> {
     return (await apiClient.put(`/${supplierId}`, updatedSupplier)).data;
+  }
+
+  async updateStatus(
+    supplierId: string,
+    active: boolean,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.patch(`/${supplierId}/status`, { active })).data;
   }
 }
 

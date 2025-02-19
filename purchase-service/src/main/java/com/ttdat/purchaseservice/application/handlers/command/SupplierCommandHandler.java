@@ -2,7 +2,9 @@ package com.ttdat.purchaseservice.application.handlers.command;
 
 import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierCommand;
 import com.ttdat.purchaseservice.application.commands.supplier.UpdateSupplierCommand;
+import com.ttdat.purchaseservice.application.commands.supplier.UpdateSupplierStatusCommand;
 import com.ttdat.purchaseservice.domain.events.SupplierCreatedEvent;
+import com.ttdat.purchaseservice.domain.events.SupplierStatusUpdatedEvent;
 import com.ttdat.purchaseservice.domain.events.SupplierUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -45,6 +47,15 @@ public class SupplierCommandHandler {
                 .notes(updateSupplierCommand.getNotes())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(supplierUpdatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateSupplierStatusCommand updateSupplierStatusCommand) {
+        SupplierStatusUpdatedEvent supplierStatusUpdatedEvent = SupplierStatusUpdatedEvent.builder()
+                .supplierId(updateSupplierStatusCommand.getSupplierId())
+                .active(updateSupplierStatusCommand.isActive())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(supplierStatusUpdatedEvent));
     }
 
 }

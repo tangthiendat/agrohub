@@ -2,6 +2,7 @@ package com.ttdat.purchaseservice.api.controllers.command;
 
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
+import com.ttdat.purchaseservice.api.dto.request.UpdateSupplierStatusRequest;
 import com.ttdat.purchaseservice.application.services.SupplierService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,18 @@ public class SupplierCommandController {
                 ApiResponse.builder()
                         .status(HttpStatus.OK.value())
                         .message("Supplier updated successfully")
+                        .success(true)
+                        .build()
+        );
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<Object>> updateSupplierStatus(@PathVariable String id, @Valid @RequestBody UpdateSupplierStatusRequest updateSupplierStatusRequest) {
+        supplierService.updateSupplierStatus(id, updateSupplierStatusRequest);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Supplier status updated successfully")
                         .success(true)
                         .build()
         );

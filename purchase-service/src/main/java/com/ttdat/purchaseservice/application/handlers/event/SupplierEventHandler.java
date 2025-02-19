@@ -6,6 +6,7 @@ import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.purchaseservice.application.mappers.SupplierMapper;
 import com.ttdat.purchaseservice.domain.entities.Supplier;
 import com.ttdat.purchaseservice.domain.events.SupplierCreatedEvent;
+import com.ttdat.purchaseservice.domain.events.SupplierStatusUpdatedEvent;
 import com.ttdat.purchaseservice.domain.events.SupplierUpdatedEvent;
 import com.ttdat.purchaseservice.domain.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,14 @@ public class SupplierEventHandler {
     public void handle(SupplierUpdatedEvent supplierUpdatedEvent) {
         Supplier supplier = getSupplierById(supplierUpdatedEvent.getSupplierId());
         supplierMapper.updateEntityFromEvent(supplier, supplierUpdatedEvent);
+        supplierRepository.save(supplier);
+    }
+
+    @Transactional
+    @EventHandler
+    public void handle(SupplierStatusUpdatedEvent supplierStatusUpdatedEvent) {
+        Supplier supplier = getSupplierById(supplierStatusUpdatedEvent.getSupplierId());
+        supplier.setActive(supplierStatusUpdatedEvent.isActive());
         supplierRepository.save(supplier);
     }
 }
