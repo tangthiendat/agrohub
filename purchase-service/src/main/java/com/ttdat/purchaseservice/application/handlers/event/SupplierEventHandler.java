@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class SupplierEventHandler {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
 
+    @Transactional
     @EventHandler
     public void handle(SupplierCreatedEvent supplierCreatedEvent) {
         if(supplierRepository.existsBySupplierName(supplierCreatedEvent.getSupplierName())) {
