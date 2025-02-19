@@ -1,9 +1,10 @@
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { Button, Col, Form, Input, Row, Space } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { categoryService } from "../../services";
 import { ICategory } from "../../interfaces";
-import { useEffect } from "react";
+import { getNotificationMessage } from "../../utils/notification";
 
 interface UpdateCategoryFormProps {
   categoryToUpdate?: ICategory;
@@ -64,8 +65,11 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
             onCancel();
             form.resetFields();
           },
-          onError: () => {
-            toast.error("Cập nhật loại sản phẩm thất bại");
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) ||
+                "Cập nhật loại sản phẩm thất bại",
+            );
           },
         },
       );
@@ -76,8 +80,10 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
           onCancel();
           form.resetFields();
         },
-        onError: () => {
-          toast.error("Thêm loại sản phẩm thất bại");
+        onError: (error: Error) => {
+          toast.error(
+            getNotificationMessage(error) || "Thêm loại sản phẩm thất bại",
+          );
         },
       });
     }

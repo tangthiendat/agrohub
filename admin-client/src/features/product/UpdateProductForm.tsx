@@ -33,6 +33,7 @@ import {
 import { categoryService, productService, unitService } from "../../services";
 import { getBase64 } from "../../utils/image";
 import { convertKeysToSnakeCase } from "../../utils/data";
+import { getNotificationMessage } from "../../utils/notification";
 
 interface UpdateProductFormProps {
   productToUpdate?: IProduct;
@@ -227,8 +228,10 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
             form.resetFields();
             setFileList([]);
           },
-          onError: () => {
-            toast.error("Cập nhật sản phẩm thất bại");
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) || "Cập nhật sản phẩm thất bại",
+            );
           },
         },
       );
@@ -250,8 +253,10 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
           form.resetFields();
           setFileList([]);
         },
-        onError: () => {
-          toast.error("Thêm sản phẩm thất bại");
+        onError: (error: Error) => {
+          toast.error(
+            getNotificationMessage(error) || "Thêm sản phẩm thất bại",
+          );
         },
       });
     }
