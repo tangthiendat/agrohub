@@ -7,11 +7,13 @@ import com.ttdat.purchaseservice.domain.entities.Supplier;
 import com.ttdat.purchaseservice.domain.events.SupplierCreatedEvent;
 import com.ttdat.purchaseservice.domain.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@ProcessingGroup("supplier-group")
 public class SupplierEventHandler {
     private final SupplierRepository supplierRepository;
     private final SupplierMapper supplierMapper;
