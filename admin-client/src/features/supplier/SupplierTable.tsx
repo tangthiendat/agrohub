@@ -1,16 +1,29 @@
 import { useState } from "react";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { useSearchParams } from "react-router";
-import ViewSupplier from "./ViewSupplier";
-import { ISupplier, Page } from "../../interfaces";
-import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
-import { formatTimestamp } from "../../utils/datetime";
-import { getSortDownIconColor, getSortUpIconColor } from "../../utils/color";
 import Access from "../auth/Access";
+import ViewSupplier from "./ViewSupplier";
+import UpdateSupplier from "./UpdateSupplier";
+import UpdateSupplierStatus from "./UpdateSupplierStatus";
+import { ISupplier, Page } from "../../interfaces";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../utils/filter";
+import { formatTimestamp } from "../../utils/datetime";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../utils/color";
 import { PERMISSIONS } from "../../common/constants";
 import { Module } from "../../common/enums";
-import UpdateSupplier from "./UpdateSupplier";
 
 interface SupplierTableProps {
   supplierPage?: Page<ISupplier>;
@@ -110,6 +123,20 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
           {active ? "Đã kích hoạt" : "Chưa kích hoạt"}
         </Tag>
       ),
+      filters: [
+        {
+          text: "Đã kích hoạt",
+          value: true,
+        },
+        {
+          text: "Chưa kích hoạt",
+          value: false,
+        },
+      ],
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "active"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
     },
     {
       title: "Email",
@@ -164,6 +191,9 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
           <ViewSupplier supplier={supplier} />
           <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE}>
             <UpdateSupplier supplier={supplier} />
+          </Access>
+          <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE_STATUS}>
+            <UpdateSupplierStatus supplier={supplier} />
           </Access>
         </Space>
       ),
