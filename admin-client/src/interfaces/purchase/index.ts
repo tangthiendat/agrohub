@@ -1,4 +1,6 @@
-export interface ISupplier {
+import { Auditable } from "../common";
+
+export interface ISupplier extends Auditable {
   supplierId: string;
   supplierName: string;
   email: string;
@@ -8,4 +10,9 @@ export interface ISupplier {
   taxCode?: string;
   contactPerson?: string;
   notes?: string;
+}
+
+export interface SupplierFilterCriteria {
+  query?: string;
+  active?: boolean;
 }

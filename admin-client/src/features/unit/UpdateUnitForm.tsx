@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { IUnit } from "../../interfaces";
 import { unitService } from "../../services";
 import { useEffect } from "react";
+import { getNotificationMessage } from "../../utils/notification";
 
 interface UpdateUnitFormProps {
   unitToUpdate?: IUnit;
@@ -64,8 +65,11 @@ const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({
             onCancel();
             form.resetFields();
           },
-          onError: () => {
-            toast.error("Cập nhật loại sản phẩm thất bại");
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) ||
+                "Cập nhật loại sản phẩm thất bại",
+            );
           },
         },
       );
@@ -76,8 +80,10 @@ const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({
           onCancel();
           form.resetFields();
         },
-        onError: () => {
-          toast.error("Thêm đơn vị tính thất bại");
+        onError: (error: Error) => {
+          toast.error(
+            getNotificationMessage(error) || "Thêm đơn vị tính thất bại",
+          );
         },
       });
     }

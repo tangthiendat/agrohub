@@ -1,14 +1,14 @@
 import { Modal } from "antd";
 import { useState } from "react";
+import UpdateSupplierForm from "./UpdateSupplierForm";
 import EditIcon from "../../common/components/icons/EditIcon";
-import UpdateCategoryForm from "./UpdateCategoryForm";
-import { ICategory } from "../../interfaces";
+import { ISupplier } from "../../interfaces";
 
-interface UpdateCategoryProps {
-  category: ICategory;
+interface UpdateSupplierProps {
+  supplier: ISupplier;
 }
 
-const UpdateCategory: React.FC<UpdateCategoryProps> = ({ category }) => {
+const UpdateSupplier: React.FC<UpdateSupplierProps> = ({ supplier }) => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const handleOpenModal = () => {
@@ -24,14 +24,14 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({ category }) => {
       <EditIcon onClick={handleOpenModal} tooltipTitle="Chỉnh sửa" />
       <Modal
         open={isOpenModal}
-        width="30%"
-        title={<span className="text-lg">Chỉnh sửa danh mục sản phẩm</span>}
+        width="60%"
+        title={<span className="text-lg">Chỉnh sửa nhà cung cấp</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}
       >
-        <UpdateCategoryForm
-          categoryToUpdate={category}
+        <UpdateSupplierForm
+          supplierToUpdate={supplier}
           onCancel={handleCloseModal}
         />
       </Modal>
@@ -39,4 +39,4 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({ category }) => {
   );
 };
 
-export default UpdateCategory;
+export default UpdateSupplier;

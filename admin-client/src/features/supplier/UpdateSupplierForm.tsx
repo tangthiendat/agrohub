@@ -1,6 +1,7 @@
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { Button, Form, Input, Space, Switch } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { ISupplier } from "../../interfaces";
 import { supplierService } from "../../services";
 import { getNotificationMessage } from "../../utils/notification";
@@ -9,6 +10,11 @@ interface UpdateSupplierFormProps {
   supplierToUpdate?: ISupplier;
   onCancel: () => void;
   viewOnly?: boolean;
+}
+
+interface UpdateSupplierArgs {
+  supplierId: string;
+  updatedSupplier: ISupplier;
 }
 
 const UpdateSupplierForm: React.FC<UpdateSupplierFormProps> = ({
@@ -28,9 +34,45 @@ const UpdateSupplierForm: React.FC<UpdateSupplierFormProps> = ({
     },
   });
 
+  const { mutate: updateSupplier, isPending: isUpdating } = useMutation({
+    mutationFn: ({ supplierId, updatedSupplier }: UpdateSupplierArgs) =>
+      supplierService.update(supplierId, updatedSupplier),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("suppliers");
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (supplierToUpdate) {
+      form.setFieldsValue(supplierToUpdate);
+    }
+  }, [form, supplierToUpdate]);
+
   function handleFinish(values: ISupplier) {
     if (supplierToUpdate) {
-      console.log("Updating supplier", values);
+      updateSupplier(
+        {
+          supplierId: supplierToUpdate.supplierId,
+          updatedSupplier: values,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật nhà cung cấp thành công");
+            form.resetFields();
+            onCancel();
+          },
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) ||
+                "Cập nhật nhà cung cấp thất bại.",
+            );
+          },
+        },
+      );
     } else {
       createSupplier(values, {
         onSuccess: () => {
@@ -135,10 +177,14 @@ const UpdateSupplierForm: React.FC<UpdateSupplierFormProps> = ({
       </div>
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel} loading={isCreating}>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
             Hủy
           </Button>
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {supplierToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
