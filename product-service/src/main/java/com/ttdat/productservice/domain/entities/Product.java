@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "suppliers")
+@Table(name = "products")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product extends Auditable {
 
