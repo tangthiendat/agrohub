@@ -21,7 +21,7 @@ const AddCategory: React.FC = () => {
       <Modal
         open={isOpenModal}
         width="30%"
-        title={<span className="text-lg">Thêm loại sản phẩm</span>}
+        title={<span className="text-lg">Thêm danh mục sản phẩm</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}

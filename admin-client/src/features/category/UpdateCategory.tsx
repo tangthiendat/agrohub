@@ -25,7 +25,7 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({ category }) => {
       <Modal
         open={isOpenModal}
         width="30%"
-        title={<span className="text-lg">Chỉnh sửa loại sản phẩm</span>}
+        title={<span className="text-lg">Chỉnh sửa danh mục sản phẩm</span>}
         destroyOnClose
         onCancel={handleCloseModal}
         footer={null}
