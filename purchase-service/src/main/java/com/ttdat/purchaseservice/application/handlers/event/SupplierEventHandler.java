@@ -40,9 +40,6 @@ public class SupplierEventHandler {
     @EventHandler
     public void handle(SupplierUpdatedEvent supplierUpdatedEvent) {
         Supplier supplier = getSupplierById(supplierUpdatedEvent.getSupplierId());
-        if(supplierRepository.existsBySupplierName(supplierUpdatedEvent.getSupplierName())) {
-            throw new DuplicateResourceException(ErrorCode.SUPPLIER_ALREADY_EXISTS);
-        }
         supplierMapper.updateEntityFromEvent(supplier, supplierUpdatedEvent);
         supplierRepository.save(supplier);
     }
