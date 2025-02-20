@@ -5,6 +5,7 @@ import { productService } from "../../services";
 import { Button, Descriptions, DescriptionsProps, Space, Tooltip } from "antd";
 import { GoArrowLeft } from "react-icons/go";
 import UpdateProductSupplierForm from "./UpdateProductSupplierForm";
+import ProductSupplierTable from "./ProductSupplierTable";
 
 const EditProductSuppliers: React.FC = () => {
   const navigate = useNavigate();
@@ -60,10 +61,10 @@ const EditProductSuppliers: React.FC = () => {
         }}
       />
       <div className="mt-6">
-        <UpdateProductSupplierForm
-          product={productData!.payload}
-          onCancel={() => navigate(-1)}
-        />
+        <UpdateProductSupplierForm product={productData!.payload} />
+      </div>
+      <div className="mt-6">
+        <ProductSupplierTable productId={id!} />
       </div>
     </div>
   );
