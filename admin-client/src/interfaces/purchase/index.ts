@@ -16,3 +16,17 @@ export interface SupplierFilterCriteria {
   query?: string;
   active?: boolean;
 }
+
+export interface ISupplierProduct {
+  supplierProductId: string;
+  supplier: ISupplier;
+  productId: string;
+}
+
+export interface ISupplierProductQuotation {
+  quotationId: string;
+  unitId: number;
+  unitPrice: number;
+  validFrom: string;
+  validTo?: string;
+}
