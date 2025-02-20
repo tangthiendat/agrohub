@@ -4,10 +4,14 @@ import com.ttdat.core.application.exceptions.DuplicateResourceException;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.purchaseservice.application.mappers.SupplierMapper;
+import com.ttdat.purchaseservice.application.mappers.SupplierProductMapper;
 import com.ttdat.purchaseservice.domain.entities.Supplier;
-import com.ttdat.purchaseservice.domain.events.SupplierCreatedEvent;
-import com.ttdat.purchaseservice.domain.events.SupplierStatusUpdatedEvent;
-import com.ttdat.purchaseservice.domain.events.SupplierUpdatedEvent;
+import com.ttdat.purchaseservice.domain.entities.SupplierProduct;
+import com.ttdat.purchaseservice.domain.events.supplier.SupplierCreatedEvent;
+import com.ttdat.purchaseservice.domain.events.supplier.SupplierProductCreatedEvent;
+import com.ttdat.purchaseservice.domain.events.supplier.SupplierStatusUpdatedEvent;
+import com.ttdat.purchaseservice.domain.events.supplier.SupplierUpdatedEvent;
+import com.ttdat.purchaseservice.domain.repositories.SupplierProductRepository;
 import com.ttdat.purchaseservice.domain.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -20,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 @ProcessingGroup("supplier-group")
 public class SupplierEventHandler {
     private final SupplierRepository supplierRepository;
+    private final SupplierProductRepository supplierProductRepository;
     private final SupplierMapper supplierMapper;
+    private final SupplierProductMapper supplierProductMapper;
 
     @Transactional
     @EventHandler
@@ -51,5 +57,12 @@ public class SupplierEventHandler {
         Supplier supplier = getSupplierById(supplierStatusUpdatedEvent.getSupplierId());
         supplier.setActive(supplierStatusUpdatedEvent.isActive());
         supplierRepository.save(supplier);
+    }
+
+    @Transactional
+    @EventHandler
+    public void handle(SupplierProductCreatedEvent supplierProductCreatedEvent) {
+        SupplierProduct supplierProduct = supplierProductMapper.toEntity(supplierProductCreatedEvent);
+        supplierProductRepository.save(supplierProduct);
     }
 }

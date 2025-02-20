@@ -1,18 +1,17 @@
-package com.ttdat.purchaseservice.api.dto.common;
+package com.ttdat.purchaseservice.domain.events.supplier;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SupplierProductDTO {
-
+public class SupplierProductCreatedEvent {
     String supplierProductId;
 
-    SupplierDTO supplier;
+    String supplierId;
 
     String productId;
 }

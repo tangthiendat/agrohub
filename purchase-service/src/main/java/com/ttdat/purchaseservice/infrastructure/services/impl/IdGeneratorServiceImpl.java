@@ -11,4 +11,9 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
     public String generateSupplierId() {
         return RandomStringUtils.secure().nextNumeric(10);
     }
+
+    @Override
+    public String generateSupplierProductId() {
+        return RandomStringUtils.secure().nextAlphanumeric(10);
+    }
 }
