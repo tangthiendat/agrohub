@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -27,4 +29,7 @@ public class SupplierProduct {
 
     @Column(length = 50)
     String productId;
+
+    @OneToMany(mappedBy = "supplierProduct", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    List<SupplierProductQuotation> quotations;
 }
