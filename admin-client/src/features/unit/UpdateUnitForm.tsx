@@ -61,14 +61,13 @@ const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({
         },
         {
           onSuccess: () => {
-            toast.success("Cập nhật loại sản phẩm thành công");
+            toast.success("Cập nhật đơn vị tính thành công");
             onCancel();
             form.resetFields();
           },
           onError: (error: Error) => {
             toast.error(
-              getNotificationMessage(error) ||
-                "Cập nhật loại sản phẩm thất bại",
+              getNotificationMessage(error) || "Cập nhật đơn vị tính thất bại",
             );
           },
         },
