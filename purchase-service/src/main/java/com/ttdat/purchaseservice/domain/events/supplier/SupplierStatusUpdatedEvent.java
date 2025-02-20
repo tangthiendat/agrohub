@@ -1,4 +1,4 @@
-package com.ttdat.purchaseservice.domain.events;
+package com.ttdat.purchaseservice.domain.events.supplier;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

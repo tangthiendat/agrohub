@@ -1,8 +1,10 @@
 package com.ttdat.purchaseservice.application.services.impl;
 
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
+import com.ttdat.purchaseservice.api.dto.common.SupplierProductDTO;
 import com.ttdat.purchaseservice.api.dto.request.UpdateSupplierStatusRequest;
 import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierCommand;
+import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierProductCommand;
 import com.ttdat.purchaseservice.application.commands.supplier.UpdateSupplierCommand;
 import com.ttdat.purchaseservice.application.services.SupplierService;
 import com.ttdat.purchaseservice.infrastructure.services.IdGeneratorService;
@@ -55,5 +57,15 @@ public class SupplierServiceImpl implements SupplierService {
                 .active(updateSupplierStatusRequest.isActive())
                 .build();
         commandGateway.sendAndWait(updateSupplierCommand);
+    }
+
+    @Override
+    public void createSupplierProduct(SupplierProductDTO supplierProductDTO) {
+        CreateSupplierProductCommand createSupplierProductCommand = CreateSupplierProductCommand.builder()
+                .supplierProductId(idGeneratorService.generateSupplierProductId())
+                .supplierId(supplierProductDTO.getSupplier().getSupplierId())
+                .productId(supplierProductDTO.getProductId())
+                .build();
+        commandGateway.sendAndWait(createSupplierProductCommand);
     }
 }

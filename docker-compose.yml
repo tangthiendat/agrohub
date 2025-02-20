@@ -26,3 +26,15 @@ services:
       - "8081:8081"
     networks:
       - agrohub
+  purchase-service:
+    build:
+      context: .
+      dockerfile: purchase-service/Dockerfile.dev
+    image: agrohub/purchase-service:dev
+    container_name: purchase-service
+    env_file:
+      - purchase-service/.env.docker
+    ports:
+      - "8083:8083"
+    networks:
+      - agrohub

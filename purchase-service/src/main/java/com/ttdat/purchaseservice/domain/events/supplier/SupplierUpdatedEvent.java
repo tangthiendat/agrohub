@@ -1,4 +1,4 @@
-package com.ttdat.purchaseservice.domain.events;
+package com.ttdat.purchaseservice.domain.events.supplier;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SupplierCreatedEvent {
+public class SupplierUpdatedEvent {
     String supplierId;
 
     String supplierName;

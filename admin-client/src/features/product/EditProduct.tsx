@@ -5,6 +5,7 @@ import { GoArrowLeft } from "react-icons/go";
 import Loading from "../../common/components/Loading";
 import UpdateProductForm from "./UpdateProductForm";
 import { productService } from "../../services";
+import { ISupplierProduct } from "../../interfaces";
 
 const EditProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -29,6 +30,9 @@ const EditProduct: React.FC = () => {
           </Tooltip>
           <h2 className="text-xl font-semibold">Chỉnh sửa sản phẩm</h2>
         </Space>
+        <Button type="primary" onClick={() => navigate("suppliers")}>
+          Danh sách nhà cung cấp
+        </Button>
       </div>
       <UpdateProductForm
         productToUpdate={productData?.payload}

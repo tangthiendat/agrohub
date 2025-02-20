@@ -1,8 +1,11 @@
 package com.ttdat.purchaseservice.application.handlers.query;
 
+import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.api.dto.response.SupplierPageResult;
 import com.ttdat.purchaseservice.application.mappers.SupplierMapper;
+import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierByProductIdQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierPageQuery;
+import com.ttdat.purchaseservice.application.queries.supplier.SearchSupplierQuery;
 import com.ttdat.purchaseservice.domain.entities.Supplier;
 import com.ttdat.purchaseservice.domain.repositories.SupplierRepository;
 import com.ttdat.purchaseservice.infrastructure.utils.PaginationUtils;
@@ -14,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -25,7 +29,7 @@ public class SupplierQueryHandler {
     @QueryHandler
     public SupplierPageResult handle(GetSupplierPageQuery query) {
         Pageable pageable = PaginationUtils.getPageable(query.getPaginationParams(), query.getSortParams());
-        Specification<Supplier> supplierPageSpec = getSupplierPageSpec(query.getFilterParams());
+        Specification<Supplier> supplierPageSpec = getSupplierSpec(query.getFilterParams());
         Page<Supplier> supplierPage = supplierRepository.findAll(supplierPageSpec, pageable);
         return SupplierPageResult.builder()
                 .meta(PaginationUtils.getPaginationMeta(supplierPage))
@@ -33,23 +37,37 @@ public class SupplierQueryHandler {
                 .build();
     }
 
-    private Specification<Supplier> getSupplierPageSpec(Map<String, String> filterParams){
-        Specification<Supplier> supplierPageSpec = Specification.where(null);
-        supplierPageSpec = supplierPageSpec.and(SpecificationUtils.buildSpecification(filterParams, "active", Boolean.class));
-        if (filterParams.containsKey("query")){
+    private Specification<Supplier> getSupplierSpec(Map<String, String> filterParams) {
+        Specification<Supplier> supplierSpec = Specification.where(null);
+        supplierSpec = supplierSpec.and(SpecificationUtils.buildSpecification(filterParams, "active", Boolean.class));
+        if (filterParams.containsKey("query")) {
             String searchValue = filterParams.get("query").toLowerCase();
             Specification<Supplier> querySpec = (root, query, criteriaBuilder) -> {
                 String likePattern = "%" + searchValue + "%";
                 return criteriaBuilder.or(
                         criteriaBuilder.like(root.get("supplierId"), likePattern),
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("supplierName")), likePattern),
+                        criteriaBuilder.like(criteriaBuilder.function("unaccent", String.class, criteriaBuilder.lower(root.get("supplierName"))),
+                                likePattern),
                         criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), likePattern),
                         criteriaBuilder.like(criteriaBuilder.lower(root.get("phoneNumber")), likePattern)
                 );
             };
-            supplierPageSpec = supplierPageSpec.and(querySpec);
+            supplierSpec = supplierSpec.and(querySpec);
         }
-        return supplierPageSpec;
+        return supplierSpec;
+    }
+
+    @QueryHandler
+    public List<SupplierDTO> handle(SearchSupplierQuery searchSupplierQuery){
+        Specification<Supplier> supplierSpec = getSupplierSpec(Map.of("query", searchSupplierQuery.getQuery()));
+        List<Supplier> suppliers = supplierRepository.findAll(supplierSpec);
+        return supplierMapper.toDTOList(suppliers);
+    }
+
+    @QueryHandler
+    public List<SupplierDTO> handle(GetSupplierByProductIdQuery query) {
+        List<Supplier> suppliers = supplierRepository.findByProductId(query.getProductId());
+        return supplierMapper.toDTOList(suppliers);
     }
 
 }

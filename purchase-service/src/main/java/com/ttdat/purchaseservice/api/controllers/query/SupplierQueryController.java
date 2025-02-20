@@ -4,8 +4,10 @@ import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
+import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.api.dto.response.SupplierPageResult;
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierPageQuery;
+import com.ttdat.purchaseservice.application.queries.supplier.SearchSupplierQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,6 +43,22 @@ public class SupplierQueryController {
                         .message("Get supplier page successfully")
                         .success(true)
                         .payload(supplierPageResult)
+                        .build()
+        );
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<SupplierDTO>>> searchSuppliers(@RequestParam String query) {
+        SearchSupplierQuery searchSupplierQuery = SearchSupplierQuery.builder()
+                .query(query)
+                .build();
+        List<SupplierDTO> supplierDTOS = queryGateway.query(searchSupplierQuery, ResponseTypes.multipleInstancesOf(SupplierDTO.class)).join();
+        return ResponseEntity.ok(
+                ApiResponse.<List<SupplierDTO>>builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Search suppliers successfully")
+                        .success(true)
+                        .payload(supplierDTOS)
                         .build()
         );
     }
