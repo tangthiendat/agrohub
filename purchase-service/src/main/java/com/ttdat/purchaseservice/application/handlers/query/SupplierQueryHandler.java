@@ -3,6 +3,7 @@ package com.ttdat.purchaseservice.application.handlers.query;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.api.dto.response.SupplierPageResult;
 import com.ttdat.purchaseservice.application.mappers.SupplierMapper;
+import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierByProductIdQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierPageQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.SearchSupplierQuery;
 import com.ttdat.purchaseservice.domain.entities.Supplier;
@@ -60,6 +61,12 @@ public class SupplierQueryHandler {
     public List<SupplierDTO> handle(SearchSupplierQuery searchSupplierQuery){
         Specification<Supplier> supplierSpec = getSupplierSpec(Map.of("query", searchSupplierQuery.getQuery()));
         List<Supplier> suppliers = supplierRepository.findAll(supplierSpec);
+        return supplierMapper.toDTOList(suppliers);
+    }
+
+    @QueryHandler
+    public List<SupplierDTO> handle(GetSupplierByProductIdQuery query) {
+        List<Supplier> suppliers = supplierRepository.findByProductId(query.getProductId());
         return supplierMapper.toDTOList(suppliers);
     }
 
