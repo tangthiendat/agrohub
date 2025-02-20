@@ -33,6 +33,7 @@ import {
 import { categoryService, productService, unitService } from "../../services";
 import { getBase64 } from "../../utils/image";
 import { convertKeysToSnakeCase } from "../../utils/data";
+import { getNotificationMessage } from "../../utils/notification";
 
 interface UpdateProductFormProps {
   productToUpdate?: IProduct;
@@ -64,7 +65,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
   const [previewOpen, setPreviewOpen] = useState<boolean>(false);
   const [previewImage, setPreviewImage] = useState<string>("");
   const [modal, contextHolder] = Modal.useModal();
-  const isUpdateSession = !!productToUpdate;
+  const isUpdateSession = !!productToUpdate && !viewOnly;
 
   useEffect(() => {
     if (productToUpdate) {
@@ -227,8 +228,10 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
             form.resetFields();
             setFileList([]);
           },
-          onError: () => {
-            toast.error("Cập nhật sản phẩm thất bại");
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) || "Cập nhật sản phẩm thất bại",
+            );
           },
         },
       );
@@ -250,8 +253,10 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
           form.resetFields();
           setFileList([]);
         },
-        onError: () => {
-          toast.error("Thêm sản phẩm thất bại");
+        onError: (error: Error) => {
+          toast.error(
+            getNotificationMessage(error) || "Thêm sản phẩm thất bại",
+          );
         },
       });
     }
@@ -543,11 +548,23 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
                           </Form.Item>
 
                           <Form.Item className="basis-[5%]">
-                            {!viewOnly && (
-                              <CloseOutlined
-                                onClick={() => removeUnit(unitField.name)}
-                              />
-                            )}
+                            {!viewOnly &&
+                              (!isUpdateSession ||
+                                unitField.name + 1 >
+                                  (productToUpdate?.productUnits.length ||
+                                    0)) && (
+                                <CloseOutlined
+                                  onClick={(
+                                    event: React.MouseEvent<
+                                      HTMLSpanElement,
+                                      MouseEvent
+                                    >,
+                                  ) => {
+                                    event.stopPropagation();
+                                    removeUnit(unitField.name);
+                                  }}
+                                />
+                              )}
                           </Form.Item>
                         </div>
                       );

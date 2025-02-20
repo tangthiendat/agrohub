@@ -92,9 +92,11 @@ const AdminLayout: React.FC = () => {
           
           {!collapsed && <h1 className="font-bold">Trang quản trị</h1>}
         </div> */}
-        <div className="logo-font m-4 text-center text-[2rem] font-bold text-primary">
-          AGROHUB
-        </div>
+        {!collapsed && (
+          <div className="logo-font m-4 text-center text-[2rem] font-bold text-primary">
+            AGROHUB
+          </div>
+        )}
         <Menu
           theme="light"
           mode="inline"

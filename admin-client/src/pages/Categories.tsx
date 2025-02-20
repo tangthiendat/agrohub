@@ -11,7 +11,7 @@ const Categories = () => {
     <Access permission={PERMISSIONS[Module.CATEGORY].GET_PAGE}>
       <div className="card">
         <div className="mb-5 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Loại sản phẩm</h2>
+          <h2 className="text-xl font-semibold">Danh mục sản phẩm</h2>
           <Access permission={PERMISSIONS[Module.CATEGORY].CREATE} hideChildren>
             <AddCategory />
           </Access>

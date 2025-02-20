@@ -13,6 +13,8 @@ import Units from "../pages/Units";
 import Users from "../pages/Users";
 import ViewProduct from "../features/product/ViewProduct";
 import EditProduct from "../features/product/EditProduct";
+import Suppliers from "../pages/Suppliers";
+import EditProductSuppliers from "../features/product/EditProductSuppliers";
 
 const router = createBrowserRouter([
   {
@@ -70,9 +72,23 @@ const router = createBrowserRouter([
           },
           {
             path: "update/:id",
-            element: <EditProduct />,
+            children: [
+              {
+                path: "",
+                index: true,
+                element: <EditProduct />,
+              },
+              {
+                path: "suppliers",
+                element: <EditProductSuppliers />,
+              },
+            ],
           },
         ],
+      },
+      {
+        path: "/suppliers",
+        element: <Suppliers />,
       },
     ],
   },

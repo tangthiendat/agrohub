@@ -1,6 +1,7 @@
 package com.ttdat.productservice.application.mappers;
 
 import com.ttdat.productservice.api.dto.common.ProductDTO;
+import com.ttdat.productservice.domain.entities.Category;
 import com.ttdat.productservice.domain.entities.Product;
 import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
 import com.ttdat.productservice.domain.events.product.ProductUpdatedEvent;
@@ -38,5 +39,13 @@ public interface ProductMapper extends EntityMapper<ProductDTO, Product> {
         }
     }
 
+    @BeforeMapping
+    default void updateCategory(@MappingTarget Product product, ProductUpdatedEvent productUpdatedEvent) {
+        if(productUpdatedEvent.getCategoryId() != null) {
+            if(product.getCategory() == null || !product.getCategory().getCategoryId().equals(productUpdatedEvent.getCategoryId())) {
+                product.setCategory(Category.builder().categoryId(productUpdatedEvent.getCategoryId()).build());
+            }
+        }
+    }
 
 }

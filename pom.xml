@@ -18,6 +18,8 @@
         <module>core</module>
         <module>product-service</module>
         <module>user-service</module>
+        <module>inventory-service</module>
+        <module>purchase-service</module>
     </modules>
 
     <properties>
