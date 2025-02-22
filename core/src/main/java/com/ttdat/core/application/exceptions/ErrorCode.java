@@ -28,6 +28,8 @@ public enum ErrorCode {
     PRODUCT_ALREADY_EXISTS("AGH-312", "Product with this name already exists", ErrorType.RESOURCE),
     SUPPLIER_NOT_FOUND("AGH-313", "Supplier not found", ErrorType.RESOURCE),
     SUPPLIER_ALREADY_EXISTS("AGH-314", "Supplier with this name already exists", ErrorType.RESOURCE),
+    WAREHOUSE_NOT_FOUND("AGH-315", "Warehouse not found", ErrorType.RESOURCE),
+    WAREHOUSE_ALREADY_EXISTS("AGH-316", "Warehouse with this name already exists", ErrorType.RESOURCE),
 
     INTERNAL_SERVER_ERROR("AGH-501", "Internal server error", ErrorType.SYSTEM),;
 

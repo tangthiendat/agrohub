@@ -15,6 +15,7 @@ import ViewProduct from "../features/product/ViewProduct";
 import EditProduct from "../features/product/EditProduct";
 import Suppliers from "../pages/Suppliers";
 import EditProductSuppliers from "../features/product/EditProductSuppliers";
+import Warehouses from "../pages/Warehouses";
 
 const router = createBrowserRouter([
   {
@@ -89,6 +90,10 @@ const router = createBrowserRouter([
       {
         path: "/suppliers",
         element: <Suppliers />,
+      },
+      {
+        path: "/warehouses",
+        element: <Warehouses />,
       },
     ],
   },
