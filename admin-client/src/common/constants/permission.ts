@@ -135,4 +135,18 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PATCH,
     },
   },
+  [Module.WAREHOUSE]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/warehouses/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/warehouses",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/warehouses/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
 };

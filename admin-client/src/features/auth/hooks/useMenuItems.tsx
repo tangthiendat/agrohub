@@ -9,6 +9,7 @@ import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
 import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
+import { FaWarehouse } from "react-icons/fa6";
 
 export function useMenuItems(user?: IUser): MenuProps["items"] {
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
@@ -63,8 +64,18 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           item.httpMethod === PERMISSIONS[Module.SUPPLIER].GET_PAGE.httpMethod,
       );
 
+      const viewWarehouses = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.WAREHOUSE].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.WAREHOUSE].GET_PAGE.httpMethod,
+      );
+
       const hasItemListChildren: boolean = Boolean(
-        viewCategories || viewUnits || viewProducts || viewSuppliers,
+        viewCategories ||
+          viewUnits ||
+          viewProducts ||
+          viewSuppliers ||
+          viewWarehouses,
       );
 
       const menuItems = [
@@ -159,6 +170,15 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           ),
                           key: "suppliers",
                           icon: <FaBuilding />,
+                        },
+                      ]
+                    : []),
+                  ...(viewWarehouses
+                    ? [
+                        {
+                          label: <NavLink to="/warehouses">Kho hàng</NavLink>,
+                          key: "warehouses",
+                          icon: <FaWarehouse />,
                         },
                       ]
                     : []),
