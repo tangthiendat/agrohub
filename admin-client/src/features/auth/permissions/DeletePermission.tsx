@@ -18,7 +18,7 @@ const DeletePermission: React.FC<DeletePermissionProps> = ({
     mutationFn: permissionService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => query.queryKey.includes("permissions"),
+        queryKey: ["permissions"],
       });
     },
   });

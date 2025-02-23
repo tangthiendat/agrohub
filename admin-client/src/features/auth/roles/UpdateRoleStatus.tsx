@@ -20,9 +20,7 @@ const UpdateRoleStatus: React.FC<UpdateRoleStatusProps> = ({ role }) => {
       roleService.updateStatus(roleId, active),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("roles");
-        },
+        queryKey: ["roles"],
       });
     },
   });

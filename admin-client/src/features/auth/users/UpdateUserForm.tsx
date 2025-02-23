@@ -68,9 +68,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
     mutationFn: userService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("users");
-        },
+        queryKey: ["users"],
       });
     },
   });
@@ -80,9 +78,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
       userService.update(userId, user),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("users");
-        },
+        queryKey: ["users"],
       });
     },
   });

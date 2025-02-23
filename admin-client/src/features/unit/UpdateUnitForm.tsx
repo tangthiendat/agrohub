@@ -27,9 +27,7 @@ const UpdateUnitForm: React.FC<UpdateUnitFormProps> = ({
     mutationFn: unitService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("units");
-        },
+        queryKey: ["units"],
       });
     },
   });

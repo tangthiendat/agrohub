@@ -27,9 +27,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
     mutationFn: categoryService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("categories");
-        },
+        queryKey: ["categories"],
       });
     },
   });
@@ -39,9 +37,7 @@ const UpdateCategoryForm: React.FC<UpdateCategoryFormProps> = ({
       categoryService.update(categoryId, updatedCategory),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("categories");
-        },
+        queryKey: ["categories"],
       });
     },
   });

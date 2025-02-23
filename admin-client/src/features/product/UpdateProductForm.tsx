@@ -114,9 +114,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
     mutationFn: productService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("products");
-        },
+        queryKey: ["products"],
       });
     },
   });
@@ -126,9 +124,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
       productService.update(productId, updatedProduct),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("products");
-        },
+        queryKey: ["products"],
       });
     },
   });
