@@ -2,9 +2,11 @@ package com.ttdat.inventoryservice.application.handlers.event;
 
 import com.ttdat.core.application.exceptions.DuplicateResourceException;
 import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.inventoryservice.application.mappers.WarehouseMapper;
 import com.ttdat.inventoryservice.domain.entities.Warehouse;
-import com.ttdat.inventoryservice.domain.events.WarehouseCreatedEvent;
+import com.ttdat.inventoryservice.domain.events.warehouse.WarehouseCreatedEvent;
+import com.ttdat.inventoryservice.domain.events.warehouse.WarehouseUpdatedEvent;
 import com.ttdat.inventoryservice.domain.repositories.WarehouseRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -26,6 +28,19 @@ public class WarehouseEventHandler {
             throw new DuplicateResourceException(ErrorCode.WAREHOUSE_ALREADY_EXISTS);
         }
         Warehouse warehouse = warehouseMapper.toEntity(warehouseCreatedEvent);
+        warehouseRepository.save(warehouse);
+    }
+
+    private Warehouse getWarehouseById(Long warehouseId) {
+        return warehouseRepository.findById(warehouseId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WAREHOUSE_NOT_FOUND));
+    }
+
+    @Transactional
+    @EventHandler
+    public void on(WarehouseUpdatedEvent warehouseUpdatedEvent){
+        Warehouse warehouse = getWarehouseById(warehouseUpdatedEvent.getWarehouseId());
+        warehouseMapper.updateEntityFromEvent(warehouse, warehouseUpdatedEvent);
         warehouseRepository.save(warehouse);
     }
 }

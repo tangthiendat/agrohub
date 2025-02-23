@@ -4,10 +4,16 @@ import { Button, Form, Input, Space } from "antd";
 import { warehouseService } from "../../services";
 import toast from "react-hot-toast";
 import { getNotificationMessage } from "../../utils/notification";
+import { useEffect } from "react";
 
 interface UpdateWarehouseFormProps {
   warehouseToUpdate?: IWarehouse;
   onCancel: () => void;
+}
+
+interface UpdateWarehouseArgs {
+  warehouseId: number;
+  updatedWarehouse: IWarehouse;
 }
 
 const UpdateWarehouseForm: React.FC<UpdateWarehouseFormProps> = ({
@@ -25,9 +31,44 @@ const UpdateWarehouseForm: React.FC<UpdateWarehouseFormProps> = ({
     },
   });
 
+  const { mutate: updateWarehouse, isPending: isUpdating } = useMutation({
+    mutationFn: ({ warehouseId, updatedWarehouse }: UpdateWarehouseArgs) =>
+      warehouseService.update(warehouseId, updatedWarehouse),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey.includes("units");
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (warehouseToUpdate) {
+      form.setFieldsValue(warehouseToUpdate);
+    }
+  }, [form, warehouseToUpdate]);
+
   function handleFinish(values: IWarehouse) {
     if (warehouseToUpdate) {
-      console.log("Updating warehouse", values);
+      updateWarehouse(
+        {
+          warehouseId: warehouseToUpdate.warehouseId,
+          updatedWarehouse: values,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật kho thành công");
+            form.resetFields();
+            onCancel();
+          },
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) || "Cập nhật kho thất bại",
+            );
+          },
+        },
+      );
     } else {
       createWarehouse(values, {
         onSuccess: () => {
@@ -63,10 +104,14 @@ const UpdateWarehouseForm: React.FC<UpdateWarehouseFormProps> = ({
 
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel} loading={isCreating}>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
             Hủy
           </Button>
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {warehouseToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>

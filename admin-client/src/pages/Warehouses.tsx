@@ -2,6 +2,7 @@ import Access from "../features/auth/Access";
 import AddWarehouse from "../features/warehouse/AddWarehouse";
 import { Module } from "../common/enums";
 import { PERMISSIONS } from "../common/constants";
+import WarehouseTable from "../features/warehouse/WarehouseTable";
 
 const Warehouses: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ const Warehouses: React.FC = () => {
             <AddWarehouse />
           </Access>
         </div>
-        {/* <SupplierTable supplierPage={data?.payload} isLoading={isLoading} /> */}
+        <WarehouseTable />
       </div>
     </Access>
   );
