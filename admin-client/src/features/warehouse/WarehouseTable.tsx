@@ -40,7 +40,7 @@ const WarehouseTable: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["units", pagination, sort].filter((key) => {
+    queryKey: ["warehouses", pagination, sort].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {

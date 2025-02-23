@@ -36,9 +36,7 @@ const UpdateWarehouseForm: React.FC<UpdateWarehouseFormProps> = ({
       warehouseService.update(warehouseId, updatedWarehouse),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("units");
-        },
+        queryKey: ["warehouses"],
       });
     },
   });
