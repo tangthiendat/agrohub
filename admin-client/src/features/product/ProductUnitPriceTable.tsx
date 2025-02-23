@@ -3,6 +3,7 @@ import { FormInstance, Table, TableProps } from "antd";
 import { IProduct, IProductUnit, IProductUnitPrice } from "../../interfaces";
 import { formatDate } from "../../utils/datetime";
 import { formatCurrency } from "../../utils/number";
+import dayjs from "dayjs";
 
 interface ProductUnitPriceTableProps {
   productForm: FormInstance<IProduct>;
@@ -22,7 +23,10 @@ const ProductUnitPriceTable: React.FC<ProductUnitPriceTableProps> = ({
       "productUnits",
       productUnitIndex,
     ]);
-    setProductUnitPrices(productUnit.productUnitPrices);
+    const sortedProductUnitPrices = productUnit.productUnitPrices.sort((a, b) =>
+      dayjs(b.validTo).diff(dayjs(a.validTo)),
+    );
+    setProductUnitPrices(sortedProductUnitPrices);
   }, [productForm, productUnitIndex]);
 
   const columns: TableProps<IProductUnitPrice>["columns"] = [
