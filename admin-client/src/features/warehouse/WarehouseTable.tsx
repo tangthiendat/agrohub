@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Table, TablePaginationConfig } from "antd";
+import { Space, Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
 import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import Access from "../auth/Access";
+import UpdateWarehouse from "./UpdateWarehouse";
 import { IWarehouse, PaginationParams, SortParams } from "../../interfaces";
 import { warehouseService } from "../../services";
 import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
 import { formatTimestamp } from "../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../utils/color";
+import { PERMISSIONS } from "../../common/constants";
+import { Module } from "../../common/enums";
 
 interface TableParams {
   pagination: TablePaginationConfig;
@@ -21,7 +25,7 @@ const WarehouseTable: React.FC = () => {
       current: Number(searchParams.get("page")) || 1,
       pageSize: Number(searchParams.get("pageSize")) || 10,
       showSizeChanger: true,
-      showTotal: (total) => `Tổng ${total} loại sản phẩm`,
+      showTotal: (total) => `Tổng ${total} loại kho hàng`,
     },
   }));
 
@@ -155,12 +159,14 @@ const WarehouseTable: React.FC = () => {
       key: "action",
       width: "15%",
       render: (record: IWarehouse) => (
-        // <Space>
-        //   <Access permission={PERMISSIONS[Module.UNIT].UPDATE} hideChildren>
-        //     <UpdateUnit unit={record} />
-        //   </Access>
-        // </Space>
-        <div></div>
+        <Space>
+          <Access
+            permission={PERMISSIONS[Module.WAREHOUSE].UPDATE}
+            hideChildren
+          >
+            <UpdateWarehouse warehouse={record} />
+          </Access>
+        </Space>
       ),
     },
   ];

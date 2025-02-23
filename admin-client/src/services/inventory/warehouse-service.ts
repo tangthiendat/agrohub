@@ -16,6 +16,10 @@ interface IWarehouseService {
     pagination: PaginationParams,
     sort?: SortParams,
   ): Promise<ApiResponse<Page<IWarehouse>>>;
+  update(
+    warehouseId: number,
+    updatedWarehouse: IWarehouse,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/warehouses", {
@@ -42,6 +46,13 @@ class WarehouseService implements IWarehouseService {
         },
       })
     ).data;
+  }
+
+  async update(
+    warehouseId: number,
+    updatedWarehouse: IWarehouse,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.put(`/${warehouseId}`, updatedWarehouse)).data;
   }
 }
 

@@ -1,7 +1,7 @@
 import { Auditable } from "../common";
 
 export interface IWarehouse extends Auditable {
-  warehouseId: string;
+  warehouseId: number;
   warehouseName: string;
   address?: string;
 }
