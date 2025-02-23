@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,4 +18,8 @@ public class WarehouseDTO {
     String warehouseName;
 
     String address;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }
