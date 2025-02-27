@@ -30,14 +30,15 @@ const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
         "productUnits",
         productUnitIndex,
       ]);
-      setCurrentProductUnitPrice(
+
+      const currentProductUnitPrice =
         productUnit?.productUnitPrices &&
-          productUnit.productUnitPrices.length > 0
-          ? productUnit.productUnitPrices[
-              productUnit.productUnitPrices.length - 1
-            ]
-          : undefined,
-      );
+        productUnit.productUnitPrices.length > 0
+          ? productUnit.productUnitPrices.find(
+              (pup) => pup.validTo === undefined,
+            )
+          : undefined;
+      setCurrentProductUnitPrice(currentProductUnitPrice);
     }
   }, [
     viewOnly,
