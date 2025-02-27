@@ -1,4 +1,4 @@
-package com.ttdat.inventoryservice.application.queries;
+package com.ttdat.inventoryservice.application.queries.warehouse;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ttdat.core.api.dto.request.PaginationParams;

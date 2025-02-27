@@ -1,8 +1,10 @@
 package com.ttdat.inventoryservice.application.handlers.query;
 
+import com.ttdat.inventoryservice.api.dto.common.WarehouseDTO;
 import com.ttdat.inventoryservice.api.dto.response.WarehousePageResult;
 import com.ttdat.inventoryservice.application.mappers.WarehouseMapper;
-import com.ttdat.inventoryservice.application.queries.GetWarehousePageQuery;
+import com.ttdat.inventoryservice.application.queries.warehouse.GetAllWarehouseQuery;
+import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehousePageQuery;
 import com.ttdat.inventoryservice.domain.entities.Warehouse;
 import com.ttdat.inventoryservice.domain.repositories.WarehouseRepository;
 import com.ttdat.inventoryservice.infrastructure.utils.PaginationUtils;
@@ -11,6 +13,8 @@ import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -26,5 +30,11 @@ public class WarehouseQueryHandler {
                 .meta(PaginationUtils.getPaginationMeta(warehousePage))
                 .content(warehouseMapper.toDTOList(warehousePage.getContent()))
                 .build();
+    }
+
+    @QueryHandler
+    public List<WarehouseDTO> handle(GetAllWarehouseQuery getAllWarehouseQuery){
+        List<Warehouse> warehouses = warehouseRepository.findAll();
+        return warehouseMapper.toDTOList(warehouses);
     }
 }
