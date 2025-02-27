@@ -20,6 +20,8 @@ interface IWarehouseService {
     warehouseId: number,
     updatedWarehouse: IWarehouse,
   ): Promise<ApiResponse<void>>;
+  getAll(): Promise<ApiResponse<IWarehouse[]>>;
+  getById(warehouseId: number): Promise<ApiResponse<IWarehouse>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/warehouses", {
@@ -53,6 +55,14 @@ class WarehouseService implements IWarehouseService {
     updatedWarehouse: IWarehouse,
   ): Promise<ApiResponse<void>> {
     return (await apiClient.put(`/${warehouseId}`, updatedWarehouse)).data;
+  }
+
+  async getAll(): Promise<ApiResponse<IWarehouse[]>> {
+    return (await apiClient.get("")).data;
+  }
+
+  async getById(warehouseId: number): Promise<ApiResponse<IWarehouse>> {
+    return (await apiClient.get(`/${warehouseId}`)).data;
   }
 }
 

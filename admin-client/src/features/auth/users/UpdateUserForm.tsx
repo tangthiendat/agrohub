@@ -6,18 +6,20 @@ import {
   Input,
   Radio,
   Select,
+  SelectProps,
   Space,
   Switch,
 } from "antd";
-import toast from "react-hot-toast";
-import dayjs, { Dayjs } from "dayjs";
 import { DatePickerProps } from "antd/lib";
-import Loading from "../../../common/components/Loading";
-import { GENDER_NAME } from "../../../common/constants";
-import { IUser } from "../../../interfaces";
-import { userService } from "../../../services";
-import { roleService } from "../../../services/auth/role-service";
+import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
+import Loading from "../../../common/components/Loading";
+import WarehouseOption from "../../warehouse/WarehouseOption";
+import { GENDER_NAME } from "../../../common/constants";
+import { IUser, IWarehouse } from "../../../interfaces";
+import { userService, warehouseService, roleService } from "../../../services";
+import removeAccents from "remove-accents";
 
 interface UpdateUserFormProps {
   userToUpdate?: IUser;
@@ -64,6 +66,19 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
     },
   });
 
+  const { data: warehouseOptions, isLoading: isWarehouseLoading } = useQuery({
+    queryKey: ["warehouses"],
+    queryFn: () => warehouseService.getAll(),
+    select: (data) => {
+      if (data.payload) {
+        return data.payload.map((warehouse) => ({
+          value: warehouse.warehouseId,
+          label: <WarehouseOption warehouse={warehouse} />,
+        }));
+      }
+    },
+  });
+
   const { mutate: createUser, isPending: isCreating } = useMutation({
     mutationFn: userService.create,
     onSuccess: () => {
@@ -82,6 +97,16 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
       });
     },
   });
+
+  const labelRender: SelectProps["labelRender"] = (props) => {
+    const { label } = props;
+    if (label) {
+      const selectedWarehouse = (label as React.JSX.Element).props
+        .warehouse as IWarehouse;
+      return `${selectedWarehouse.warehouseName}`;
+    }
+    return null;
+  };
 
   const disabledDate: DatePickerProps["disabledDate"] = (current) => {
     return current && dayjs(current).isAfter(dayjs().endOf("day"));
@@ -119,7 +144,7 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
     }
   }
 
-  if (isRolesLoading) {
+  if (isRolesLoading || isWarehouseLoading) {
     return <Loading />;
   }
 
@@ -231,6 +256,37 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
       <div className="flex gap-8">
         <Form.Item
           className="flex-1"
+          label="Kho làm việc"
+          name="warehouseId"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn kho làm việc",
+            },
+          ]}
+        >
+          <Select
+            showSearch
+            allowClear
+            labelRender={labelRender}
+            placeholder="Chọn kho"
+            options={warehouseOptions}
+            filterOption={(input, option) => {
+              const warehouse = option?.label.props.warehouse as IWarehouse;
+              return (
+                removeAccents(warehouse.warehouseName.toLowerCase()).includes(
+                  removeAccents(input.toLowerCase()),
+                ) ||
+                removeAccents(warehouse?.address.toLowerCase()).includes(
+                  removeAccents(input.toLowerCase()),
+                )
+              );
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item
+          className="flex-1"
           label="Vai trò"
           name={["role", "roleId"]}
           rules={[
@@ -242,26 +298,26 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
         >
           <Select placeholder="Chọn vai trò" options={roleOptions} />
         </Form.Item>
-        {!userToUpdate && (
-          <Form.Item
-            className="flex-1"
-            label="Mật khẩu"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập mật khẩu",
-              },
-              {
-                min: 6,
-                message: "Mật khẩu phải chứa ít nhất 6 ký tự",
-              },
-            ]}
-          >
-            <Input.Password placeholder="Mật khẩu" />
-          </Form.Item>
-        )}
       </div>
+      {!userToUpdate && (
+        <Form.Item
+          style={{ width: "calc(50% - 1rem)" }}
+          label="Mật khẩu"
+          name="password"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập mật khẩu",
+            },
+            {
+              min: 6,
+              message: "Mật khẩu phải chứa ít nhất 6 ký tự",
+            },
+          ]}
+        >
+          <Input.Password placeholder="Mật khẩu" />
+        </Form.Item>
+      )}
 
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>

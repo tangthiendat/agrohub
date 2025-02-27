@@ -19,6 +19,7 @@ public class UserUpdatedEvent {
     UUID userId;
     String fullName;
     boolean active;
+    Long warehouseId;
     Gender gender;
     String email;
     LocalDate dob;
