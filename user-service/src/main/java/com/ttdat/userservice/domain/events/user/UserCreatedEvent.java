@@ -20,6 +20,7 @@ public class UserCreatedEvent {
     String fullName;
     Gender gender;
     boolean active;
+    Long warehouseId;
     String email;
     LocalDate dob;
     String password;

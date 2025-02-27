@@ -24,6 +24,8 @@ public class UserDTO {
 
     boolean active;
 
+    Long warehouseId;
+
     Gender gender;
 
     String password;
