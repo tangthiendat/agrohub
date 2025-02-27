@@ -33,6 +33,8 @@ public class User extends Auditable implements UserDetails {
 
     boolean active;
 
+    Long warehouseId;
+
     String email;
 
     String password;

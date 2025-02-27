@@ -11,7 +11,7 @@ const ViewProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const { data: productData, isLoading } = useQuery({
-    queryKey: ["product", id],
+    queryKey: ["products", id],
     queryFn: () => productService.getById(id || ""),
     enabled: !!id,
   });

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { Button, Form, Modal, Space, Tooltip } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -17,6 +17,7 @@ const UpdateProductSupplierForm: React.FC<UpdateProductSupplierFormProps> = ({
   product,
 }) => {
   const [form] = Form.useForm<ISupplierProduct>();
+  const queryClient = useQueryClient();
 
   const [isOpenSupplierModal, setIsOpenSupplierModal] =
     useState<boolean>(false);
@@ -46,11 +47,13 @@ const UpdateProductSupplierForm: React.FC<UpdateProductSupplierFormProps> = ({
   }
 
   function handleFinish() {
-    console.log("SUPPLIER PRODUCT\n", form.getFieldsValue(true));
     const supplierProduct = form.getFieldsValue(true);
     createSupplierProduct(supplierProduct, {
       onSuccess: () => {
         toast.success("Thêm nhà cung cấp thành công");
+        queryClient.invalidateQueries({
+          queryKey: ["suppliers", product.productId],
+        });
       },
       onError: (error: Error) => {
         toast.error(

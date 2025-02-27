@@ -21,6 +21,7 @@ public class CreateUserCommand {
     Gender gender;
     boolean active;
     String email;
+    Long warehouseId;
     LocalDate dob;
     String password;
     String phoneNumber;

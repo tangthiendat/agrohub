@@ -37,9 +37,7 @@ const UpdateRoleForm: React.FC<UpdateRoleProps> = ({
     mutationFn: roleService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("roles");
-        },
+        queryKey: ["roles"],
       });
     },
   });
@@ -49,9 +47,7 @@ const UpdateRoleForm: React.FC<UpdateRoleProps> = ({
       roleService.update(roleId, updatedRole),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("roles");
-        },
+        queryKey: ["roles"],
       });
     },
   });

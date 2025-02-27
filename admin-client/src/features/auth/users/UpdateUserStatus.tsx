@@ -20,9 +20,7 @@ const UpdateUserStatus: React.FC<UpdateUserStatusProps> = ({ user }) => {
       userService.updateStatus(userId, active),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("users");
-        },
+        queryKey: ["users"],
       });
     },
   });

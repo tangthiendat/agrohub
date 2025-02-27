@@ -37,9 +37,7 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
     mutationFn: permissionService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey.includes("permissions");
-        },
+        queryKey: ["permissions"],
       });
     },
   });
@@ -49,9 +47,7 @@ const UpdatePermissionForm: React.FC<UpdatePermissionFormProps> = ({
       permissionService.update(permissionId, updatedPermission),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query) => {
-          return query.queryKey[0] === "permissions";
-        },
+        queryKey: ["permissions"],
       });
     },
   });

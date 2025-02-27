@@ -3,9 +3,11 @@ package com.ttdat.inventoryservice.infrastructure.config.axon;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.ttdat.inventoryservice.application.handlers.error.InventoryServiceEventErrorHandler;
 import org.axonframework.axonserver.connector.AxonServerConfiguration;
 import org.axonframework.axonserver.connector.AxonServerConnectionManager;
 import org.axonframework.axonserver.connector.query.AxonServerQueryBus;
+import org.axonframework.config.ConfigurerModule;
 import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
@@ -20,15 +22,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AxonConfig {
 
-//    @Bean
-//    public ConfigurerModule errorHandlingConfigurerModule() {
-//        return configurer -> configurer.eventProcessing(processingConfigurer ->
-//                        processingConfigurer
-//                                .registerDefaultListenerInvocationErrorHandler(
-//                                        conf -> new PurchaseServiceEventErrorHandler()
-//                                )
-//        );
-//    }
+    @Bean
+    public ConfigurerModule errorHandlingConfigurerModule() {
+        return configurer -> configurer.eventProcessing(processingConfigurer ->
+                        processingConfigurer
+                                .registerDefaultListenerInvocationErrorHandler(
+                                        conf -> new InventoryServiceEventErrorHandler()
+                                )
+        );
+    }
 
     @Bean
     public Serializer messageSerializer() {

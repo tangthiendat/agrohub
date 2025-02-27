@@ -34,6 +34,7 @@ export interface IUser extends Auditable {
   dob: string;
   gender: Gender;
   active: boolean;
+  warehouseId: number;
   phoneNumber: string;
   role: IRole;
 }

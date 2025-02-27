@@ -22,6 +22,7 @@ public class UpdateUserCommand {
     String fullName;
     Gender gender;
     boolean active;
+    Long warehouseId;
     String email;
     LocalDate dob;
     String phoneNumber;
