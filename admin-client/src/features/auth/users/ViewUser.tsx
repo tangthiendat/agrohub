@@ -1,8 +1,12 @@
-import { useState } from "react";
-import { IUser } from "../../../interfaces";
+import { useQuery } from "@tanstack/react-query";
 import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
+import { useState } from "react";
 import ViewIcon from "../../../common/components/icons/ViewIcon";
+import Loading from "../../../common/components/Loading";
+import WarehouseOption from "../../warehouse/WarehouseOption";
 import { GENDER_NAME } from "../../../common/constants";
+import { IUser } from "../../../interfaces";
+import { warehouseService } from "../../../services";
 import { formatTimestamp } from "../../../utils/datetime";
 
 interface ViewUserProps {
@@ -11,6 +15,13 @@ interface ViewUserProps {
 
 const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
   const [open, setOpen] = useState<boolean>(false);
+
+  const { data: warehouse, isLoading } = useQuery({
+    queryKey: ["warehouse", user.warehouseId],
+    queryFn: () => warehouseService.getById(user.warehouseId),
+    enabled: open,
+    select: (data) => data.payload,
+  });
 
   function showDrawer(): void {
     setOpen(true);
@@ -62,20 +73,26 @@ const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
       ),
     },
     {
-      key: "role",
+      label: "Kho làm việc",
+      key: "warehouse",
+      span: "filled",
+      children: warehouse ? <WarehouseOption warehouse={warehouse} /> : "",
+    },
+    {
       label: "Vai trò",
+      key: "role",
       span: "filled",
       children: user.role.roleName,
     },
     {
-      key: "createdAt",
       label: "Ngày tạo",
+      key: "createdAt",
       span: "filled",
       children: user.createdAt && formatTimestamp(user.createdAt),
     },
     {
-      key: "updatedAt",
       label: "Ngày cập nhật",
+      key: "updatedAt",
       span: "filled",
       children: user.updatedAt && formatTimestamp(user.updatedAt),
     },
@@ -89,14 +106,18 @@ const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
         onClose={onClose}
         title="Chi tiết quyền hạn"
       >
-        <Descriptions
-          size="middle"
-          bordered
-          items={items}
-          labelStyle={{
-            width: "27%",
-          }}
-        />
+        {isLoading ? (
+          <Loading />
+        ) : (
+          <Descriptions
+            size="middle"
+            bordered
+            items={items}
+            labelStyle={{
+              width: "27%",
+            }}
+          />
+        )}
       </Drawer>
     </>
   );
