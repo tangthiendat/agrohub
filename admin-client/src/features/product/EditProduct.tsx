@@ -5,9 +5,10 @@ import { GoArrowLeft } from "react-icons/go";
 import Loading from "../../common/components/Loading";
 import UpdateProductForm from "./UpdateProductForm";
 import { productService } from "../../services";
-import { ISupplierProduct } from "../../interfaces";
+import { useTitle } from "../../common/hooks";
 
 const EditProduct: React.FC = () => {
+  useTitle("Chỉnh sửa sản phẩm");
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 

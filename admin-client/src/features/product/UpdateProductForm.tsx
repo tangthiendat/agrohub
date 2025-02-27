@@ -267,169 +267,165 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         </Typography.Title>
 
         <div className="flex items-center justify-between gap-10">
-          <div className="flex-1">
-            <Form.Item
-              label="Tên sản phẩm"
-              name="productName"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập tên sản phẩm",
-                },
-              ]}
-            >
-              <Input readOnly={viewOnly} />
-            </Form.Item>
-          </div>
-
-          <div className="flex-1">
-            <Form.Item
-              label="Loại sản phẩm"
-              name={["category", "categoryId"]}
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn loại sản phẩm",
-                },
-              ]}
-            >
-              <Select
-                disabled={viewOnly}
-                options={categoryOptions}
-                loading={isCategoriesLoading}
-                placeholder="Chọn loại sản phẩm"
-              />
-            </Form.Item>
-          </div>
+          <Form.Item
+            className="flex-1"
+            label="Tên sản phẩm"
+            name="productName"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập tên sản phẩm",
+              },
+            ]}
+          >
+            <Input readOnly={viewOnly} />
+          </Form.Item>
+          <Form.Item
+            className="flex-1"
+            label="Loại sản phẩm"
+            name={["category", "categoryId"]}
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn loại sản phẩm",
+              },
+            ]}
+          >
+            <Select
+              disabled={viewOnly}
+              options={categoryOptions}
+              loading={isCategoriesLoading}
+              placeholder="Chọn loại sản phẩm"
+            />
+          </Form.Item>
         </div>
 
         <div className="flex items-center justify-between gap-10">
-          <div className="flex-1">
-            <Form.Item label="Mô tả" name="description">
-              <Input.TextArea readOnly={viewOnly} rows={4} />
-            </Form.Item>
-          </div>
-          <div className="flex-1">
-            <Form.Item
-              name="productImg"
-              label="Ảnh sản phẩm"
-              valuePropName="fileList"
-              rules={[
-                {
-                  validator: () => {
-                    if (fileList && fileList.length < 1) {
-                      return Promise.reject(new Error("Vui lòng tải ảnh lên"));
-                    }
-                    return Promise.resolve();
-                  },
+          <Form.Item className="flex-1" label="Mô tả" name="description">
+            <Input.TextArea readOnly={viewOnly} rows={4} />
+          </Form.Item>
+
+          <Form.Item
+            className="flex-1"
+            name="productImg"
+            label="Ảnh sản phẩm"
+            valuePropName="fileList"
+            rules={[
+              {
+                validator: () => {
+                  if (fileList && fileList.length < 1) {
+                    return Promise.reject(new Error("Vui lòng tải ảnh lên"));
+                  }
+                  return Promise.resolve();
                 },
-              ]}
-              getValueFromEvent={(e) =>
-                Array.isArray(e) ? e : e && e.fileList
-              }
+              },
+            ]}
+            getValueFromEvent={(e) => (Array.isArray(e) ? e : e && e.fileList)}
+          >
+            <Upload
+              accept="image/*"
+              maxCount={1}
+              disabled={viewOnly}
+              listType="picture-card"
+              fileList={fileList}
+              beforeUpload={() => false} // Prevent automatic upload
+              onPreview={handlePreview}
+              onChange={handleUploadChange}
+              showUploadList={{
+                showRemoveIcon: !viewOnly,
+              }}
             >
-              <Upload
-                maxCount={1}
-                disabled={viewOnly}
-                listType="picture-card"
-                fileList={fileList}
-                beforeUpload={() => false} // Prevent automatic upload
-                onPreview={handlePreview}
-                onChange={handleUploadChange}
-                showUploadList={{
-                  showRemoveIcon: !viewOnly,
-                }}
-              >
-                {fileList.length < 1 && (
-                  <button
-                    style={{ border: 0, background: "none" }}
-                    type="button"
-                  >
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
-                  </button>
-                )}
-              </Upload>
-              {previewImage && (
-                <Image
-                  wrapperStyle={{ display: "none" }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                    afterOpenChange: (visible) =>
-                      !visible && setPreviewImage(""),
-                  }}
-                  src={previewImage}
-                />
+              {fileList.length < 1 && (
+                <button style={{ border: 0, background: "none" }} type="button">
+                  <PlusOutlined />
+                  <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
+                </button>
               )}
-            </Form.Item>
-          </div>
+            </Upload>
+            {previewImage && (
+              <Image
+                wrapperStyle={{ display: "none" }}
+                preview={{
+                  visible: previewOpen,
+                  onVisibleChange: (visible) => setPreviewOpen(visible),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(""),
+                }}
+                src={previewImage}
+              />
+            )}
+          </Form.Item>
         </div>
 
-        <div className="flex items-center justify-between gap-10">
-          <div style={{ width: "calc(50% - 1.25rem)" }}>
-            <Form.Item label="Tổng số lượng sản phẩm" name="totalQuantity">
+        {productToUpdate && (
+          <div className="flex items-center justify-between gap-10">
+            <Form.Item
+              style={{ width: "calc(50% - 1.25rem)" }}
+              label="Tổng số lượng sản phẩm"
+              name="totalQuantity"
+            >
               <InputNumber readOnly={viewOnly} className="w-full" min={0} />
             </Form.Item>
           </div>
-        </div>
+        )}
 
         <Typography.Title level={5} className="mb-2">
           Đặc điểm kỹ thuật
         </Typography.Title>
 
         <div className="flex items-center justify-between gap-10">
-          <div className="flex-1">
-            <Form.Item
-              label="Thời hạn sử dụng (ngày)"
-              name="defaultExpDays"
-              tooltip="Thời gian sử dụng mặc định của sản phẩm trước khi hết hạn (ngày)"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập thời hạn sử dụng",
-                },
-              ]}
-            >
-              <InputNumber readOnly={viewOnly} className="w-full" min={0} />
-            </Form.Item>
-          </div>
+          <Form.Item
+            className="flex-1"
+            label="Thời hạn sử dụng (ngày)"
+            name="defaultExpDays"
+            tooltip="Thời gian sử dụng mặc định của sản phẩm trước khi hết hạn (ngày)"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập thời hạn sử dụng",
+              },
+            ]}
+          >
+            <InputNumber readOnly={viewOnly} className="w-full" min={0} />
+          </Form.Item>
 
-          <div className="flex-1">
-            <Form.Item label="Điều kiện bảo quản" name="storageConditions">
-              <Input readOnly={viewOnly} />
-            </Form.Item>
-          </div>
+          <Form.Item
+            className="flex-1"
+            label="Điều kiện bảo quản"
+            name="storageConditions"
+          >
+            <Input readOnly={viewOnly} />
+          </Form.Item>
         </div>
 
         <div className="flex items-center justify-between gap-10">
-          <div className="flex-1">
-            <Form.Item
-              label="Trạng thái vật lý"
-              name="physicalState"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn trạng thái vật lý",
-                },
-              ]}
-            >
-              <Select
-                disabled={viewOnly}
-                options={physicalStateOptions}
-                placeholder="Chọn trạng thái vật lý"
-              />
-            </Form.Item>
-          </div>
+          <Form.Item
+            className="flex-1"
+            label="Trạng thái vật lý"
+            name="physicalState"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn trạng thái vật lý",
+              },
+            ]}
+          >
+            <Select
+              disabled={viewOnly}
+              options={physicalStateOptions}
+              placeholder="Chọn trạng thái vật lý"
+            />
+          </Form.Item>
 
-          <div className="flex-1">
-            <Form.Item label="Quy cách đóng gói" name="packaging">
-              <Input
-                readOnly={viewOnly}
-                placeholder="VD: 1kg, bao 50kg, chai 1L"
-              />
-            </Form.Item>
-          </div>
+          <Form.Item
+            className="flex-1"
+            label="Quy cách đóng gói"
+            name="packaging"
+          >
+            <Input
+              readOnly={viewOnly}
+              placeholder="VD: 1kg, bao 50kg, chai 1L"
+            />
+          </Form.Item>
         </div>
 
         <Typography.Title level={5} className="mb-2">
@@ -437,31 +433,37 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         </Typography.Title>
 
         <div className="flex items-center justify-between gap-10">
-          <div className="flex-1">
-            <Form.Item label="Hướng dẫn an toàn" name="safetyInstructions">
-              <Input readOnly={viewOnly} />
-            </Form.Item>
-          </div>
+          <Form.Item
+            className="flex-1"
+            label="Hướng dẫn an toàn"
+            name="safetyInstructions"
+          >
+            <Input readOnly={viewOnly} />
+          </Form.Item>
 
-          <div className="flex-1">
-            <Form.Item label="Phân loại nguy hiểm" name="hazardClassification">
-              <Input
-                readOnly={viewOnly}
-                placeholder="VD: Độc hại, Gây kích ứng da"
-              />
-            </Form.Item>
-          </div>
+          <Form.Item
+            className="flex-1"
+            label="Phân loại nguy hiểm"
+            name="hazardClassification"
+          >
+            <Input
+              readOnly={viewOnly}
+              placeholder="VD: Độc hại, Gây kích ứng da"
+            />
+          </Form.Item>
         </div>
 
         <div className="flex items-center justify-between gap-10">
-          <div style={{ width: "calc(50% - 1.25rem)" }}>
-            <Form.Item label="Thiết bị bảo hộ cần thiết" name="ppeRequired">
-              <Input
-                readOnly={viewOnly}
-                placeholder="VD: Găng tay, kính bảo hộ"
-              />
-            </Form.Item>
-          </div>
+          <Form.Item
+            style={{ width: "calc(50% - 1.25rem)" }}
+            label="Thiết bị bảo hộ cần thiết"
+            name="ppeRequired"
+          >
+            <Input
+              readOnly={viewOnly}
+              placeholder="VD: Găng tay, kính bảo hộ"
+            />
+          </Form.Item>
         </div>
 
         <Typography.Title level={5} className="mb-2">
