@@ -71,6 +71,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
         pagination: {
           ...prev.pagination,
           total: productPage.meta?.totalElements || 0,
+          showTotal: (total) => `Tổng ${total} sản phẩm`,
         },
       }));
     }
