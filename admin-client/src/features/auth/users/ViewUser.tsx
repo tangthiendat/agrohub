@@ -104,7 +104,7 @@ const ViewUser: React.FC<ViewUserProps> = ({ user }) => {
         width="40%"
         open={open}
         onClose={onClose}
-        title="Chi tiết quyền hạn"
+        title="Chi tiết thông tin người dùng"
       >
         {isLoading ? (
           <Loading />

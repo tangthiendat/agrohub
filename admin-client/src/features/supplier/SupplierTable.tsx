@@ -189,10 +189,13 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
       render: (_, supplier) => (
         <Space>
           <ViewSupplier supplier={supplier} />
-          <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE}>
+          <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE} hideChildren>
             <UpdateSupplier supplier={supplier} />
           </Access>
-          <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE_STATUS}>
+          <Access
+            permission={PERMISSIONS[Module.SUPPLIER].UPDATE_STATUS}
+            hideChildren
+          >
             <UpdateSupplierStatus supplier={supplier} />
           </Access>
         </Space>
