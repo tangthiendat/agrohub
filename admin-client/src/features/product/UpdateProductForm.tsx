@@ -37,7 +37,7 @@ import { getNotificationMessage } from "../../utils/notification";
 
 interface UpdateProductFormProps {
   productToUpdate?: IProduct;
-  onCancel: () => void;
+  onCancel?: () => void;
   viewOnly?: boolean;
 }
 
@@ -220,7 +220,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         {
           onSuccess: () => {
             toast.success("Cập nhật sản phẩm thành công");
-            onCancel();
+            onCancel?.();
             form.resetFields();
             setFileList([]);
           },
@@ -245,7 +245,7 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
       createProduct(formData, {
         onSuccess: () => {
           toast.success("Thêm sản phẩm thành công");
-          onCancel();
+          onCancel?.();
           form.resetFields();
           setFileList([]);
         },
