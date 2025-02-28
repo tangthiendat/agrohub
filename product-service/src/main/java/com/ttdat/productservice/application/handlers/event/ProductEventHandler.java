@@ -24,7 +24,7 @@ public class ProductEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(ProductCreatedEvent productCreatedEvent) {
+    public void on(ProductCreatedEvent productCreatedEvent) {
         Product product = productMapper.toEntity(productCreatedEvent);
         productRepository.save(product);
     }
@@ -36,7 +36,7 @@ public class ProductEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(ProductUpdatedEvent productUpdatedEvent) {
+    public void on(ProductUpdatedEvent productUpdatedEvent) {
         Product product = getProductById(productUpdatedEvent.getProductId());
         productMapper.updateEntityFromEvent(product, productUpdatedEvent);
         productRepository.save(product);
