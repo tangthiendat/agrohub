@@ -14,6 +14,9 @@ import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -67,6 +70,22 @@ public class WarehouseQueryController {
                         .status(HttpStatus.OK.value())
                         .success(true)
                         .message("Get warehouse by id successfully")
+                        .payload(warehouseDTO)
+                        .build()
+        );
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<WarehouseDTO>> getMyWarehouse() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long warehouseId = Long.parseLong(((Jwt) authentication.getCredentials()).getClaimAsString("warehouse_id"));
+        GetWarehouseByIdQuery getWarehouseById = GetWarehouseByIdQuery.builder().warehouseId(warehouseId).build();
+        WarehouseDTO warehouseDTO = queryGateway.query(getWarehouseById, ResponseTypes.instanceOf(WarehouseDTO.class)).join();
+        return ResponseEntity.ok(
+                ApiResponse.<WarehouseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .success(true)
+                        .message("Get my warehouse successfully")
                         .payload(warehouseDTO)
                         .build()
         );
