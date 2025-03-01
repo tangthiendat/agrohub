@@ -1,9 +1,11 @@
 package com.ttdat.inventoryservice.infrastructure.config.axon;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ttdat.inventoryservice.application.handlers.error.InventoryServiceEventErrorHandler;
+import com.ttdat.inventoryservice.infrastructure.interceptors.MetadataDispatchInterceptor;
 import org.axonframework.axonserver.connector.AxonServerConfiguration;
 import org.axonframework.axonserver.connector.AxonServerConnectionManager;
 import org.axonframework.axonserver.connector.query.AxonServerQueryBus;
@@ -38,6 +40,7 @@ public class AxonConfig {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         return JacksonSerializer.builder()
                 .objectMapper(objectMapper)
                 .build();
@@ -47,7 +50,7 @@ public class AxonConfig {
     public QueryBus queryBus(AxonServerConnectionManager axonServerConnectionManager,
                              AxonServerConfiguration axonServerConfiguration,
                              QueryUpdateEmitter queryUpdateEmitter) {
-        return AxonServerQueryBus.builder()
+        AxonServerQueryBus axonServerQueryBus = AxonServerQueryBus.builder()
                 .configuration(axonServerConfiguration)
                 .axonServerConnectionManager(axonServerConnectionManager)
                 .messageSerializer(messageSerializer())
@@ -57,6 +60,8 @@ public class AxonConfig {
                         .queryUpdateEmitter(queryUpdateEmitter)
                         .build())
                 .build();
+        axonServerQueryBus.registerDispatchInterceptor(new MetadataDispatchInterceptor());
+        return axonServerQueryBus;
     }
 
     @Bean

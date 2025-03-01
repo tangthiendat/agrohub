@@ -11,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
-public class GetAllWarehouseQuery {
+public class GetCurrentUserWarehouseQuery {
 }

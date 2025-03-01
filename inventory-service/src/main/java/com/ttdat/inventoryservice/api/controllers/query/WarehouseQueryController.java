@@ -7,6 +7,7 @@ import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.inventoryservice.api.dto.common.WarehouseDTO;
 import com.ttdat.inventoryservice.api.dto.response.WarehousePageResult;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetAllWarehouseQuery;
+import com.ttdat.inventoryservice.application.queries.warehouse.GetCurrentUserWarehouseQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehouseByIdQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehousePageQuery;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,6 @@ import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -77,10 +75,8 @@ public class WarehouseQueryController {
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<WarehouseDTO>> getMyWarehouse() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long warehouseId = Long.parseLong(((Jwt) authentication.getCredentials()).getClaimAsString("warehouse_id"));
-        GetWarehouseByIdQuery getWarehouseById = GetWarehouseByIdQuery.builder().warehouseId(warehouseId).build();
-        WarehouseDTO warehouseDTO = queryGateway.query(getWarehouseById, ResponseTypes.instanceOf(WarehouseDTO.class)).join();
+        GetCurrentUserWarehouseQuery getCurrentUserWarehouseQuery = GetCurrentUserWarehouseQuery.builder().build();
+        WarehouseDTO warehouseDTO = queryGateway.query(getCurrentUserWarehouseQuery, ResponseTypes.instanceOf(WarehouseDTO.class)).join();
         return ResponseEntity.ok(
                 ApiResponse.<WarehouseDTO>builder()
                         .status(HttpStatus.OK.value())
