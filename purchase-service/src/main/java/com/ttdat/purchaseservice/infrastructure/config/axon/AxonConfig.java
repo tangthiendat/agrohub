@@ -4,13 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.ttdat.purchaseservice.application.handlers.error.PurchaseServiceEventErrorHandler;
+import com.ttdat.purchaseservice.infrastructure.interceptors.MetadataDispatchInterceptor;
 import org.axonframework.axonserver.connector.AxonServerConfiguration;
 import org.axonframework.axonserver.connector.AxonServerConnectionManager;
+import org.axonframework.axonserver.connector.command.AxonServerCommandBus;
 import org.axonframework.axonserver.connector.query.AxonServerQueryBus;
+import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.commandhandling.distributed.AnnotationRoutingStrategy;
+import org.axonframework.commandhandling.distributed.RoutingStrategy;
 import org.axonframework.config.ConfigurerModule;
 import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.axonframework.queryhandling.QueryBus;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.queryhandling.SimpleQueryBus;
@@ -47,7 +54,7 @@ public class AxonConfig {
     public QueryBus queryBus(AxonServerConnectionManager axonServerConnectionManager,
                              AxonServerConfiguration axonServerConfiguration,
                              QueryUpdateEmitter queryUpdateEmitter) {
-        return AxonServerQueryBus.builder()
+        AxonServerQueryBus axonServerQueryBus = AxonServerQueryBus.builder()
                 .configuration(axonServerConfiguration)
                 .axonServerConnectionManager(axonServerConnectionManager)
                 .messageSerializer(messageSerializer())
@@ -57,6 +64,26 @@ public class AxonConfig {
                         .queryUpdateEmitter(queryUpdateEmitter)
                         .build())
                 .build();
+        axonServerQueryBus.registerDispatchInterceptor(new MetadataDispatchInterceptor());
+        return axonServerQueryBus;
+    }
+
+    @Bean
+    public CommandBus commandBus(AxonServerConnectionManager axonServerConnectionManager,
+                                 AxonServerConfiguration axonServerConfiguration) {
+        RoutingStrategy routingStrategy = AnnotationRoutingStrategy
+                .builder()
+                .annotationType(TargetAggregateIdentifier.class)
+                .build();
+        AxonServerCommandBus axonServerCommandBus = AxonServerCommandBus.builder()
+                .axonServerConnectionManager(axonServerConnectionManager)
+                .configuration(axonServerConfiguration)
+                .serializer(messageSerializer())
+                .localSegment(SimpleCommandBus.builder().build())
+                .routingStrategy(routingStrategy)
+                .build();
+        axonServerCommandBus.registerDispatchInterceptor(new MetadataDispatchInterceptor());
+        return axonServerCommandBus;
     }
 
     @Bean

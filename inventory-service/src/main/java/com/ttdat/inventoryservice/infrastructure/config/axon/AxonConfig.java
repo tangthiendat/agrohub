@@ -8,11 +8,17 @@ import com.ttdat.inventoryservice.application.handlers.error.InventoryServiceEve
 import com.ttdat.inventoryservice.infrastructure.interceptors.MetadataDispatchInterceptor;
 import org.axonframework.axonserver.connector.AxonServerConfiguration;
 import org.axonframework.axonserver.connector.AxonServerConnectionManager;
+import org.axonframework.axonserver.connector.command.AxonServerCommandBus;
 import org.axonframework.axonserver.connector.query.AxonServerQueryBus;
+import org.axonframework.commandhandling.CommandBus;
+import org.axonframework.commandhandling.SimpleCommandBus;
+import org.axonframework.commandhandling.distributed.AnnotationRoutingStrategy;
+import org.axonframework.commandhandling.distributed.RoutingStrategy;
 import org.axonframework.config.ConfigurerModule;
 import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.axonframework.queryhandling.QueryBus;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
 import org.axonframework.queryhandling.SimpleQueryBus;
@@ -40,7 +46,6 @@ public class AxonConfig {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
         return JacksonSerializer.builder()
                 .objectMapper(objectMapper)
                 .build();
@@ -62,6 +67,24 @@ public class AxonConfig {
                 .build();
         axonServerQueryBus.registerDispatchInterceptor(new MetadataDispatchInterceptor());
         return axonServerQueryBus;
+    }
+
+    @Bean
+    public CommandBus commandBus(AxonServerConnectionManager axonServerConnectionManager,
+                                 AxonServerConfiguration axonServerConfiguration) {
+        RoutingStrategy routingStrategy = AnnotationRoutingStrategy
+                .builder()
+                .annotationType(TargetAggregateIdentifier.class)
+                .build();
+        AxonServerCommandBus axonServerCommandBus = AxonServerCommandBus.builder()
+                .axonServerConnectionManager(axonServerConnectionManager)
+                .configuration(axonServerConfiguration)
+                .serializer(messageSerializer())
+                .localSegment(SimpleCommandBus.builder().build())
+                .routingStrategy(routingStrategy)
+                .build();
+        axonServerCommandBus.registerDispatchInterceptor(new MetadataDispatchInterceptor());
+        return axonServerCommandBus;
     }
 
     @Bean

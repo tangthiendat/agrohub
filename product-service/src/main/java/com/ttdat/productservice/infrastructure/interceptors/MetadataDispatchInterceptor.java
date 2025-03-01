@@ -1,4 +1,4 @@
-package com.ttdat.inventoryservice.infrastructure.interceptors;
+package com.ttdat.productservice.infrastructure.interceptors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.Message;

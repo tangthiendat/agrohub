@@ -47,7 +47,7 @@ public class WarehouseQueryHandler {
 
     @QueryHandler
     public WarehouseDTO getWarehouseById(GetCurrentUserWarehouseQuery getCurrentUserWarehouseQuery, QueryMessage<?,?> queryMessage) {
-        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouse_id");
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Warehouse warehouse = warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WAREHOUSE_NOT_FOUND));
         return warehouseMapper.toDTO(warehouse);
