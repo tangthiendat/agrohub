@@ -220,7 +220,6 @@ const UpdateProductForm: React.FC<UpdateProductFormProps> = ({
         {
           onSuccess: () => {
             toast.success("Cập nhật sản phẩm thành công");
-            onCancel?.();
             form.resetFields();
             setFileList([]);
           },

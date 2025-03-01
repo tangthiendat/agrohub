@@ -33,7 +33,10 @@ const EditProduct: React.FC = () => {
           Danh sách nhà cung cấp
         </Button>
       </div>
-      <UpdateProductForm productToUpdate={productData?.payload} />
+      <UpdateProductForm
+        productToUpdate={productData?.payload}
+        onCancel={() => navigate(-1)}
+      />
     </div>
   );
 };
