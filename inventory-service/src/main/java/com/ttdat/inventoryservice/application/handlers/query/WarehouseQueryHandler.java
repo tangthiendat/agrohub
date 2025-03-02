@@ -7,7 +7,6 @@ import com.ttdat.inventoryservice.api.dto.response.WarehousePageResult;
 import com.ttdat.inventoryservice.application.mappers.WarehouseMapper;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetAllWarehouseQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetCurrentUserWarehouseQuery;
-import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehouseByIdQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehousePageQuery;
 import com.ttdat.inventoryservice.domain.entities.Warehouse;
 import com.ttdat.inventoryservice.domain.repositories.WarehouseRepository;
