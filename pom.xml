@@ -21,6 +21,7 @@
         <module>inventory-service</module>
         <module>purchase-service</module>
         <module>debt-service</module>
+        <module>customer-service</module>
         <module>email-service</module>
     </modules>
 
