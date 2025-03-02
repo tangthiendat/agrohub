@@ -12,11 +12,12 @@ public class UserServiceInterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-       String[] whiteList = {
-        "/api/v1/auth/**",
-        "/api/v1/users/me"
-       };
-         registry.addInterceptor(permissionInterceptor)
+        String[] whiteList = {
+                "/api/v1/auth/**",
+                "/api/v1/users/me",
+                "/api/v1/users/info"
+        };
+        registry.addInterceptor(permissionInterceptor)
                 .excludePathPatterns(whiteList);
     }
 }

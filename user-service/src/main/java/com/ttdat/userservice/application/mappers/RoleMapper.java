@@ -15,7 +15,9 @@ import java.util.List;
         uses = {PermissionMapper.class})
 public interface RoleMapper extends EntityMapper<RoleDTO, Role> {
 
-    List<RoleOption> toRoleOptions(List<Role> roles);
+    RoleOption toRoleOption(Role role);
+
+    List<RoleOption> toRoleOptionList(List<Role> roles);
 
     AuthRole toAuthRole(Role role);
 
