@@ -3,6 +3,7 @@ import { createApiClient } from "../../config/axios/api-client";
 import {
   ApiResponse,
   IUser,
+  IUserInfo,
   Page,
   PaginationParams,
   SortParams,
@@ -19,6 +20,7 @@ interface IUserService {
   create(newUser: Omit<IUser, "userId">): Promise<ApiResponse<void>>;
   update(userId: string, updatedUser: IUser): Promise<ApiResponse<void>>;
   updateStatus(userId: string, active: boolean): Promise<ApiResponse<void>>;
+  getUserInfo(): Promise<ApiResponse<IUserInfo>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/users", {
@@ -60,6 +62,10 @@ class UserService implements IUserService {
     active: boolean,
   ): Promise<ApiResponse<void>> {
     return (await apiClient.patch(`/${userId}/status`, { active })).data;
+  }
+
+  async getUserInfo(): Promise<ApiResponse<IUserInfo>> {
+    return (await apiClient.get("/info")).data;
   }
 }
 

@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { MdCategory, MdDashboard, MdInventory } from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
-import { FaKey, FaUserCog, FaUsers } from "react-icons/fa";
-import { IUser } from "../../../interfaces";
-import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
+import { FaFileInvoice, FaKey, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { FaWarehouse } from "react-icons/fa6";
+import { BiPurchaseTag } from "react-icons/bi";
+import { IUser } from "../../../interfaces";
+import { PERMISSIONS } from "../../../common/constants";
+import { Module } from "../../../common/enums";
 
 export function useMenuItems(user?: IUser): MenuProps["items"] {
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
@@ -77,6 +78,8 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           viewSuppliers ||
           viewWarehouses,
       );
+
+      const hasPurchaseItem = true;
 
       const menuItems = [
         {
@@ -182,6 +185,24 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                         },
                       ]
                     : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasPurchaseItem
+          ? [
+              {
+                label: "Mua hàng",
+                key: "purchase",
+                icon: <BiPurchaseTag />,
+                children: [
+                  {
+                    label: (
+                      <NavLink to="/purchase-orders">Đơn đặt hàng</NavLink>
+                    ),
+                    key: "purchaseOrders",
+                    icon: <FaFileInvoice />,
+                  },
                 ],
               },
             ]

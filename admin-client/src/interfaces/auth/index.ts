@@ -26,6 +26,13 @@ export interface IRole extends Auditable {
   permissions: IPermission[];
 }
 
+export interface IRoleInfo {
+  roleId: number;
+  roleName: string;
+  active: boolean;
+  description?: string;
+}
+
 export interface IUser extends Auditable {
   userId: string;
   fullName: string;
@@ -37,6 +44,18 @@ export interface IUser extends Auditable {
   warehouseId: number;
   phoneNumber: string;
   role: IRole;
+}
+
+export interface IUserInfo {
+  userId: string;
+  fullName: string;
+  email: string;
+  dob: string;
+  gender: Gender;
+  active: boolean;
+  warehouseId: number;
+  phoneNumber: string;
+  role: IRoleInfo;
 }
 
 export interface PermissionFilterCriteria {

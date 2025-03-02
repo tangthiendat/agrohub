@@ -149,4 +149,14 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PUT,
     },
   },
+  [Module.PURCHASE_ORDER]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/purchase-orders/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/purchase-orders",
+      httpMethod: HttpMethod.POST,
+    },
+  },
 };

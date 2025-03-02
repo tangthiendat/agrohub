@@ -1,43 +1,38 @@
 import { useCallback, useEffect, useState } from "react";
+import { IProduct } from "../../interfaces";
 import { useQuery } from "@tanstack/react-query";
-import { ISupplier } from "../../interfaces";
-import { supplierService } from "../../services";
-import { AutoComplete } from "antd";
+import { productService } from "../../services";
 import { debounce } from "lodash";
+import { AutoComplete } from "antd";
 
-interface SearchSupplierBarProps {
+interface SearchProductBarProps {
   className?: string;
   placeholder?: string;
   onClear?: () => void;
-  onSelect: (supplier: ISupplier) => void;
+  onSelect: (product: IProduct) => void;
+  optionRenderer: (product: IProduct) => {
+    value: string;
+    label: React.ReactNode;
+  };
 }
 
-const SearchSupplierBar: React.FC<SearchSupplierBarProps> = ({
+const SearchProductBar: React.FC<SearchProductBarProps> = ({
   className,
+  placeholder,
   onSelect,
   onClear,
-  placeholder,
+  optionRenderer,
 }) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { data: searchSuppliers } = useQuery({
-    queryKey: ["suppliers", "search", searchQuery],
-    queryFn: () => supplierService.search(searchQuery),
+  const { data: searchProducts } = useQuery({
+    queryKey: ["products", "search", searchQuery],
+    queryFn: () => productService.search(searchQuery),
     enabled: searchQuery !== "",
     select: (data) => data.payload,
   });
 
-  const supplierOptions = searchSuppliers?.map((supplier) => ({
-    value: supplier.supplierId,
-    label: (
-      <div>
-        <div className="text-wrap">{supplier.supplierName}</div>
-        <div className="text-wrap text-xs text-gray-500">
-          {supplier.phoneNumber}
-        </div>
-      </div>
-    ),
-  }));
+  const productOptions = searchProducts?.map(optionRenderer);
 
   useEffect(() => {
     if (inputValue === "") {
@@ -52,13 +47,13 @@ const SearchSupplierBar: React.FC<SearchSupplierBarProps> = ({
   const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
 
   function handleSelect(value: string) {
-    const selectedSupplier = searchSuppliers?.find(
-      (supplier) => supplier.supplierId === value,
+    const selectedProduct = searchProducts?.find(
+      (product) => product.productId === value,
     );
 
-    if (selectedSupplier) {
-      onSelect(selectedSupplier);
-      setInputValue(selectedSupplier.supplierName);
+    if (selectedProduct) {
+      onSelect(selectedProduct);
+      setInputValue("");
       setSearchQuery("");
     }
   }
@@ -69,7 +64,7 @@ const SearchSupplierBar: React.FC<SearchSupplierBarProps> = ({
       value={inputValue}
       className={className}
       placeholder={placeholder}
-      options={supplierOptions}
+      options={productOptions}
       onSelect={handleSelect}
       allowClear
       onChange={setInputValue}
@@ -78,4 +73,4 @@ const SearchSupplierBar: React.FC<SearchSupplierBarProps> = ({
   );
 };
 
-export default SearchSupplierBar;
+export default SearchProductBar;

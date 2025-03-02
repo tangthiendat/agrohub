@@ -21,6 +21,7 @@ interface IProductService {
     productId: string,
     updatedProduct: FormData,
   ): Promise<ApiResponse<void>>;
+  search(query: string): Promise<ApiResponse<IProduct[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/products", {
@@ -70,6 +71,10 @@ class ProductService implements IProductService {
         },
       })
     ).data;
+  }
+
+  async search(query: string): Promise<ApiResponse<IProduct[]>> {
+    return (await apiClient.get("/search", { params: { query } })).data;
   }
 }
 
