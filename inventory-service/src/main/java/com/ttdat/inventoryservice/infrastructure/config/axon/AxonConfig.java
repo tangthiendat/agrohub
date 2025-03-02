@@ -8,12 +8,14 @@ import com.ttdat.inventoryservice.infrastructure.interceptors.MetadataDispatchIn
 import org.axonframework.axonserver.connector.AxonServerConfiguration;
 import org.axonframework.axonserver.connector.AxonServerConnectionManager;
 import org.axonframework.axonserver.connector.command.AxonServerCommandBus;
+import org.axonframework.axonserver.connector.event.axon.AxonServerEventStore;
 import org.axonframework.axonserver.connector.query.AxonServerQueryBus;
 import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.distributed.AnnotationRoutingStrategy;
 import org.axonframework.commandhandling.distributed.RoutingStrategy;
 import org.axonframework.config.ConfigurerModule;
+import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
 import org.axonframework.eventsourcing.Snapshotter;
@@ -84,6 +86,20 @@ public class AxonConfig {
                 .build();
         axonServerCommandBus.registerDispatchInterceptor(new MetadataDispatchInterceptor());
         return axonServerCommandBus;
+    }
+
+    @Bean
+    public EventBus eventStore(AxonServerConnectionManager axonServerConnectionManager,
+                               AxonServerConfiguration axonServerConfiguration) {
+        AxonServerEventStore axonServerEventStore = AxonServerEventStore.builder()
+                .configuration(axonServerConfiguration)
+                .platformConnectionManager(axonServerConnectionManager)
+                .eventSerializer(messageSerializer())
+                .snapshotSerializer(messageSerializer())
+                .snapshotFilter(snapshot -> true)
+                .build();
+        axonServerEventStore.registerDispatchInterceptor(new MetadataDispatchInterceptor());
+        return axonServerEventStore;
     }
 
     @Bean
