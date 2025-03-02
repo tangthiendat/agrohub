@@ -1,0 +1,12 @@
+server:
+  port: 8084
+  servlet:
+    context-path: /debt-service
+spring:
+  application:
+    name: debt-service
+  main:
+    allow-bean-definition-overriding: true
+  threads:
+    virtual:
+      enabled: true
