@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Space } from "antd";
 import { useShallow } from "zustand/react/shallow";
 import BackButton from "../../common/components/BackButton";
@@ -11,9 +11,11 @@ import PurchaseOrderForm from "./PurchaseOrderForm";
 import { usePurchaseOrderStore } from "../../store/purchase-order-store";
 import { IProduct } from "../../interfaces";
 import { userService, warehouseService } from "../../services";
+import { purchaseOrderService } from "../../services/purchase/purchase-order-service";
 
 const NewPurchaseOrder: React.FC = () => {
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
   const { addDetail, setWarehouse, setUser, reset } = usePurchaseOrderStore(
     useShallow((state) => ({
       addDetail: state.addDetail,
@@ -35,6 +37,17 @@ const NewPurchaseOrder: React.FC = () => {
   const { data: userData, isLoading: isUserLoading } = useQuery({
     queryKey: ["user", "info"],
     queryFn: userService.getUserInfo,
+  });
+
+  const { mutate: createPurchaseOrder, isPending: isCreating } = useMutation({
+    mutationFn: purchaseOrderService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["purchase-orders"],
+      });
+      form.resetFields();
+      reset();
+    },
   });
 
   useEffect(() => {
@@ -65,16 +78,24 @@ const NewPurchaseOrder: React.FC = () => {
               reset();
               toast.success("Đã xóa đơn đặt hàng");
             }}
+            loading={isCreating}
           >
             Làm mới
           </Button>
-          <Button type="primary" onClick={() => form.submit()}>
+          <Button
+            type="primary"
+            onClick={() => form.submit()}
+            loading={isCreating}
+          >
             Lưu
           </Button>
         </Space>
       </div>
 
-      <PurchaseOrderForm form={form} />
+      <PurchaseOrderForm
+        form={form}
+        createPurchaseOrder={createPurchaseOrder}
+      />
 
       <div className="flex items-center justify-between">
         <SearchProductBar

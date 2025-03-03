@@ -1,3 +1,4 @@
+import { UseMutateFunction } from "@tanstack/react-query";
 import {
   Card,
   DatePicker,
@@ -7,24 +8,38 @@ import {
   Modal,
   Select,
 } from "antd";
-import SearchSupplierBar from "../supplier/SearchSupplierBar";
-import { CreatePurchaseOrderRequest, ISupplier } from "../../interfaces";
+import { FormInstance } from "antd/lib";
+import dayjs, { Dayjs } from "dayjs";
+import toast from "react-hot-toast";
+import { useShallow } from "zustand/react/shallow";
+import { DiscountType, PurchaseOrderStatus } from "../../common/enums";
+import {
+  ApiResponse,
+  CreatePurchaseOrderRequest,
+  ISupplier,
+} from "../../interfaces";
 import {
   PurchaseOrderDetailState,
   usePurchaseOrderStore,
 } from "../../store/purchase-order-store";
-import { useShallow } from "zustand/react/shallow";
-import dayjs, { Dayjs } from "dayjs";
+import { getNotificationMessage } from "../../utils/notification";
 import { formatCurrency, parseCurrency } from "../../utils/number";
-import { DiscountType, PurchaseOrderStatus } from "../../common/enums";
-import { FormInstance } from "antd/lib";
-import { convertKeysToSnakeCase } from "../../utils/data";
+import SearchSupplierBar from "../supplier/SearchSupplierBar";
 
 interface PurchaseOrderFormProps {
   form: FormInstance;
+  createPurchaseOrder: UseMutateFunction<
+    ApiResponse<void>,
+    Error,
+    CreatePurchaseOrderRequest,
+    unknown
+  >;
 }
 
-const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({ form }) => {
+const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
+  form,
+  createPurchaseOrder,
+}) => {
   const [modal, contextHolder] = Modal.useModal();
   const {
     warehouse,
@@ -79,7 +94,16 @@ const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({ form }) => {
         }),
       ),
     };
-    console.log(convertKeysToSnakeCase(newPurchaseOrder));
+    createPurchaseOrder(newPurchaseOrder, {
+      onSuccess: () => {
+        toast.success("Đã tạo đơn đặt hàng");
+      },
+      onError: (error) => {
+        toast.error(
+          getNotificationMessage(error) || "Tạo đơn đặt hàng thất bại",
+        );
+      },
+    });
   }
 
   return (
