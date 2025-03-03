@@ -1,5 +1,6 @@
 package com.ttdat.purchaseservice.application.mappers;
 
+import com.ttdat.purchaseservice.api.dto.common.PurchaseOrderDTO;
 import com.ttdat.purchaseservice.api.dto.response.PurchaseOrderTableItem;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrder;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
@@ -12,8 +13,8 @@ import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-        uses = {SupplierMapper.class})
-public interface PurchaseOrderMapper {
+        uses = {SupplierMapper.class, PurchaseOrderDetailMapper.class})
+public interface PurchaseOrderMapper extends EntityMapper<PurchaseOrderDTO, PurchaseOrder> {
     @Mapping(target = "supplier.supplierId", source = "supplierId")
     PurchaseOrder toEntity(PurchaseOrderCreatedEvent purchaseOrderCreatedEvent);
 
