@@ -7,6 +7,7 @@ import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.inventoryservice.api.dto.common.WarehouseDTO;
 import com.ttdat.inventoryservice.api.dto.response.WarehousePageResult;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetAllWarehouseQuery;
+import com.ttdat.inventoryservice.application.queries.warehouse.GetCurrentUserWarehouseQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehouseByIdQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehousePageQuery;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,20 @@ public class WarehouseQueryController {
                         .status(HttpStatus.OK.value())
                         .success(true)
                         .message("Get warehouse by id successfully")
+                        .payload(warehouseDTO)
+                        .build()
+        );
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<WarehouseDTO>> getMyWarehouse() {
+        GetCurrentUserWarehouseQuery getCurrentUserWarehouseQuery = GetCurrentUserWarehouseQuery.builder().build();
+        WarehouseDTO warehouseDTO = queryGateway.query(getCurrentUserWarehouseQuery, ResponseTypes.instanceOf(WarehouseDTO.class)).join();
+        return ResponseEntity.ok(
+                ApiResponse.<WarehouseDTO>builder()
+                        .status(HttpStatus.OK.value())
+                        .success(true)
+                        .message("Get my warehouse successfully")
                         .payload(warehouseDTO)
                         .build()
         );

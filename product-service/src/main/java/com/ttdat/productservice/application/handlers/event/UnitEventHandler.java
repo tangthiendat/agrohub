@@ -23,7 +23,7 @@ public class UnitEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(UnitCreatedEvent unitCreatedEvent) {
+    public void on(UnitCreatedEvent unitCreatedEvent) {
         if (unitRepository.existsByUnitName(unitCreatedEvent.getUnitName())) {
             throw new DuplicateResourceException(ErrorCode.UNIT_ALREADY_EXISTS);
         }
@@ -38,7 +38,7 @@ public class UnitEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(UnitUpdatedEvent unitUpdatedEvent) {
+    public void on(UnitUpdatedEvent unitUpdatedEvent) {
         Unit unit = getUnitById(unitUpdatedEvent.getUnitId());
         unitMapper.updateEntityFromEvent(unit, unitUpdatedEvent);
         unitRepository.save(unit);

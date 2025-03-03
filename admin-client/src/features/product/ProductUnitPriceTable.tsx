@@ -23,8 +23,8 @@ const ProductUnitPriceTable: React.FC<ProductUnitPriceTableProps> = ({
       "productUnits",
       productUnitIndex,
     ]);
-    const sortedProductUnitPrices = productUnit.productUnitPrices.sort((a, b) =>
-      dayjs(b.validTo).diff(dayjs(a.validTo)),
+    const sortedProductUnitPrices = productUnit?.productUnitPrices?.sort(
+      (a, b) => dayjs(a.validFrom).diff(dayjs(b.validFrom)),
     );
     setProductUnitPrices(sortedProductUnitPrices);
   }, [productForm, productUnitIndex]);

@@ -23,7 +23,7 @@ public class CategoryEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(CategoryCreatedEvent categoryCreatedEvent){
+    public void on(CategoryCreatedEvent categoryCreatedEvent){
         if(categoryRepository.existsByCategoryName(categoryCreatedEvent.getCategoryName())){
             throw new DuplicateResourceException(ErrorCode.CATEGORY_ALREADY_EXISTS);
         }
@@ -38,7 +38,7 @@ public class CategoryEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(CategoryUpdatedEvent categoryUpdatedEvent) {
+    public void on(CategoryUpdatedEvent categoryUpdatedEvent) {
         Category category = getCategoryById(categoryUpdatedEvent.getCategoryId());
         categoryMapper.updateEntityFromEvent(category, categoryUpdatedEvent);
         categoryRepository.save(category);

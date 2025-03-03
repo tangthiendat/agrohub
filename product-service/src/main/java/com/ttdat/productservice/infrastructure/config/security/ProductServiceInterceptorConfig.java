@@ -12,6 +12,10 @@ public class ProductServiceInterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-         registry.addInterceptor(permissionInterceptor);
+        String[] whiteList = new String[]{
+                "/api/v1/products/search",
+        };
+        registry.addInterceptor(permissionInterceptor)
+                .excludePathPatterns(whiteList);
     }
 }

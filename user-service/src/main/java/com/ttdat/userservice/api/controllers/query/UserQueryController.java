@@ -5,8 +5,10 @@ import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.userservice.api.dto.common.UserDTO;
+import com.ttdat.userservice.api.dto.response.UserInfo;
 import com.ttdat.userservice.api.dto.response.UserPageResult;
 import com.ttdat.userservice.application.queries.user.GetUserByIdQuery;
+import com.ttdat.userservice.application.queries.user.GetUserInfoQuery;
 import com.ttdat.userservice.application.queries.user.GetUserPageQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
@@ -57,6 +59,18 @@ public class UserQueryController {
                 .success(true)
                 .message("User fetched successfully")
                 .payload(user)
+                .build());
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<ApiResponse<UserInfo>> getUserInfo(){
+        GetUserInfoQuery getUserInfoQuery = GetUserInfoQuery.builder().build();
+        UserInfo userInfo = queryGateway.query(getUserInfoQuery, ResponseTypes.instanceOf(UserInfo.class)).join();
+        return ResponseEntity.ok(ApiResponse.<UserInfo>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("User info fetched successfully")
+                .payload(userInfo)
                 .build());
     }
 }

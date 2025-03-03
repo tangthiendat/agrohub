@@ -1,4 +1,7 @@
 import { snakeCase } from "lodash";
+import { DiscountType } from "../common/enums";
+import { IProduct, IProductUnitPrice } from "../interfaces";
+import dayjs from "dayjs";
 
 export function convertKeysToSnakeCase<T>(obj: T): T {
   if (Array.isArray(obj)) {
@@ -13,4 +16,35 @@ export function convertKeysToSnakeCase<T>(obj: T): T {
     }, {}) as T;
   }
   return obj;
+}
+
+export function getVATValue(totalAmount: number, vatRate: number): number {
+  return totalAmount * (vatRate / 100);
+}
+
+export function getFinalAmount(
+  totalAmount: number,
+  discountValue: number,
+  discountType: DiscountType,
+  vatRate: number,
+): number {
+  if (discountType === DiscountType.PERCENT) {
+    return totalAmount - totalAmount * (discountValue / 100);
+  }
+  return totalAmount - getVATValue(totalAmount, vatRate) - discountValue;
+}
+
+export function getCurrentProductUnitPrice(
+  product: IProduct,
+  productUnitId: string,
+): IProductUnitPrice {
+  const productUnit = product.productUnits.find(
+    (pu) => pu.productUnitId === productUnitId,
+  );
+  const sortedProductUnitPrices = productUnit!.productUnitPrices!.sort((a, b) =>
+    dayjs(b.validFrom).diff(dayjs(a.validFrom)),
+  );
+  return sortedProductUnitPrices!.find((pup) =>
+    dayjs().isAfter(pup.validFrom),
+  )!;
 }

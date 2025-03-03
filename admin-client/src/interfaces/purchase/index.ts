@@ -1,3 +1,4 @@
+import { DiscountType, PurchaseOrderStatus } from "../../common/enums";
 import { Auditable } from "../common";
 
 export interface ISupplier extends Auditable {
@@ -23,10 +24,46 @@ export interface ISupplierProduct {
   productId: string;
 }
 
-export interface ISupplierProductQuotation {
-  quotationId: string;
-  unitId: number;
-  unitPrice: number;
-  validFrom: string;
-  validTo?: string;
+export interface IPurchaseOrderDetail {
+  detailId: string;
+  productId: string;
+  productUnitId: number;
+  quantity: number;
+}
+
+export interface IPurchaseOrder extends Auditable {
+  purchaseOrderId: string;
+  supplier: ISupplier;
+  warehouseId: number;
+  orderDate: string;
+  expectedDeliveryDate: string;
+  status: PurchaseOrderStatus;
+  totalAmount: number;
+  discountValue: number;
+  discountType: DiscountType;
+  vatRate: number;
+  finalAmount: number;
+  purchaseOrderDetails: IPurchaseOrderDetail[];
+}
+
+export interface CreatePurchaseOrderDetail {
+  productId: string;
+  productUnitId: string;
+  quantity: number;
+}
+
+export interface CreatePurchaseOrderRequest {
+  supplierId: string;
+  warehouseId: number;
+  userId: string;
+  orderDate: string;
+  status: PurchaseOrderStatus;
+  expectedDeliveryDate: string;
+  totalAmount: number;
+  discountValue: number;
+  discountType: DiscountType;
+  vatRate: number;
+  finalAmount: number;
+  purchaseOrderDetails: CreatePurchaseOrderDetail[];
+  note?: string;
 }

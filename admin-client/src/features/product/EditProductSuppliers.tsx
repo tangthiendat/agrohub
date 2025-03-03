@@ -1,14 +1,13 @@
-import { useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
+import { Descriptions, DescriptionsProps, Space } from "antd";
+import { useParams } from "react-router";
+import BackButton from "../../common/components/BackButton";
 import Loading from "../../common/components/Loading";
-import { productService } from "../../services";
-import { Button, Descriptions, DescriptionsProps, Space, Tooltip } from "antd";
-import { GoArrowLeft } from "react-icons/go";
-import UpdateProductSupplierForm from "./UpdateProductSupplierForm";
 import ProductSupplierTable from "./ProductSupplierTable";
+import UpdateProductSupplierForm from "./UpdateProductSupplierForm";
+import { productService } from "../../services";
 
 const EditProductSuppliers: React.FC = () => {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const { data: productData, isLoading } = useQuery({
@@ -44,9 +43,7 @@ const EditProductSuppliers: React.FC = () => {
     <div className="card">
       <div className="mb-5 flex items-center justify-between">
         <Space align="start" size="middle">
-          <Tooltip title="Quay lại">
-            <Button icon={<GoArrowLeft />} onClick={() => navigate(-1)} />
-          </Tooltip>
+          <BackButton />
           <h2 className="text-xl font-semibold">
             Chỉnh sửa danh sách nhà cung cấp
           </h2>

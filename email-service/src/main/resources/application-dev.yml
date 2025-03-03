@@ -1,0 +1,12 @@
+server:
+  port: 8087
+  servlet:
+    context-path: /email-service
+spring:
+  application:
+    name: email-service
+  main:
+    allow-bean-definition-overriding: true
+  threads:
+    virtual:
+      enabled: true

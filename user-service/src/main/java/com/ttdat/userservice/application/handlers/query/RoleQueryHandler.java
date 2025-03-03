@@ -25,7 +25,7 @@ public class RoleQueryHandler {
 
     @QueryHandler
     public List<RoleOption> handle(GetAllRolesQuery query) {
-        return roleMapper.toRoleOptions(roleRepository.findAll());
+        return roleMapper.toRoleOptionList(roleRepository.findAll());
     }
 
     @QueryHandler

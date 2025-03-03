@@ -30,9 +30,11 @@ const SearchSupplierBar: React.FC<SearchSupplierBarProps> = ({
   const supplierOptions = searchSuppliers?.map((supplier) => ({
     value: supplier.supplierId,
     label: (
-      <div className="flex items-center justify-between">
-        <div>{supplier.supplierName}</div>
-        <div>{supplier.phoneNumber}</div>
+      <div>
+        <div className="text-wrap">{supplier.supplierName}</div>
+        <div className="text-wrap text-xs text-gray-500">
+          {supplier.phoneNumber}
+        </div>
       </div>
     ),
   }));
@@ -63,6 +65,7 @@ const SearchSupplierBar: React.FC<SearchSupplierBarProps> = ({
 
   return (
     <AutoComplete
+      defaultActiveFirstOption
       value={inputValue}
       className={className}
       placeholder={placeholder}

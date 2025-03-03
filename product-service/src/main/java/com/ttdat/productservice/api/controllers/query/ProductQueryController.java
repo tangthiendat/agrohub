@@ -8,12 +8,14 @@ import com.ttdat.productservice.api.dto.common.ProductDTO;
 import com.ttdat.productservice.api.dto.response.ProductPageResult;
 import com.ttdat.productservice.application.queries.product.GetProductByIdQuery;
 import com.ttdat.productservice.application.queries.product.GetProductPageQuery;
+import com.ttdat.productservice.application.queries.product.SearchProductQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -49,6 +51,19 @@ public class ProductQueryController {
                 .message("Product retrieved successfully")
                 .success(true)
                 .payload(productDTO)
+                .build());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<ProductDTO>>> getAllProducts(@RequestParam String query) {
+        SearchProductQuery searchProductQuery = SearchProductQuery.builder()
+                .query(query)
+                .build();
+        List<ProductDTO> productDTOs = queryGateway.query(searchProductQuery, ResponseTypes.multipleInstancesOf(ProductDTO.class)).join();
+        return ResponseEntity.ok(ApiResponse.<List<ProductDTO>>builder()
+                .message("Products retrieved successfully")
+                .success(true)
+                .payload(productDTOs)
                 .build());
     }
 }
