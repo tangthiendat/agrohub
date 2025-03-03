@@ -1,13 +1,5 @@
 import { UseMutateFunction } from "@tanstack/react-query";
-import {
-  Card,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Select,
-} from "antd";
+import { Card, DatePicker, Form, Input, Modal } from "antd";
 import { FormInstance } from "antd/lib";
 import dayjs, { Dayjs } from "dayjs";
 import toast from "react-hot-toast";
@@ -23,7 +15,6 @@ import {
   usePurchaseOrderStore,
 } from "../../store/purchase-order-store";
 import { getNotificationMessage } from "../../utils/notification";
-import { formatCurrency, parseCurrency } from "../../utils/number";
 import SearchSupplierBar from "../supplier/SearchSupplierBar";
 
 interface PurchaseOrderFormProps {
@@ -45,14 +36,14 @@ const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
     warehouse,
     user,
     discountType,
-    setDiscountType,
+    // setDiscountType,
     purchaseOrderDetails,
   } = usePurchaseOrderStore(
     useShallow((state) => ({
       warehouse: state.warehouse,
       user: state.user,
       discountType: state.discountType,
-      setDiscountType: state.setDiscountType,
+      // setDiscountType: state.setDiscountType,
       purchaseOrderDetails: state.purchaseOrderDetails,
     })),
   );
@@ -186,7 +177,7 @@ const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
               <Input.TextArea rows={2} />
             </Form.Item>
           </Card>
-          <Card className="flex-1 self-stretch">
+          {/* <Card className="flex-1 self-stretch">
             <Form.Item label="Tổng tiền hàng" name="totalAmount">
               <InputNumber
                 readOnly
@@ -248,7 +239,7 @@ const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
                 addonAfter="VND"
               />
             </Form.Item>
-          </Card>
+          </Card> */}
         </div>
       </Form>
     </>

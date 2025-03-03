@@ -76,7 +76,7 @@ const NewPurchaseOrder: React.FC = () => {
           <Button
             onClick={() => {
               reset();
-              toast.success("Đã xóa đơn đặt hàng");
+              toast.success("Làm mới thành công");
             }}
             loading={isCreating}
           >
