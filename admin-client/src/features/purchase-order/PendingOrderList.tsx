@@ -1,16 +1,34 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Card, List, Tag } from "antd";
+import dayjs from "dayjs";
+import toast from "react-hot-toast";
 import Loading from "../../common/components/Loading";
+import { PURCHASE_ORDER_STATUS_COLOR } from "../../common/constants";
+import { PURCHASE_ORDER_STATUS_NAME } from "../../common/constants/status";
+import { PurchaseOrderStatus } from "../../common/enums";
 import { PurchaseOrderFilterCriteria } from "../../interfaces";
 import { purchaseOrderService } from "../../services";
-import { Button, Card, List, Tag } from "antd";
-import { PURCHASE_ORDER_STATUS_COLOR } from "../../common/constants";
-import dayjs from "dayjs";
-import { PURCHASE_ORDER_STATUS_NAME } from "../../common/constants/status";
+import { getNotificationMessage } from "../../utils/notification";
+
+interface UpdatePurchaseOrderStatusArgs {
+  purchaseOrderId: string;
+  status: PurchaseOrderStatus;
+}
 
 const PendingOrderList: React.FC = () => {
   const filter: PurchaseOrderFilterCriteria = {
     status: "PENDING",
   };
+  const queryClient = useQueryClient();
+
+  const { mutate: updatePurchaseOrderStatus, isPending: isUpdating } =
+    useMutation({
+      mutationFn: ({
+        purchaseOrderId,
+        status,
+      }: UpdatePurchaseOrderStatusArgs) =>
+        purchaseOrderService.updateStatus(purchaseOrderId, status),
+    });
 
   const { data: pendingPurchaseOrders, isLoading } = useQuery({
     queryKey: ["purchase-orders", filter].filter((key) => {
@@ -106,7 +124,29 @@ const PendingOrderList: React.FC = () => {
                 <Button
                   size="small"
                   danger
-                  // onClick={() => handleCancel(purchaseOrder.purchaseOrderId)}
+                  disabled={isUpdating}
+                  onClick={() => {
+                    updatePurchaseOrderStatus(
+                      {
+                        purchaseOrderId: purchaseOrder.purchaseOrderId,
+                        status: PurchaseOrderStatus.CANCELLED,
+                      },
+                      {
+                        onSuccess: () => {
+                          queryClient.invalidateQueries({
+                            queryKey: ["purchase-orders"],
+                          });
+                          toast.success("Đã hủy đơn hàng");
+                        },
+                        onError: (error: Error) => {
+                          toast.error(
+                            getNotificationMessage(error) ||
+                              "Hủy đơn hàng thất bại",
+                          );
+                        },
+                      },
+                    );
+                  }}
                 >
                   Hủy
                 </Button>
@@ -114,7 +154,29 @@ const PendingOrderList: React.FC = () => {
                 <Button
                   size="small"
                   type="primary"
-                  // onClick={() => handleApprove(purchaseOrder.purchaseOrderId)}
+                  disabled={isUpdating}
+                  onClick={() => {
+                    updatePurchaseOrderStatus(
+                      {
+                        purchaseOrderId: purchaseOrder.purchaseOrderId,
+                        status: PurchaseOrderStatus.APPROVED,
+                      },
+                      {
+                        onSuccess: () => {
+                          queryClient.invalidateQueries({
+                            queryKey: ["purchase-orders"],
+                          });
+                          toast.success("Đã xác nhận đơn hàng");
+                        },
+                        onError: (error: Error) => {
+                          toast.error(
+                            getNotificationMessage(error) ||
+                              "Xác nhận đơn hàng thất bại",
+                          );
+                        },
+                      },
+                    );
+                  }}
                 >
                   Xác nhận
                 </Button>

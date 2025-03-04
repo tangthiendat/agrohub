@@ -9,6 +9,7 @@ import {
   PurchaseOrderFilterCriteria,
   SortParams,
 } from "../../interfaces";
+import { PurchaseOrderStatus } from "../../common/enums";
 
 interface IPurchaseOrderService {
   create(
@@ -22,6 +23,10 @@ interface IPurchaseOrderService {
   get(
     filter: PurchaseOrderFilterCriteria,
   ): Promise<ApiResponse<IPurchaseOrderListItem[]>>;
+  updateStatus(
+    purchaseOrderId: string,
+    status: PurchaseOrderStatus,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/purchase-orders", {
@@ -56,6 +61,14 @@ class PurchaseOrderService implements IPurchaseOrderService {
     filter: PurchaseOrderFilterCriteria,
   ): Promise<ApiResponse<IPurchaseOrderListItem[]>> {
     return (await apiClient.get("", { params: filter })).data;
+  }
+
+  async updateStatus(
+    purchaseOrderId: string,
+    status: PurchaseOrderStatus,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.patch(`/${purchaseOrderId}/status`, { status }))
+      .data;
   }
 }
 
