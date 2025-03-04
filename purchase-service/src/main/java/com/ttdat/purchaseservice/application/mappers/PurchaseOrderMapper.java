@@ -1,7 +1,7 @@
 package com.ttdat.purchaseservice.application.mappers;
 
 import com.ttdat.purchaseservice.api.dto.common.PurchaseOrderDTO;
-import com.ttdat.purchaseservice.api.dto.response.PurchaseOrderTableItem;
+import com.ttdat.purchaseservice.api.dto.response.PurchaseOrderListItem;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrder;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
 import org.mapstruct.InjectionStrategy;
@@ -19,7 +19,7 @@ public interface PurchaseOrderMapper extends EntityMapper<PurchaseOrderDTO, Purc
     PurchaseOrder toEntity(PurchaseOrderCreatedEvent purchaseOrderCreatedEvent);
 
     @Mapping(target = "supplierName", source = "supplier.supplierName")
-    PurchaseOrderTableItem toTableItem(PurchaseOrder purchaseOrder);
+    PurchaseOrderListItem toListItem(PurchaseOrder purchaseOrder);
 
-    List<PurchaseOrderTableItem> toTableItemList(List<PurchaseOrder> purchaseOrders);
+    List<PurchaseOrderListItem> toTableItemList(List<PurchaseOrder> purchaseOrders);
 }

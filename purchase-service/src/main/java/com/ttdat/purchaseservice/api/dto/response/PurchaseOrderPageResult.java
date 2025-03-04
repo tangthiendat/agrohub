@@ -17,5 +17,5 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PurchaseOrderPageResult {
     PaginationMeta meta;
-    List<PurchaseOrderTableItem> content;
+    List<PurchaseOrderListItem> content;
 }
