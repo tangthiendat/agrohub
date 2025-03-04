@@ -7,6 +7,7 @@ import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
 import PendingOrderList from "../features/purchase-order/PendingOrderList";
+import ApprovedOrderList from "../features/purchase-order/ApprovedOrderList";
 
 const PurchaseOrders: React.FC = () => {
   useTitle("Đơn đặt hàng nhà cung cấp");
@@ -46,7 +47,7 @@ const PurchaseOrders: React.FC = () => {
     {
       key: "approved",
       label: "Đã xác nhận",
-      children: "Đã xác nhận",
+      children: <ApprovedOrderList />,
     },
   ];
 
