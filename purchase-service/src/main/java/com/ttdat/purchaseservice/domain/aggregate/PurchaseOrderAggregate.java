@@ -2,10 +2,12 @@ package com.ttdat.purchaseservice.domain.aggregate;
 
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderDetailCommand;
+import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderStatusCommand;
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderDetailCreatedEvent;
+import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderStatusUpdatedEvent;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.axonframework.commandhandling.CommandHandler;
@@ -86,6 +88,15 @@ public class PurchaseOrderAggregate {
         AggregateLifecycle.apply(purchaseOrderDetailCreatedEvent);
     }
 
+    @CommandHandler
+    public void handle(UpdatePurchaseOrderStatusCommand updatePurchaseOrderStatusCommand){
+        PurchaseOrderStatusUpdatedEvent purchaseOrderStatusUpdatedEvent = PurchaseOrderStatusUpdatedEvent.builder()
+                .purchaseOrderId(updatePurchaseOrderStatusCommand.getPurchaseOrderId())
+                .status(updatePurchaseOrderStatusCommand.getStatus())
+                .build();
+        AggregateLifecycle.apply(purchaseOrderStatusUpdatedEvent);
+    }
+
     @EventSourcingHandler
     public void on(PurchaseOrderCreatedEvent purchaseOrderCreatedEvent) {
         this.purchaseOrderId = purchaseOrderCreatedEvent.getPurchaseOrderId();
@@ -115,5 +126,10 @@ public class PurchaseOrderAggregate {
                 .quantity(purchaseOrderDetailCreatedEvent.getQuantity())
                 .build();
         this.purchaseOrderDetails.add(aggPurchaseOrderDetail);
+    }
+
+    @EventSourcingHandler
+    public void on(PurchaseOrderStatusUpdatedEvent purchaseOrderStatusUpdatedEvent){
+        this.status = purchaseOrderStatusUpdatedEvent.getStatus();
     }
 }

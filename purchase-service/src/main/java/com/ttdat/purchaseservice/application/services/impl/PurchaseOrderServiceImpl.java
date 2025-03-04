@@ -1,8 +1,10 @@
 package com.ttdat.purchaseservice.application.services.impl;
 
 import com.ttdat.purchaseservice.api.dto.request.CreatePurchaseOrderRequest;
+import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderStatusRequest;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderDetailCommand;
+import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderStatusCommand;
 import com.ttdat.purchaseservice.application.services.PurchaseOrderService;
 import com.ttdat.purchaseservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +50,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
              commandGateway.sendAndWait(createPurchaseOrderDetailCommand);
         });
 
+    }
+
+    @Override
+    public void updatePurchaseOrderStatus(String id, UpdatePurchaseOrderStatusRequest updatePurchaseOrderStatusRequest) {
+        UpdatePurchaseOrderStatusCommand updatePurchaseOrderStatusCommand = UpdatePurchaseOrderStatusCommand.builder()
+                .purchaseOrderId(id)
+                .status(updatePurchaseOrderStatusRequest.getStatus())
+                .build();
+        commandGateway.sendAndWait(updatePurchaseOrderStatusCommand);
     }
 }

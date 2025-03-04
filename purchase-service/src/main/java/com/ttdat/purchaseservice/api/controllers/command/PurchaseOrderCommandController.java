@@ -2,14 +2,12 @@ package com.ttdat.purchaseservice.api.controllers.command;
 
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.purchaseservice.api.dto.request.CreatePurchaseOrderRequest;
+import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderStatusRequest;
 import com.ttdat.purchaseservice.application.services.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/purchase-orders")
@@ -28,6 +26,18 @@ public class PurchaseOrderCommandController {
                                 .success(true)
                                 .build()
                 );
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<ApiResponse<Object>> updatePurchaseOrderStatus(@PathVariable String id, @RequestBody UpdatePurchaseOrderStatusRequest updatePurchaseOrderStatusRequest) {
+        purchaseOrderService.updatePurchaseOrderStatus(id, updatePurchaseOrderStatusRequest);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Purchase order status updated successfully")
+                        .success(true)
+                        .build()
+        );
     }
 
 }
