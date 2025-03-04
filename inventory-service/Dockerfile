@@ -15,7 +15,7 @@ COPY sales-service/ sales-service/
 COPY email-service/ email-service/
 
 #Build only user-service and its dependent modules
-RUN mvn clean package -DskipTests -pl product-service -am
+RUN mvn clean package -DskipTests -pl inventory-service -am
 
 FROM eclipse-temurin:21-jre-alpine
 
@@ -23,11 +23,11 @@ RUN unlink /etc/localtime;ln -s  /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/local
 
 WORKDIR /app
 
-COPY --from=build /app/product-service/target/*.jar /app/product-service.jar
+COPY --from=build /app/inventory-service/target/*.jar /app/inventory-service.jar
 
-EXPOSE 8080
+EXPOSE 8082
 
 ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
 ENV SPRING_PROFILES_ACTIVE="docker"
 
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTIONS} -jar /app/product-service.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTIONS} -jar /app/inventory-service.jar"]

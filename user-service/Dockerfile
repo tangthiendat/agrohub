@@ -7,6 +7,12 @@ COPY pom.xml .
 COPY core/ core/
 COPY user-service/ user-service/
 COPY product-service/ product-service/
+COPY inventory-service/ inventory-service/
+COPY purchase-service/ purchase-service/
+COPY debt-service/ debt-service/
+COPY customer-service/ customer-service/
+COPY sales-service/ sales-service/
+COPY email-service/ email-service/
 
 #Build only user-service and its dependent modules
 RUN mvn clean package -DskipTests -pl user-service -am
