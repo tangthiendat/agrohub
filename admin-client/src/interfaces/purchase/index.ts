@@ -78,5 +78,5 @@ export interface IPurchaseOrderTableItem {
 
 export interface PurchaseOrderFilterCriteria {
   query?: string;
-  status?: PurchaseOrderStatus;
+  status?: string;
 }

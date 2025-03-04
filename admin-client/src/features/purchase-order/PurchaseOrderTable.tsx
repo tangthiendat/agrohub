@@ -1,13 +1,25 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { Table, TablePaginationConfig, Tag } from "antd";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { Page, IPurchaseOrderTableItem } from "../../interfaces";
-import { getDefaultSortOrder, getSortDirection } from "../../utils/filter";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../utils/filter";
 import { TableProps } from "antd/lib";
 import { PurchaseOrderStatus } from "../../common/enums";
 import { PURCHASE_ORDER_STATUS_COLOR } from "../../common/constants";
-import { getSortDownIconColor, getSortUpIconColor } from "../../utils/color";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../utils/color";
 
 interface PurchaseOrderTableProps {
   purchaseOrderPage?: Page<IPurchaseOrderTableItem>;
@@ -148,6 +160,14 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
       width: "10%",
       render: (status: PurchaseOrderStatus) => (
         <Tag color={PURCHASE_ORDER_STATUS_COLOR[status]}>{status}</Tag>
+      ),
+      filters: Object.values(PurchaseOrderStatus).map((status) => ({
+        text: status,
+        value: status,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
       ),
     },
   ];
