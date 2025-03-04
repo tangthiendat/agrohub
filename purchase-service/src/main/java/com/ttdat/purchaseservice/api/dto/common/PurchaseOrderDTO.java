@@ -1,5 +1,7 @@
 package com.ttdat.purchaseservice.api.dto.common;
 
+import com.ttdat.purchaseservice.api.dto.response.PoUserDTO;
+import com.ttdat.purchaseservice.api.dto.response.PoWarehouseDTO;
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import lombok.*;
@@ -19,7 +21,9 @@ public class PurchaseOrderDTO {
 
     SupplierDTO supplier;
 
-    String userId;
+    PoUserDTO user;
+
+    PoWarehouseDTO warehouse;
 
     LocalDate orderDate;
 

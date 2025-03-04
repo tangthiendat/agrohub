@@ -13,4 +13,8 @@ public interface PurchaseOrderDetailMapper extends EntityMapper<PurchaseOrderDet
     @Mapping(target = "purchaseOrder.purchaseOrderId", source = "purchaseOrderId")
     PurchaseOrderDetail toEntity(PurchaseOrderDetailCreatedEvent purchaseOrderDetailCreatedEvent);
 
+    @Override
+    @Mapping(target = "product.productId", source = "productId")
+    @Mapping(target = "productUnit.productUnitId", source = "productUnitId")
+    PurchaseOrderDetailDTO toDTO(PurchaseOrderDetail entity);
 }

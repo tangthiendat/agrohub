@@ -22,4 +22,9 @@ public interface PurchaseOrderMapper extends EntityMapper<PurchaseOrderDTO, Purc
     PurchaseOrderListItem toListItem(PurchaseOrder purchaseOrder);
 
     List<PurchaseOrderListItem> toTableItemList(List<PurchaseOrder> purchaseOrders);
+
+    @Override
+    @Mapping(target = "warehouse.warehouseId", source = "warehouseId")
+    @Mapping(target = "user.userId", source = "userId")
+    PurchaseOrderDTO toDTO(PurchaseOrder entity);
 }

@@ -3,6 +3,7 @@ import { createApiClient } from "../../config/axios/api-client";
 import {
   ApiResponse,
   CreatePurchaseOrderRequest,
+  IPurchaseOrder,
   IPurchaseOrderListItem,
   Page,
   PaginationParams,
@@ -27,6 +28,7 @@ interface IPurchaseOrderService {
     purchaseOrderId: string,
     status: PurchaseOrderStatus,
   ): Promise<ApiResponse<void>>;
+  getById(purchaseOrderId: string): Promise<ApiResponse<IPurchaseOrder>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/purchase-orders", {
@@ -69,6 +71,10 @@ class PurchaseOrderService implements IPurchaseOrderService {
   ): Promise<ApiResponse<void>> {
     return (await apiClient.patch(`/${purchaseOrderId}/status`, { status }))
       .data;
+  }
+
+  async getById(purchaseOrderId: string): Promise<ApiResponse<IPurchaseOrder>> {
+    return (await apiClient.get(`/${purchaseOrderId}`)).data;
   }
 }
 

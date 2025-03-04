@@ -1,5 +1,7 @@
 package com.ttdat.purchaseservice.api.dto.common;
 
+import com.ttdat.purchaseservice.api.dto.response.PodProductDTO;
+import com.ttdat.purchaseservice.api.dto.response.PodProductUnitDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,9 +13,9 @@ import lombok.experimental.FieldDefaults;
 public class PurchaseOrderDetailDTO {
     String purchaseOrderDetailId;
 
-    String productId;
+    PodProductDTO product;
 
-    String productUnitId;
+    PodProductUnitDTO productUnit;
 
     Integer quantity;
 
