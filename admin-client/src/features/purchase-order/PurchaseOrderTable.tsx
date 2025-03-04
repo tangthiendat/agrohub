@@ -6,7 +6,7 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import { Page, IPurchaseOrderTableItem } from "../../interfaces";
+import { Page, IPurchaseOrderListItem } from "../../interfaces";
 import {
   getDefaultFilterValue,
   getDefaultSortOrder,
@@ -14,7 +14,10 @@ import {
 } from "../../utils/filter";
 import { TableProps } from "antd/lib";
 import { PurchaseOrderStatus } from "../../common/enums";
-import { PURCHASE_ORDER_STATUS_COLOR } from "../../common/constants";
+import {
+  PURCHASE_ORDER_STATUS_COLOR,
+  PURCHASE_ORDER_STATUS_NAME,
+} from "../../common/constants";
 import {
   getFilterIconColor,
   getSortDownIconColor,
@@ -22,7 +25,7 @@ import {
 } from "../../utils/color";
 
 interface PurchaseOrderTableProps {
-  purchaseOrderPage?: Page<IPurchaseOrderTableItem>;
+  purchaseOrderPage?: Page<IPurchaseOrderListItem>;
   isLoading: boolean;
 }
 
@@ -57,7 +60,7 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
     }
   }, [purchaseOrderPage]);
 
-  const handleTableChange: TableProps<IPurchaseOrderTableItem>["onChange"] = (
+  const handleTableChange: TableProps<IPurchaseOrderListItem>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -109,7 +112,7 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
     setSearchParams(searchParams);
   };
 
-  const columns: TableProps<IPurchaseOrderTableItem>["columns"] = [
+  const columns: TableProps<IPurchaseOrderListItem>["columns"] = [
     {
       title: "ID",
       dataIndex: "purchaseOrderId",
@@ -157,12 +160,14 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      width: "10%",
+      width: "15%",
       render: (status: PurchaseOrderStatus) => (
-        <Tag color={PURCHASE_ORDER_STATUS_COLOR[status]}>{status}</Tag>
+        <Tag color={PURCHASE_ORDER_STATUS_COLOR[status]}>
+          {PURCHASE_ORDER_STATUS_NAME[status]}
+        </Tag>
       ),
       filters: Object.values(PurchaseOrderStatus).map((status) => ({
-        text: status,
+        text: PURCHASE_ORDER_STATUS_NAME[status],
         value: status,
       })),
       defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
@@ -176,7 +181,7 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
     <Table
       bordered={false}
       columns={columns}
-      rowKey={(record: IPurchaseOrderTableItem) => record.purchaseOrderId}
+      rowKey={(record: IPurchaseOrderListItem) => record.purchaseOrderId}
       pagination={tableParams.pagination}
       dataSource={purchaseOrderPage?.content}
       rowClassName={(_, index) =>

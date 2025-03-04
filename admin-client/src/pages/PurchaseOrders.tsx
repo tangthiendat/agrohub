@@ -1,79 +1,60 @@
-import { useNavigate, useSearchParams } from "react-router";
-import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { SearchProps } from "antd/es/input";
-import { useQuery } from "@tanstack/react-query";
+import { Button, Tabs, TabsProps } from "antd";
+import { useNavigate, useSearchParams } from "react-router";
 import Access from "../features/auth/Access";
-import Search from "antd/es/input/Search";
-import PurchaseOrderTable from "../features/purchase-order/PurchaseOrderTable";
+import AllPurchaseOrderTab from "../features/purchase-order/AllPurchaseOrderTab";
 import { PERMISSIONS } from "../common/constants";
-import { useTitle } from "../common/hooks";
 import { Module } from "../common/enums";
-import {
-  PaginationParams,
-  PurchaseOrderFilterCriteria,
-  SortParams,
-} from "../interfaces";
-import { purchaseOrderService } from "../services";
+import { useTitle } from "../common/hooks";
+import PendingOrderList from "../features/purchase-order/PendingOrderList";
 
 const PurchaseOrders: React.FC = () => {
   useTitle("Đơn đặt hàng nhà cung cấp");
-  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const pagination: PaginationParams = {
-    page: Number(searchParams.get("page")) || 1,
-    pageSize: Number(searchParams.get("pageSize")) || 10,
-  };
-
-  const sort: SortParams = {
-    sortBy: searchParams.get("sortBy") || "",
-    direction: searchParams.get("direction") || "",
-  };
-
-  const filter: PurchaseOrderFilterCriteria = {
-    query: searchParams.get("query") || undefined,
-    status: searchParams.get("status") || undefined,
-  };
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["suppliers", pagination, sort, filter].filter((key) => {
-      if (typeof key === "string") {
-        return key !== "";
-      } else if (key instanceof Object) {
-        return Object.values(key).some(
-          (value) => value !== undefined && value !== "",
-        );
+  function handleTabChange(key: string) {
+    if (key !== "all") {
+      //reset all query params
+      if (searchParams.has("query")) {
+        searchParams.delete("query");
       }
-    }),
-    queryFn: () => purchaseOrderService.getPage(pagination, sort, filter),
-  });
-
-  const handleSearch: SearchProps["onSearch"] = (value) => {
-    if (value) {
-      searchParams.set("query", value);
-    } else {
-      searchParams.delete("query");
+      if (searchParams.has("status")) {
+        searchParams.delete("status");
+      }
+      if (searchParams.has("page")) {
+        searchParams.delete("page");
+      }
+      if (searchParams.has("pageSize")) {
+        searchParams.delete("pageSize");
+      }
+      setSearchParams(searchParams);
     }
-    setSearchParams(searchParams);
-  };
+  }
+
+  const items: TabsProps["items"] = [
+    {
+      key: "all",
+      label: "Tất cả",
+      children: <AllPurchaseOrderTab />,
+    },
+    {
+      key: "pending",
+      label: "Chờ xác nhận",
+      children: <PendingOrderList />,
+    },
+    {
+      key: "approved",
+      label: "Đã xác nhận",
+      children: "Đã xác nhận",
+    },
+  ];
 
   return (
     <Access permission={PERMISSIONS[Module.PURCHASE_ORDER].GET_PAGE}>
       <div className="card">
-        <h2 className="mb-3 text-xl font-semibold">
-          Đơn đặt hàng nhà cung cấp
-        </h2>
-        <div className="mb-5 flex items-center justify-between">
-          <div className="w-[40%]">
-            <Search
-              placeholder="Nhập mã đơn đặt hàng hoặc tên nhà cung cấp"
-              defaultValue={searchParams.get("query") || ""}
-              enterButton
-              allowClear
-              onSearch={handleSearch}
-            />
-          </div>
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Đơn đặt hàng nhà cung cấp</h2>
           <Access
             permission={PERMISSIONS[Module.PURCHASE_ORDER].CREATE}
             hideChildren
@@ -87,10 +68,7 @@ const PurchaseOrders: React.FC = () => {
             </Button>
           </Access>
         </div>
-        <PurchaseOrderTable
-          purchaseOrderPage={data?.payload}
-          isLoading={isLoading}
-        />
+        <Tabs items={items} defaultActiveKey="all" onChange={handleTabChange} />
       </div>
     </Access>
   );

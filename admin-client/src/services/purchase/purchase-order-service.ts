@@ -3,7 +3,7 @@ import { createApiClient } from "../../config/axios/api-client";
 import {
   ApiResponse,
   CreatePurchaseOrderRequest,
-  IPurchaseOrderTableItem,
+  IPurchaseOrderListItem,
   Page,
   PaginationParams,
   PurchaseOrderFilterCriteria,
@@ -18,7 +18,10 @@ interface IPurchaseOrderService {
     pagination: PaginationParams,
     sort?: SortParams,
     filter?: PurchaseOrderFilterCriteria,
-  ): Promise<ApiResponse<Page<IPurchaseOrderTableItem>>>;
+  ): Promise<ApiResponse<Page<IPurchaseOrderListItem>>>;
+  get(
+    filter: PurchaseOrderFilterCriteria,
+  ): Promise<ApiResponse<IPurchaseOrderListItem[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/purchase-orders", {
@@ -36,7 +39,7 @@ class PurchaseOrderService implements IPurchaseOrderService {
     pagination: PaginationParams,
     sort?: SortParams,
     filter?: PurchaseOrderFilterCriteria,
-  ): Promise<ApiResponse<Page<IPurchaseOrderTableItem>>> {
+  ): Promise<ApiResponse<Page<IPurchaseOrderListItem>>> {
     return (
       await apiClient.get("/page", {
         params: {
@@ -47,6 +50,12 @@ class PurchaseOrderService implements IPurchaseOrderService {
         },
       })
     ).data;
+  }
+
+  async get(
+    filter: PurchaseOrderFilterCriteria,
+  ): Promise<ApiResponse<IPurchaseOrderListItem[]>> {
+    return (await apiClient.get("", { params: filter })).data;
   }
 }
 

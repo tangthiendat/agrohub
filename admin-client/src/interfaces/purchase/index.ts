@@ -68,7 +68,7 @@ export interface CreatePurchaseOrderRequest {
   note?: string;
 }
 
-export interface IPurchaseOrderTableItem {
+export interface IPurchaseOrderListItem {
   purchaseOrderId: string;
   supplierName: string;
   orderDate: string;
