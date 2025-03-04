@@ -67,3 +67,16 @@ export interface CreatePurchaseOrderRequest {
   purchaseOrderDetails: CreatePurchaseOrderDetail[];
   note?: string;
 }
+
+export interface IPurchaseOrderTableItem {
+  purchaseOrderId: string;
+  supplierName: string;
+  orderDate: string;
+  expectedDeliveryDate: string;
+  status: PurchaseOrderStatus;
+}
+
+export interface PurchaseOrderFilterCriteria {
+  query?: string;
+  status?: PurchaseOrderStatus;
+}
