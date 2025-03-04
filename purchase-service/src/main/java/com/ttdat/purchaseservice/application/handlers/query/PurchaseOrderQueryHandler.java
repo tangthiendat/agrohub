@@ -15,6 +15,7 @@ import com.ttdat.purchaseservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.purchaseservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
+import org.axonframework.queryhandling.QueryMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,9 +31,12 @@ public class PurchaseOrderQueryHandler {
     private final PurchaseOrderMapper purchaseOrderMapper;
 
     @QueryHandler
-    public PurchaseOrderPageResult handle(GetPurchaseOrderPageQuery getPurchaseOrderPageQuery) {
+    public PurchaseOrderPageResult handle(GetPurchaseOrderPageQuery getPurchaseOrderPageQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        Map<String, String> filterParams = getPurchaseOrderPageQuery.getFilterParams();
+        filterParams.put("warehouseId", warehouseId.toString());
         Pageable pageable = PaginationUtils.getPageable(getPurchaseOrderPageQuery.getPaginationParams(), getPurchaseOrderPageQuery.getSortParams());
-        Specification<PurchaseOrder> purchaseOrderSpec = getPurchaseOrderSpec(getPurchaseOrderPageQuery.getFilterParams());
+        Specification<PurchaseOrder> purchaseOrderSpec = getPurchaseOrderSpec(filterParams);
         Page<PurchaseOrder> purchaseOrderPage = purchaseOrderRepository.findAll(purchaseOrderSpec, pageable);
         return PurchaseOrderPageResult.builder()
                 .meta(PaginationUtils.getPaginationMeta(purchaseOrderPage))
@@ -42,7 +46,8 @@ public class PurchaseOrderQueryHandler {
 
     public Specification<PurchaseOrder> getPurchaseOrderSpec(Map<String, String> filterParams) {
         Specification<PurchaseOrder> purchaseOrderSpec = Specification.where(null);
-        purchaseOrderSpec = purchaseOrderSpec.and(SpecificationUtils.buildSpecification(filterParams, "status", String.class));
+        purchaseOrderSpec = purchaseOrderSpec.and(SpecificationUtils.buildSpecification(filterParams, "warehouseId", Long.class))
+                .and(SpecificationUtils.buildSpecification(filterParams, "status", String.class));
         if (filterParams.containsKey("query")) {
             String searchValue = filterParams.get("query");
             Specification<PurchaseOrder> querySpec = (root, query, criteriaBuilder) -> {
@@ -59,15 +64,18 @@ public class PurchaseOrderQueryHandler {
     }
 
     @QueryHandler
-    public PurchaseOrderDTO handle(GetPurchaseOrderByIdQuery getPurchaseOrderByIdQuery){
+    public PurchaseOrderDTO handle(GetPurchaseOrderByIdQuery getPurchaseOrderByIdQuery) {
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findById(getPurchaseOrderByIdQuery.getPurchaseOrderId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
         return purchaseOrderMapper.toDTO(purchaseOrder);
     }
 
     @QueryHandler
-    public List<PurchaseOrderListItem> handle(GetAllPurchaseOrderQuery getAllPurchaseOrderQuery){
-        Specification<PurchaseOrder> purchaseOrderSpec = getPurchaseOrderSpec(getAllPurchaseOrderQuery.getFilterParams());
+    public List<PurchaseOrderListItem> handle(GetAllPurchaseOrderQuery getAllPurchaseOrderQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        Map<String, String> filterParams = getAllPurchaseOrderQuery.getFilterParams();
+        filterParams.put("warehouseId", warehouseId.toString());
+        Specification<PurchaseOrder> purchaseOrderSpec = getPurchaseOrderSpec(filterParams);
         List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll(purchaseOrderSpec);
         return purchaseOrderMapper.toTableItemList(purchaseOrders);
     }
