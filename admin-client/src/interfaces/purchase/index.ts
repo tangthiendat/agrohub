@@ -1,5 +1,8 @@
 import { DiscountType, PurchaseOrderStatus } from "../../common/enums";
+import { IUserInfo } from "../auth";
 import { Auditable } from "../common";
+import { IWarehouse } from "../inventory";
+import { IProduct } from "../product";
 
 export interface ISupplier extends Auditable {
   supplierId: string;
@@ -26,7 +29,7 @@ export interface ISupplierProduct {
 
 export interface IPurchaseOrderDetail {
   detailId: string;
-  productId: string;
+  product: IProduct;
   productUnitId: number;
   quantity: number;
 }
@@ -34,7 +37,8 @@ export interface IPurchaseOrderDetail {
 export interface IPurchaseOrder extends Auditable {
   purchaseOrderId: string;
   supplier: ISupplier;
-  warehouseId: number;
+  warehouse: IWarehouse;
+  user: IUserInfo;
   orderDate: string;
   expectedDeliveryDate: string;
   status: PurchaseOrderStatus;
