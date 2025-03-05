@@ -1,6 +1,7 @@
 package com.ttdat.userservice.application.mappers;
 
 import com.ttdat.core.api.dto.response.AuthRole;
+import com.ttdat.core.api.dto.response.RoleInfo;
 import com.ttdat.userservice.api.dto.common.RoleDTO;
 import com.ttdat.userservice.api.dto.response.RoleOption;
 import com.ttdat.userservice.domain.entities.Role;
@@ -18,6 +19,8 @@ public interface RoleMapper extends EntityMapper<RoleDTO, Role> {
     RoleOption toRoleOption(Role role);
 
     List<RoleOption> toRoleOptionList(List<Role> roles);
+
+    RoleInfo toRoleInfo(Role role);
 
     AuthRole toAuthRole(Role role);
 

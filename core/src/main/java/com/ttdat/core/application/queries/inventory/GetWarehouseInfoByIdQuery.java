@@ -1,15 +1,11 @@
-package com.ttdat.userservice.application.commands.user;
+package com.ttdat.core.application.queries.inventory;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.ttdat.core.domain.entities.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -17,22 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
-public class UpdateUserCommand {
-    UUID userId;
-
-    String fullName;
-
-    Gender gender;
-
-    boolean active;
-
+public class GetWarehouseInfoByIdQuery {
     Long warehouseId;
-
-    String email;
-
-    LocalDate dob;
-
-    String phoneNumber;
-
-    Long roleId;
 }

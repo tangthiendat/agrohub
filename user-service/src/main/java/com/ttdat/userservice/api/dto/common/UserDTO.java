@@ -1,6 +1,6 @@
 package com.ttdat.userservice.api.dto.common;
 
-import com.ttdat.userservice.domain.entities.Gender;
+import com.ttdat.core.domain.entities.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

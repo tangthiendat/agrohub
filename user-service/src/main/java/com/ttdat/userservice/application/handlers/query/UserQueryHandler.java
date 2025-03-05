@@ -1,10 +1,11 @@
 package com.ttdat.userservice.application.handlers.query;
 
 import com.ttdat.core.api.dto.response.PaginationMeta;
+import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.core.application.queries.user.GetUserInfoByIdQuery;
 import com.ttdat.userservice.api.dto.common.UserDTO;
-import com.ttdat.userservice.api.dto.response.UserInfo;
 import com.ttdat.userservice.api.dto.response.UserPageResult;
 import com.ttdat.userservice.application.mappers.UserMapper;
 import com.ttdat.userservice.application.queries.user.GetUserByEmailQuery;
@@ -87,6 +88,12 @@ public class UserQueryHandler {
     public UserInfo handle(GetUserInfoQuery getUserInfoQuery, QueryMessage<?,?> queryMessage){
         String userIdStr = (String) queryMessage.getMetaData().get("userId");
         User user = getUserById(UUID.fromString(userIdStr));
+        return userMapper.toUserInfo(user);
+    }
+
+    @QueryHandler
+    public UserInfo handle(GetUserInfoByIdQuery getUserInfoByIdQuery){
+        User user = getUserById(UUID.fromString(getUserInfoByIdQuery.getUserId()));
         return userMapper.toUserInfo(user);
     }
 }

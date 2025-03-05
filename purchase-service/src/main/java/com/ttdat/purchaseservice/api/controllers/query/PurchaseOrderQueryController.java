@@ -3,6 +3,10 @@ package com.ttdat.purchaseservice.api.controllers.query;
 import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
+import com.ttdat.core.api.dto.response.UserInfo;
+import com.ttdat.core.api.dto.response.WarehouseInfo;
+import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
+import com.ttdat.core.application.queries.user.GetUserInfoByIdQuery;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.purchaseservice.api.dto.common.PurchaseOrderDTO;
 import com.ttdat.purchaseservice.api.dto.response.PurchaseOrderListItem;
@@ -68,6 +72,16 @@ public class PurchaseOrderQueryController {
                 .purchaseOrderId(id)
                 .build();
         PurchaseOrderDTO purchaseOrderDTO = queryGateway.query(getPurchaseOrderByIdQuery, ResponseTypes.instanceOf(PurchaseOrderDTO.class)).join();
+        GetUserInfoByIdQuery getUserInfoByIdQuery = GetUserInfoByIdQuery.builder()
+                .userId(purchaseOrderDTO.getUser().getUserId())
+                .build();
+        UserInfo userInfo = queryGateway.query(getUserInfoByIdQuery, ResponseTypes.instanceOf(UserInfo.class)).join();
+        purchaseOrderDTO.setUser(userInfo);
+        GetWarehouseInfoByIdQuery getWarehouseInfoByIdQuery = GetWarehouseInfoByIdQuery.builder()
+                .warehouseId(purchaseOrderDTO.getWarehouse().getWarehouseId())
+                .build();
+        WarehouseInfo warehouseInfo = queryGateway.query(getWarehouseInfoByIdQuery, ResponseTypes.instanceOf(WarehouseInfo.class)).join();
+        purchaseOrderDTO.setWarehouse(warehouseInfo);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<PurchaseOrderDTO>builder()
                         .status(HttpStatus.OK.value())

@@ -1,7 +1,7 @@
 package com.ttdat.userservice.application.mappers;
 
+import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.userservice.api.dto.common.UserDTO;
-import com.ttdat.userservice.api.dto.response.UserInfo;
 import com.ttdat.userservice.domain.entities.Role;
 import com.ttdat.userservice.domain.entities.User;
 import com.ttdat.userservice.domain.events.user.UserCreatedEvent;
