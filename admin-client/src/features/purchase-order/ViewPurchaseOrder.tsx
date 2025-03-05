@@ -1,5 +1,13 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { TableProps } from "antd/lib";
+import toast from "react-hot-toast";
 import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import {
+  Button,
   Card,
   DatePicker,
   Form,
@@ -28,7 +36,12 @@ import {
 } from "../../interfaces";
 import { productService, purchaseOrderService } from "../../services";
 import { formatCurrency, parseCurrency } from "../../utils/number";
-import { TableProps } from "antd/lib";
+import { getNotificationMessage } from "../../utils/notification";
+
+interface UpdatePurchaseOrderStatusArgs {
+  purchaseOrderId: string;
+  status: PurchaseOrderStatus;
+}
 
 const ViewPurchaseOrder: React.FC = () => {
   const { id } = useParams();
@@ -36,6 +49,7 @@ const ViewPurchaseOrder: React.FC = () => {
     IPurchaseOrder | undefined
   >(undefined);
   const [form] = Form.useForm<IPurchaseOrder>();
+  const queryClient = useQueryClient();
   const { data: purchaseOrder, isLoading: isPurchaseOrderLoading } = useQuery({
     queryKey: ["purchase-orders", id],
     queryFn: () => purchaseOrderService.getById(id!),
@@ -68,6 +82,15 @@ const ViewPurchaseOrder: React.FC = () => {
     },
   });
 
+  const { mutate: updatePurchaseOrderStatus, isPending: isUpdating } =
+    useMutation({
+      mutationFn: ({
+        purchaseOrderId,
+        status,
+      }: UpdatePurchaseOrderStatusArgs) =>
+        purchaseOrderService.updateStatus(purchaseOrderId, status),
+    });
+
   useEffect(() => {
     if (purchaseOrder && productsMap) {
       const fullPurchaseOrder = {
@@ -76,6 +99,7 @@ const ViewPurchaseOrder: React.FC = () => {
         purchaseOrderDetails: purchaseOrder.purchaseOrderDetails.map((pod) => ({
           ...pod,
           product: productsMap[pod.product.productId],
+          unitPrice: pod.unitPrice || 0,
         })),
       };
       setCurrentPurchaseOrder(fullPurchaseOrder);
@@ -193,6 +217,66 @@ const ViewPurchaseOrder: React.FC = () => {
             )}
           </div>
         </Space>
+        <div className="mt-2 flex space-x-2">
+          <Button
+            danger
+            disabled={isUpdating}
+            onClick={() => {
+              updatePurchaseOrderStatus(
+                {
+                  purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
+                  status: PurchaseOrderStatus.CANCELLED,
+                },
+                {
+                  onSuccess: () => {
+                    queryClient.invalidateQueries({
+                      queryKey: ["purchase-orders"],
+                    });
+                    toast.success("Đã hủy đơn hàng");
+                  },
+                  onError: (error: Error) => {
+                    toast.error(
+                      getNotificationMessage(error) || "Hủy đơn hàng thất bại",
+                    );
+                  },
+                },
+              );
+            }}
+          >
+            Hủy
+          </Button>
+
+          {currentPurchaseOrder?.status === PurchaseOrderStatus.PENDING && (
+            <Button
+              type="primary"
+              disabled={isUpdating}
+              onClick={() => {
+                updatePurchaseOrderStatus(
+                  {
+                    purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
+                    status: PurchaseOrderStatus.APPROVED,
+                  },
+                  {
+                    onSuccess: () => {
+                      queryClient.invalidateQueries({
+                        queryKey: ["purchase-orders"],
+                      });
+                      toast.success("Đã xác nhận đơn hàng");
+                    },
+                    onError: (error: Error) => {
+                      toast.error(
+                        getNotificationMessage(error) ||
+                          "Xác nhận đơn hàng thất bại",
+                      );
+                    },
+                  },
+                );
+              }}
+            >
+              Xác nhận
+            </Button>
+          )}
+        </div>
       </div>
       <Form
         form={form}
