@@ -197,14 +197,26 @@ const ViewPurchaseOrder: React.FC = () => {
                       (acc, pod) => acc + (pod.unitPrice || 0) * pod.quantity,
                       0,
                     );
+                    const vatRate = currentPurchaseOrder?.vatRate || 0;
+                    const discountValue =
+                      currentPurchaseOrder?.discountValue || 0;
+                    const discountType = currentPurchaseOrder?.discountType;
+                    const finalAmount = getFinalAmount(
+                      totalAmount,
+                      discountValue,
+                      discountType,
+                      vatRate,
+                    );
                     form.setFieldsValue({
                       totalAmount: totalAmount,
                       purchaseOrderDetails: newPODetails,
+                      finalAmount: finalAmount,
                     });
                     setCurrentPurchaseOrder({
                       ...currentPurchaseOrder!,
                       purchaseOrderDetails: newPODetails || [],
                       totalAmount: totalAmount || 0,
+                      finalAmount: finalAmount,
                     });
                   }}
                 />
@@ -546,7 +558,8 @@ const ViewPurchaseOrder: React.FC = () => {
                   min={0}
                   onChange={(value) => {
                     const totalAmount = currentPurchaseOrder?.totalAmount || 0;
-                    const discountValue = value || 0;
+                    const discountValue =
+                      currentPurchaseOrder?.discountValue || 0;
                     const discountType = currentPurchaseOrder?.discountType;
 
                     const finalAmount = getFinalAmount(
