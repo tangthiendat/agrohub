@@ -5,3 +5,9 @@ export interface IWarehouse extends Auditable {
   warehouseName: string;
   address: string;
 }
+
+export interface IWarehouseInfo {
+  warehouseId: number;
+  warehouseName: string;
+  address: string;
+}

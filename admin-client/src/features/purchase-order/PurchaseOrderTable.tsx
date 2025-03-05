@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { Table, TablePaginationConfig, Tag } from "antd";
 import {
   CaretDownFilled,
@@ -23,6 +23,7 @@ import {
   getSortDownIconColor,
   getSortUpIconColor,
 } from "../../utils/color";
+import ViewIcon from "../../common/components/icons/ViewIcon";
 
 interface PurchaseOrderTableProps {
   purchaseOrderPage?: Page<IPurchaseOrderListItem>;
@@ -38,6 +39,7 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
@@ -173,6 +175,17 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
       defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
+    },
+    {
+      title: "Hành động",
+      key: "action",
+      width: "15%",
+      render: (_, record: IPurchaseOrderListItem) => (
+        <ViewIcon
+          tooltipTitle="Xem chi tiết"
+          onClick={() => navigate(record.purchaseOrderId)}
+        />
       ),
     },
   ];

@@ -94,7 +94,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
         ...(hasAuthChildren
           ? [
               {
-                label: "Xác thực",
+                label: "Quản trị",
                 key: "auth",
                 icon: <IoShieldCheckmark />,
                 children: [
