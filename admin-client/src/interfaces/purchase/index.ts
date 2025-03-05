@@ -49,6 +49,7 @@ export interface IPurchaseOrder extends Auditable {
   vatRate: number;
   finalAmount: number;
   purchaseOrderDetails: IPurchaseOrderDetail[];
+  note?: string;
 }
 
 export interface CreatePurchaseOrderDetail {

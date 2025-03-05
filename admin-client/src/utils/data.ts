@@ -29,9 +29,13 @@ export function getFinalAmount(
   vatRate: number,
 ): number {
   if (discountType === DiscountType.PERCENT) {
-    return totalAmount - totalAmount * (discountValue / 100);
+    return (
+      totalAmount -
+      totalAmount * (discountValue / 100) +
+      getVATValue(totalAmount, vatRate)
+    );
   }
-  return totalAmount - getVATValue(totalAmount, vatRate) - discountValue;
+  return totalAmount + getVATValue(totalAmount, vatRate) - discountValue;
 }
 
 export function getCurrentProductUnitPrice(

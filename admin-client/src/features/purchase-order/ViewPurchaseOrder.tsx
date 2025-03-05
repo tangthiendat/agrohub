@@ -17,6 +17,7 @@ import {
   Space,
   Table,
   Tag,
+  Typography,
 } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
@@ -37,6 +38,7 @@ import {
 import { productService, purchaseOrderService } from "../../services";
 import { formatCurrency, parseCurrency } from "../../utils/number";
 import { getNotificationMessage } from "../../utils/notification";
+import { convertKeysToSnakeCase, getFinalAmount } from "../../utils/data";
 
 interface UpdatePurchaseOrderStatusArgs {
   purchaseOrderId: string;
@@ -136,7 +138,7 @@ const ViewPurchaseOrder: React.FC = () => {
       title: "Đơn vị tính",
       dataIndex: "productUnit",
       key: "unit",
-      width: "15%",
+      width: "10%",
       render: (productUnit: IProductUnit, record: IPurchaseOrderDetail) => (
         <Select
           disabled
@@ -152,7 +154,7 @@ const ViewPurchaseOrder: React.FC = () => {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
-      width: "15%",
+      width: "10%",
       render: (quantity: number) => (
         <InputNumber value={quantity} min={1} readOnly />
       ),
@@ -178,26 +180,62 @@ const ViewPurchaseOrder: React.FC = () => {
                   step={1000}
                   min={0}
                   addonAfter="VND"
+                  onChange={(value) => {
+                    const newPODetails =
+                      currentPurchaseOrder?.purchaseOrderDetails.map((pod) => {
+                        if (
+                          pod.product?.productId === record.product?.productId
+                        ) {
+                          return {
+                            ...pod,
+                            unitPrice: value as number,
+                          };
+                        }
+                        return pod;
+                      });
+                    const totalAmount = newPODetails?.reduce(
+                      (acc, pod) => acc + (pod.unitPrice || 0) * pod.quantity,
+                      0,
+                    );
+                    form.setFieldsValue({
+                      totalAmount: totalAmount,
+                      purchaseOrderDetails: newPODetails,
+                    });
+                    setCurrentPurchaseOrder({
+                      ...currentPurchaseOrder!,
+                      purchaseOrderDetails: newPODetails || [],
+                      totalAmount: totalAmount || 0,
+                    });
+                  }}
                 />
               );
             },
           },
         ]
       : []),
-    // {
-    //   title: "Thành tiền",
-    //   dataIndex: "productUnit",
-    //   key: "total",
-    //   width: "15%",
-    //   render: (productUnit: IProductUnit, record: PurchaseOrderDetailState) => {
-    //     const currentProductUnitPrice = getCurrentProductUnitPrice(
-    //       record.product,
-    //       productUnit.productUnitId,
-    //     );
-    //     return formatCurrency(currentProductUnitPrice.price * record.quantity);
-    //   },
-    // },
+    ...(currentPurchaseOrder?.status === PurchaseOrderStatus.APPROVED ||
+    currentPurchaseOrder?.status === PurchaseOrderStatus.COMPLETED
+      ? [
+          {
+            title: "Thành tiền",
+            dataIndex: "productUnit",
+            key: "total",
+            width: "15%",
+            render: (_: IProductUnit, record: IPurchaseOrderDetail) => {
+              return formatCurrency((record.unitPrice || 0) * record.quantity);
+            },
+          },
+        ]
+      : []),
   ];
+
+  function handleFinish() {
+    const updatedPurchaseOrder = {
+      ...currentPurchaseOrder,
+      note: form.getFieldValue("note"),
+    };
+    console.log(convertKeysToSnakeCase(updatedPurchaseOrder));
+  }
 
   return (
     <div className="card">
@@ -276,12 +314,22 @@ const ViewPurchaseOrder: React.FC = () => {
               Xác nhận
             </Button>
           )}
+          {currentPurchaseOrder?.status === PurchaseOrderStatus.APPROVED && (
+            <Button
+              type="primary"
+              onClick={() => {
+                form.submit();
+              }}
+            >
+              Cập nhật
+            </Button>
+          )}
         </div>
       </div>
       <Form
         form={form}
         className="mb-6"
-        // onFinish={handleFinish}
+        onFinish={handleFinish}
         layout="vertical"
       >
         <div className="flex items-center justify-between gap-6">
@@ -368,12 +416,47 @@ const ViewPurchaseOrder: React.FC = () => {
                   addonAfter="VND"
                 />
               </Form.Item>
-              <Form.Item label="Chiết khấu" name="discountValue">
+              <Form.Item
+                label="Chiết khấu"
+                name="discountValue"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      if (
+                        currentPurchaseOrder?.discountType ===
+                          DiscountType.AMOUNT &&
+                        value > currentPurchaseOrder?.totalAmount
+                      ) {
+                        return Promise.reject(
+                          new Error(
+                            "Chiết khấu không được lớn hơn tổng tiền hàng",
+                          ),
+                        );
+                      }
+                      if (
+                        currentPurchaseOrder?.discountType ===
+                          DiscountType.PERCENT &&
+                        value > 100
+                      ) {
+                        return Promise.reject(
+                          new Error("Chiết khấu không được lớn hơn 100%"),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
                 <InputNumber
                   className="w-full"
+                  value={currentPurchaseOrder?.discountValue}
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
-                  step={1000}
+                  step={
+                    currentPurchaseOrder?.discountType === DiscountType.PERCENT
+                      ? 1
+                      : 1000
+                  }
                   min={0}
                   addonAfter={
                     <Select
@@ -392,25 +475,103 @@ const ViewPurchaseOrder: React.FC = () => {
                           label: "%",
                         },
                       ]}
-                      // onChange={(value) => {
-                      //   setDiscountType(value);
-                      // }}
+                      onChange={(value) => {
+                        const totalAmount =
+                          currentPurchaseOrder?.totalAmount || 0;
+
+                        const vatRate = currentPurchaseOrder?.vatRate || 0;
+                        const finalAmount = getFinalAmount(
+                          totalAmount,
+                          0,
+                          value,
+                          vatRate,
+                        );
+                        form.setFieldsValue({
+                          discountValue: 0,
+                          finalAmount: finalAmount,
+                        });
+                        setCurrentPurchaseOrder({
+                          ...currentPurchaseOrder!,
+                          discountValue: 0,
+                          discountType: value,
+                          finalAmount: finalAmount,
+                        });
+                      }}
                     />
                   }
+                  onChange={(value) => {
+                    const totalAmount = currentPurchaseOrder?.totalAmount || 0;
+                    const discountValue = value || 0;
+                    const discountType = currentPurchaseOrder?.discountType;
+                    const vatRate = currentPurchaseOrder?.vatRate || 0;
+                    const finalAmount = getFinalAmount(
+                      totalAmount,
+                      discountValue,
+                      discountType,
+                      vatRate,
+                    );
+                    form.setFieldsValue({
+                      discountValue,
+                      finalAmount: finalAmount,
+                    });
+                    setCurrentPurchaseOrder({
+                      ...currentPurchaseOrder!,
+                      discountValue,
+                      finalAmount: finalAmount,
+                    });
+                  }}
                 />
               </Form.Item>
-              <Form.Item label="VAT" name="vatRate">
+              <Form.Item
+                label="VAT"
+                name="vatRate"
+                rules={[
+                  {
+                    validator: (_, value) => {
+                      if (value > 100) {
+                        return Promise.reject(
+                          new Error("VAT không được lớn hơn 100%"),
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  },
+                ]}
+              >
                 <InputNumber
+                  value={currentPurchaseOrder?.vatRate}
                   className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   min={0}
+                  onChange={(value) => {
+                    const totalAmount = currentPurchaseOrder?.totalAmount || 0;
+                    const discountValue = value || 0;
+                    const discountType = currentPurchaseOrder?.discountType;
+
+                    const finalAmount = getFinalAmount(
+                      totalAmount,
+                      discountValue,
+                      discountType,
+                      value || 0,
+                    );
+                    form.setFieldsValue({
+                      vatRate: value || 0,
+                      finalAmount: finalAmount,
+                    });
+                    setCurrentPurchaseOrder({
+                      ...currentPurchaseOrder,
+                      vatRate: value || 0,
+                      finalAmount: finalAmount,
+                    });
+                  }}
                   addonAfter="%"
                 />
               </Form.Item>
               <Form.Item label="Tổng cộng" name="finalAmount">
                 <InputNumber
                   readOnly
+                  value={currentPurchaseOrder?.finalAmount}
                   className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
@@ -421,6 +582,9 @@ const ViewPurchaseOrder: React.FC = () => {
             </Card>
           )}
         </div>
+        <Typography.Title level={5} className="mt-6">
+          Chi tiết đơn hàng
+        </Typography.Title>
         <Table
           className="mt-6"
           rowKey={(detail: IPurchaseOrderDetail) => detail.product?.productId}
