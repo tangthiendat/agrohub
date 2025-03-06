@@ -1,6 +1,5 @@
-package com.ttdat.purchaseservice.application.commands.purchaseorder;
+package com.ttdat.purchaseservice.api.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,10 +10,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
-public class CmdPurchaseOrderDetail {
-    String purchaseOrderDetailId;
-
+public class UpdatePurchaseOrderDetailRequest {
     String productId;
 
     String productUnitId;

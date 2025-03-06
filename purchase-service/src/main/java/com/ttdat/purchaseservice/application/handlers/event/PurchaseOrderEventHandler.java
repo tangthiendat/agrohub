@@ -6,6 +6,7 @@ import com.ttdat.purchaseservice.application.mappers.PurchaseOrderMapper;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrder;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderStatusUpdatedEvent;
+import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderUpdatedEvent;
 import com.ttdat.purchaseservice.domain.repositories.PurchaseOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -34,6 +35,13 @@ public class PurchaseOrderEventHandler {
     public void on(PurchaseOrderStatusUpdatedEvent purchaseOrderStatusUpdatedEvent) {
         PurchaseOrder purchaseOrder = getPurchaseOrderById(purchaseOrderStatusUpdatedEvent.getPurchaseOrderId());
         purchaseOrder.setStatus(purchaseOrderStatusUpdatedEvent.getStatus());
+        purchaseOrderRepository.save(purchaseOrder);
+    }
+
+    @EventHandler
+    public void on(PurchaseOrderUpdatedEvent purchaseOrderUpdatedEvent) {
+        PurchaseOrder purchaseOrder = getPurchaseOrderById(purchaseOrderUpdatedEvent.getPurchaseOrderId());
+        purchaseOrderMapper.updateEntityFromEvent(purchaseOrder, purchaseOrderUpdatedEvent);
         purchaseOrderRepository.save(purchaseOrder);
     }
 

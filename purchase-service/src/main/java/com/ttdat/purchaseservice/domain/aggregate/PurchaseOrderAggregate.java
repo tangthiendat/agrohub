@@ -1,11 +1,13 @@
 package com.ttdat.purchaseservice.domain.aggregate;
 
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderCommand;
+import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderStatusCommand;
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderStatusUpdatedEvent;
+import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderUpdatedEvent;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.axonframework.commandhandling.CommandHandler;
@@ -91,6 +93,38 @@ public class PurchaseOrderAggregate {
         AggregateLifecycle.apply(purchaseOrderStatusUpdatedEvent);
     }
 
+    @CommandHandler
+    public void handle(UpdatePurchaseOrderCommand updatePurchaseOrderCommand){
+        List<EvtPurchaseOrderDetail> evtPurchaseOrderDetails = updatePurchaseOrderCommand.getPurchaseOrderDetails() != null ?
+                updatePurchaseOrderCommand.getPurchaseOrderDetails().stream()
+                        .map(cmdPurchaseOrderDetail -> EvtPurchaseOrderDetail.builder()
+                                .purchaseOrderDetailId(cmdPurchaseOrderDetail.getPurchaseOrderDetailId())
+                                .productId(cmdPurchaseOrderDetail.getProductId())
+                                .productUnitId(cmdPurchaseOrderDetail.getProductUnitId())
+                                .quantity(cmdPurchaseOrderDetail.getQuantity())
+                                .unitPrice(cmdPurchaseOrderDetail.getUnitPrice())
+                                .build())
+                        .toList()
+                : List.of();
+        PurchaseOrderUpdatedEvent purchaseOrderUpdatedEvent = PurchaseOrderUpdatedEvent.builder()
+                .purchaseOrderId(updatePurchaseOrderCommand.getPurchaseOrderId())
+                .warehouseId(updatePurchaseOrderCommand.getWarehouseId())
+                .supplierId(updatePurchaseOrderCommand.getSupplierId())
+                .userId(updatePurchaseOrderCommand.getUserId())
+                .orderDate(updatePurchaseOrderCommand.getOrderDate())
+                .expectedDeliveryDate(updatePurchaseOrderCommand.getExpectedDeliveryDate())
+                .status(updatePurchaseOrderCommand.getStatus())
+                .purchaseOrderDetails(evtPurchaseOrderDetails)
+                .totalAmount(updatePurchaseOrderCommand.getTotalAmount())
+                .discountValue(updatePurchaseOrderCommand.getDiscountValue())
+                .discountType(updatePurchaseOrderCommand.getDiscountType())
+                .vatRate(updatePurchaseOrderCommand.getVatRate())
+                .finalAmount(updatePurchaseOrderCommand.getFinalAmount())
+                .note(updatePurchaseOrderCommand.getNote())
+                .build();
+        AggregateLifecycle.apply(purchaseOrderUpdatedEvent);
+    }
+
     @EventSourcingHandler
     public void on(PurchaseOrderCreatedEvent purchaseOrderCreatedEvent) {
         this.purchaseOrderId = purchaseOrderCreatedEvent.getPurchaseOrderId();
@@ -110,9 +144,26 @@ public class PurchaseOrderAggregate {
         }
     }
 
-
     @EventSourcingHandler
     public void on(PurchaseOrderStatusUpdatedEvent purchaseOrderStatusUpdatedEvent){
         this.status = purchaseOrderStatusUpdatedEvent.getStatus();
+    }
+
+    @EventSourcingHandler
+    public void on(PurchaseOrderUpdatedEvent purchaseOrderUpdatedEvent){
+        this.warehouseId = purchaseOrderUpdatedEvent.getWarehouseId();
+        this.supplierId = purchaseOrderUpdatedEvent.getSupplierId();
+        this.userId = purchaseOrderUpdatedEvent.getUserId();
+        this.orderDate = purchaseOrderUpdatedEvent.getOrderDate();
+        this.expectedDeliveryDate = purchaseOrderUpdatedEvent.getExpectedDeliveryDate();
+        this.status = purchaseOrderUpdatedEvent.getStatus();
+        this.totalAmount = purchaseOrderUpdatedEvent.getTotalAmount();
+        this.discountValue = purchaseOrderUpdatedEvent.getDiscountValue();
+        this.discountType = purchaseOrderUpdatedEvent.getDiscountType();
+        this.vatRate = purchaseOrderUpdatedEvent.getVatRate();
+        this.finalAmount = purchaseOrderUpdatedEvent.getFinalAmount();
+        if (purchaseOrderUpdatedEvent.getNote() != null) {
+            this.note = purchaseOrderUpdatedEvent.getNote();
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.ttdat.purchaseservice.api.controllers.command;
 
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.purchaseservice.api.dto.request.CreatePurchaseOrderRequest;
+import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderStatusRequest;
 import com.ttdat.purchaseservice.application.services.PurchaseOrderService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,18 @@ public class PurchaseOrderCommandController {
                 ApiResponse.builder()
                         .status(HttpStatus.OK.value())
                         .message("Purchase order status updated successfully")
+                        .success(true)
+                        .build()
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<Object>> updatePurchaseOrder(@PathVariable String id, @RequestBody UpdatePurchaseOrderRequest updatePurchaseOrderRequest) {
+        purchaseOrderService.updatePurchaseOrder(id, updatePurchaseOrderRequest);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Purchase order updated successfully")
                         .success(true)
                         .build()
         );
