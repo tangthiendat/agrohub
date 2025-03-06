@@ -46,6 +46,6 @@ export enum PurchaseOrderStatus {
 }
 
 export enum DiscountType {
-  PERCENT = "PERCENT",
+  PERCENTAGE = "PERCENTAGE",
   AMOUNT = "AMOUNT",
 }

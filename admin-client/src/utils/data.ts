@@ -28,7 +28,7 @@ export function getFinalAmount(
   discountType: DiscountType,
   vatRate: number,
 ): number {
-  if (discountType === DiscountType.PERCENT) {
+  if (discountType === DiscountType.PERCENTAGE) {
     return (
       totalAmount -
       totalAmount * (discountValue / 100) +

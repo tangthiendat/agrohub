@@ -9,6 +9,7 @@ import {
   PaginationParams,
   PurchaseOrderFilterCriteria,
   SortParams,
+  UpdatePurchaseOrderRequest,
 } from "../../interfaces";
 import { PurchaseOrderStatus } from "../../common/enums";
 
@@ -24,6 +25,10 @@ interface IPurchaseOrderService {
   get(
     filter: PurchaseOrderFilterCriteria,
   ): Promise<ApiResponse<IPurchaseOrderListItem[]>>;
+  update(
+    purchaseOrderId: string,
+    purchaseOrder: UpdatePurchaseOrderRequest,
+  ): Promise<ApiResponse<void>>;
   updateStatus(
     purchaseOrderId: string,
     status: PurchaseOrderStatus,
@@ -63,6 +68,13 @@ class PurchaseOrderService implements IPurchaseOrderService {
     filter: PurchaseOrderFilterCriteria,
   ): Promise<ApiResponse<IPurchaseOrderListItem[]>> {
     return (await apiClient.get("", { params: filter })).data;
+  }
+
+  async update(
+    purchaseOrderId: string,
+    purchaseOrder: UpdatePurchaseOrderRequest,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.put(`/${purchaseOrderId}`, purchaseOrder)).data;
   }
 
   async updateStatus(

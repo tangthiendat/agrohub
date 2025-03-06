@@ -1,5 +1,3 @@
-import { TableProps } from "antd/lib";
-import toast from "react-hot-toast";
 import {
   useMutation,
   useQueries,
@@ -19,8 +17,10 @@ import {
   Tag,
   Typography,
 } from "antd";
+import { TableProps } from "antd/lib";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import BackButton from "../../common/components/BackButton";
 import Loading from "../../common/components/Loading";
@@ -37,13 +37,18 @@ import {
   UpdatePurchaseOrderRequest,
 } from "../../interfaces";
 import { productService, purchaseOrderService } from "../../services";
-import { formatCurrency, parseCurrency } from "../../utils/number";
+import { getFinalAmount } from "../../utils/data";
 import { getNotificationMessage } from "../../utils/notification";
-import { convertKeysToSnakeCase, getFinalAmount } from "../../utils/data";
+import { formatCurrency, parseCurrency } from "../../utils/number";
 
 interface UpdatePurchaseOrderStatusArgs {
   purchaseOrderId: string;
   status: PurchaseOrderStatus;
+}
+
+interface UpdatePurchaseOrderArgs {
+  purchaseOrderId: string;
+  purchaseOrder: UpdatePurchaseOrderRequest;
 }
 
 const ViewPurchaseOrder: React.FC = () => {
@@ -85,14 +90,29 @@ const ViewPurchaseOrder: React.FC = () => {
     },
   });
 
-  const { mutate: updatePurchaseOrderStatus, isPending: isUpdating } =
+  const { mutate: updatePurchaseOrderStatus, isPending: isUpdatingStatus } =
     useMutation({
       mutationFn: ({
         purchaseOrderId,
         status,
       }: UpdatePurchaseOrderStatusArgs) =>
         purchaseOrderService.updateStatus(purchaseOrderId, status),
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["purchase-orders"],
+        });
+      },
     });
+
+  const { mutate: updatePurchaseOrder, isPending: isUpdating } = useMutation({
+    mutationFn: ({ purchaseOrderId, purchaseOrder }: UpdatePurchaseOrderArgs) =>
+      purchaseOrderService.update(purchaseOrderId, purchaseOrder),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["purchase-orders"],
+      });
+    },
+  });
 
   useEffect(() => {
     if (purchaseOrder && productsMap) {
@@ -266,7 +286,22 @@ const ViewPurchaseOrder: React.FC = () => {
       ),
       note: form.getFieldValue("note"),
     };
-    console.log(convertKeysToSnakeCase(updatedPurchaseOrder));
+    updatePurchaseOrder(
+      {
+        purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
+        purchaseOrder: updatedPurchaseOrder,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Cập nhật đơn đặt hàng thành công");
+        },
+        onError: (error: Error) => {
+          toast.error(
+            getNotificationMessage(error) || "Cập nhật đơn đặt hàng thất bại",
+          );
+        },
+      },
+    );
   }
 
   return (
@@ -290,7 +325,7 @@ const ViewPurchaseOrder: React.FC = () => {
         <div className="mt-2 flex space-x-2">
           <Button
             danger
-            disabled={isUpdating}
+            disabled={isUpdatingStatus || isUpdating}
             onClick={() => {
               updatePurchaseOrderStatus(
                 {
@@ -299,9 +334,6 @@ const ViewPurchaseOrder: React.FC = () => {
                 },
                 {
                   onSuccess: () => {
-                    queryClient.invalidateQueries({
-                      queryKey: ["purchase-orders"],
-                    });
                     toast.success("Đã hủy đơn hàng");
                   },
                   onError: (error: Error) => {
@@ -319,7 +351,7 @@ const ViewPurchaseOrder: React.FC = () => {
           {currentPurchaseOrder?.status === PurchaseOrderStatus.PENDING && (
             <Button
               type="primary"
-              disabled={isUpdating}
+              disabled={isUpdatingStatus || isUpdating}
               onClick={() => {
                 updatePurchaseOrderStatus(
                   {
@@ -328,9 +360,6 @@ const ViewPurchaseOrder: React.FC = () => {
                   },
                   {
                     onSuccess: () => {
-                      queryClient.invalidateQueries({
-                        queryKey: ["purchase-orders"],
-                      });
                       toast.success("Đã xác nhận đơn hàng");
                     },
                     onError: (error: Error) => {
@@ -467,7 +496,7 @@ const ViewPurchaseOrder: React.FC = () => {
                       }
                       if (
                         currentPurchaseOrder?.discountType ===
-                          DiscountType.PERCENT &&
+                          DiscountType.PERCENTAGE &&
                         value > 100
                       ) {
                         return Promise.reject(
@@ -485,7 +514,8 @@ const ViewPurchaseOrder: React.FC = () => {
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   step={
-                    currentPurchaseOrder?.discountType === DiscountType.PERCENT
+                    currentPurchaseOrder?.discountType ===
+                    DiscountType.PERCENTAGE
                       ? 1
                       : 1000
                   }
@@ -503,7 +533,7 @@ const ViewPurchaseOrder: React.FC = () => {
                           label: "VND",
                         },
                         {
-                          value: DiscountType.PERCENT,
+                          value: DiscountType.PERCENTAGE,
                           label: "%",
                         },
                       ]}
