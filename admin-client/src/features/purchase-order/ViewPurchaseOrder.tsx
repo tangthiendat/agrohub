@@ -34,6 +34,7 @@ import {
   IProductUnit,
   IPurchaseOrder,
   IPurchaseOrderDetail,
+  UpdatePurchaseOrderRequest,
 } from "../../interfaces";
 import { productService, purchaseOrderService } from "../../services";
 import { formatCurrency, parseCurrency } from "../../utils/number";
@@ -242,8 +243,27 @@ const ViewPurchaseOrder: React.FC = () => {
   ];
 
   function handleFinish() {
-    const updatedPurchaseOrder = {
-      ...currentPurchaseOrder,
+    const updatedPurchaseOrder: UpdatePurchaseOrderRequest = {
+      purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
+      userId: currentPurchaseOrder!.user.userId,
+      warehouseId: currentPurchaseOrder!.warehouse.warehouseId,
+      supplierId: currentPurchaseOrder!.supplier.supplierId,
+      status: currentPurchaseOrder!.status,
+      orderDate: currentPurchaseOrder!.orderDate,
+      expectedDeliveryDate: currentPurchaseOrder!.expectedDeliveryDate,
+      totalAmount: currentPurchaseOrder!.totalAmount,
+      discountValue: currentPurchaseOrder!.discountValue,
+      discountType: currentPurchaseOrder!.discountType,
+      vatRate: currentPurchaseOrder!.vatRate,
+      finalAmount: currentPurchaseOrder!.finalAmount,
+      purchaseOrderDetails: currentPurchaseOrder!.purchaseOrderDetails.map(
+        (pod) => ({
+          productId: pod.product.productId,
+          productUnitId: pod.productUnit.productUnitId,
+          quantity: pod.quantity,
+          unitPrice: pod.unitPrice,
+        }),
+      ),
       note: form.getFieldValue("note"),
     };
     console.log(convertKeysToSnakeCase(updatedPurchaseOrder));

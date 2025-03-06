@@ -74,6 +74,30 @@ export interface CreatePurchaseOrderRequest {
   note?: string;
 }
 
+export interface UpdatePurchaseOrderDetail {
+  productId: string;
+  productUnitId: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface UpdatePurchaseOrderRequest {
+  purchaseOrderId: string;
+  supplierId: string;
+  warehouseId: number;
+  userId: string;
+  orderDate: string;
+  status: PurchaseOrderStatus;
+  expectedDeliveryDate: string;
+  totalAmount: number;
+  discountValue: number;
+  discountType: DiscountType;
+  vatRate: number;
+  finalAmount: number;
+  purchaseOrderDetails: UpdatePurchaseOrderDetail[];
+  note?: string;
+}
+
 export interface IPurchaseOrderListItem {
   purchaseOrderId: string;
   supplierName: string;
