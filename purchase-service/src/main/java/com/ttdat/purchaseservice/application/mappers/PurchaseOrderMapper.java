@@ -4,10 +4,7 @@ import com.ttdat.purchaseservice.api.dto.common.PurchaseOrderDTO;
 import com.ttdat.purchaseservice.api.dto.response.PurchaseOrderListItem;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrder;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
 
 import java.util.List;
 
@@ -27,4 +24,12 @@ public interface PurchaseOrderMapper extends EntityMapper<PurchaseOrderDTO, Purc
     @Mapping(target = "warehouse.warehouseId", source = "warehouseId")
     @Mapping(target = "user.userId", source = "userId")
     PurchaseOrderDTO toDTO(PurchaseOrder entity);
+
+    @AfterMapping
+    default void setPurchaseOrderIdForDetails(@MappingTarget PurchaseOrder purchaseOrder, PurchaseOrderCreatedEvent purchaseOrderCreatedEvent) {
+        if(purchaseOrder.getPurchaseOrderDetails() != null) {
+            purchaseOrder.getPurchaseOrderDetails().forEach(purchaseOrderDetail ->
+                    purchaseOrderDetail.setPurchaseOrder(PurchaseOrder.builder().purchaseOrderId(purchaseOrder.getPurchaseOrderId()).build()));
+        }
+    }
 }

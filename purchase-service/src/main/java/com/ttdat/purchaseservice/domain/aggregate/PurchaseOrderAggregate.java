@@ -1,12 +1,10 @@
 package com.ttdat.purchaseservice.domain.aggregate;
 
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderCommand;
-import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderDetailCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderStatusCommand;
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
-import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderDetailCreatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderStatusUpdatedEvent;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,12 +12,10 @@ import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventsourcing.EventSourcingHandler;
 import org.axonframework.modelling.command.AggregateIdentifier;
 import org.axonframework.modelling.command.AggregateLifecycle;
-import org.axonframework.modelling.command.AggregateMember;
 import org.axonframework.spring.stereotype.Aggregate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Aggregate(type = "PurchaseOrderAggregate")
@@ -41,8 +37,7 @@ public class PurchaseOrderAggregate {
 
     PurchaseOrderStatus status;
 
-    @AggregateMember(routingKey = "purchaseOrderDetailId")
-    List<AggPurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
+    List<EvtPurchaseOrderDetail> purchaseOrderDetails;
 
     BigDecimal totalAmount;
 
@@ -58,6 +53,16 @@ public class PurchaseOrderAggregate {
 
     @CommandHandler
     public PurchaseOrderAggregate(CreatePurchaseOrderCommand purchaseOrderCommand) {
+        List<EvtPurchaseOrderDetail> evtPurchaseOrderDetails = purchaseOrderCommand.getPurchaseOrderDetails() != null ?
+                purchaseOrderCommand.getPurchaseOrderDetails().stream()
+                        .map(cmdPurchaseOrderDetail -> EvtPurchaseOrderDetail.builder()
+                                .purchaseOrderDetailId(cmdPurchaseOrderDetail.getPurchaseOrderDetailId())
+                                .productId(cmdPurchaseOrderDetail.getProductId())
+                                .productUnitId(cmdPurchaseOrderDetail.getProductUnitId())
+                                .quantity(cmdPurchaseOrderDetail.getQuantity())
+                                .build())
+                        .toList()
+                : List.of();
         PurchaseOrderCreatedEvent purchaseOrderCreatedEvent = PurchaseOrderCreatedEvent.builder()
                 .purchaseOrderId(purchaseOrderCommand.getPurchaseOrderId())
                 .warehouseId(purchaseOrderCommand.getWarehouseId())
@@ -70,22 +75,11 @@ public class PurchaseOrderAggregate {
                 .discountValue(purchaseOrderCommand.getDiscountValue())
                 .discountType(purchaseOrderCommand.getDiscountType())
                 .vatRate(purchaseOrderCommand.getVatRate())
+                .purchaseOrderDetails(evtPurchaseOrderDetails)
                 .finalAmount(purchaseOrderCommand.getFinalAmount())
                 .note(purchaseOrderCommand.getNote())
                 .build();
         AggregateLifecycle.apply(purchaseOrderCreatedEvent);
-    }
-
-    @CommandHandler
-    public void handle(CreatePurchaseOrderDetailCommand createPurchaseOrderDetailCommand) {
-        PurchaseOrderDetailCreatedEvent purchaseOrderDetailCreatedEvent = PurchaseOrderDetailCreatedEvent.builder()
-                .purchaseOrderDetailId(createPurchaseOrderDetailCommand.getPurchaseOrderDetailId())
-                .purchaseOrderId(createPurchaseOrderDetailCommand.getPurchaseOrderId())
-                .productId(createPurchaseOrderDetailCommand.getProductId())
-                .productUnitId(createPurchaseOrderDetailCommand.getProductUnitId())
-                .quantity(createPurchaseOrderDetailCommand.getQuantity())
-                .build();
-        AggregateLifecycle.apply(purchaseOrderDetailCreatedEvent);
     }
 
     @CommandHandler
@@ -116,17 +110,6 @@ public class PurchaseOrderAggregate {
         }
     }
 
-    @EventSourcingHandler
-    public void on(PurchaseOrderDetailCreatedEvent purchaseOrderDetailCreatedEvent) {
-        AggPurchaseOrderDetail aggPurchaseOrderDetail = AggPurchaseOrderDetail.builder()
-                .purchaseOrderDetailId(purchaseOrderDetailCreatedEvent.getPurchaseOrderDetailId())
-                .purchaseOrderId(purchaseOrderDetailCreatedEvent.getPurchaseOrderId())
-                .productId(purchaseOrderDetailCreatedEvent.getProductId())
-                .productUnitId(purchaseOrderDetailCreatedEvent.getProductUnitId())
-                .quantity(purchaseOrderDetailCreatedEvent.getQuantity())
-                .build();
-        this.purchaseOrderDetails.add(aggPurchaseOrderDetail);
-    }
 
     @EventSourcingHandler
     public void on(PurchaseOrderStatusUpdatedEvent purchaseOrderStatusUpdatedEvent){

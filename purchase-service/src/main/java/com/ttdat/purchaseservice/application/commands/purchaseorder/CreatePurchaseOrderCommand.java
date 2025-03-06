@@ -9,6 +9,7 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -31,6 +32,8 @@ public class CreatePurchaseOrderCommand {
     LocalDate expectedDeliveryDate;
 
     PurchaseOrderStatus status;
+
+    List<CmdPurchaseOrderDetail> purchaseOrderDetails;
 
     BigDecimal totalAmount;
 

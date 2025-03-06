@@ -47,6 +47,7 @@ public class AxonConfig {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         return JacksonSerializer.builder()
                 .objectMapper(objectMapper)
                 .build();
