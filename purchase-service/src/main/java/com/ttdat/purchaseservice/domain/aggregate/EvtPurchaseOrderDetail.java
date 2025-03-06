@@ -1,23 +1,17 @@
 package com.ttdat.purchaseservice.domain.aggregate;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.axonframework.modelling.command.EntityId;
 
 import java.math.BigDecimal;
 
+@Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AggPurchaseOrderDetail {
-    @EntityId(routingKey = "purchaseOrderDetailId")
+public class EvtPurchaseOrderDetail {
     String purchaseOrderDetailId;
-
-    String purchaseOrderId;
 
     String productId;
 

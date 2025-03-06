@@ -1,7 +1,7 @@
 package com.ttdat.userservice.application.commands.user;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.ttdat.userservice.domain.entities.Gender;
+import com.ttdat.core.domain.entities.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,12 +18,20 @@ import java.time.LocalDate;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class CreateUserCommand {
     String fullName;
+
     Gender gender;
+
     boolean active;
+
     String email;
+
     Long warehouseId;
+
     LocalDate dob;
+
     String password;
+
     String phoneNumber;
+
     Long roleId;
 }

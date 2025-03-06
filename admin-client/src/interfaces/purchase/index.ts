@@ -1,5 +1,8 @@
 import { DiscountType, PurchaseOrderStatus } from "../../common/enums";
+import { IUserInfo } from "../auth";
 import { Auditable } from "../common";
+import { IWarehouseInfo } from "../inventory";
+import { IProduct, IProductUnit } from "../product";
 
 export interface ISupplier extends Auditable {
   supplierId: string;
@@ -26,15 +29,17 @@ export interface ISupplierProduct {
 
 export interface IPurchaseOrderDetail {
   detailId: string;
-  productId: string;
-  productUnitId: number;
+  product: IProduct;
+  productUnit: IProductUnit;
   quantity: number;
+  unitPrice: number;
 }
 
 export interface IPurchaseOrder extends Auditable {
   purchaseOrderId: string;
   supplier: ISupplier;
-  warehouseId: number;
+  warehouse: IWarehouseInfo;
+  user: IUserInfo;
   orderDate: string;
   expectedDeliveryDate: string;
   status: PurchaseOrderStatus;
@@ -44,6 +49,7 @@ export interface IPurchaseOrder extends Auditable {
   vatRate: number;
   finalAmount: number;
   purchaseOrderDetails: IPurchaseOrderDetail[];
+  note?: string;
 }
 
 export interface CreatePurchaseOrderDetail {
@@ -66,4 +72,41 @@ export interface CreatePurchaseOrderRequest {
   finalAmount: number;
   purchaseOrderDetails: CreatePurchaseOrderDetail[];
   note?: string;
+}
+
+export interface UpdatePurchaseOrderDetail {
+  productId: string;
+  productUnitId: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface UpdatePurchaseOrderRequest {
+  purchaseOrderId: string;
+  supplierId: string;
+  warehouseId: number;
+  userId: string;
+  orderDate: string;
+  status: PurchaseOrderStatus;
+  expectedDeliveryDate: string;
+  totalAmount: number;
+  discountValue: number;
+  discountType: DiscountType;
+  vatRate: number;
+  finalAmount: number;
+  purchaseOrderDetails: UpdatePurchaseOrderDetail[];
+  note?: string;
+}
+
+export interface IPurchaseOrderListItem {
+  purchaseOrderId: string;
+  supplierName: string;
+  orderDate: string;
+  expectedDeliveryDate: string;
+  status: PurchaseOrderStatus;
+}
+
+export interface PurchaseOrderFilterCriteria {
+  query?: string;
+  status?: string;
 }

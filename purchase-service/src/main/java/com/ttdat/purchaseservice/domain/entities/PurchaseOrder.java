@@ -53,6 +53,6 @@ public class PurchaseOrder extends Auditable {
 
     String note;
 
-    @OneToMany(mappedBy = "purchaseOrder")
+    @OneToMany(mappedBy = "purchaseOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<PurchaseOrderDetail> purchaseOrderDetails;
 }

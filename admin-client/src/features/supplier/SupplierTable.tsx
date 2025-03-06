@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Space, Table, TablePaginationConfig, TableProps, Tag } from "antd";
 import {
   CaretDownFilled,
@@ -47,6 +47,19 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
       showTotal: (total) => `Tổng ${total} nhà cung cấp`,
     },
   }));
+
+  useEffect(() => {
+    if (supplierPage) {
+      setTableParams((prev) => ({
+        ...prev,
+        pagination: {
+          ...prev.pagination,
+          total: supplierPage.meta?.totalElements || 0,
+          showTotal: (total) => `Tổng ${total} nhà cung cấp`,
+        },
+      }));
+    }
+  }, [supplierPage]);
 
   const handleTableChange: TableProps<ISupplier>["onChange"] = (
     pagination,

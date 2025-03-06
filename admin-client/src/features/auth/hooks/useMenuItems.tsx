@@ -94,7 +94,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
         ...(hasAuthChildren
           ? [
               {
-                label: "Xác thực",
+                label: "Quản trị",
                 key: "auth",
                 icon: <IoShieldCheckmark />,
                 children: [
@@ -200,7 +200,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                     label: (
                       <NavLink to="/purchase-orders">Đơn đặt hàng</NavLink>
                     ),
-                    key: "purchaseOrders",
+                    key: "purchase-orders",
                     icon: <FaFileInvoice />,
                   },
                 ],

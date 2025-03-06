@@ -1,7 +1,9 @@
 package com.ttdat.inventoryservice.application.handlers.query;
 
+import com.ttdat.core.api.dto.response.WarehouseInfo;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
 import com.ttdat.inventoryservice.api.dto.common.WarehouseDTO;
 import com.ttdat.inventoryservice.api.dto.response.WarehousePageResult;
 import com.ttdat.inventoryservice.application.mappers.WarehouseMapper;
@@ -44,11 +46,21 @@ public class WarehouseQueryHandler {
         return warehouseMapper.toDTOList(warehouses);
     }
 
-    @QueryHandler
-    public WarehouseDTO getWarehouseById(GetCurrentUserWarehouseQuery getCurrentUserWarehouseQuery, QueryMessage<?,?> queryMessage) {
-        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
-        Warehouse warehouse = warehouseRepository.findById(warehouseId)
+    private Warehouse getWarehouseById(Long warehouseId) {
+        return warehouseRepository.findById(warehouseId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.WAREHOUSE_NOT_FOUND));
+    }
+
+    @QueryHandler
+    public WarehouseDTO handle(GetCurrentUserWarehouseQuery getCurrentUserWarehouseQuery, QueryMessage<?,?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        Warehouse warehouse = getWarehouseById(warehouseId);
         return warehouseMapper.toDTO(warehouse);
+    }
+
+    @QueryHandler
+    public WarehouseInfo handle(GetWarehouseInfoByIdQuery getWarehouseInfoByIdQuery) {
+        Warehouse warehouse = getWarehouseById(getWarehouseInfoByIdQuery.getWarehouseId());
+        return warehouseMapper.toWarehouseInfo(warehouse);
     }
 }

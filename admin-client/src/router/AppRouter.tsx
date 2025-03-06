@@ -18,6 +18,7 @@ import EditProductSuppliers from "../features/product/EditProductSuppliers";
 import Warehouses from "../pages/Warehouses";
 import PurchaseOrders from "../pages/PurchaseOrders";
 import NewPurchaseOrder from "../features/purchase-order/NewPurchaseOrder";
+import ViewPurchaseOrder from "../features/purchase-order/ViewPurchaseOrder";
 
 const router = createBrowserRouter([
   {
@@ -108,6 +109,10 @@ const router = createBrowserRouter([
           {
             path: "new",
             element: <NewPurchaseOrder />,
+          },
+          {
+            path: ":id",
+            element: <ViewPurchaseOrder />,
           },
         ],
       },

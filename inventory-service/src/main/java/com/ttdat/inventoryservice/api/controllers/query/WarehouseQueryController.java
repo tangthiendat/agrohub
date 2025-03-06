@@ -59,19 +59,19 @@ public class WarehouseQueryController {
         );
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<WarehouseDTO>> getWarehouseById(@PathVariable Long id) {
-        GetWarehouseByIdQuery getWarehouseById = GetWarehouseByIdQuery.builder().warehouseId(id).build();
-        WarehouseDTO warehouseDTO = queryGateway.query(getWarehouseById, ResponseTypes.instanceOf(WarehouseDTO.class)).join();
-        return ResponseEntity.ok(
-                ApiResponse.<WarehouseDTO>builder()
-                        .status(HttpStatus.OK.value())
-                        .success(true)
-                        .message("Get warehouse by id successfully")
-                        .payload(warehouseDTO)
-                        .build()
-        );
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<ApiResponse<WarehouseDTO>> getWarehouseById(@PathVariable Long id) {
+//        GetWarehouseByIdQuery getWarehouseById = GetWarehouseByIdQuery.builder().warehouseId(id).build();
+//        WarehouseDTO warehouseDTO = queryGateway.query(getWarehouseById, ResponseTypes.instanceOf(WarehouseDTO.class)).join();
+//        return ResponseEntity.ok(
+//                ApiResponse.<WarehouseDTO>builder()
+//                        .status(HttpStatus.OK.value())
+//                        .success(true)
+//                        .message("Get warehouse by id successfully")
+//                        .payload(warehouseDTO)
+//                        .build()
+//        );
+//    }
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<WarehouseDTO>> getMyWarehouse() {

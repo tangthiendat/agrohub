@@ -26,8 +26,6 @@ axon:
         mode: subscribing
       purchase-order-group:
         mode: subscribing
-      purchase-order-detail-group:
-        mode: subscribing
 application:
   security:
     rsa:

@@ -42,10 +42,10 @@ export enum PurchaseOrderStatus {
   PENDING = "PENDING",
   APPROVED = "APPROVED",
   COMPLETED = "COMPLETED",
-  CANCELED = "CANCELED",
+  CANCELLED = "CANCELLED",
 }
 
 export enum DiscountType {
-  PERCENT = "PERCENT",
+  PERCENTAGE = "PERCENTAGE",
   AMOUNT = "AMOUNT",
 }

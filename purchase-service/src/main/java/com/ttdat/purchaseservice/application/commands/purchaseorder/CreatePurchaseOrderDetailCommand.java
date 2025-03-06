@@ -12,10 +12,10 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class CreatePurchaseOrderDetailCommand {
-    String purchaseOrderDetailId;
-
     @TargetAggregateIdentifier
     String purchaseOrderId;
+
+    String purchaseOrderDetailId;
 
     String productId;
 

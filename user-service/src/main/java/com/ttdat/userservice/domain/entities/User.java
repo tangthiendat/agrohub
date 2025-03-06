@@ -1,5 +1,6 @@
 package com.ttdat.userservice.domain.entities;
 
+import com.ttdat.core.domain.entities.Gender;
 import com.ttdat.userservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;

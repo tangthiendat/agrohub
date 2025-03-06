@@ -1,6 +1,6 @@
-package com.ttdat.userservice.api.dto.response;
+package com.ttdat.core.api.dto.response;
 
-import com.ttdat.userservice.domain.entities.Gender;
+import com.ttdat.core.domain.entities.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserInfo {
-    UUID userId;
+    String userId;
 
     String fullName;
 
@@ -29,5 +29,5 @@ public class UserInfo {
 
     String phoneNumber;
 
-    RoleOption role;
+    RoleInfo role;
 }

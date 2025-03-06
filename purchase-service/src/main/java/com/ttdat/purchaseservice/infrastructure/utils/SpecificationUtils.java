@@ -21,6 +21,8 @@ public class SpecificationUtils {
                             return criteriaBuilder.equal(root.get(fieldName), criteria.getValue());
                         } else if (fieldType == Boolean.class) {
                             return criteriaBuilder.equal(root.get(fieldName), Boolean.parseBoolean((String) criteria.getValue()));
+                        } else if (fieldType == Long.class) {
+                            return criteriaBuilder.equal(root.get(fieldName), Long.parseLong((String) criteria.getValue()));
                         } else {
                             throw new UnsupportedOperationException("Field type not supported");
                         }
