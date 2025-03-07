@@ -105,18 +105,25 @@ const NewPurchaseOrder: React.FC = () => {
           optionRenderer={(product) => ({
             value: product.productId,
             label: (
-              <div>
-                <div className="flex items-center justify-between gap-2 font-semibold">
-                  <div className="text-wrap">{product.productName} </div>
-                  <div className="bg-sky-100 px-[3px] py-[3px] text-sky-600">
-                    {
-                      product.productUnits.find((unit) => unit.isDefault)!.unit
-                        .unitName
-                    }
+              <div className="flex items-center gap-2">
+                <img
+                  src={product.imageUrl}
+                  alt={product.productName}
+                  className="h-10 w-10 object-cover"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center justify-between gap-2 font-semibold">
+                    <div className="text-wrap">{product.productName} </div>
+                    <div className="bg-sky-100 px-[3px] py-[3px] text-sky-600">
+                      {
+                        product.productUnits.find((unit) => unit.isDefault)!
+                          .unit.unitName
+                      }
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <div className="text-gray-500">ID: {product.productId}</div>
+                  <div>
+                    <div className="text-gray-500">ID: {product.productId}</div>
+                  </div>
                 </div>
               </div>
             ),
