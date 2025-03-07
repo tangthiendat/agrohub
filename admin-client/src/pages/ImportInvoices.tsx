@@ -1,23 +1,22 @@
-import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router";
+import Access from "../features/auth/Access";
+import { useTitle } from "../common/hooks";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
-import { useTitle } from "../common/hooks";
-import Access from "../features/auth/Access";
-import AllPurchaseOrderTab from "../features/purchase-order/AllPurchaseOrderTab";
 
-const PurchaseOrders: React.FC = () => {
-  useTitle("Đơn đặt hàng nhà cung cấp");
+const ImportInvoices: React.FC = () => {
+  useTitle("Phiếu nhập kho");
   const navigate = useNavigate();
 
   return (
-    <Access permission={PERMISSIONS[Module.PURCHASE_ORDER].GET_PAGE}>
+    <Access permission={PERMISSIONS[Module.IMPORT_INVOICE].GET_PAGE}>
       <div className="card">
         <div className="mb-2 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Đơn đặt hàng nhà cung cấp</h2>
+          <h2 className="text-xl font-semibold">Phiếu nhập kho</h2>
           <Access
-            permission={PERMISSIONS[Module.PURCHASE_ORDER].CREATE}
+            permission={PERMISSIONS[Module.IMPORT_INVOICE].CREATE}
             hideChildren
           >
             <Button
@@ -29,10 +28,10 @@ const PurchaseOrders: React.FC = () => {
             </Button>
           </Access>
         </div>
-        <AllPurchaseOrderTab />
+        {/* <AllPurchaseOrderTab /> */}
       </div>
     </Access>
   );
 };
 
-export default PurchaseOrders;
+export default ImportInvoices;

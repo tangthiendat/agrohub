@@ -24,6 +24,7 @@ export enum Module {
   SUPPLIER = "SUPPLIER",
   WAREHOUSE = "WAREHOUSE",
   PURCHASE_ORDER = "PURCHASE ORDER",
+  IMPORT_INVOICE = "IMPORT INVOICE",
 }
 
 export enum Gender {

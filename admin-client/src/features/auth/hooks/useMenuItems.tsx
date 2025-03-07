@@ -79,7 +79,23 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           viewWarehouses,
       );
 
-      const hasPurchaseItem = true;
+      const viewPurchaseOrders = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.PURCHASE_ORDER].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.PURCHASE_ORDER].GET_PAGE.httpMethod,
+      );
+
+      const viewImportInvoices = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.IMPORT_INVOICE].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.IMPORT_INVOICE].GET_PAGE.httpMethod,
+      );
+
+      const hasPurchaseItem = Boolean(viewPurchaseOrders || viewImportInvoices);
 
       const menuItems = [
         {
@@ -196,13 +212,32 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                 key: "purchase",
                 icon: <BiPurchaseTag />,
                 children: [
-                  {
-                    label: (
-                      <NavLink to="/purchase-orders">Đơn đặt hàng</NavLink>
-                    ),
-                    key: "purchase-orders",
-                    icon: <FaFileInvoice />,
-                  },
+                  ...(viewPurchaseOrders
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/purchase-orders">
+                              Đơn đặt hàng
+                            </NavLink>
+                          ),
+                          key: "purchase-orders",
+                          icon: <FaFileInvoice />,
+                        },
+                      ]
+                    : []),
+                  ...(viewImportInvoices
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/import-invoices">
+                              Phiếu nhập kho
+                            </NavLink>
+                          ),
+                          key: "import-invoices",
+                          icon: <FaFileInvoice />,
+                        },
+                      ]
+                    : []),
                 ],
               },
             ]
