@@ -195,6 +195,10 @@ const ViewPurchaseOrder: React.FC = () => {
                 );
               return (
                 <InputNumber
+                  readOnly={
+                    currentPurchaseOrder?.status ===
+                    PurchaseOrderStatus.COMPLETED
+                  }
                   value={currentPODetail?.unitPrice || 0}
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
@@ -323,32 +327,35 @@ const ViewPurchaseOrder: React.FC = () => {
           </div>
         </Space>
         <div className="mt-2 flex space-x-2">
-          <Button
-            danger
-            disabled={isUpdatingStatus || isUpdating}
-            onClick={() => {
-              updatePurchaseOrderStatus(
-                {
-                  purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
-                  status: PurchaseOrderStatus.CANCELLED,
-                },
-                {
-                  onSuccess: () => {
-                    toast.success("Đã hủy đơn hàng");
+          {purchaseOrder?.status !== PurchaseOrderStatus.COMPLETED && (
+            <Button
+              danger
+              disabled={isUpdatingStatus || isUpdating}
+              onClick={() => {
+                updatePurchaseOrderStatus(
+                  {
+                    purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
+                    status: PurchaseOrderStatus.CANCELLED,
                   },
-                  onError: (error: Error) => {
-                    toast.error(
-                      getNotificationMessage(error) || "Hủy đơn hàng thất bại",
-                    );
+                  {
+                    onSuccess: () => {
+                      toast.success("Đã hủy đơn hàng");
+                    },
+                    onError: (error: Error) => {
+                      toast.error(
+                        getNotificationMessage(error) ||
+                          "Hủy đơn hàng thất bại",
+                      );
+                    },
                   },
-                },
-              );
-            }}
-          >
-            Hủy
-          </Button>
+                );
+              }}
+            >
+              Hủy
+            </Button>
+          )}
 
-          {currentPurchaseOrder?.status === PurchaseOrderStatus.PENDING && (
+          {purchaseOrder?.status === PurchaseOrderStatus.PENDING && (
             <Button
               type="primary"
               disabled={isUpdatingStatus || isUpdating}
@@ -375,7 +382,7 @@ const ViewPurchaseOrder: React.FC = () => {
               Xác nhận
             </Button>
           )}
-          {currentPurchaseOrder?.status === PurchaseOrderStatus.APPROVED && (
+          {purchaseOrder?.status === PurchaseOrderStatus.APPROVED && (
             <Button
               type="primary"
               onClick={() => {
@@ -455,9 +462,7 @@ const ViewPurchaseOrder: React.FC = () => {
             <Form.Item label="Ghi chú" name="note">
               <Input.TextArea
                 readOnly={
-                  currentPurchaseOrder?.status ===
-                    PurchaseOrderStatus.PENDING ||
-                  currentPurchaseOrder?.status === PurchaseOrderStatus.CANCELLED
+                  currentPurchaseOrder?.status !== PurchaseOrderStatus.APPROVED
                 }
                 rows={2}
               />
@@ -510,6 +515,10 @@ const ViewPurchaseOrder: React.FC = () => {
               >
                 <InputNumber
                   className="w-full"
+                  readOnly={
+                    currentPurchaseOrder?.status ===
+                    PurchaseOrderStatus.COMPLETED
+                  }
                   value={currentPurchaseOrder?.discountValue}
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
@@ -522,6 +531,10 @@ const ViewPurchaseOrder: React.FC = () => {
                   min={0}
                   addonAfter={
                     <Select
+                      disabled={
+                        currentPurchaseOrder?.status ===
+                        PurchaseOrderStatus.COMPLETED
+                      }
                       value={currentPurchaseOrder?.discountType}
                       style={{ width: "75px" }}
                       dropdownStyle={{
@@ -601,6 +614,10 @@ const ViewPurchaseOrder: React.FC = () => {
                 ]}
               >
                 <InputNumber
+                  readOnly={
+                    currentPurchaseOrder.status ===
+                    PurchaseOrderStatus.COMPLETED
+                  }
                   value={currentPurchaseOrder?.vatRate}
                   className="w-full"
                   formatter={(value) => formatCurrency(value)}
