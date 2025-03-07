@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Space } from "antd";
+import { ReloadOutlined, SaveFilled } from "@ant-design/icons";
 import { useShallow } from "zustand/react/shallow";
 import BackButton from "../../common/components/BackButton";
 import Loading from "../../common/components/Loading";
@@ -74,6 +75,7 @@ const NewPurchaseOrder: React.FC = () => {
         </Space>
         <Space>
           <Button
+            icon={<ReloadOutlined />}
             onClick={() => {
               reset();
               toast.success("Làm mới thành công");
@@ -83,6 +85,7 @@ const NewPurchaseOrder: React.FC = () => {
             Làm mới
           </Button>
           <Button
+            icon={<SaveFilled />}
             type="primary"
             onClick={() => form.submit()}
             loading={isCreating}
