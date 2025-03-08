@@ -110,3 +110,24 @@ export interface PurchaseOrderFilterCriteria {
   query?: string;
   status?: string;
 }
+
+export interface CreateImportInvoiceDetail {
+  productId: string;
+  productUnitId: string;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface CreateImportInvoiceRequest {
+  supplierId: string;
+  warehouseId: number;
+  userId: string;
+  createdDate: string;
+  totalAmount: number;
+  discountValue: number;
+  discountType: DiscountType;
+  vatRate: number;
+  finalAmount: number;
+  importInvoiceDetails: CreateImportInvoiceDetail[];
+  note?: string;
+}
