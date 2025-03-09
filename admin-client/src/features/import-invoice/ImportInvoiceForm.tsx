@@ -80,6 +80,17 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({ form }) => {
       });
       return;
     }
+    //check if all details has batch information (at least 1 batch)
+    const missingBatch = importInvoiceDetails.some(
+      (detail) => detail.batches.length === 0,
+    );
+    if (missingBatch) {
+      modal.error({
+        title: "Lỗi",
+        content: "Vui lòng nhập đầy đủ thông tin lô hàng",
+      });
+      return;
+    }
     const newImportInvoice: CreateImportInvoiceRequest = {
       supplierId: importInvoiceFormValues.supplier.supplierId as string,
       warehouseId: warehouse.warehouseId,
@@ -96,6 +107,11 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({ form }) => {
           productUnitId: detail.productUnit.productUnitId,
           quantity: detail.quantity,
           unitPrice: detail.unitPrice,
+          batches: detail.batches.map((batch) => ({
+            manufacturerDate: batch.manufacturingDate,
+            expirationDate: batch.expirationDate,
+            quantity: batch.quantity,
+          })),
         }),
       ),
       note: importInvoiceFormValues.note as string,

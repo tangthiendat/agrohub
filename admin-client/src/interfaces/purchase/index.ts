@@ -111,11 +111,18 @@ export interface PurchaseOrderFilterCriteria {
   status?: string;
 }
 
+export interface CreateBatchRequest {
+  manufacturerDate: string;
+  expirationDate: string;
+  quantity: number;
+}
+
 export interface CreateImportInvoiceDetail {
   productId: string;
   productUnitId: string;
   quantity: number;
   unitPrice: number;
+  batches: CreateBatchRequest[];
 }
 
 export interface CreateImportInvoiceRequest {

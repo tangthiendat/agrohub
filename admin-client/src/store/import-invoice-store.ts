@@ -13,11 +13,18 @@ import {
 } from "../interfaces";
 import { getFinalAmount } from "../utils/data";
 
+export interface ImportInvoiceDetailBatchState {
+  manufacturingDate: string;
+  expirationDate: string;
+  quantity: number;
+}
+
 export interface ImportInvoiceDetailState {
   product: IProduct;
   productUnit: IProductUnit;
   quantity: number;
   unitPrice: number;
+  batches: ImportInvoiceDetailBatchState[];
 }
 
 export interface ImportInvoiceState {
@@ -36,6 +43,18 @@ export interface ImportInvoiceState {
   updateProductUnit: (productId: string, productUnitId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   updateUnitPrice: (productId: string, unitPrice: number) => void;
+  initBatch: (productId: string) => void;
+  deleteBatch: (productId: string, batchIndex: number) => void;
+  updateBatchManufacturingDate: (
+    productId: string,
+    batchIndex: number,
+    manufacturingDate: string,
+  ) => void;
+  updateBatchQuantity: (
+    productId: string,
+    batchIndex: number,
+    quantity: number,
+  ) => void;
   setSupplier: (supplier: ISupplier) => void;
   setWarehouse: (warehouse: IWarehouse) => void;
   setUser: (user: IUserInfo) => void;
@@ -77,6 +96,7 @@ export const useImportInvoiceStore = create<ImportInvoiceState>()(
                   productUnit: product.productUnits.find((pu) => pu.isDefault)!,
                   quantity: 1,
                   unitPrice: 0,
+                  batches: [],
                 });
               }
             },
@@ -148,6 +168,78 @@ export const useImportInvoiceStore = create<ImportInvoiceState>()(
             },
             false,
             "updateUnitPrice",
+          );
+        },
+        initBatch: (productId: string) => {
+          set(
+            (state) => {
+              const detail = state.importInvoiceDetails.find(
+                (d) => d.product.productId === productId,
+              );
+              if (detail) {
+                detail.batches.push({
+                  quantity: 1,
+                } as ImportInvoiceDetailBatchState);
+              }
+            },
+            false,
+            "initBatch",
+          );
+        },
+        deleteBatch: (productId: string, batchIndex: number) => {
+          set(
+            (state) => {
+              const detail = state.importInvoiceDetails.find(
+                (d) => d.product.productId === productId,
+              );
+              if (detail && detail.batches) {
+                detail.batches.splice(batchIndex, 1);
+              }
+            },
+            false,
+            "deleteBatch",
+          );
+        },
+        updateBatchManufacturingDate: (
+          productId: string,
+          batchIndex: number,
+          manufacturingDate: string,
+        ) => {
+          set(
+            (state) => {
+              const detail = state.importInvoiceDetails.find(
+                (d) => d.product.productId === productId,
+              );
+              if (detail && detail.batches) {
+                detail.batches[batchIndex].manufacturingDate =
+                  manufacturingDate;
+                detail.batches[batchIndex].expirationDate = dayjs(
+                  manufacturingDate,
+                )
+                  .add(detail.product.defaultExpDays, "day")
+                  .format("YYYY-MM-DD");
+              }
+            },
+            false,
+            "updateBatchManufacturingDate",
+          );
+        },
+        updateBatchQuantity: (
+          productId: string,
+          batchIndex: number,
+          quantity: number,
+        ) => {
+          set(
+            (state) => {
+              const detail = state.importInvoiceDetails.find(
+                (d) => d.product.productId === productId,
+              );
+              if (detail && detail.batches) {
+                detail.batches[batchIndex].quantity = quantity;
+              }
+            },
+            false,
+            "updateBatchQuantity",
           );
         },
         setSupplier: (supplier: ISupplier) => {

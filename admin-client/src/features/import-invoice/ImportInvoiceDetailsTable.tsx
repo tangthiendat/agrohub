@@ -1,7 +1,8 @@
-import { InputNumber, Select, Table, TableProps } from "antd";
+import { InputNumber, Select, Table, TableProps, Typography } from "antd";
 import { FormInstance } from "antd/lib";
 import { useShallow } from "zustand/react/shallow";
 import DeleteIcon from "../../common/components/icons/DeleteIcon";
+import NewBatchForm from "./NewBatchForm";
 import { IProductUnit } from "../../interfaces";
 import {
   ImportInvoiceDetailState,
@@ -142,6 +143,17 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
       rowKey={(detail: ImportInvoiceDetailState) => detail.product.productId}
       dataSource={importInvoiceDetails}
       pagination={false}
+      expandable={{
+        expandedRowRender: (record: ImportInvoiceDetailState) => (
+          <>
+            <Typography.Title level={5} className="mb-2">
+              Thông tin lô hàng
+            </Typography.Title>
+            <NewBatchForm importInvoiceDetail={record} />
+          </>
+        ),
+        expandRowByClick: true,
+      }}
       columns={columns}
       bordered={false}
       size="middle"
