@@ -53,3 +53,16 @@ services:
       - "8083:8083"
     networks:
       - agrohub
+
+  debt-service:
+    build:
+      context: .
+      dockerfile: debt-service/Dockerfile.dev
+    image: agrohub/debt-service:dev
+    container_name: debt-service
+    env_file:
+      - debt-service/.env.docker
+    ports:
+      - "8084:8084"
+    networks:
+      - agrohub

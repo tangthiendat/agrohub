@@ -20,6 +20,7 @@ public class PurchaseOrderDetail {
     String purchaseOrderDetailId;
 
     @ManyToOne
+    @JoinColumn(name = "purchase_order_id")
     PurchaseOrder purchaseOrder;
 
     @Column(length = 100)

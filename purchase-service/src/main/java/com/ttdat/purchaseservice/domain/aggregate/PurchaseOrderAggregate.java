@@ -8,6 +8,7 @@ import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderStatusUpdatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderUpdatedEvent;
+import com.ttdat.purchaseservice.domain.valueobject.EvtPurchaseOrderDetail;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.axonframework.commandhandling.CommandHandler;

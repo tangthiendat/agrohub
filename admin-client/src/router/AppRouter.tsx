@@ -19,6 +19,8 @@ import Warehouses from "../pages/Warehouses";
 import PurchaseOrders from "../pages/PurchaseOrders";
 import NewPurchaseOrder from "../features/purchase-order/NewPurchaseOrder";
 import ViewPurchaseOrder from "../features/purchase-order/ViewPurchaseOrder";
+import ImportInvoices from "../pages/ImportInvoices";
+import NewImportInvoice from "../features/import-invoice/NewImportInvoice";
 
 const router = createBrowserRouter([
   {
@@ -113,6 +115,20 @@ const router = createBrowserRouter([
           {
             path: ":id",
             element: <ViewPurchaseOrder />,
+          },
+        ],
+      },
+      {
+        path: "/import-invoices",
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <ImportInvoices />,
+          },
+          {
+            path: "new",
+            element: <NewImportInvoice />,
           },
         ],
       },

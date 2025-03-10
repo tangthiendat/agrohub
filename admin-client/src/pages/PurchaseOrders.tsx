@@ -11,43 +11,6 @@ const PurchaseOrders: React.FC = () => {
   useTitle("Đơn đặt hàng nhà cung cấp");
   const navigate = useNavigate();
 
-  // function handleTabChange(key: string) {
-  //   if (key !== "all") {
-  //     //reset all query params
-  //     if (searchParams.has("query")) {
-  //       searchParams.delete("query");
-  //     }
-  //     if (searchParams.has("status")) {
-  //       searchParams.delete("status");
-  //     }
-  //     if (searchParams.has("page")) {
-  //       searchParams.delete("page");
-  //     }
-  //     if (searchParams.has("pageSize")) {
-  //       searchParams.delete("pageSize");
-  //     }
-  //     setSearchParams(searchParams);
-  //   }
-  // }
-
-  // const items: TabsProps["items"] = [
-  //   {
-  //     key: "all",
-  //     label: "Tất cả",
-  //     children: <AllPurchaseOrderTab />,
-  //   },
-  //   {
-  //     key: "pending",
-  //     label: "Chờ xác nhận",
-  //     children: <PendingOrderList />,
-  //   },
-  //   {
-  //     key: "approved",
-  //     label: "Đã xác nhận",
-  //     children: <ApprovedOrderList />,
-  //   },
-  // ];
-
   return (
     <Access permission={PERMISSIONS[Module.PURCHASE_ORDER].GET_PAGE}>
       <div className="card">

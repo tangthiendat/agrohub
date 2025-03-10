@@ -1,9 +1,11 @@
 package com.ttdat.productservice.domain.aggregate;
 
+import com.ttdat.core.application.commands.product.UpdateProductTotalQuantityCommand;
 import com.ttdat.productservice.application.commands.product.CreateProductCommand;
 import com.ttdat.productservice.application.commands.product.UpdateProductCommand;
 import com.ttdat.productservice.domain.entities.PhysicalState;
 import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
+import com.ttdat.productservice.domain.events.product.ProductTotalQuantityUpdatedEvent;
 import com.ttdat.productservice.domain.events.product.ProductUpdatedEvent;
 import com.ttdat.productservice.domain.valueobject.EvtProductUnit;
 import com.ttdat.productservice.domain.valueobject.EvtProductUnitPrice;
@@ -27,6 +29,8 @@ public class ProductAggregate {
     String productId;
 
     String productName;
+
+    Integer totalQuantity;
 
     String description;
 
@@ -136,11 +140,21 @@ public class ProductAggregate {
         AggregateLifecycle.apply(productUpdatedEvent);
     }
 
+    @CommandHandler
+    public void handle(UpdateProductTotalQuantityCommand updateProductTotalQuantityCommand){
+        ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent = ProductTotalQuantityUpdatedEvent.builder()
+                .productId(updateProductTotalQuantityCommand.getProductId())
+                .quantity(updateProductTotalQuantityCommand.getQuantity())
+                .build();
+        AggregateLifecycle.apply(productTotalQuantityUpdatedEvent);
+    }
+
     @EventSourcingHandler
     public void on(ProductCreatedEvent productCreatedEvent) {
         this.productId = productCreatedEvent.getProductId();
         this.productName = productCreatedEvent.getProductName();
         this.description = productCreatedEvent.getDescription();
+        this.totalQuantity = productCreatedEvent.getTotalQuantity();
         this.imageUrl = productCreatedEvent.getImageUrl();
         this.categoryId = productCreatedEvent.getCategoryId();
         this.defaultExpDays = productCreatedEvent.getDefaultExpDays();
@@ -157,6 +171,7 @@ public class ProductAggregate {
     public void on(ProductUpdatedEvent productUpdatedEvent) {
         this.productName = productUpdatedEvent.getProductName();
         this.description = productUpdatedEvent.getDescription();
+        this.totalQuantity = productUpdatedEvent.getTotalQuantity();
         this.imageUrl = productUpdatedEvent.getImageUrl();
         this.categoryId = productUpdatedEvent.getCategoryId();
         this.defaultExpDays = productUpdatedEvent.getDefaultExpDays();
@@ -169,5 +184,12 @@ public class ProductAggregate {
         this.ppeRequired = productUpdatedEvent.getPpeRequired();
     }
 
+    @EventSourcingHandler
+    public void on(ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent){
+        if(productTotalQuantityUpdatedEvent.getQuantity() == null){
+            this.totalQuantity = 0;
+        }
+        totalQuantity += productTotalQuantityUpdatedEvent.getQuantity();
+    }
 
 }

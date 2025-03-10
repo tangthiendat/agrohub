@@ -24,6 +24,7 @@ import {
   getSortUpIconColor,
 } from "../../utils/color";
 import ViewIcon from "../../common/components/icons/ViewIcon";
+import { formatDate } from "../../utils/datetime";
 
 interface PurchaseOrderTableProps {
   purchaseOrderPage?: Page<IPurchaseOrderListItem>;
@@ -132,6 +133,7 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
       dataIndex: "orderDate",
       key: "orderDate",
       width: "15%",
+      render: (orderDate: string) => formatDate(orderDate),
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "orderDate"),
       sortIcon: ({ sortOrder }) => (
@@ -146,6 +148,8 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
       dataIndex: "expectedDeliveryDate",
       key: "expectedDeliveryDate",
       width: "15%",
+      render: (expectedDeliveryDate: string) =>
+        formatDate(expectedDeliveryDate),
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(
         searchParams,

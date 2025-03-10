@@ -1,5 +1,6 @@
-package com.ttdat.purchaseservice.domain.aggregate;
+package com.ttdat.purchaseservice.application.commands.importinvoice;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -7,11 +8,12 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EvtPurchaseOrderDetail {
-    String purchaseOrderDetailId;
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class CmdImportInvoiceDetail {
+    String importInvoiceDetailId;
 
     String productId;
 

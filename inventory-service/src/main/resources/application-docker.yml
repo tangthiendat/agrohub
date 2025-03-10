@@ -24,6 +24,10 @@ axon:
     processors:
       warehouse-group:
         mode: subscribing
+      product-batch-group:
+        mode: subscribing
+      product-stock-group:
+        mode: subscribing
 application:
   security:
     rsa:

@@ -1,8 +1,8 @@
 package com.ttdat.purchaseservice.domain.events.purchaseorder;
 
-import com.ttdat.purchaseservice.domain.aggregate.EvtPurchaseOrderDetail;
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
+import com.ttdat.purchaseservice.domain.valueobject.EvtPurchaseOrderDetail;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
