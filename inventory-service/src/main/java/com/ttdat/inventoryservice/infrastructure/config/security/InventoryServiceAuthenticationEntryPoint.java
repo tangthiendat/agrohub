@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class ProductServiceAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class InventoryServiceAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final AuthenticationEntryPoint delegate = new BearerTokenAuthenticationEntryPoint();
     private final ObjectMapper mapper;
 
-    public ProductServiceAuthenticationEntryPoint(ObjectMapper mapper) {
+    public InventoryServiceAuthenticationEntryPoint(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 

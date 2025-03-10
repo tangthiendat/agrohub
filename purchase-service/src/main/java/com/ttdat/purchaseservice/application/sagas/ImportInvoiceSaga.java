@@ -1,6 +1,7 @@
 package com.ttdat.purchaseservice.application.sagas;
 
 import com.ttdat.core.application.commands.debt.CreateDebtAccountCommand;
+import com.ttdat.core.application.commands.stock.AddProductStockCommand;
 import com.ttdat.core.application.constants.SystemConfigConstants;
 import com.ttdat.core.domain.entities.DebtPartyType;
 import com.ttdat.core.domain.entities.DebtSourceType;
@@ -28,6 +29,16 @@ public class ImportInvoiceSaga {
     @StartSaga
     @SagaEventHandler(associationProperty = "importInvoiceId")
     public void on(ImportInvoiceCreatedEvent importInvoiceCreatedEvent){
+        importInvoiceCreatedEvent.getImportInvoiceDetails().forEach(importInvoiceDetail -> {
+            AddProductStockCommand addProductStockCommand = AddProductStockCommand.builder()
+                    .productStockId(UUID.randomUUID().toString())
+                    .warehouseId(importInvoiceCreatedEvent.getWarehouseId())
+                    .productId(importInvoiceDetail.getProductId())
+                    .quantity(importInvoiceDetail.getQuantity())
+                    .build();
+            commandGateway.sendAndWait(addProductStockCommand);
+        });
+
         CreateDebtAccountCommand createDebtAccountCommand = CreateDebtAccountCommand.builder()
                 .debtAccountId(UUID.randomUUID().toString())
                 .partyId(importInvoiceCreatedEvent.getSupplierId())
@@ -44,4 +55,5 @@ public class ImportInvoiceSaga {
         commandGateway.sendAndWait(createDebtAccountCommand);
         SagaLifecycle.end();
     }
+
 }
