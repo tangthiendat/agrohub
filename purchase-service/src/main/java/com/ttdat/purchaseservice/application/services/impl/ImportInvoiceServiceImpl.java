@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ public class ImportInvoiceServiceImpl implements ImportInvoiceService {
     @Override
     public void createImportInvoice(CreateImportInvoiceRequest request) {
         String importInvoiceId = idGeneratorService.generateImportInvoiceId();
+        List<CreateProductBatchCommand> createProductBatchCommandList = new ArrayList<>();
         List<CmdImportInvoiceDetail> cmdImportInvoiceDetails = request.getImportInvoiceDetails().stream()
                 .map(importInvoiceDetail -> {
                     String importInvoiceDetailId = UUID.randomUUID().toString();
@@ -36,7 +38,7 @@ public class ImportInvoiceServiceImpl implements ImportInvoiceService {
                                 .receivedDate(importInvoiceDetailBatch.getReceivedDate())
                                 .quantity(importInvoiceDetailBatch.getQuantity())
                                 .build();
-                        commandGateway.sendAndWait(createProductBatchCommand);
+                        createProductBatchCommandList.add(createProductBatchCommand);
                     });
                     return CmdImportInvoiceDetail.builder()
                             .importInvoiceDetailId(importInvoiceDetailId)
@@ -62,5 +64,6 @@ public class ImportInvoiceServiceImpl implements ImportInvoiceService {
                 .finalAmount(request.getFinalAmount())
                 .build();
         commandGateway.sendAndWait(createImportInvoiceCommand);
+        createProductBatchCommandList.forEach(commandGateway::sendAndWait);
     }
 }
