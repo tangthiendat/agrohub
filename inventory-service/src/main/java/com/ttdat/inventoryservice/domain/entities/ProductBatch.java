@@ -20,6 +20,7 @@ public class ProductBatch {
     String batchId;
 
     @ManyToOne
+    @JoinColumn(name = "warehouse_id")
     Warehouse warehouse;
 
     @Column(length = 50)
