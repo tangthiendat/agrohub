@@ -1,8 +1,6 @@
-package com.ttdat.purchaseservice.domain.events.purchaseorder;
+package com.ttdat.purchaseservice.api.dto.request;
 
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
-import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
-import com.ttdat.purchaseservice.domain.valueobject.EvtPurchaseOrderDetail;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,25 +10,21 @@ import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PurchaseOrderUpdatedEvent {
-    String purchaseOrderId;
-
+public class CreateImportInvoiceRequest {
     Long warehouseId;
 
     String supplierId;
 
     String userId;
 
-    LocalDate orderDate;
+    LocalDate createdDate;
 
-    LocalDate expectedDeliveryDate;
+    String note;
 
-    PurchaseOrderStatus status;
-
-    List<EvtPurchaseOrderDetail> purchaseOrderDetails;
+    List<CreateImportInvoiceDetailRequest> importInvoiceDetails;
 
     BigDecimal totalAmount;
 
@@ -41,6 +35,4 @@ public class PurchaseOrderUpdatedEvent {
     BigDecimal vatRate;
 
     BigDecimal finalAmount;
-
-    String note;
 }

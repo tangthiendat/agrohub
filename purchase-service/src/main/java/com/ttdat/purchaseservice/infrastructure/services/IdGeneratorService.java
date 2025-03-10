@@ -4,4 +4,6 @@ public interface IdGeneratorService {
     String generateSupplierId();
     String generateSupplierProductId();
     String generatePurchaseOrderId();
+    String generateImportInvoiceId();
+    String generateProductBatchId();
 }

@@ -8,14 +8,16 @@ import com.ttdat.inventoryservice.api.dto.common.WarehouseDTO;
 import com.ttdat.inventoryservice.api.dto.response.WarehousePageResult;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetAllWarehouseQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetCurrentUserWarehouseQuery;
-import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehouseByIdQuery;
 import com.ttdat.inventoryservice.application.queries.warehouse.GetWarehousePageQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;

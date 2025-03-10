@@ -1,10 +1,10 @@
-package com.ttdat.purchaseservice.domain.events.purchaseorder;
+package com.ttdat.purchaseservice.application.commands.importinvoice;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
-import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
-import com.ttdat.purchaseservice.domain.valueobject.EvtPurchaseOrderDetail;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,11 +12,13 @@ import java.util.List;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PurchaseOrderUpdatedEvent {
-    String purchaseOrderId;
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class CreateImportInvoiceCommand {
+    @TargetAggregateIdentifier
+    String importInvoiceId;
 
     Long warehouseId;
 
@@ -24,13 +26,11 @@ public class PurchaseOrderUpdatedEvent {
 
     String userId;
 
-    LocalDate orderDate;
+    LocalDate createdDate;
 
-    LocalDate expectedDeliveryDate;
+    String note;
 
-    PurchaseOrderStatus status;
-
-    List<EvtPurchaseOrderDetail> purchaseOrderDetails;
+    List<CmdImportInvoiceDetail> importInvoiceDetails;
 
     BigDecimal totalAmount;
 
@@ -42,5 +42,4 @@ public class PurchaseOrderUpdatedEvent {
 
     BigDecimal finalAmount;
 
-    String note;
 }
