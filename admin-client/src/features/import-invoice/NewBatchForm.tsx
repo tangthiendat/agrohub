@@ -46,6 +46,7 @@ const NewBatchForm: React.FC<NewBatchFormProps> = ({ importInvoiceDetail }) => {
                     <div className="mb-2 flex items-center gap-10">
                       <div className="basis-[20%]">Ngày sản xuất</div>
                       <div className="basis-[20%]">Ngày hết hạn</div>
+                      <div className="basis-[20%]">Ngày nhận hàng</div>
                       <div className="basis-[15%]">Số lượng</div>
                     </div>
                   )}
@@ -117,6 +118,28 @@ const NewBatchForm: React.FC<NewBatchFormProps> = ({ importInvoiceDetail }) => {
                                   .expirationDate,
                               )
                             }
+                            disabledDate={(current) => {
+                              return dayjs(current).isBefore(
+                                dayjs().startOf("day"),
+                              );
+                            }}
+                            className="w-full"
+                            format="DD/MM/YYYY"
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          className="basis-[20%]"
+                          name={[batchField.name, "receivedDate"]}
+                          initialValue={dayjs().tz().format("YYYY-MM-DD")}
+                          getValueProps={(value: string) => ({
+                            value: value && dayjs(value),
+                          })}
+                          normalize={(value: Dayjs) =>
+                            value && value.tz().format("YYYY-MM-DD")
+                          }
+                        >
+                          <DatePicker
+                            disabled
                             disabledDate={(current) => {
                               return dayjs(current).isBefore(
                                 dayjs().startOf("day"),

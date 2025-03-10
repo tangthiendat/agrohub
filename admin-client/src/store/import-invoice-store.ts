@@ -16,6 +16,7 @@ import { getFinalAmount } from "../utils/data";
 export interface ImportInvoiceDetailBatchState {
   manufacturingDate: string;
   expirationDate: string;
+  receivedDate: string;
   quantity: number;
 }
 
@@ -179,6 +180,7 @@ export const useImportInvoiceStore = create<ImportInvoiceState>()(
               if (detail) {
                 detail.batches.push({
                   quantity: 1,
+                  receivedDate: dayjs().format("YYYY-MM-DD"),
                 } as ImportInvoiceDetailBatchState);
               }
             },

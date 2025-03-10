@@ -1,5 +1,5 @@
 import { ReloadOutlined, SaveFilled } from "@ant-design/icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Space } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -11,11 +11,15 @@ import ImportInvoiceDetailsTable from "./ImportInvoiceDetailsTable";
 import ImportInvoiceForm from "./ImportInvoiceForm";
 import { useImportInvoiceStore } from "../../store/import-invoice-store";
 import { IProduct } from "../../interfaces";
-import { userService, warehouseService } from "../../services";
+import {
+  importInvoiceService,
+  userService,
+  warehouseService,
+} from "../../services";
 
 const NewImportInvoice: React.FC = () => {
   const [form] = Form.useForm();
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const { addDetail, setWarehouse, setUser, reset } = useImportInvoiceStore(
     useShallow((state) => ({
       addDetail: state.addDetail,
@@ -39,16 +43,16 @@ const NewImportInvoice: React.FC = () => {
     queryFn: userService.getUserInfo,
   });
 
-  // const { mutate: createPurchaseOrder, isPending: isCreating } = useMutation({
-  //   mutationFn: purchaseOrderService.create,
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["purchase-orders"],
-  //     });
-  //     form.resetFields();
-  //     reset();
-  //   },
-  // });
+  const { mutate: createImportInvoice, isPending: isCreating } = useMutation({
+    mutationFn: importInvoiceService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["import-invoices"],
+      });
+      form.resetFields();
+      reset();
+    },
+  });
 
   useEffect(() => {
     if (warehouseData) {
@@ -77,7 +81,7 @@ const NewImportInvoice: React.FC = () => {
               reset();
               toast.success("Làm mới thành công");
             }}
-            // loading={isCreating}
+            loading={isCreating}
           >
             Làm mới
           </Button>
@@ -85,14 +89,17 @@ const NewImportInvoice: React.FC = () => {
             icon={<SaveFilled />}
             type="primary"
             onClick={() => form.submit()}
-            // loading={isCreating}
+            loading={isCreating}
           >
             Lưu
           </Button>
         </Space>
       </div>
 
-      <ImportInvoiceForm form={form} />
+      <ImportInvoiceForm
+        form={form}
+        createImportInvoice={createImportInvoice}
+      />
 
       <div className="flex items-center justify-between">
         <SearchProductBar

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { UseMutateFunction } from "@tanstack/react-query";
 import {
   Card,
   DatePicker,
@@ -9,23 +9,38 @@ import {
   Modal,
   Select,
 } from "antd";
+import dayjs, { Dayjs } from "dayjs";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { useShallow } from "zustand/react/shallow";
+import SearchSupplierBar from "../supplier/SearchSupplierBar";
+import { DiscountType } from "../../common/enums";
+import {
+  ApiResponse,
+  CreateImportInvoiceRequest,
+  ISupplier,
+} from "../../interfaces";
 import {
   ImportInvoiceDetailState,
   useImportInvoiceStore,
 } from "../../store/import-invoice-store";
-import { useShallow } from "zustand/react/shallow";
-import dayjs, { Dayjs } from "dayjs";
-import SearchSupplierBar from "../supplier/SearchSupplierBar";
-import { CreateImportInvoiceRequest, ISupplier } from "../../interfaces";
-import { DiscountType } from "../../common/enums";
-import { convertKeysToSnakeCase } from "../../utils/data";
+import { getNotificationMessage } from "../../utils/notification";
 import { formatCurrency, parseCurrency } from "../../utils/number";
 
 interface ImportInvoiceFormProps {
   form: FormInstance;
+  createImportInvoice: UseMutateFunction<
+    ApiResponse<void>,
+    Error,
+    CreateImportInvoiceRequest,
+    unknown
+  >;
 }
 
-const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({ form }) => {
+const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
+  form,
+  createImportInvoice,
+}) => {
   const [modal, contextHolder] = Modal.useModal();
   const {
     warehouse,
@@ -110,13 +125,23 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({ form }) => {
           batches: detail.batches.map((batch) => ({
             manufacturerDate: batch.manufacturingDate,
             expirationDate: batch.expirationDate,
+            receivedDate: batch.receivedDate,
             quantity: batch.quantity,
           })),
         }),
       ),
       note: importInvoiceFormValues.note as string,
     };
-    console.log(convertKeysToSnakeCase(newImportInvoice));
+    createImportInvoice(newImportInvoice, {
+      onSuccess: () => {
+        toast.success("Tạo phiếu nhập kho thành công");
+      },
+      onError: (error: Error) => {
+        toast.error(
+          getNotificationMessage(error) || "Tạo phiếu nhập kho thất bại",
+        );
+      },
+    });
   }
 
   return (

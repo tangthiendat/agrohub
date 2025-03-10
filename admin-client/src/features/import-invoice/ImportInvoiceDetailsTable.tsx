@@ -65,6 +65,7 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
       width: "10%",
       render: (productUnit: IProductUnit, record: ImportInvoiceDetailState) => (
         <Select
+          onClick={(e) => e.stopPropagation()}
           value={productUnit.productUnitId}
           options={record.product.productUnits.map((pu) => ({
             value: pu.productUnitId,
@@ -84,6 +85,7 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
         <InputNumber
           value={record.quantity}
           min={1}
+          onClick={(e) => e.stopPropagation()}
           onChange={(value) => {
             updateQuantity(record.product.productId, value as number);
             form.setFieldsValue({
@@ -152,7 +154,7 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
             <NewBatchForm importInvoiceDetail={record} />
           </>
         ),
-        expandRowByClick: true,
+        // expandRowByClick: true,
       }}
       columns={columns}
       bordered={false}
