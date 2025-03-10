@@ -3,8 +3,6 @@ package com.ttdat.core.api.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-
 @Data
 @Builder
 @AllArgsConstructor

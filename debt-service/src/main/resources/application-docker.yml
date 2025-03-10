@@ -17,6 +17,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+axon:
+  axonserver:
+    servers: ${AXON_SERVER}
+  eventhandling:
+    processors:
+      debt-group:
+        mode: subscribing
 application:
   security:
     rsa:
