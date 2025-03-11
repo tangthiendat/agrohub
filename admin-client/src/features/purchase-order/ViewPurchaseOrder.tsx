@@ -177,7 +177,13 @@ const ViewPurchaseOrder: React.FC = () => {
       key: "quantity",
       width: "10%",
       render: (quantity: number) => (
-        <InputNumber value={quantity} min={1} readOnly />
+        <InputNumber
+          readOnly={
+            currentPurchaseOrder?.status === PurchaseOrderStatus.COMPLETED
+          }
+          value={quantity}
+          min={1}
+        />
       ),
     },
     ...(currentPurchaseOrder?.status === PurchaseOrderStatus.APPROVED ||
@@ -489,7 +495,11 @@ const ViewPurchaseOrder: React.FC = () => {
             <Form.Item label="Ghi chú" name="note">
               <Input.TextArea
                 readOnly={
-                  currentPurchaseOrder?.status !== PurchaseOrderStatus.APPROVED
+                  currentPurchaseOrder?.status ===
+                    PurchaseOrderStatus.PENDING ||
+                  currentPurchaseOrder?.status ===
+                    PurchaseOrderStatus.CANCELLED ||
+                  currentPurchaseOrder?.status === PurchaseOrderStatus.COMPLETED
                 }
                 rows={2}
               />
