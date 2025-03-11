@@ -392,6 +392,33 @@ const ViewPurchaseOrder: React.FC = () => {
               Cập nhật
             </Button>
           )}
+          {purchaseOrder?.status === PurchaseOrderStatus.APPROVED && (
+            <Button
+              type="primary"
+              disabled={isUpdatingStatus || isUpdating}
+              onClick={() => {
+                updatePurchaseOrderStatus(
+                  {
+                    purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
+                    status: PurchaseOrderStatus.COMPLETED,
+                  },
+                  {
+                    onSuccess: () => {
+                      toast.success("Đã hoàn thành đơn hàng");
+                    },
+                    onError: (error: Error) => {
+                      toast.error(
+                        getNotificationMessage(error) ||
+                          "Hoàn thành đơn hàng thất bại",
+                      );
+                    },
+                  },
+                );
+              }}
+            >
+              Hoàn thành
+            </Button>
+          )}
         </div>
       </div>
       <Form
