@@ -176,6 +176,9 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
             <Form.Item label="Người tạo">
               <Input value={user.fullName} readOnly />
             </Form.Item>
+          </Card>
+
+          <Card className="flex-1 self-stretch">
             <Form.Item
               label="Ngày lập phiếu"
               name="createdDate"
@@ -188,25 +191,30 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
             >
               <DatePicker disabled className="w-full" format="DD/MM/YYYY" />
             </Form.Item>
+            <Form.Item label="Ghi chú" name="note">
+              <Input.TextArea rows={2} />
+            </Form.Item>
           </Card>
 
-          <Card className="flex-1 self-stretch">
+          <Card className="w-[25%] self-stretch">
             <Form.Item label="Tổng tiền hàng" name="totalAmount">
               <InputNumber
+                className="right-aligned-number w-full"
+                controls={false}
                 readOnly
                 value={totalAmount}
-                className="w-full"
                 formatter={(value) => formatCurrency(value)}
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 step={1000}
                 min={0}
-                addonAfter="VND"
+                addonAfter={<div className="w-[55px]">VND</div>}
               />
             </Form.Item>
             <Form.Item label="Chiết khấu" name="discountValue">
               <InputNumber
+                className="right-aligned-number w-full"
+                controls={false}
                 value={discountValue}
-                className="w-full"
                 formatter={(value) => formatCurrency(value)}
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 onChange={(value) => {
@@ -238,34 +246,49 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
                 }
               />
             </Form.Item>
-            <Form.Item label="VAT" name="vatRate">
+            {/* <Form.Item label="VAT" name="vatRate">
               <InputNumber
+                className="right-aligned-number w-full"
+                controls={false}
                 value={vatRate}
-                className="w-full"
                 formatter={(value) => formatCurrency(value)}
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 onChange={(value) => {
                   setVatRate(value as number);
                 }}
                 min={0}
-                addonAfter="%"
+                addonAfter={<div className="w-[55px]">%</div>}
+              />
+            </Form.Item> */}
+            <Form.Item label="VAT" name="vatRate">
+              <Select
+                className="w-full"
+                value={vatRate}
+                onChange={(value) => {
+                  setVatRate(value);
+                }}
+                labelRender={(props) => (
+                  <div className="text-right">{props.label}</div>
+                )}
+                options={[
+                  { value: 0, label: "0%" },
+                  { value: 5, label: "5%" },
+                  { value: 8, label: "8%" },
+                  { value: 10, label: "10%" },
+                ]}
               />
             </Form.Item>
             <Form.Item label="Tổng cộng" name="finalAmount">
               <InputNumber
+                className="right-aligned-number w-full"
+                controls={false}
                 readOnly
                 value={finalAmount}
-                className="w-full"
                 formatter={(value) => formatCurrency(value)}
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 min={0}
-                addonAfter="VND"
+                addonAfter={<div className="w-[55px]">VND</div>}
               />
-            </Form.Item>
-          </Card>
-          <Card className="flex-1 self-stretch">
-            <Form.Item label="Ghi chú" name="note">
-              <Input.TextArea rows={2} />
             </Form.Item>
           </Card>
         </div>

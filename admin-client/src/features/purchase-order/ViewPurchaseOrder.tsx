@@ -11,6 +11,7 @@ import {
   Form,
   Input,
   InputNumber,
+  Modal,
   Select,
   Space,
   Table,
@@ -51,13 +52,21 @@ interface UpdatePurchaseOrderArgs {
   purchaseOrder: UpdatePurchaseOrderRequest;
 }
 
+interface CancelPurchaseOrderArgs {
+  purchaseOrderId: string;
+  cancelReason: string;
+}
+
 const ViewPurchaseOrder: React.FC = () => {
   const { id } = useParams();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] = useState<
     IPurchaseOrder | undefined
   >(undefined);
   const [form] = Form.useForm<IPurchaseOrder>();
+  const [cancelPurchaseOrderForm] = Form.useForm();
   const queryClient = useQueryClient();
+  const [isOpenCancelModal, setIsOpenCancelModal] = useState<boolean>(false);
+
   const { data: purchaseOrder, isLoading: isPurchaseOrderLoading } = useQuery({
     queryKey: ["purchase-orders", id],
     queryFn: () => purchaseOrderService.getById(id!),
@@ -113,6 +122,24 @@ const ViewPurchaseOrder: React.FC = () => {
       });
     },
   });
+
+  const { mutate: cancelPurchaseOrder, isPending: isCanceling } = useMutation({
+    mutationFn: ({ purchaseOrderId, cancelReason }: CancelPurchaseOrderArgs) =>
+      purchaseOrderService.cancel(purchaseOrderId, cancelReason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["purchase-orders"],
+      });
+    },
+  });
+
+  const handleOpenCancelModal = () => {
+    setIsOpenCancelModal(true);
+  };
+
+  const handleCloseCancelModal = () => {
+    setIsOpenCancelModal(false);
+  };
 
   useEffect(() => {
     if (purchaseOrder && productsMap) {
@@ -201,6 +228,8 @@ const ViewPurchaseOrder: React.FC = () => {
                 );
               return (
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly={
                     currentPurchaseOrder?.status ===
                     PurchaseOrderStatus.COMPLETED
@@ -265,7 +294,19 @@ const ViewPurchaseOrder: React.FC = () => {
             key: "total",
             width: "15%",
             render: (_: IProductUnit, record: IPurchaseOrderDetail) => {
-              return formatCurrency((record.unitPrice || 0) * record.quantity);
+              return (
+                <InputNumber
+                  value={(record.unitPrice || 0) * record.quantity}
+                  className="right-aligned-number w-full"
+                  controls={false}
+                  readOnly
+                  formatter={(value) => formatCurrency(value)}
+                  parser={(value) => parseCurrency(value) as unknown as 0}
+                  step={1000}
+                  min={0}
+                  addonAfter="VND"
+                />
+              );
             },
           },
         ]
@@ -333,33 +374,70 @@ const ViewPurchaseOrder: React.FC = () => {
           </div>
         </Space>
         <div className="mt-2 flex space-x-2">
-          {purchaseOrder?.status !== PurchaseOrderStatus.COMPLETED && (
-            <Button
-              danger
-              disabled={isUpdatingStatus || isUpdating}
-              onClick={() => {
-                updatePurchaseOrderStatus(
-                  {
-                    purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
-                    status: PurchaseOrderStatus.CANCELLED,
-                  },
-                  {
-                    onSuccess: () => {
-                      toast.success("Đã hủy đơn hàng");
-                    },
-                    onError: (error: Error) => {
-                      toast.error(
-                        getNotificationMessage(error) ||
-                          "Hủy đơn hàng thất bại",
+          {purchaseOrder?.status !== PurchaseOrderStatus.COMPLETED &&
+            purchaseOrder?.status !== PurchaseOrderStatus.CANCELLED && (
+              <>
+                <Button danger onClick={handleOpenCancelModal}>
+                  Hủy
+                </Button>
+                <Modal
+                  open={isOpenCancelModal}
+                  width="30%"
+                  title={<span className="text-lg">Hủy đơn đặt hàng</span>}
+                  destroyOnClose
+                  onCancel={handleCloseCancelModal}
+                  cancelText="Đóng"
+                  okText="Hủy đơn hàng"
+                  onOk={() => cancelPurchaseOrderForm.submit()}
+                  cancelButtonProps={{
+                    disabled: isCanceling,
+                  }}
+                  okButtonProps={{
+                    disabled: isCanceling,
+                  }}
+                >
+                  <Form
+                    form={cancelPurchaseOrderForm}
+                    layout="vertical"
+                    onFinish={(values) => {
+                      cancelPurchaseOrder(
+                        {
+                          purchaseOrderId:
+                            currentPurchaseOrder!.purchaseOrderId,
+                          cancelReason: values.cancelReason as string,
+                        },
+                        {
+                          onSuccess: () => {
+                            toast.success("Hủy đơn hàng thành công");
+                            cancelPurchaseOrderForm.resetFields();
+                            handleCloseCancelModal();
+                          },
+                          onError: (error: Error) => {
+                            toast.error(
+                              getNotificationMessage(error) ||
+                                "Hủy đơn hàng thất bại",
+                            );
+                          },
+                        },
                       );
-                    },
-                  },
-                );
-              }}
-            >
-              Hủy
-            </Button>
-          )}
+                    }}
+                  >
+                    <Form.Item
+                      label="Lý do hủy"
+                      name="cancelReason"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập lý do hủy đơn hàng",
+                        },
+                      ]}
+                    >
+                      <Input.TextArea rows={3} />
+                    </Form.Item>
+                  </Form>
+                </Modal>
+              </>
+            )}
 
           {purchaseOrder?.status === PurchaseOrderStatus.PENDING && (
             <Button
@@ -505,18 +583,30 @@ const ViewPurchaseOrder: React.FC = () => {
               />
             </Form.Item>
           </Card>
+          {currentPurchaseOrder?.status === PurchaseOrderStatus.CANCELLED && (
+            <Card className="flex-1 self-stretch">
+              <Form.Item label="Lý do hủy">
+                <Input.TextArea
+                  value={currentPurchaseOrder?.cancelReason}
+                  readOnly
+                  rows={2}
+                />
+              </Form.Item>
+            </Card>
+          )}
           {(currentPurchaseOrder?.status === PurchaseOrderStatus.APPROVED ||
             currentPurchaseOrder?.status === PurchaseOrderStatus.COMPLETED) && (
-            <Card className="flex-1 self-stretch">
+            <Card className="w-[25%] self-stretch">
               <Form.Item label="Tổng tiền hàng" name="totalAmount">
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly
-                  className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   step={1000}
                   min={0}
-                  addonAfter="VND"
+                  addonAfter={<div className="w-[55px]">VND</div>}
                 />
               </Form.Item>
               <Form.Item
@@ -551,7 +641,8 @@ const ViewPurchaseOrder: React.FC = () => {
                 ]}
               >
                 <InputNumber
-                  className="w-full"
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly={
                     currentPurchaseOrder?.status ===
                     PurchaseOrderStatus.COMPLETED
@@ -634,7 +725,7 @@ const ViewPurchaseOrder: React.FC = () => {
                   }}
                 />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 label="VAT"
                 name="vatRate"
                 rules={[
@@ -651,12 +742,13 @@ const ViewPurchaseOrder: React.FC = () => {
                 ]}
               >
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly={
                     currentPurchaseOrder.status ===
                     PurchaseOrderStatus.COMPLETED
                   }
                   value={currentPurchaseOrder?.vatRate}
-                  className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   min={0}
@@ -682,18 +774,62 @@ const ViewPurchaseOrder: React.FC = () => {
                       finalAmount: finalAmount,
                     });
                   }}
-                  addonAfter="%"
+                  addonAfter={<div className="w-[55px]">%</div>}
+                />
+              </Form.Item> */}
+              <Form.Item label="VAT" name="vatRate">
+                <Select
+                  disabled={
+                    currentPurchaseOrder.status ===
+                    PurchaseOrderStatus.COMPLETED
+                  }
+                  value={currentPurchaseOrder?.vatRate}
+                  className="w-full"
+                  options={[
+                    { value: 0, label: "0%" },
+                    { value: 5, label: "5%" },
+                    { value: 8, label: "8%" },
+                    { value: 10, label: "10%" },
+                  ]}
+                  labelRender={(props) => (
+                    <div className="text-right">{props.label}</div>
+                  )}
+                  onChange={(value) => {
+                    const totalAmount = currentPurchaseOrder?.totalAmount || 0;
+                    const discountValue =
+                      currentPurchaseOrder?.discountValue || 0;
+                    const discountType = currentPurchaseOrder?.discountType;
+
+                    const finalAmount = getFinalAmount(
+                      totalAmount,
+                      discountValue,
+                      discountType,
+                      value,
+                    );
+
+                    form.setFieldsValue({
+                      vatRate: value,
+                      finalAmount: finalAmount,
+                    });
+
+                    setCurrentPurchaseOrder({
+                      ...currentPurchaseOrder,
+                      vatRate: value,
+                      finalAmount: finalAmount,
+                    });
+                  }}
                 />
               </Form.Item>
               <Form.Item label="Tổng cộng" name="finalAmount">
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly
                   value={currentPurchaseOrder?.finalAmount}
-                  className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   min={0}
-                  addonAfter="VND"
+                  addonAfter={<div className="w-[55px]">VND</div>}
                 />
               </Form.Item>
             </Card>

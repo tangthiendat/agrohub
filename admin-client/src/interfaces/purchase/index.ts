@@ -50,6 +50,7 @@ export interface IPurchaseOrder extends Auditable {
   finalAmount: number;
   purchaseOrderDetails: IPurchaseOrderDetail[];
   note?: string;
+  cancelReason?: string;
 }
 
 export interface CreatePurchaseOrderDetail {

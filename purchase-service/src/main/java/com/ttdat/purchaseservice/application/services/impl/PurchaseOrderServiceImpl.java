@@ -1,12 +1,10 @@
 package com.ttdat.purchaseservice.application.services.impl;
 
+import com.ttdat.purchaseservice.api.dto.request.CancelPurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.CreatePurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderStatusRequest;
-import com.ttdat.purchaseservice.application.commands.purchaseorder.CmdPurchaseOrderDetail;
-import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderCommand;
-import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderCommand;
-import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderStatusCommand;
+import com.ttdat.purchaseservice.application.commands.purchaseorder.*;
 import com.ttdat.purchaseservice.application.services.PurchaseOrderService;
 import com.ttdat.purchaseservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -89,5 +87,14 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 .note(updatePurchaseOrderRequest.getNote())
                 .build();
         commandGateway.sendAndWait(updatePurchaseOrderCommand);
+    }
+
+    @Override
+    public void cancelPurchaseOrder(String id, CancelPurchaseOrderRequest cancelPurchaseOrderRequest) {
+        CancelPurchaseOrderCommand cancelPurchaseOrderCommand = CancelPurchaseOrderCommand.builder()
+                .purchaseOrderId(id)
+                .cancelReason(cancelPurchaseOrderRequest.getCancelReason())
+                .build();
+        commandGateway.sendAndWait(cancelPurchaseOrderCommand);
     }
 }

@@ -8,6 +8,7 @@ import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { FaWarehouse } from "react-icons/fa6";
 import { BiPurchaseTag } from "react-icons/bi";
+import { TbPackageImport } from "react-icons/tb";
 import { IUser } from "../../../interfaces";
 import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
@@ -234,7 +235,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                             </NavLink>
                           ),
                           key: "import-invoices",
-                          icon: <FaFileInvoice />,
+                          icon: <TbPackageImport size={18} />,
                         },
                       ]
                     : []),
