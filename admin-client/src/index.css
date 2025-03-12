@@ -29,4 +29,7 @@
   .table-row-gray .ant-table-cell.ant-table-column-sort {
     @apply bg-gray-100;
   }
+  .right-aligned-number .ant-input-number-input {
+    @apply text-right;
+  }
 }

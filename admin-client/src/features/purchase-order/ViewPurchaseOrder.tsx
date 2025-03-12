@@ -201,6 +201,8 @@ const ViewPurchaseOrder: React.FC = () => {
                 );
               return (
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly={
                     currentPurchaseOrder?.status ===
                     PurchaseOrderStatus.COMPLETED
@@ -265,7 +267,19 @@ const ViewPurchaseOrder: React.FC = () => {
             key: "total",
             width: "15%",
             render: (_: IProductUnit, record: IPurchaseOrderDetail) => {
-              return formatCurrency((record.unitPrice || 0) * record.quantity);
+              return (
+                <InputNumber
+                  value={(record.unitPrice || 0) * record.quantity}
+                  className="right-aligned-number w-full"
+                  controls={false}
+                  readOnly
+                  formatter={(value) => formatCurrency(value)}
+                  parser={(value) => parseCurrency(value) as unknown as 0}
+                  step={1000}
+                  min={0}
+                  addonAfter="VND"
+                />
+              );
             },
           },
         ]
@@ -510,13 +524,14 @@ const ViewPurchaseOrder: React.FC = () => {
             <Card className="flex-1 self-stretch">
               <Form.Item label="Tổng tiền hàng" name="totalAmount">
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly
-                  className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   step={1000}
                   min={0}
-                  addonAfter="VND"
+                  addonAfter={<div className="w-[55px]">VND</div>}
                 />
               </Form.Item>
               <Form.Item
@@ -551,7 +566,8 @@ const ViewPurchaseOrder: React.FC = () => {
                 ]}
               >
                 <InputNumber
-                  className="w-full"
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly={
                     currentPurchaseOrder?.status ===
                     PurchaseOrderStatus.COMPLETED
@@ -651,12 +667,13 @@ const ViewPurchaseOrder: React.FC = () => {
                 ]}
               >
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly={
                     currentPurchaseOrder.status ===
                     PurchaseOrderStatus.COMPLETED
                   }
                   value={currentPurchaseOrder?.vatRate}
-                  className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   min={0}
@@ -682,18 +699,19 @@ const ViewPurchaseOrder: React.FC = () => {
                       finalAmount: finalAmount,
                     });
                   }}
-                  addonAfter="%"
+                  addonAfter={<div className="w-[55px]">%</div>}
                 />
               </Form.Item>
               <Form.Item label="Tổng cộng" name="finalAmount">
                 <InputNumber
+                  className="right-aligned-number w-full"
+                  controls={false}
                   readOnly
                   value={currentPurchaseOrder?.finalAmount}
-                  className="w-full"
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   min={0}
-                  addonAfter="VND"
+                  addonAfter={<div className="w-[55px]">VND</div>}
                 />
               </Form.Item>
             </Card>

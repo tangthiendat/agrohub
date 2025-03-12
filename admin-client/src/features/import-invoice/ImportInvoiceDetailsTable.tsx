@@ -103,6 +103,8 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
       width: "15%",
       render: (unitPrice: number, record: ImportInvoiceDetailState) => (
         <InputNumber
+          className="right-aligned-number w-full"
+          controls={false}
           value={unitPrice}
           min={0}
           step={1000}
@@ -123,8 +125,19 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
       title: "Thành tiền",
       key: "total",
       width: "15%",
-      render: (_, record: ImportInvoiceDetailState) =>
-        formatCurrency(record.quantity * record.unitPrice),
+      render: (_, record: ImportInvoiceDetailState) => (
+        <InputNumber
+          value={(record.unitPrice || 0) * record.quantity}
+          className="right-aligned-number w-full"
+          controls={false}
+          readOnly
+          formatter={(value) => formatCurrency(value)}
+          parser={(value) => parseCurrency(value) as unknown as 0}
+          step={1000}
+          min={0}
+          addonAfter="VND"
+        />
+      ),
     },
     {
       title: "Hành động",
