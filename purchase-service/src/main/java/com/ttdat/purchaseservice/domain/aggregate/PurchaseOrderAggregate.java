@@ -134,6 +134,7 @@ public class PurchaseOrderAggregate {
         this.userId = purchaseOrderCreatedEvent.getUserId();
         this.orderDate = purchaseOrderCreatedEvent.getOrderDate();
         this.expectedDeliveryDate = purchaseOrderCreatedEvent.getExpectedDeliveryDate();
+        this.purchaseOrderDetails = purchaseOrderCreatedEvent.getPurchaseOrderDetails();
         this.status = purchaseOrderCreatedEvent.getStatus();
         this.totalAmount = purchaseOrderCreatedEvent.getTotalAmount();
         this.discountValue = purchaseOrderCreatedEvent.getDiscountValue();
@@ -158,6 +159,7 @@ public class PurchaseOrderAggregate {
         this.orderDate = purchaseOrderUpdatedEvent.getOrderDate();
         this.expectedDeliveryDate = purchaseOrderUpdatedEvent.getExpectedDeliveryDate();
         this.status = purchaseOrderUpdatedEvent.getStatus();
+        this.purchaseOrderDetails = purchaseOrderUpdatedEvent.getPurchaseOrderDetails();
         this.totalAmount = purchaseOrderUpdatedEvent.getTotalAmount();
         this.discountValue = purchaseOrderUpdatedEvent.getDiscountValue();
         this.discountType = purchaseOrderUpdatedEvent.getDiscountType();
