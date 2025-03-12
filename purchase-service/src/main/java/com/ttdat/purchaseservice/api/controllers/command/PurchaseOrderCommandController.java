@@ -1,6 +1,7 @@
 package com.ttdat.purchaseservice.api.controllers.command;
 
 import com.ttdat.core.api.dto.response.ApiResponse;
+import com.ttdat.purchaseservice.api.dto.request.CancelPurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.CreatePurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderStatusRequest;
@@ -48,6 +49,18 @@ public class PurchaseOrderCommandController {
                 ApiResponse.builder()
                         .status(HttpStatus.OK.value())
                         .message("Purchase order updated successfully")
+                        .success(true)
+                        .build()
+        );
+    }
+
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<ApiResponse<Object>> cancelPurchaseOrder(@PathVariable String id, @RequestBody CancelPurchaseOrderRequest cancelPurchaseOrderRequest) {
+        purchaseOrderService.cancelPurchaseOrder(id, cancelPurchaseOrderRequest);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Purchase order canceled successfully")
                         .success(true)
                         .build()
         );

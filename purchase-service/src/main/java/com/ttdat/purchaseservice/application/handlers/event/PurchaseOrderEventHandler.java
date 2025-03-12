@@ -4,6 +4,8 @@ import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.purchaseservice.application.mappers.PurchaseOrderMapper;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrder;
+import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
+import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCancelledEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderStatusUpdatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderUpdatedEvent;
@@ -42,6 +44,14 @@ public class PurchaseOrderEventHandler {
     public void on(PurchaseOrderUpdatedEvent purchaseOrderUpdatedEvent) {
         PurchaseOrder purchaseOrder = getPurchaseOrderById(purchaseOrderUpdatedEvent.getPurchaseOrderId());
         purchaseOrderMapper.updateEntityFromEvent(purchaseOrder, purchaseOrderUpdatedEvent);
+        purchaseOrderRepository.save(purchaseOrder);
+    }
+
+    @EventHandler
+    public void on(PurchaseOrderCancelledEvent purchaseOrderCancelledEvent) {
+        PurchaseOrder purchaseOrder = getPurchaseOrderById(purchaseOrderCancelledEvent.getPurchaseOrderId());
+        purchaseOrder.setStatus(PurchaseOrderStatus.CANCELLED);
+        purchaseOrder.setCancelReason(purchaseOrderCancelledEvent.getCancelReason());
         purchaseOrderRepository.save(purchaseOrder);
     }
 

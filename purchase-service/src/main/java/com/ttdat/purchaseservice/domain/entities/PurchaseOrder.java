@@ -37,6 +37,10 @@ public class PurchaseOrder extends Auditable {
     @Enumerated(EnumType.STRING)
     PurchaseOrderStatus status;
 
+    String note;
+
+    String cancelReason;
+
     @Column(precision = 15, scale = 2)
     BigDecimal totalAmount;
 
@@ -52,7 +56,6 @@ public class PurchaseOrder extends Auditable {
     @Column(precision = 15, scale = 2)
     BigDecimal finalAmount;
 
-    String note;
 
     @OneToMany(mappedBy = "purchaseOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<PurchaseOrderDetail> purchaseOrderDetails;

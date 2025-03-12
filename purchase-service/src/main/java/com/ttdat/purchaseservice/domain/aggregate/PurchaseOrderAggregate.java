@@ -1,10 +1,12 @@
 package com.ttdat.purchaseservice.domain.aggregate;
 
+import com.ttdat.purchaseservice.application.commands.purchaseorder.CancelPurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderStatusCommand;
 import com.ttdat.purchaseservice.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
+import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCancelledEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderStatusUpdatedEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderUpdatedEvent;
@@ -40,6 +42,10 @@ public class PurchaseOrderAggregate {
 
     PurchaseOrderStatus status;
 
+    String note;
+
+    String cancelReason;
+
     List<EvtPurchaseOrderDetail> purchaseOrderDetails;
 
     BigDecimal totalAmount;
@@ -52,7 +58,6 @@ public class PurchaseOrderAggregate {
 
     BigDecimal finalAmount;
 
-    String note;
 
     @CommandHandler
     public PurchaseOrderAggregate(CreatePurchaseOrderCommand purchaseOrderCommand) {
@@ -126,6 +131,15 @@ public class PurchaseOrderAggregate {
         AggregateLifecycle.apply(purchaseOrderUpdatedEvent);
     }
 
+    @CommandHandler
+    public void handle(CancelPurchaseOrderCommand cancelPurchaseOrderCommand){
+        PurchaseOrderCancelledEvent purchaseOrderCancelledEvent = PurchaseOrderCancelledEvent.builder()
+                .purchaseOrderId(cancelPurchaseOrderCommand.getPurchaseOrderId())
+                .cancelReason(cancelPurchaseOrderCommand.getCancelReason())
+                .build();
+        AggregateLifecycle.apply(purchaseOrderCancelledEvent);
+    }
+
     @EventSourcingHandler
     public void on(PurchaseOrderCreatedEvent purchaseOrderCreatedEvent) {
         this.purchaseOrderId = purchaseOrderCreatedEvent.getPurchaseOrderId();
@@ -168,5 +182,11 @@ public class PurchaseOrderAggregate {
         if (purchaseOrderUpdatedEvent.getNote() != null) {
             this.note = purchaseOrderUpdatedEvent.getNote();
         }
+    }
+
+    @EventSourcingHandler
+    public void on(PurchaseOrderCancelledEvent purchaseOrderCancelledEvent){
+        this.cancelReason = purchaseOrderCancelledEvent.getCancelReason();
+        this.status = PurchaseOrderStatus.CANCELLED;
     }
 }
