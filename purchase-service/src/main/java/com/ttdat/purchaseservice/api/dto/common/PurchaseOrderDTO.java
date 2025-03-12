@@ -31,6 +31,10 @@ public class PurchaseOrderDTO {
 
     PurchaseOrderStatus status;
 
+    String note;
+
+    String cancelReason;
+
     List<PurchaseOrderDetailDTO> purchaseOrderDetails;
 
     BigDecimal totalAmount;
@@ -42,6 +46,4 @@ public class PurchaseOrderDTO {
     BigDecimal vatRate;
 
     BigDecimal finalAmount;
-
-    String note;
 }

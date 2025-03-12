@@ -11,6 +11,7 @@ import {
   Form,
   Input,
   InputNumber,
+  Modal,
   Select,
   Space,
   Table,
@@ -51,13 +52,21 @@ interface UpdatePurchaseOrderArgs {
   purchaseOrder: UpdatePurchaseOrderRequest;
 }
 
+interface CancelPurchaseOrderArgs {
+  purchaseOrderId: string;
+  cancelReason: string;
+}
+
 const ViewPurchaseOrder: React.FC = () => {
   const { id } = useParams();
   const [currentPurchaseOrder, setCurrentPurchaseOrder] = useState<
     IPurchaseOrder | undefined
   >(undefined);
   const [form] = Form.useForm<IPurchaseOrder>();
+  const [cancelPurchaseOrderForm] = Form.useForm();
   const queryClient = useQueryClient();
+  const [isOpenCancelModal, setIsOpenCancelModal] = useState<boolean>(false);
+
   const { data: purchaseOrder, isLoading: isPurchaseOrderLoading } = useQuery({
     queryKey: ["purchase-orders", id],
     queryFn: () => purchaseOrderService.getById(id!),
@@ -113,6 +122,24 @@ const ViewPurchaseOrder: React.FC = () => {
       });
     },
   });
+
+  const { mutate: cancelPurchaseOrder, isPending: isCanceling } = useMutation({
+    mutationFn: ({ purchaseOrderId, cancelReason }: CancelPurchaseOrderArgs) =>
+      purchaseOrderService.cancel(purchaseOrderId, cancelReason),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["purchase-orders"],
+      });
+    },
+  });
+
+  const handleOpenCancelModal = () => {
+    setIsOpenCancelModal(true);
+  };
+
+  const handleCloseCancelModal = () => {
+    setIsOpenCancelModal(false);
+  };
 
   useEffect(() => {
     if (purchaseOrder && productsMap) {
@@ -347,33 +374,70 @@ const ViewPurchaseOrder: React.FC = () => {
           </div>
         </Space>
         <div className="mt-2 flex space-x-2">
-          {purchaseOrder?.status !== PurchaseOrderStatus.COMPLETED && (
-            <Button
-              danger
-              disabled={isUpdatingStatus || isUpdating}
-              onClick={() => {
-                updatePurchaseOrderStatus(
-                  {
-                    purchaseOrderId: currentPurchaseOrder!.purchaseOrderId,
-                    status: PurchaseOrderStatus.CANCELLED,
-                  },
-                  {
-                    onSuccess: () => {
-                      toast.success("Đã hủy đơn hàng");
-                    },
-                    onError: (error: Error) => {
-                      toast.error(
-                        getNotificationMessage(error) ||
-                          "Hủy đơn hàng thất bại",
+          {purchaseOrder?.status !== PurchaseOrderStatus.COMPLETED &&
+            purchaseOrder?.status !== PurchaseOrderStatus.CANCELLED && (
+              <>
+                <Button danger onClick={handleOpenCancelModal}>
+                  Hủy
+                </Button>
+                <Modal
+                  open={isOpenCancelModal}
+                  width="30%"
+                  title={<span className="text-lg">Hủy đơn đặt hàng</span>}
+                  destroyOnClose
+                  onCancel={handleCloseCancelModal}
+                  cancelText="Đóng"
+                  okText="Hủy đơn hàng"
+                  onOk={() => cancelPurchaseOrderForm.submit()}
+                  cancelButtonProps={{
+                    disabled: isCanceling,
+                  }}
+                  okButtonProps={{
+                    disabled: isCanceling,
+                  }}
+                >
+                  <Form
+                    form={cancelPurchaseOrderForm}
+                    layout="vertical"
+                    onFinish={(values) => {
+                      cancelPurchaseOrder(
+                        {
+                          purchaseOrderId:
+                            currentPurchaseOrder!.purchaseOrderId,
+                          cancelReason: values.cancelReason as string,
+                        },
+                        {
+                          onSuccess: () => {
+                            toast.success("Hủy đơn hàng thành công");
+                            cancelPurchaseOrderForm.resetFields();
+                            handleCloseCancelModal();
+                          },
+                          onError: (error: Error) => {
+                            toast.error(
+                              getNotificationMessage(error) ||
+                                "Hủy đơn hàng thất bại",
+                            );
+                          },
+                        },
                       );
-                    },
-                  },
-                );
-              }}
-            >
-              Hủy
-            </Button>
-          )}
+                    }}
+                  >
+                    <Form.Item
+                      label="Lý do hủy"
+                      name="cancelReason"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập lý do hủy đơn hàng",
+                        },
+                      ]}
+                    >
+                      <Input.TextArea rows={3} />
+                    </Form.Item>
+                  </Form>
+                </Modal>
+              </>
+            )}
 
           {purchaseOrder?.status === PurchaseOrderStatus.PENDING && (
             <Button
@@ -519,6 +583,17 @@ const ViewPurchaseOrder: React.FC = () => {
               />
             </Form.Item>
           </Card>
+          {currentPurchaseOrder?.status === PurchaseOrderStatus.CANCELLED && (
+            <Card className="flex-1 self-stretch">
+              <Form.Item label="Lý do hủy">
+                <Input.TextArea
+                  value={currentPurchaseOrder?.cancelReason}
+                  readOnly
+                  rows={2}
+                />
+              </Form.Item>
+            </Card>
+          )}
           {(currentPurchaseOrder?.status === PurchaseOrderStatus.APPROVED ||
             currentPurchaseOrder?.status === PurchaseOrderStatus.COMPLETED) && (
             <Card className="flex-1 self-stretch">

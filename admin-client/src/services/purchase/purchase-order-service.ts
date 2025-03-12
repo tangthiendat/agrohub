@@ -34,6 +34,10 @@ interface IPurchaseOrderService {
     status: PurchaseOrderStatus,
   ): Promise<ApiResponse<void>>;
   getById(purchaseOrderId: string): Promise<ApiResponse<IPurchaseOrder>>;
+  cancel(
+    purchaseOrderId: string,
+    cancelReason: string,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/purchase-orders", {
@@ -87,6 +91,15 @@ class PurchaseOrderService implements IPurchaseOrderService {
 
   async getById(purchaseOrderId: string): Promise<ApiResponse<IPurchaseOrder>> {
     return (await apiClient.get(`/${purchaseOrderId}`)).data;
+  }
+
+  async cancel(
+    purchaseOrderId: string,
+    cancelReason: string,
+  ): Promise<ApiResponse<void>> {
+    return (
+      await apiClient.patch(`/${purchaseOrderId}/cancel`, { cancelReason })
+    ).data;
   }
 }
 
