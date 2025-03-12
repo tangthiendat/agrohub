@@ -596,7 +596,7 @@ const ViewPurchaseOrder: React.FC = () => {
           )}
           {(currentPurchaseOrder?.status === PurchaseOrderStatus.APPROVED ||
             currentPurchaseOrder?.status === PurchaseOrderStatus.COMPLETED) && (
-            <Card className="flex-1 self-stretch">
+            <Card className="w-[25%] self-stretch">
               <Form.Item label="Tổng tiền hàng" name="totalAmount">
                 <InputNumber
                   className="right-aligned-number w-full"
@@ -725,7 +725,7 @@ const ViewPurchaseOrder: React.FC = () => {
                   }}
                 />
               </Form.Item>
-              <Form.Item
+              {/* <Form.Item
                 label="VAT"
                 name="vatRate"
                 rules={[
@@ -775,6 +775,49 @@ const ViewPurchaseOrder: React.FC = () => {
                     });
                   }}
                   addonAfter={<div className="w-[55px]">%</div>}
+                />
+              </Form.Item> */}
+              <Form.Item label="VAT" name="vatRate">
+                <Select
+                  disabled={
+                    currentPurchaseOrder.status ===
+                    PurchaseOrderStatus.COMPLETED
+                  }
+                  value={currentPurchaseOrder?.vatRate}
+                  className="w-full"
+                  options={[
+                    { value: 0, label: "0%" },
+                    { value: 5, label: "5%" },
+                    { value: 8, label: "8%" },
+                    { value: 10, label: "10%" },
+                  ]}
+                  labelRender={(props) => (
+                    <div className="text-right">{props.label}</div>
+                  )}
+                  onChange={(value) => {
+                    const totalAmount = currentPurchaseOrder?.totalAmount || 0;
+                    const discountValue =
+                      currentPurchaseOrder?.discountValue || 0;
+                    const discountType = currentPurchaseOrder?.discountType;
+
+                    const finalAmount = getFinalAmount(
+                      totalAmount,
+                      discountValue,
+                      discountType,
+                      value,
+                    );
+
+                    form.setFieldsValue({
+                      vatRate: value,
+                      finalAmount: finalAmount,
+                    });
+
+                    setCurrentPurchaseOrder({
+                      ...currentPurchaseOrder,
+                      vatRate: value,
+                      finalAmount: finalAmount,
+                    });
+                  }}
                 />
               </Form.Item>
               <Form.Item label="Tổng cộng" name="finalAmount">

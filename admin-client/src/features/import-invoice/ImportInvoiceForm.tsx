@@ -196,7 +196,7 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
             </Form.Item>
           </Card>
 
-          <Card className="flex-1 self-stretch">
+          <Card className="w-[25%] self-stretch">
             <Form.Item label="Tổng tiền hàng" name="totalAmount">
               <InputNumber
                 className="right-aligned-number w-full"
@@ -246,7 +246,7 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
                 }
               />
             </Form.Item>
-            <Form.Item label="VAT" name="vatRate">
+            {/* <Form.Item label="VAT" name="vatRate">
               <InputNumber
                 className="right-aligned-number w-full"
                 controls={false}
@@ -258,6 +258,24 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
                 }}
                 min={0}
                 addonAfter={<div className="w-[55px]">%</div>}
+              />
+            </Form.Item> */}
+            <Form.Item label="VAT" name="vatRate">
+              <Select
+                className="w-full"
+                value={vatRate}
+                onChange={(value) => {
+                  setVatRate(value);
+                }}
+                labelRender={(props) => (
+                  <div className="text-right">{props.label}</div>
+                )}
+                options={[
+                  { value: 0, label: "0%" },
+                  { value: 5, label: "5%" },
+                  { value: 8, label: "8%" },
+                  { value: 10, label: "10%" },
+                ]}
               />
             </Form.Item>
             <Form.Item label="Tổng cộng" name="finalAmount">
