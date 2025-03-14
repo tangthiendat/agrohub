@@ -164,20 +164,11 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
       width: "10%",
     },
     {
-      title: "Thời gian tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      title: "Điểm tín nhiệm",
+      key: "trustScore",
       width: "12%",
-      render: (createdAt: string) =>
-        createdAt ? formatTimestamp(createdAt) : "",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
-      sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
-          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-        </div>
-      ),
+      render: (_, supplier: ISupplier) =>
+        supplier.supplierRating && `${supplier.supplierRating.trustScore}/100`,
     },
     {
       title: "Thời gian cập nhật",
