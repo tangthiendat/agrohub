@@ -30,7 +30,7 @@ public class SupplierEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(SupplierCreatedEvent supplierCreatedEvent) {
+    public void on(SupplierCreatedEvent supplierCreatedEvent) {
         if(supplierRepository.existsBySupplierName(supplierCreatedEvent.getSupplierName())) {
             throw new DuplicateResourceException(ErrorCode.SUPPLIER_ALREADY_EXISTS);
         }
@@ -45,7 +45,7 @@ public class SupplierEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(SupplierUpdatedEvent supplierUpdatedEvent) {
+    public void on(SupplierUpdatedEvent supplierUpdatedEvent) {
         Supplier supplier = getSupplierById(supplierUpdatedEvent.getSupplierId());
         supplierMapper.updateEntityFromEvent(supplier, supplierUpdatedEvent);
         supplierRepository.save(supplier);
@@ -53,7 +53,7 @@ public class SupplierEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(SupplierStatusUpdatedEvent supplierStatusUpdatedEvent) {
+    public void on(SupplierStatusUpdatedEvent supplierStatusUpdatedEvent) {
         Supplier supplier = getSupplierById(supplierStatusUpdatedEvent.getSupplierId());
         supplier.setActive(supplierStatusUpdatedEvent.isActive());
         supplierRepository.save(supplier);
@@ -61,7 +61,7 @@ public class SupplierEventHandler {
 
     @Transactional
     @EventHandler
-    public void handle(SupplierProductCreatedEvent supplierProductCreatedEvent) {
+    public void on(SupplierProductCreatedEvent supplierProductCreatedEvent) {
         SupplierProduct supplierProduct = supplierProductMapper.toEntity(supplierProductCreatedEvent);
         supplierProductRepository.save(supplierProduct);
     }

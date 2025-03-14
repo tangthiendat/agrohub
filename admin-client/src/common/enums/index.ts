@@ -23,6 +23,8 @@ export enum Module {
   PRODUCT = "PRODUCT",
   SUPPLIER = "SUPPLIER",
   WAREHOUSE = "WAREHOUSE",
+  PURCHASE_ORDER = "PURCHASE ORDER",
+  IMPORT_INVOICE = "IMPORT INVOICE",
 }
 
 export enum Gender {
@@ -35,4 +37,16 @@ export enum PhysicalState {
   SOLID = "SOLID",
   LIQUID = "LIQUID",
   POWDER = "POWDER",
+}
+
+export enum PurchaseOrderStatus {
+  PENDING = "PENDING",
+  APPROVED = "APPROVED",
+  COMPLETED = "COMPLETED",
+  CANCELLED = "CANCELLED",
+}
+
+export enum DiscountType {
+  PERCENTAGE = "PERCENTAGE",
+  AMOUNT = "AMOUNT",
 }

@@ -30,7 +30,6 @@ const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
         "productUnits",
         productUnitIndex,
       ]);
-
       const currentProductUnitPrice =
         productUnit?.productUnitPrices &&
         productUnit.productUnitPrices.length > 0
@@ -69,11 +68,13 @@ const EditProductUnitPrice: React.FC<EditProductUnitPriceProps> = ({
         <EditIcon onClick={handleOpenModal} tooltipTitle="Chỉnh sửa giá" />
       )}
 
-      <ViewProductUnitPrices
-        key={productUnitIndex}
-        productForm={productForm}
-        productUnitIndex={productUnitIndex}
-      />
+      {currentProductUnitPrice && (
+        <ViewProductUnitPrices
+          key={productUnitIndex}
+          productForm={productForm}
+          productUnitIndex={productUnitIndex}
+        />
+      )}
 
       <Modal
         open={isOpenModal}

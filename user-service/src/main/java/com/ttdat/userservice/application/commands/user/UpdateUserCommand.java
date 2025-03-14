@@ -1,7 +1,7 @@
 package com.ttdat.userservice.application.commands.user;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.ttdat.userservice.domain.entities.Gender;
+import com.ttdat.core.domain.entities.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,12 +19,20 @@ import java.util.UUID;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class UpdateUserCommand {
     UUID userId;
+
     String fullName;
+
     Gender gender;
+
     boolean active;
+
     Long warehouseId;
+
     String email;
+
     LocalDate dob;
+
     String phoneNumber;
+
     Long roleId;
 }

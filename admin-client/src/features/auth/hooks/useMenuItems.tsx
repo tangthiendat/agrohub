@@ -3,13 +3,15 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { MdCategory, MdDashboard, MdInventory } from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
-import { FaKey, FaUserCog, FaUsers } from "react-icons/fa";
-import { IUser } from "../../../interfaces";
-import { PERMISSIONS } from "../../../common/constants";
-import { Module } from "../../../common/enums";
+import { FaFileInvoice, FaKey, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { FaWarehouse } from "react-icons/fa6";
+import { BiPurchaseTag } from "react-icons/bi";
+import { TbPackageImport } from "react-icons/tb";
+import { IUser } from "../../../interfaces";
+import { PERMISSIONS } from "../../../common/constants";
+import { Module } from "../../../common/enums";
 
 export function useMenuItems(user?: IUser): MenuProps["items"] {
   const [menuItems, setMenuItems] = useState<MenuProps["items"]>([]);
@@ -78,6 +80,24 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           viewWarehouses,
       );
 
+      const viewPurchaseOrders = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.PURCHASE_ORDER].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.PURCHASE_ORDER].GET_PAGE.httpMethod,
+      );
+
+      const viewImportInvoices = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.IMPORT_INVOICE].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.IMPORT_INVOICE].GET_PAGE.httpMethod,
+      );
+
+      const hasPurchaseItem = Boolean(viewPurchaseOrders || viewImportInvoices);
+
       const menuItems = [
         {
           label: (
@@ -91,7 +111,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
         ...(hasAuthChildren
           ? [
               {
-                label: "Xác thực",
+                label: "Quản trị",
                 key: "auth",
                 icon: <IoShieldCheckmark />,
                 children: [
@@ -179,6 +199,43 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           label: <NavLink to="/warehouses">Kho hàng</NavLink>,
                           key: "warehouses",
                           icon: <FaWarehouse />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasPurchaseItem
+          ? [
+              {
+                label: "Mua hàng",
+                key: "purchase",
+                icon: <BiPurchaseTag />,
+                children: [
+                  ...(viewPurchaseOrders
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/purchase-orders">
+                              Đơn đặt hàng
+                            </NavLink>
+                          ),
+                          key: "purchase-orders",
+                          icon: <FaFileInvoice />,
+                        },
+                      ]
+                    : []),
+                  ...(viewImportInvoices
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/import-invoices">
+                              Phiếu nhập kho
+                            </NavLink>
+                          ),
+                          key: "import-invoices",
+                          icon: <TbPackageImport size={18} />,
                         },
                       ]
                     : []),

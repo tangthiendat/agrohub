@@ -1,13 +1,16 @@
 package com.ttdat.userservice.application.handlers.query;
 
 import com.ttdat.core.api.dto.response.PaginationMeta;
+import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.core.application.queries.user.GetUserInfoByIdQuery;
 import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.api.dto.response.UserPageResult;
 import com.ttdat.userservice.application.mappers.UserMapper;
 import com.ttdat.userservice.application.queries.user.GetUserByEmailQuery;
 import com.ttdat.userservice.application.queries.user.GetUserByIdQuery;
+import com.ttdat.userservice.application.queries.user.GetUserInfoQuery;
 import com.ttdat.userservice.application.queries.user.GetUserPageQuery;
 import com.ttdat.userservice.domain.entities.User;
 import com.ttdat.userservice.domain.repositories.UserRepository;
@@ -15,6 +18,7 @@ import com.ttdat.userservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.userservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
+import org.axonframework.queryhandling.QueryMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -36,17 +40,21 @@ public class UserQueryHandler {
         return userMapper.toDTO(user);
     }
 
+    private User getUserById(UUID userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+    }
+
     @QueryHandler
     public UserDTO handle(GetUserByIdQuery getUserByIdQuery){
-        User user = userRepository.findById(UUID.fromString(getUserByIdQuery.getUserId()))
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
+        User user = getUserById(UUID.fromString(getUserByIdQuery.getUserId()));
         return userMapper.toDTO(user);
     }
 
     @QueryHandler
     public UserPageResult handle(GetUserPageQuery getUserPageQuery){
         Pageable pageable = PaginationUtils.getPageable(getUserPageQuery.getPaginationParams(), getUserPageQuery.getSortParams());
-        Specification<User> userPageSpec = getUserPageSpec(getUserPageQuery.getFilterParams());
+        Specification<User> userPageSpec = getUserSpec(getUserPageQuery.getFilterParams());
         Page<User> userPage = userRepository.findAll(userPageSpec, pageable);
         PaginationMeta paginationMeta = PaginationUtils.getPaginationMeta(userPage);
         return UserPageResult.builder()
@@ -55,7 +63,7 @@ public class UserQueryHandler {
                 .build();
     }
 
-    private Specification<User> getUserPageSpec(Map<String, String> filterParams){
+    private Specification<User> getUserSpec(Map<String, String> filterParams){
         Specification<User> userPageSpec = Specification.where(null);
         userPageSpec = userPageSpec.and(SpecificationUtils.buildSpecification(filterParams, "fullName", String.class))
                 .and(SpecificationUtils.buildSpecification(filterParams, "gender", String.class))
@@ -74,5 +82,18 @@ public class UserQueryHandler {
             userPageSpec = userPageSpec.and(querySpec);
         }
         return userPageSpec;
+    }
+
+    @QueryHandler
+    public UserInfo handle(GetUserInfoQuery getUserInfoQuery, QueryMessage<?,?> queryMessage){
+        String userIdStr = (String) queryMessage.getMetaData().get("userId");
+        User user = getUserById(UUID.fromString(userIdStr));
+        return userMapper.toUserInfo(user);
+    }
+
+    @QueryHandler
+    public UserInfo handle(GetUserInfoByIdQuery getUserInfoByIdQuery){
+        User user = getUserById(UUID.fromString(getUserInfoByIdQuery.getUserId()));
+        return userMapper.toUserInfo(user);
     }
 }

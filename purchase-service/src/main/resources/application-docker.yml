@@ -24,6 +24,10 @@ axon:
     processors:
       supplier-group:
         mode: subscribing
+      purchase-order-group:
+        mode: subscribing
+      import-invoice-group:
+        mode: subscribing
 application:
   security:
     rsa:

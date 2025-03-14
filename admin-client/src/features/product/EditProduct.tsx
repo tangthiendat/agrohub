@@ -1,11 +1,11 @@
-import { useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Button, Space, Tooltip } from "antd";
-import { GoArrowLeft } from "react-icons/go";
+import { Button, Space } from "antd";
+import { useNavigate, useParams } from "react-router";
+import BackButton from "../../common/components/BackButton";
 import Loading from "../../common/components/Loading";
 import UpdateProductForm from "./UpdateProductForm";
-import { productService } from "../../services";
 import { useTitle } from "../../common/hooks";
+import { productService } from "../../services";
 
 const EditProduct: React.FC = () => {
   useTitle("Chỉnh sửa sản phẩm");
@@ -26,9 +26,7 @@ const EditProduct: React.FC = () => {
     <div className="card">
       <div className="mb-5 flex items-center justify-between">
         <Space align="start" size="middle">
-          <Tooltip title="Quay lại">
-            <Button icon={<GoArrowLeft />} onClick={() => navigate(-1)} />
-          </Tooltip>
+          <BackButton />
           <h2 className="text-xl font-semibold">Chỉnh sửa sản phẩm</h2>
         </Space>
         <Button type="primary" onClick={() => navigate("suppliers")}>

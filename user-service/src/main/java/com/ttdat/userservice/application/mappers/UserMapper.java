@@ -1,5 +1,6 @@
 package com.ttdat.userservice.application.mappers;
 
+import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.domain.entities.Role;
 import com.ttdat.userservice.domain.entities.User;
@@ -25,6 +26,8 @@ public interface UserMapper extends EntityMapper<UserDTO, User> {
     @Mapping(target = "password", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent);
+
+    UserInfo toUserInfo(User user);
 
     @AfterMapping
     default void updateUserRole(@MappingTarget User user, UserUpdatedEvent userUpdatedEvent) {

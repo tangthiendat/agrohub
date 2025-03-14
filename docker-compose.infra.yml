@@ -208,3 +208,51 @@ services:
     networks:
       - agrohub
 
+  debt-service-db:
+    image: postgres:16.4-alpine
+    container_name: debt-service-db
+    environment:
+      POSTGRES_DB: debt_service
+      POSTGRES_USER: debt_service
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5435:5435"
+    volumes:
+      - ${DOCKER_DATA}/ct553/debt-service:/var/lib/postgresql/data
+      - ./config/debt-service-db.conf:/etc/postgresql/debt-service-db.conf
+    command: -c config_file=/etc/postgresql/debt-service-db.conf
+    networks:
+      - agrohub
+
+  customer-service-db:
+    image: postgres:16.4-alpine
+    container_name: customer-service-db
+    environment:
+      POSTGRES_DB: customer_service
+      POSTGRES_USER: customer_service
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5436:5436"
+    volumes:
+      - ${DOCKER_DATA}/ct553/customer-service:/var/lib/postgresql/data
+      - ./config/customer-service-db.conf:/etc/postgresql/customer-service-db.conf
+    command: -c config_file=/etc/postgresql/customer-service-db.conf
+    networks:
+      - agrohub
+
+  sales-service-db:
+    image: postgres:16.4-alpine
+    container_name: sales-service-db
+    environment:
+      POSTGRES_DB: sales_service
+      POSTGRES_USER: sales_service
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5437:5437"
+    volumes:
+      - ${DOCKER_DATA}/ct553/sales-service:/var/lib/postgresql/data
+      - ./config/sales-service-db.conf:/etc/postgresql/sales-service-db.conf
+    command: -c config_file=/etc/postgresql/sales-service-db.conf
+    networks:
+      - agrohub
+

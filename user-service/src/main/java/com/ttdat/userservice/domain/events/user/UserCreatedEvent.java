@@ -1,6 +1,6 @@
 package com.ttdat.userservice.domain.events.user;
 
-import com.ttdat.userservice.domain.entities.Gender;
+import com.ttdat.core.domain.entities.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

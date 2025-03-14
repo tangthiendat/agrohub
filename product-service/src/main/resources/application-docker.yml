@@ -7,6 +7,10 @@ spring:
     name: product-service
   main:
     allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-request-size: 15MB
+      max-file-size: 10MB
   threads:
     virtual:
       enabled: true

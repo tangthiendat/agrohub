@@ -25,7 +25,7 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtBlacklistFilter jwtBlacklistFilter;
 
-    private final ProductServiceAuthenticationEntryPoint productServiceAuthenticationEntryPoint;
+    private final InventoryServiceAuthenticationEntryPoint inventoryServiceAuthenticationEntryPoint;
 
     @Value("${application.security.rsa.rsa-public-key}")
     private RSAPublicKey rsaPublicKey;
@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .oauth2ResourceServer(oauth2 ->
                         oauth2.jwt(jwtConfig ->
                                 jwtConfig.jwtAuthenticationConverter(jwtAuthenticationConverter())
-                        ).authenticationEntryPoint(productServiceAuthenticationEntryPoint))
+                        ).authenticationEntryPoint(inventoryServiceAuthenticationEntryPoint))
                 .addFilterBefore(jwtBlacklistFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(AbstractHttpConfigurer::disable);
 

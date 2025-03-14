@@ -7,6 +7,7 @@ import com.ttdat.productservice.api.dto.response.ProductPageResult;
 import com.ttdat.productservice.application.mappers.ProductMapper;
 import com.ttdat.productservice.application.queries.product.GetProductByIdQuery;
 import com.ttdat.productservice.application.queries.product.GetProductPageQuery;
+import com.ttdat.productservice.application.queries.product.SearchProductQuery;
 import com.ttdat.productservice.domain.entities.Product;
 import com.ttdat.productservice.domain.repositories.ProductRepository;
 import com.ttdat.productservice.infrastructure.utils.PaginationUtils;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -29,7 +31,7 @@ public class ProductQueryHandler {
     @QueryHandler
     public ProductPageResult handle(GetProductPageQuery getProductPageQuery){
         Pageable pageable = PaginationUtils.getPageable(getProductPageQuery.getPaginationParams(), getProductPageQuery.getSortParams());
-        Specification<Product> productPageSpec = getProductPageSpec(getProductPageQuery.getFilterParams());
+        Specification<Product> productPageSpec = getProductSpec(getProductPageQuery.getFilterParams());
         Page<Product> productPage = productRepository.findAll(productPageSpec, pageable);
         return ProductPageResult.builder()
                 .meta(PaginationUtils.getPaginationMeta(productPage))
@@ -37,7 +39,7 @@ public class ProductQueryHandler {
                 .build();
     }
 
-    private Specification<Product> getProductPageSpec(Map<String, String> filterParams){
+    private Specification<Product> getProductSpec(Map<String, String> filterParams){
         Specification<Product> productPageSpec = Specification.where(null);
         productPageSpec = productPageSpec.and(SpecificationUtils.buildJoinSpecification(filterParams, "category", "categoryId", Long.class));
         if (filterParams.containsKey("query")){
@@ -60,5 +62,12 @@ public class ProductQueryHandler {
         Product product = productRepository.findById(getProductByIdQuery.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
         return productMapper.toDTO(product);
+    }
+
+    @QueryHandler
+    public List<ProductDTO> handle(SearchProductQuery searchProductQuery){
+        Specification<Product> productSpec = getProductSpec(Map.of("query", searchProductQuery.getQuery()));
+        List<Product> products = productRepository.findAll(productSpec);
+        return productMapper.toDTOList(products);
     }
 }

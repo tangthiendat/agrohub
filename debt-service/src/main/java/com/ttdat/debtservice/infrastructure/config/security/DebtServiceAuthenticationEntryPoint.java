@@ -1,4 +1,4 @@
-package com.ttdat.inventoryservice.infrastructure.config.security;
+package com.ttdat.debtservice.infrastructure.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ttdat.core.api.dto.response.ApiError;
@@ -16,11 +16,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
-public class ProductServiceAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class DebtServiceAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private final AuthenticationEntryPoint delegate = new BearerTokenAuthenticationEntryPoint();
     private final ObjectMapper mapper;
 
-    public ProductServiceAuthenticationEntryPoint(ObjectMapper mapper) {
+    public DebtServiceAuthenticationEntryPoint(ObjectMapper mapper) {
         this.mapper = mapper;
     }
 

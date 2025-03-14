@@ -14,6 +14,7 @@ services:
       - "8080:8080"
     networks:
       - agrohub
+
   product-service:
     build:
       context: .
@@ -26,6 +27,20 @@ services:
       - "8081:8081"
     networks:
       - agrohub
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: inventory-service/Dockerfile.dev
+    image: agrohub/inventory-service:dev
+    container_name: inventory-service
+    env_file:
+      - inventory-service/.env.docker
+    ports:
+      - "8082:8082"
+    networks:
+      - agrohub
+
   purchase-service:
     build:
       context: .
@@ -36,5 +51,18 @@ services:
       - purchase-service/.env.docker
     ports:
       - "8083:8083"
+    networks:
+      - agrohub
+
+  debt-service:
+    build:
+      context: .
+      dockerfile: debt-service/Dockerfile.dev
+    image: agrohub/debt-service:dev
+    container_name: debt-service
+    env_file:
+      - debt-service/.env.docker
+    ports:
+      - "8084:8084"
     networks:
       - agrohub

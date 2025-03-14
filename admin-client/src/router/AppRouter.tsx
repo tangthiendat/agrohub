@@ -16,6 +16,11 @@ import EditProduct from "../features/product/EditProduct";
 import Suppliers from "../pages/Suppliers";
 import EditProductSuppliers from "../features/product/EditProductSuppliers";
 import Warehouses from "../pages/Warehouses";
+import PurchaseOrders from "../pages/PurchaseOrders";
+import NewPurchaseOrder from "../features/purchase-order/NewPurchaseOrder";
+import ViewPurchaseOrder from "../features/purchase-order/ViewPurchaseOrder";
+import ImportInvoices from "../pages/ImportInvoices";
+import NewImportInvoice from "../features/import-invoice/NewImportInvoice";
 
 const router = createBrowserRouter([
   {
@@ -94,6 +99,38 @@ const router = createBrowserRouter([
       {
         path: "/warehouses",
         element: <Warehouses />,
+      },
+      {
+        path: "/purchase-orders",
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <PurchaseOrders />,
+          },
+          {
+            path: "new",
+            element: <NewPurchaseOrder />,
+          },
+          {
+            path: ":id",
+            element: <ViewPurchaseOrder />,
+          },
+        ],
+      },
+      {
+        path: "/import-invoices",
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <ImportInvoices />,
+          },
+          {
+            path: "new",
+            element: <NewImportInvoice />,
+          },
+        ],
       },
     ],
   },

@@ -1,0 +1,12 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /sales-service
+spring:
+  application:
+    name: sales-service
+  main:
+    allow-bean-definition-overriding: true
+  threads:
+    virtual:
+      enabled: true

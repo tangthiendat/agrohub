@@ -46,4 +46,7 @@ public class Supplier extends Auditable {
 
     @OneToMany(mappedBy = "supplier", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     List<SupplierProduct> supplierProducts;
+
+    @OneToMany(mappedBy = "supplier")
+    List<PurchaseOrder> purchaseOrders;
 }

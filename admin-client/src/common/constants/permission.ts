@@ -149,4 +149,32 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PUT,
     },
   },
+  [Module.PURCHASE_ORDER]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/purchase-orders/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/purchase-orders",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/purchase-orders/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+    UPDATE_STATUS: {
+      apiPath: "/api/v1/purchase-orders/{id}/status",
+      httpMethod: HttpMethod.PATCH,
+    },
+  },
+  [Module.IMPORT_INVOICE]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/import-invoices/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/import-invoices",
+      httpMethod: HttpMethod.POST,
+    },
+  },
 };

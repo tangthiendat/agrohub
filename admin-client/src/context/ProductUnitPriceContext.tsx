@@ -30,7 +30,9 @@ const ProductUnitPriceContextProvider: React.FC<PropsWithChildren> = ({
 const useProductUnitPrice = () => {
   const context = useContext(ProductUnitPriceContext);
   if (!context) {
-    throw new Error("useTraveler must be used within a TravelerProvider");
+    throw new Error(
+      "useProductUnitPrice must be used within a ProductUnitPriceProvider",
+    );
   }
   return context;
 };

@@ -1,0 +1,12 @@
+server:
+  port: 8085
+  servlet:
+    context-path: /customer-service
+spring:
+  application:
+    name: customer-service
+  main:
+    allow-bean-definition-overriding: true
+  threads:
+    virtual:
+      enabled: true
