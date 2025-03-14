@@ -5,6 +5,7 @@ import { IWarehouseInfo } from "../inventory";
 import { IProduct, IProductUnit } from "../product";
 
 export interface ISupplierRating extends Auditable {
+  warehouseId: number;
   ratingId: string;
   trustScore: number;
   comment?: string;

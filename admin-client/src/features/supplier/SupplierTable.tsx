@@ -24,6 +24,7 @@ import {
 } from "../../utils/color";
 import { PERMISSIONS } from "../../common/constants";
 import { Module } from "../../common/enums";
+import RateSupplier from "./RateSupplier";
 
 interface SupplierTableProps {
   supplierPage?: Page<ISupplier>;
@@ -195,6 +196,9 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
           <ViewSupplier supplier={supplier} />
           <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE} hideChildren>
             <UpdateSupplier supplier={supplier} />
+          </Access>
+          <Access permission={PERMISSIONS[Module.SUPPLIER].RATE} hideChildren>
+            <RateSupplier supplier={supplier} />
           </Access>
           <Access
             permission={PERMISSIONS[Module.SUPPLIER].UPDATE_STATUS}
