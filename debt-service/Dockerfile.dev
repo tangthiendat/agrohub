@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY debt-service/target/*.jar /app/debt-service.jar
 
-EXPOSE 8081
+EXPOSE 8084
 
 ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
 ENV SPRING_PROFILES_ACTIVE="docker"
