@@ -1,5 +1,6 @@
 package com.ttdat.purchaseservice.api.dto.common;
 
+import com.ttdat.purchaseservice.api.dto.response.SupplierRatingDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +34,8 @@ public class SupplierDTO {
     String contactPerson;
 
     String notes;
+
+    SupplierRatingDTO supplierRating;
 
     LocalDateTime createdAt;
 
