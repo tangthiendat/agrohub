@@ -5,13 +5,13 @@ import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.purchaseservice.application.mappers.SupplierMapper;
 import com.ttdat.purchaseservice.application.mappers.SupplierProductMapper;
+import com.ttdat.purchaseservice.application.mappers.SupplierRatingMapper;
 import com.ttdat.purchaseservice.domain.entities.Supplier;
 import com.ttdat.purchaseservice.domain.entities.SupplierProduct;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierCreatedEvent;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierProductCreatedEvent;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierStatusUpdatedEvent;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierUpdatedEvent;
+import com.ttdat.purchaseservice.domain.entities.SupplierRating;
+import com.ttdat.purchaseservice.domain.events.supplier.*;
 import com.ttdat.purchaseservice.domain.repositories.SupplierProductRepository;
+import com.ttdat.purchaseservice.domain.repositories.SupplierRatingRepository;
 import com.ttdat.purchaseservice.domain.repositories.SupplierRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -27,6 +27,8 @@ public class SupplierEventHandler {
     private final SupplierProductRepository supplierProductRepository;
     private final SupplierMapper supplierMapper;
     private final SupplierProductMapper supplierProductMapper;
+    private final SupplierRatingRepository supplierRatingRepository;
+    private final SupplierRatingMapper supplierRatingMapper;
 
     @Transactional
     @EventHandler
@@ -65,4 +67,12 @@ public class SupplierEventHandler {
         SupplierProduct supplierProduct = supplierProductMapper.toEntity(supplierProductCreatedEvent);
         supplierProductRepository.save(supplierProduct);
     }
+
+    @Transactional
+    @EventHandler
+    public void on(SupplierRatingCreatedEvent supplierRatingCreatedEvent){
+        SupplierRating supplierRating = supplierRatingMapper.toEntity(supplierRatingCreatedEvent);
+        supplierRatingRepository.save(supplierRating);
+    }
+
 }

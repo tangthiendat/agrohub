@@ -2,6 +2,7 @@ package com.ttdat.purchaseservice.api.controllers.command;
 
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
+import com.ttdat.purchaseservice.api.dto.request.CreateSupplierRatingRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdateSupplierStatusRequest;
 import com.ttdat.purchaseservice.application.services.SupplierService;
 import jakarta.validation.Valid;
@@ -50,6 +51,18 @@ public class SupplierCommandController {
                         .success(true)
                         .build()
         );
+    }
+
+    @PostMapping("/{id}/ratings")
+    public ResponseEntity<ApiResponse<Object>> createSupplierRating(@PathVariable String id, @RequestBody CreateSupplierRatingRequest createSupplierRatingRequest) {
+        supplierService.createSupplierRating(id, createSupplierRatingRequest);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.builder()
+                        .status(HttpStatus.CREATED.value())
+                        .message("Supplier rating created successfully")
+                        .success(true)
+                        .build()
+                );
     }
 
 }

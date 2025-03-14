@@ -49,4 +49,7 @@ public class Supplier extends Auditable {
 
     @OneToMany(mappedBy = "supplier")
     List<PurchaseOrder> purchaseOrders;
+
+    @OneToMany(mappedBy = "supplier")
+    List<SupplierRating> supplierRatings;
 }
