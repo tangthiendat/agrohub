@@ -31,6 +31,7 @@ public enum ErrorCode {
     WAREHOUSE_NOT_FOUND("AGH-315", "Warehouse not found", ErrorType.RESOURCE),
     WAREHOUSE_ALREADY_EXISTS("AGH-316", "Warehouse with this name already exists", ErrorType.RESOURCE),
     PURCHASE_ORDER_NOT_FOUND("AGH-317", "Purchase order not found", ErrorType.RESOURCE),
+    SUPPLIER_RATING_NOT_FOUND("AGH-318", "Supplier rating not found", ErrorType.RESOURCE),
 
     INTERNAL_SERVER_ERROR("AGH-501", "Internal server error", ErrorType.SYSTEM),;
 

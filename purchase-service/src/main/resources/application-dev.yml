@@ -28,6 +28,8 @@ axon:
         mode: subscribing
       import-invoice-group:
         mode: subscribing
+      supplier-rating-group:
+        mode: subscribing
 application:
   security:
     rsa:

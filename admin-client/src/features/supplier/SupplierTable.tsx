@@ -24,6 +24,7 @@ import {
 } from "../../utils/color";
 import { PERMISSIONS } from "../../common/constants";
 import { Module } from "../../common/enums";
+import RateSupplier from "./RateSupplier";
 
 interface SupplierTableProps {
   supplierPage?: Page<ISupplier>;
@@ -164,20 +165,11 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
       width: "10%",
     },
     {
-      title: "Thời gian tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
+      title: "Điểm tín nhiệm",
+      key: "trustScore",
       width: "12%",
-      render: (createdAt: string) =>
-        createdAt ? formatTimestamp(createdAt) : "",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
-      sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
-          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-        </div>
-      ),
+      render: (_, supplier: ISupplier) =>
+        supplier.supplierRating && `${supplier.supplierRating.trustScore}/100`,
     },
     {
       title: "Thời gian cập nhật",
@@ -204,6 +196,9 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
           <ViewSupplier supplier={supplier} />
           <Access permission={PERMISSIONS[Module.SUPPLIER].UPDATE} hideChildren>
             <UpdateSupplier supplier={supplier} />
+          </Access>
+          <Access permission={PERMISSIONS[Module.SUPPLIER].RATE} hideChildren>
+            <RateSupplier supplier={supplier} />
           </Access>
           <Access
             permission={PERMISSIONS[Module.SUPPLIER].UPDATE_STATUS}

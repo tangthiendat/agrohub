@@ -4,6 +4,13 @@ import { Auditable } from "../common";
 import { IWarehouseInfo } from "../inventory";
 import { IProduct, IProductUnit } from "../product";
 
+export interface ISupplierRating extends Auditable {
+  warehouseId: number;
+  ratingId: string;
+  trustScore: number;
+  comment?: string;
+}
+
 export interface ISupplier extends Auditable {
   supplierId: string;
   supplierName: string;
@@ -13,6 +20,7 @@ export interface ISupplier extends Auditable {
   address?: string;
   taxCode?: string;
   contactPerson?: string;
+  supplierRating?: ISupplierRating;
   notes?: string;
 }
 

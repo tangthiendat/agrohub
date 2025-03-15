@@ -25,7 +25,7 @@ WORKDIR /app
 
 COPY --from=build /app/debt-service/target/*.jar /app/debt-service.jar
 
-EXPOSE 8080
+EXPOSE 8084
 
 ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
 ENV SPRING_PROFILES_ACTIVE="docker"

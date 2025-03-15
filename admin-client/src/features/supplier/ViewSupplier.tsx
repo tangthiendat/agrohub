@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
+import { Descriptions, DescriptionsProps, Drawer, Tag, Typography } from "antd";
 import ViewIcon from "../../common/components/icons/ViewIcon";
 import { ISupplier } from "../../interfaces";
 import { formatTimestamp } from "../../utils/datetime";
@@ -96,10 +96,48 @@ const ViewSupplier: React.FC<ViewSupplierProps> = ({ supplier }) => {
         onClose={onClose}
         title="Chi tiết nhà cung cấp"
       >
+        <Typography.Title level={5} className="mb-2">
+          Thông tin cơ bản
+        </Typography.Title>
         <Descriptions
+          className="mb-4"
           size="middle"
           bordered
           items={items}
+          labelStyle={{
+            width: "28%",
+          }}
+        />
+        <Typography.Title level={5} className="mb-2">
+          Thông tin đánh giá
+        </Typography.Title>
+        <Descriptions
+          size="middle"
+          bordered
+          items={[
+            {
+              key: "trustScore",
+              label: "Điểm tín nhiệm",
+              span: "filled",
+              children:
+                supplier.supplierRating &&
+                `${supplier.supplierRating.trustScore}/100`,
+            },
+            {
+              key: "comment",
+              label: "Nhận xét",
+              span: "filled",
+              children: supplier.supplierRating?.comment,
+            },
+            {
+              key: "updatedAt",
+              label: "Cập nhật",
+              span: "filled",
+              children:
+                supplier.supplierRating?.updatedAt &&
+                formatTimestamp(supplier.supplierRating.updatedAt),
+            },
+          ]}
           labelStyle={{
             width: "28%",
           }}

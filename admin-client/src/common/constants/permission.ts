@@ -134,6 +134,10 @@ export const PERMISSIONS = {
       apiPath: "/api/v1/suppliers/{id}/status",
       httpMethod: HttpMethod.PATCH,
     },
+    RATE: {
+      apiPath: "/api/v1/suppliers/{id}/ratings",
+      httpMethod: HttpMethod.POST,
+    },
   },
   [Module.WAREHOUSE]: {
     GET_PAGE: {

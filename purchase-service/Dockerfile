@@ -25,7 +25,7 @@ WORKDIR /app
 
 COPY --from=build /app/purchase-service/target/*.jar /app/purchase-service.jar
 
-EXPOSE 8080
+EXPOSE 8083
 
 ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
 ENV SPRING_PROFILES_ACTIVE="docker"
