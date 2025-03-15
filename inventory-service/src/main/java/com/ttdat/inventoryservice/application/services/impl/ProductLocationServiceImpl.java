@@ -2,6 +2,7 @@ package com.ttdat.inventoryservice.application.services.impl;
 
 import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
 import com.ttdat.inventoryservice.application.commands.location.CreateProductLocationCommand;
+import com.ttdat.inventoryservice.application.commands.location.UpdateProductLocationCommand;
 import com.ttdat.inventoryservice.application.services.ProductLocationService;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.gateway.CommandGateway;
@@ -26,5 +27,19 @@ public class ProductLocationServiceImpl implements ProductLocationService {
                 .status(productLocationDTO.getStatus())
                 .build();
         commandGateway.send(createProductLocationCommand);
+    }
+
+    @Override
+    public void updateProductLocation(String id, ProductLocationDTO productLocationDTO) {
+        UpdateProductLocationCommand updateProductLocationCommand = UpdateProductLocationCommand.builder()
+                .locationId(id)
+                .warehouseId(productLocationDTO.getWarehouse().getWarehouseId())
+                .rackName(productLocationDTO.getRackName())
+                .rackType(productLocationDTO.getRackType())
+                .rowNumber(productLocationDTO.getRowNumber())
+                .columnNumber(productLocationDTO.getColumnNumber())
+                .status(productLocationDTO.getStatus())
+                .build();
+        commandGateway.send(updateProductLocationCommand);
     }
 }

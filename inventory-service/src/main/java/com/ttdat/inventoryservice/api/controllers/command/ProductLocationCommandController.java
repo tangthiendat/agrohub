@@ -23,4 +23,14 @@ public class ProductLocationCommandController {
                 .success(true)
                 .build();
     }
+
+    @PutMapping("/{id}")
+    public ApiResponse<Object> updateProductLocation(@PathVariable String id, @RequestBody ProductLocationDTO productLocationDTO) {
+        productLocationService.updateProductLocation(id, productLocationDTO);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message("Product location updated successfully")
+                .success(true)
+                .build();
+    }
 }

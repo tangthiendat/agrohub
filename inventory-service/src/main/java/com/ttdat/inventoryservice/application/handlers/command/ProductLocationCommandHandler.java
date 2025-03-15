@@ -1,7 +1,9 @@
 package com.ttdat.inventoryservice.application.handlers.command;
 
 import com.ttdat.inventoryservice.application.commands.location.CreateProductLocationCommand;
+import com.ttdat.inventoryservice.application.commands.location.UpdateProductLocationCommand;
 import com.ttdat.inventoryservice.domain.events.location.ProductLocationCreatedEvent;
+import com.ttdat.inventoryservice.domain.events.location.ProductLocationUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;
@@ -25,5 +27,19 @@ public class ProductLocationCommandHandler {
                 .status(createProductLocationCommand.getStatus())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(productLocationCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateProductLocationCommand updateProductLocationCommand){
+        ProductLocationUpdatedEvent productLocationUpdatedEvent = ProductLocationUpdatedEvent.builder()
+                .locationId(updateProductLocationCommand.getLocationId())
+                .warehouseId(updateProductLocationCommand.getWarehouseId())
+                .rackName(updateProductLocationCommand.getRackName())
+                .rackType(updateProductLocationCommand.getRackType())
+                .rowNumber(updateProductLocationCommand.getRowNumber())
+                .columnNumber(updateProductLocationCommand.getColumnNumber())
+                .status(updateProductLocationCommand.getStatus())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(productLocationUpdatedEvent));
     }
 }
