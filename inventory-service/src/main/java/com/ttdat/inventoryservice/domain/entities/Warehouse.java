@@ -32,4 +32,7 @@ public class Warehouse extends Auditable {
 
     @OneToMany(mappedBy = "warehouse")
     List<ProductStock> productStocks;
+
+    @OneToMany(mappedBy = "warehouse")
+    List<ProductLocation> productLocations;
 }
