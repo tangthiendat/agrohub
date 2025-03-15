@@ -8,7 +8,6 @@ import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierByProdu
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierPageQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.SearchSupplierQuery;
 import com.ttdat.purchaseservice.domain.entities.Supplier;
-import com.ttdat.purchaseservice.domain.entities.SupplierRating;
 import com.ttdat.purchaseservice.domain.repositories.SupplierRepository;
 import com.ttdat.purchaseservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.purchaseservice.infrastructure.utils.SpecificationUtils;

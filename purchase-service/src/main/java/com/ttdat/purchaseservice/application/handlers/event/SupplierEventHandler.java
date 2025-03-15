@@ -75,4 +75,13 @@ public class SupplierEventHandler {
         supplierRatingRepository.save(supplierRating);
     }
 
+    @Transactional
+    @EventHandler
+    public void on(SupplierRatingUpdatedEvent supplierRatingUpdatedEvent) {
+        SupplierRating supplierRating = supplierRatingRepository.findById(supplierRatingUpdatedEvent.getRatingId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.SUPPLIER_RATING_NOT_FOUND));
+        supplierRatingMapper.updateEntityFromEvent(supplierRating, supplierRatingUpdatedEvent);
+        supplierRatingRepository.save(supplierRating);
+    }
+
 }

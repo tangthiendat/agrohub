@@ -76,4 +76,16 @@ public class SupplierCommandHandler {
         eventBus.publish(GenericEventMessage.asEventMessage(supplierRatingCreatedEvent));
     }
 
+    @CommandHandler
+    public void handle(UpdateSupplierRatingCommand updateSupplierRatingCommand){
+        SupplierRatingUpdatedEvent supplierRatingUpdatedEvent = SupplierRatingUpdatedEvent.builder()
+                .ratingId(updateSupplierRatingCommand.getRatingId())
+                .warehouseId(updateSupplierRatingCommand.getWarehouseId())
+                .supplierId(updateSupplierRatingCommand.getSupplierId())
+                .trustScore(updateSupplierRatingCommand.getTrustScore())
+                .comment(updateSupplierRatingCommand.getComment())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(supplierRatingUpdatedEvent));
+    }
+
 }

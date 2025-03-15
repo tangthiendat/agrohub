@@ -3,11 +3,9 @@ package com.ttdat.purchaseservice.application.services.impl;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.api.dto.common.SupplierProductDTO;
 import com.ttdat.purchaseservice.api.dto.request.CreateSupplierRatingRequest;
+import com.ttdat.purchaseservice.api.dto.request.UpdateSupplierRatingRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdateSupplierStatusRequest;
-import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierCommand;
-import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierProductCommand;
-import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierRatingCommand;
-import com.ttdat.purchaseservice.application.commands.supplier.UpdateSupplierCommand;
+import com.ttdat.purchaseservice.application.commands.supplier.*;
 import com.ttdat.purchaseservice.application.services.SupplierService;
 import com.ttdat.purchaseservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -84,5 +82,17 @@ public class SupplierServiceImpl implements SupplierService {
                 .comment(createSupplierRatingRequest.getComment())
                 .build();
         commandGateway.sendAndWait(createSupplierRatingCommand);
+    }
+
+    @Override
+    public void updateSupplierRating(String supplierId, String ratingId, UpdateSupplierRatingRequest updateSupplierRatingRequest) {
+        UpdateSupplierRatingCommand updateSupplierRatingCommand = UpdateSupplierRatingCommand.builder()
+                .ratingId(ratingId)
+                .warehouseId(updateSupplierRatingRequest.getWarehouseId())
+                .supplierId(supplierId)
+                .trustScore(updateSupplierRatingRequest.getTrustScore())
+                .comment(updateSupplierRatingRequest.getComment())
+                .build();
+        commandGateway.sendAndWait(updateSupplierRatingCommand);
     }
 }

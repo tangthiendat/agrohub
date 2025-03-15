@@ -3,6 +3,7 @@ package com.ttdat.purchaseservice.api.controllers.command;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.api.dto.request.CreateSupplierRatingRequest;
+import com.ttdat.purchaseservice.api.dto.request.UpdateSupplierRatingRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdateSupplierStatusRequest;
 import com.ttdat.purchaseservice.application.services.SupplierService;
 import jakarta.validation.Valid;
@@ -63,6 +64,19 @@ public class SupplierCommandController {
                         .success(true)
                         .build()
                 );
+    }
+
+    @PatchMapping("/{id}/ratings/{ratingId}")
+    public ResponseEntity<ApiResponse<Object>> updateSupplierRating(@PathVariable String id, @PathVariable String ratingId,
+                                                                    @Valid @RequestBody UpdateSupplierRatingRequest updateSupplierRatingRequest) {
+        supplierService.updateSupplierRating(id, ratingId, updateSupplierRatingRequest);
+        return ResponseEntity.ok(
+                ApiResponse.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Supplier rating updated successfully")
+                        .success(true)
+                        .build()
+        );
     }
 
 }
