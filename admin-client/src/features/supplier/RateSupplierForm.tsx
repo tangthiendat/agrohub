@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Input, InputNumber, Space } from "antd";
@@ -16,12 +17,25 @@ interface AddSupplierRatingArgs {
   supplierRating: ISupplierRating;
 }
 
+interface UpdateSupplierRatingArgs {
+  supplierId: string;
+  ratingId: string;
+  supplierRating: ISupplierRating;
+}
+
 const RateSupplierForm: React.FC<RateSupplierFormProps> = ({
   supplier,
   onCancel,
 }) => {
   const [form] = Form.useForm<ISupplierRating>();
   const queryClient = useQueryClient();
+  const isUpdateSession = !!supplier.supplierRating;
+
+  useEffect(() => {
+    if (supplier.supplierRating) {
+      form.setFieldsValue(supplier.supplierRating);
+    }
+  }, [supplier, form]);
 
   const { data: warehouseData, isLoading: isWarehouseLoading } = useQuery({
     queryKey: ["warehouse", "me"],
@@ -38,32 +52,69 @@ const RateSupplierForm: React.FC<RateSupplierFormProps> = ({
     },
   });
 
+  const { mutate: updateSupplierRating } = useMutation({
+    mutationFn: ({
+      supplierId,
+      ratingId,
+      supplierRating,
+    }: UpdateSupplierRatingArgs) =>
+      supplierService.updateRating(supplierId, ratingId, supplierRating),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["suppliers"],
+      });
+    },
+  });
+
   if (isWarehouseLoading) {
     return <Loading />;
   }
 
   function handleFinish(values: ISupplierRating) {
-    createSupplierRating(
-      {
-        supplierId: supplier.supplierId,
-        supplierRating: {
-          ...values,
-          warehouseId: warehouseData!.payload.warehouseId,
+    if (isUpdateSession) {
+      updateSupplierRating(
+        {
+          supplierId: supplier.supplierId,
+          ratingId: supplier.supplierRating!.ratingId,
+          supplierRating: values,
         },
-      },
-      {
-        onSuccess: () => {
-          toast.success("Đánh giá nhà cung cấp thành công");
-          form.resetFields();
-          onCancel();
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật đánh giá nhà cung cấp thành công");
+            form.resetFields();
+            onCancel();
+          },
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) ||
+                "Cập nhật đánh giá nhà cung cấp thất bại",
+            );
+          },
         },
-        onError: (error: Error) => {
-          toast.error(
-            getNotificationMessage(error) || "Đánh giá nhà cung cấp thất bại",
-          );
+      );
+    } else {
+      createSupplierRating(
+        {
+          supplierId: supplier.supplierId,
+          supplierRating: {
+            ...values,
+            warehouseId: warehouseData!.payload.warehouseId,
+          },
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            toast.success("Đánh giá nhà cung cấp thành công");
+            form.resetFields();
+            onCancel();
+          },
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) || "Đánh giá nhà cung cấp thất bại",
+            );
+          },
+        },
+      );
+    }
   }
 
   return (
@@ -85,7 +136,7 @@ const RateSupplierForm: React.FC<RateSupplierFormProps> = ({
             Hủy
           </Button>
           <Button type="primary" htmlType="submit" loading={isCreating}>
-            Đánh giá
+            {isUpdateSession ? "Cập nhật" : "Đánh giá"}
           </Button>
         </Space>
       </Form.Item>

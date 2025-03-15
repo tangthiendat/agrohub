@@ -29,6 +29,11 @@ interface ISupplierService {
     supplierId: string,
     supplierRating: ISupplierRating,
   ): Promise<ApiResponse<void>>;
+  updateRating(
+    supplierId: string,
+    ratingId: string,
+    supplierRating: ISupplierRating,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/suppliers", {
@@ -83,6 +88,19 @@ class SupplierService implements ISupplierService {
   ): Promise<ApiResponse<void>> {
     return (await apiClient.post(`/${supplierId}/ratings`, supplierRating))
       .data;
+  }
+
+  async updateRating(
+    supplierId: string,
+    ratingId: string,
+    supplierRating: ISupplierRating,
+  ): Promise<ApiResponse<void>> {
+    return (
+      await apiClient.patch(
+        `/${supplierId}/ratings/${ratingId}`,
+        supplierRating,
+      )
+    ).data;
   }
 }
 
