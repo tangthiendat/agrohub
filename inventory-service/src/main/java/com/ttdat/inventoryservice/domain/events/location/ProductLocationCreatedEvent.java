@@ -2,8 +2,6 @@ package com.ttdat.inventoryservice.domain.events.location;
 
 import com.ttdat.inventoryservice.domain.entities.LocationStatus;
 import com.ttdat.inventoryservice.domain.entities.RackType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

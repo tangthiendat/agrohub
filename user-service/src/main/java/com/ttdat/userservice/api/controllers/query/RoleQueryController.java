@@ -28,19 +28,19 @@ public class RoleQueryController {
     private final QueryGateway queryGateway;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<RoleOption>>> getRoles() {
+    public ApiResponse<List<RoleOption>> getRoles() {
         GetAllRolesQuery getAllRolesQuery = GetAllRolesQuery.builder().build();
         List<RoleOption> roles = queryGateway.query(getAllRolesQuery, ResponseTypes.multipleInstancesOf(RoleOption.class)).join();
-        return ResponseEntity.ok(ApiResponse.<List<RoleOption>>builder()
+        return ApiResponse.<List<RoleOption>>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Roles fetched successfully")
                 .payload(roles)
-                .build());
+                .build();
     }
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<RolePageResult>> getRolePage(@RequestParam Map<String, String> filterParams) {
+    public ApiResponse<RolePageResult> getRolePage(@RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetRolePageQuery getRolePageQuery = GetRolePageQuery.builder()
@@ -49,11 +49,11 @@ public class RoleQueryController {
                 .filterParams(filterParams)
                 .build();
         RolePageResult roles = queryGateway.query(getRolePageQuery, ResponseTypes.instanceOf(RolePageResult.class)).join();
-        return ResponseEntity.ok(ApiResponse.<RolePageResult>builder()
+        return ApiResponse.<RolePageResult>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Role page fetched successfully")
                 .payload(roles)
-                .build());
+                .build();
     }
 }

@@ -28,19 +28,19 @@ public class PermissionQueryController {
     private final QueryGateway queryGateway;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PermissionDTO>>> getPermissions() {
+    public ApiResponse<List<PermissionDTO>> getPermissions() {
         GetAllPermissionsQuery getAllPermissionsQuery = GetAllPermissionsQuery.builder().build();
         List<PermissionDTO> permissions = queryGateway.query(getAllPermissionsQuery, ResponseTypes.multipleInstancesOf(PermissionDTO.class)).join();
-        return ResponseEntity.ok(ApiResponse.<List<PermissionDTO>>builder()
+        return ApiResponse.<List<PermissionDTO>>builder()
                 .status(HttpStatus.OK.value())
                 .message("Permissions retrieved successfully")
                 .success(true)
                 .payload(permissions)
-                .build());
+                .build();
     }
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<PermissionPageResult>> getPermissionPage(@RequestParam Map<String, String> filterParams) {
+    public ApiResponse<PermissionPageResult> getPermissionPage(@RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetPermissionPageQuery getPermissionPageQuery = GetPermissionPageQuery.builder()
@@ -49,11 +49,11 @@ public class PermissionQueryController {
                 .filterParams(filterParams)
                 .build();
         PermissionPageResult permissionPage = queryGateway.query(getPermissionPageQuery, ResponseTypes.instanceOf(PermissionPageResult.class)).join();
-        return ResponseEntity.ok(ApiResponse.<PermissionPageResult>builder()
+        return ApiResponse.<PermissionPageResult>builder()
                 .status(HttpStatus.OK.value())
                 .message("Permission page retrieved successfully")
                 .success(true)
                 .payload(permissionPage)
-                .build());
+                .build();
     }
 }
