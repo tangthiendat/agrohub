@@ -4,7 +4,9 @@ import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
+import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
 import com.ttdat.inventoryservice.api.dto.response.ProductLocationPageResult;
+import com.ttdat.inventoryservice.application.queries.location.GetAllProductLocationQuery;
 import com.ttdat.inventoryservice.application.queries.location.GetProductLocationPageQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -38,6 +41,18 @@ public class ProductLocationQueryController {
                 .success(true)
                 .message("Product location page fetched successfully")
                 .payload(productLocationPage)
+                .build();
+    }
+
+    @GetMapping
+    public ApiResponse<List<ProductLocationDTO>> getProductLocations() {
+        GetAllProductLocationQuery getAllProductLocationQuery = GetAllProductLocationQuery.builder().build();
+        List<ProductLocationDTO> productLocations = queryGateway.query(getAllProductLocationQuery, ResponseTypes.multipleInstancesOf(ProductLocationDTO.class)).join();
+        return ApiResponse.<List<ProductLocationDTO>>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Product locations fetched successfully")
+                .payload(productLocations)
                 .build();
     }
 }

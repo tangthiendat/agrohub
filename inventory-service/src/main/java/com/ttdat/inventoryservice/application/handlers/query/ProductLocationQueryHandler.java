@@ -1,7 +1,9 @@
 package com.ttdat.inventoryservice.application.handlers.query;
 
+import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
 import com.ttdat.inventoryservice.api.dto.response.ProductLocationPageResult;
 import com.ttdat.inventoryservice.application.mappers.ProductLocationMapper;
+import com.ttdat.inventoryservice.application.queries.location.GetAllProductLocationQuery;
 import com.ttdat.inventoryservice.application.queries.location.GetProductLocationPageQuery;
 import com.ttdat.inventoryservice.domain.entities.ProductLocation;
 import com.ttdat.inventoryservice.domain.repositories.ProductLocationRepository;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -63,5 +66,13 @@ public class ProductLocationQueryHandler {
             spec = spec.and(querySpec);
         }
         return spec;
+    }
+
+    @QueryHandler
+    public List<ProductLocationDTO> handle(GetAllProductLocationQuery getAllProductLocationQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        Specification<ProductLocation> productLocationSpec = getProductLocationSpec(Map.of("warehouseId", warehouseId.toString()));
+        List<ProductLocation> productLocations = productLocationRepository.findAll(productLocationSpec);
+        return productLocationMapper.toDTOList(productLocations);
     }
 }
