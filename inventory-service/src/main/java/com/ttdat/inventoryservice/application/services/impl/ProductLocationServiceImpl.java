@@ -24,8 +24,9 @@ public class ProductLocationServiceImpl implements ProductLocationService {
                 .rackType(productLocationDTO.getRackType())
                 .rowNumber(productLocationDTO.getRowNumber())
                 .columnNumber(productLocationDTO.getColumnNumber())
+                .status(productLocationDTO.getStatus())
                 .build();
-        commandGateway.send(createProductLocationCommand);
+        commandGateway.sendAndWait(createProductLocationCommand);
     }
 
     @Override
@@ -37,7 +38,8 @@ public class ProductLocationServiceImpl implements ProductLocationService {
                 .rackType(productLocationDTO.getRackType())
                 .rowNumber(productLocationDTO.getRowNumber())
                 .columnNumber(productLocationDTO.getColumnNumber())
+                .status(productLocationDTO.getStatus())
                 .build();
-        commandGateway.send(updateProductLocationCommand);
+        commandGateway.sendAndWait(updateProductLocationCommand);
     }
 }
