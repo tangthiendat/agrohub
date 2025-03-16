@@ -13,3 +13,4 @@ export * from "./purchase/purchase-order-service.ts";
 export * from "./purchase/import-invoice-service.ts";
 
 export * from "./inventory/warehouse-service.ts";
+export * from "./inventory/product-location-service.ts";

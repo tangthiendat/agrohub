@@ -1,10 +1,11 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Form, Input, InputNumber, Space } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Input, InputNumber, Space } from "antd";
 import Loading from "../../common/components/Loading";
+import { useCurrentWarehouse } from "../../common/hooks";
 import { ISupplier, ISupplierRating } from "../../interfaces";
-import { supplierService, warehouseService } from "../../services";
+import { supplierService } from "../../services";
 import { getNotificationMessage } from "../../utils/notification";
 
 interface RateSupplierFormProps {
@@ -37,10 +38,8 @@ const RateSupplierForm: React.FC<RateSupplierFormProps> = ({
     }
   }, [supplier, form]);
 
-  const { data: warehouseData, isLoading: isWarehouseLoading } = useQuery({
-    queryKey: ["warehouse", "me"],
-    queryFn: warehouseService.getCurrentUserWarehouse,
-  });
+  const { currentWarehouse, isLoading: isWarehouseLoading } =
+    useCurrentWarehouse();
 
   const { mutate: createSupplierRating, isPending: isCreating } = useMutation({
     mutationFn: ({ supplierId, supplierRating }: AddSupplierRatingArgs) =>
@@ -98,7 +97,7 @@ const RateSupplierForm: React.FC<RateSupplierFormProps> = ({
           supplierId: supplier.supplierId,
           supplierRating: {
             ...values,
-            warehouseId: warehouseData!.payload.warehouseId,
+            warehouseId: currentWarehouse!.warehouseId,
           },
         },
         {

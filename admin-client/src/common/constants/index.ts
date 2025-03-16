@@ -1,10 +1,11 @@
-import { PurchaseOrderStatus } from "../enums";
+import { LocationStatus, PurchaseOrderStatus } from "../enums";
 
 export * from "./notification";
 export * from "./permission";
 export * from "./user";
 export * from "./status";
 export * from "./product";
+export * from "./location";
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 
@@ -17,4 +18,11 @@ export const PURCHASE_ORDER_STATUS_COLOR: Record<string, string> = {
   [PurchaseOrderStatus.APPROVED]: "#4CAF50",
   [PurchaseOrderStatus.COMPLETED]: "#2196F3",
   [PurchaseOrderStatus.CANCELLED]: "#F44336",
+};
+
+export const LOCATION_STATUS_COLOR: Record<string, string> = {
+  [LocationStatus.AVAILABLE]: "green",
+  [LocationStatus.OCCUPIED]: "blue",
+  [LocationStatus.LOCKED]: "red",
+  [LocationStatus.UNDER_MAINTENANCE]: "yellow",
 };

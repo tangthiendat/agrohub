@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,23 +30,21 @@ public class PurchaseOrderQueryController {
     private final QueryGateway queryGateway;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PurchaseOrderListItem>>> getPurchaseOrders(@RequestParam Map<String, String> filterParams) {
+    public ApiResponse<List<PurchaseOrderListItem>> getPurchaseOrders(@RequestParam Map<String, String> filterParams) {
         GetAllPurchaseOrderQuery getAllPurchaseOrderQuery = GetAllPurchaseOrderQuery.builder()
                 .filterParams(filterParams)
                 .build();
         List<PurchaseOrderListItem> purchaseOrderListItems = queryGateway.query(getAllPurchaseOrderQuery, ResponseTypes.multipleInstancesOf(PurchaseOrderListItem.class)).join();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<List<PurchaseOrderListItem>>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Get purchase orders successfully")
-                        .success(true)
-                        .payload(purchaseOrderListItems)
-                        .build()
-                );
+        return ApiResponse.<List<PurchaseOrderListItem>>builder()
+                .status(HttpStatus.OK.value())
+                .message("Get purchase orders successfully")
+                .success(true)
+                .payload(purchaseOrderListItems)
+                .build();
     }
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<PurchaseOrderPageResult>> getPurchaseOrderPage(@RequestParam Map<String, String> filterParams) {
+    public ApiResponse<PurchaseOrderPageResult> getPurchaseOrderPage(@RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetPurchaseOrderPageQuery getPurchaseOrderPageQuery = GetPurchaseOrderPageQuery.builder()
@@ -56,18 +53,16 @@ public class PurchaseOrderQueryController {
                 .filterParams(filterParams)
                 .build();
         PurchaseOrderPageResult purchaseOrderPageResult = queryGateway.query(getPurchaseOrderPageQuery, ResponseTypes.instanceOf(PurchaseOrderPageResult.class)).join();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<PurchaseOrderPageResult>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Get purchase order page successfully")
-                        .success(true)
-                        .payload(purchaseOrderPageResult)
-                        .build()
-                );
+        return ApiResponse.<PurchaseOrderPageResult>builder()
+                .status(HttpStatus.OK.value())
+                .message("Get purchase order page successfully")
+                .success(true)
+                .payload(purchaseOrderPageResult)
+                .build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PurchaseOrderDTO>> getPurchaseOrderById(@PathVariable("id") String id) {
+    public ApiResponse<PurchaseOrderDTO> getPurchaseOrderById(@PathVariable("id") String id) {
         GetPurchaseOrderByIdQuery getPurchaseOrderByIdQuery = GetPurchaseOrderByIdQuery.builder()
                 .purchaseOrderId(id)
                 .build();
@@ -82,13 +77,11 @@ public class PurchaseOrderQueryController {
                 .build();
         WarehouseInfo warehouseInfo = queryGateway.query(getWarehouseInfoByIdQuery, ResponseTypes.instanceOf(WarehouseInfo.class)).join();
         purchaseOrderDTO.setWarehouse(warehouseInfo);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<PurchaseOrderDTO>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Get purchase order successfully")
-                        .success(true)
-                        .payload(purchaseOrderDTO)
-                        .build()
-                );
+        return ApiResponse.<PurchaseOrderDTO>builder()
+                .status(HttpStatus.OK.value())
+                .message("Get purchase order successfully")
+                .success(true)
+                .payload(purchaseOrderDTO)
+                .build();
     }
 }

@@ -181,4 +181,18 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.POST,
     },
   },
+  [Module.PRODUCT_LOCATION]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/product-locations/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/product-locations",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/product-locations/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
 };

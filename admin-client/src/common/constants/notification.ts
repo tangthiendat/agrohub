@@ -14,4 +14,6 @@ export const NOTIFICATION_MESSAGE: Record<string, string> = {
   "AGH-314": "Nhà cung cấp đã tồn tại",
   "AGH-315": "Kho hàng không tồn tại",
   "AGH-316": "Kho hàng đã tồn tại",
+  "AGH-318": "Vị trí hàng hóa không tồn tại",
+  "AGH-319": "Vị trí hàng hóa đã tồn tại",
 };

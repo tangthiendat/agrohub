@@ -25,6 +25,7 @@ export enum Module {
   WAREHOUSE = "WAREHOUSE",
   PURCHASE_ORDER = "PURCHASE ORDER",
   IMPORT_INVOICE = "IMPORT INVOICE",
+  PRODUCT_LOCATION = "PRODUCT LOCATION",
 }
 
 export enum Gender {
@@ -49,4 +50,16 @@ export enum PurchaseOrderStatus {
 export enum DiscountType {
   PERCENTAGE = "PERCENTAGE",
   AMOUNT = "AMOUNT",
+}
+
+export enum RackType {
+  STACKING_RACK = "STACKING_RACK",
+  PALLET_RACK = "PALLET_RACK",
+}
+
+export enum LocationStatus {
+  AVAILABLE = "AVAILABLE",
+  OCCUPIED = "OCCUPIED",
+  LOCKED = "LOCKED",
+  UNDER_MAINTENANCE = "UNDER_MAINTENANCE",
 }

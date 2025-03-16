@@ -30,7 +30,7 @@ public class UserQueryController {
     private final QueryGateway queryGateway;
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<UserPageResult>> getUserPage(@RequestParam Map<String, String> filterParams) {
+    public ApiResponse<UserPageResult> getUserPage(@RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetUserPageQuery getUserPageQuery = GetUserPageQuery.builder()
@@ -39,38 +39,38 @@ public class UserQueryController {
                 .filterParams(filterParams)
                 .build();
         UserPageResult users = queryGateway.query(getUserPageQuery, ResponseTypes.instanceOf(UserPageResult.class)).join();
-        return ResponseEntity.ok(ApiResponse.<UserPageResult>builder()
+        return ApiResponse.<UserPageResult>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("User page fetched successfully")
                 .payload(users)
-                .build());
+                .build();
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserDTO>> getMe(Authentication authentication) {
+    public ApiResponse<UserDTO> getMe(Authentication authentication) {
         String userId = authentication.getName();
         GetUserByIdQuery getUserByIdQuery = GetUserByIdQuery.builder()
                 .userId(userId)
                 .build();
         UserDTO user = queryGateway.query(getUserByIdQuery, ResponseTypes.instanceOf(UserDTO.class)).join();
-        return ResponseEntity.ok(ApiResponse.<UserDTO>builder()
+        return ApiResponse.<UserDTO>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("User fetched successfully")
                 .payload(user)
-                .build());
+                .build();
     }
 
     @GetMapping("/info")
-    public ResponseEntity<ApiResponse<UserInfo>> getUserInfo(){
+    public ApiResponse<UserInfo> getUserInfo() {
         GetUserInfoQuery getUserInfoQuery = GetUserInfoQuery.builder().build();
         UserInfo userInfo = queryGateway.query(getUserInfoQuery, ResponseTypes.instanceOf(UserInfo.class)).join();
-        return ResponseEntity.ok(ApiResponse.<UserInfo>builder()
+        return ApiResponse.<UserInfo>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("User info fetched successfully")
                 .payload(userInfo)
-                .build());
+                .build();
     }
 }

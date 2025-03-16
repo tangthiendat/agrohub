@@ -7,7 +7,6 @@ import com.ttdat.userservice.application.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,34 +16,34 @@ public class AuthCommandController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody AuthRequest authRequest,
-                                                           HttpServletResponse response) {
-        return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
+    public ApiResponse<AuthResponse> login(@RequestBody AuthRequest authRequest,
+                                           HttpServletResponse response) {
+        return ApiResponse.<AuthResponse>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Login successful")
                 .payload(authService.login(authRequest, response))
-                .build());
+                .build();
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<ApiResponse<Object>> logout(@RequestHeader("Authorization") String authHeader, HttpServletResponse response) {
+    public ApiResponse<Object> logout(@RequestHeader("Authorization") String authHeader, HttpServletResponse response) {
         authService.logout(authHeader, response);
-        return ResponseEntity.ok(ApiResponse.builder()
+        return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Logout successful")
-                .build());
+                .build();
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<ApiResponse<AuthResponse>> refreshToken(@CookieValue("refresh_token") String refreshToken) {
-        return ResponseEntity.ok(ApiResponse.<AuthResponse>builder()
+    public ApiResponse<AuthResponse> refreshToken(@CookieValue("refresh_token") String refreshToken) {
+        return ApiResponse.<AuthResponse>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Refresh token successful")
                 .payload(authService.refreshAccessToken(refreshToken))
-                .build());
+                .build();
     }
 
 }
