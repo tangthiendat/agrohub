@@ -1,5 +1,6 @@
 package com.ttdat.inventoryservice.domain.entities;
 
+import com.ttdat.inventoryservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "product_locations")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductLocation {
+public class ProductLocation extends Auditable {
     @Id
     String locationId;
 

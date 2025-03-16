@@ -8,6 +8,10 @@ import org.mapstruct.*;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ProductLocationMapper extends EntityMapper<ProductLocationDTO, ProductLocation> {
+    @Override
+    @Mapping(target = "warehouseId", source = "warehouse.warehouseId")
+    ProductLocationDTO toDTO(ProductLocation entity);
+
     @Mapping(target = "warehouse.warehouseId", source = "warehouseId")
     ProductLocation toEntity(ProductLocationCreatedEvent productLocationCreatedEvent);
 
