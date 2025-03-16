@@ -1,12 +1,17 @@
 import { MenuProps } from "antd";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
-import { MdCategory, MdDashboard, MdInventory } from "react-icons/md";
+import {
+  MdCategory,
+  MdDashboard,
+  MdInventory,
+  MdOutlineInventory,
+} from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { FaFileInvoice, FaKey, FaUserCog, FaUsers } from "react-icons/fa";
 import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
-import { FaWarehouse } from "react-icons/fa6";
+import { FaLocationDot, FaWarehouse } from "react-icons/fa6";
 import { BiPurchaseTag } from "react-icons/bi";
 import { TbPackageImport } from "react-icons/tb";
 import { IUser } from "../../../interfaces";
@@ -97,6 +102,16 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
       );
 
       const hasPurchaseItem = Boolean(viewPurchaseOrders || viewImportInvoices);
+
+      const viewProductLocations = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.PRODUCT_LOCATION].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.PRODUCT_LOCATION].GET_PAGE.httpMethod,
+      );
+
+      const hasStockItem = Boolean(viewProductLocations);
 
       const menuItems = [
         {
@@ -236,6 +251,28 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           ),
                           key: "import-invoices",
                           icon: <TbPackageImport size={18} />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasStockItem
+          ? [
+              {
+                label: "Tồn kho",
+                key: "inventory",
+                icon: <MdOutlineInventory />,
+                children: [
+                  ...(viewProductLocations
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/product-locations">Vị trí</NavLink>
+                          ),
+                          key: "product-locations",
+                          icon: <FaLocationDot />,
                         },
                       ]
                     : []),

@@ -5,6 +5,7 @@ export * from "./permission";
 export * from "./user";
 export * from "./status";
 export * from "./product";
+export * from "./location";
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 
