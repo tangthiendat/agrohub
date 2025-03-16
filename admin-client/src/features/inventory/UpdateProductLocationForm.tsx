@@ -34,7 +34,7 @@ const UpdateProductLocationForm: React.FC<UpdateProductLocationFormProps> = ({
     mutationFn: productLocationService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["productLocations", currentWarehouse?.warehouseId],
+        queryKey: ["product-locations"],
       });
     },
   });
@@ -98,29 +98,24 @@ const UpdateProductLocationForm: React.FC<UpdateProductLocationFormProps> = ({
       <div className="flex items-center gap-8">
         <Form.Item
           className="flex-1"
-          label="Số ngăn (1-100)"
+          label="Ngăn (1-100)"
           name="rowNumber"
-          rules={[{ required: true, message: "Vui lòng nhập số ngăn" }]}
+          rules={[{ required: true, message: "Vui lòng nhập ngăn" }]}
         >
           <InputNumber
             className="w-full"
             min={1}
             max={100}
-            placeholder="Số hàng"
+            placeholder="Ngăn"
           />
         </Form.Item>
         <Form.Item
           className="flex-1"
-          label="Số tầng (1-10)"
+          label="Tầng (1-10)"
           name="columnNumber"
-          rules={[{ required: true, message: "Vui lòng nhập số tầng" }]}
+          rules={[{ required: true, message: "Vui lòng nhập tầng" }]}
         >
-          <InputNumber
-            className="w-full"
-            min={1}
-            max={10}
-            placeholder="Số tầng"
-          />
+          <InputNumber className="w-full" min={1} max={10} placeholder="Tầng" />
         </Form.Item>
       </div>
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>

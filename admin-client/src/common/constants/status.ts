@@ -8,7 +8,7 @@ export const PURCHASE_ORDER_STATUS_NAME: Record<string, string> = {
 };
 
 export const LOCATION_STATUS_NAME: Record<string, string> = {
-  [LocationStatus.AVAILABLE]: "Có sẵn",
+  [LocationStatus.AVAILABLE]: "Sẵn sàng",
   [LocationStatus.OCCUPIED]: "Đã sử dụng",
   [LocationStatus.LOCKED]: "Đã khóa",
   [LocationStatus.UNDER_MAINTENANCE]: "Đang bảo trì",

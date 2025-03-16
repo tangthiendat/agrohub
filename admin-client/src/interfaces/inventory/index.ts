@@ -14,10 +14,17 @@ export interface IWarehouseInfo {
 }
 
 export interface IProductLocation extends Auditable {
+  locationId: number;
   warehouseId: number;
   rackName: string;
   rackType: RackType;
   rowNumber: number;
   columnNumber: number;
   status: LocationStatus;
+}
+
+export interface ProductLocationFilterCriteria {
+  status?: string;
+  rackType?: string;
+  query?: string;
 }
