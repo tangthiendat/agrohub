@@ -53,8 +53,8 @@ export enum DiscountType {
 }
 
 export enum RackType {
-  PALLET_RACK = "PALLET_RACK",
   STACKING_RACK = "STACKING_RACK",
+  PALLET_RACK = "PALLET_RACK",
 }
 
 export enum LocationStatus {

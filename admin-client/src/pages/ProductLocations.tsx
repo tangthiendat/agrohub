@@ -1,13 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
+import { SearchProps } from "antd/es/input";
+import Search from "antd/es/input/Search";
 import { useSearchParams } from "react-router";
+import Access from "../features/auth/Access";
+import AddProductLocation from "../features/inventory/AddProductLocation";
+import ProductLocationTable from "../features/inventory/ProductLocationTable";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
-import Access from "../features/auth/Access";
-import AddProductLocation from "../features/inventory/AddProductLocation";
-import { PaginationParams, SortParams } from "../interfaces";
+import {
+  PaginationParams,
+  ProductLocationFilterCriteria,
+  SortParams,
+} from "../interfaces";
 import { productLocationService } from "../services";
-import ProductLocationTable from "../features/inventory/ProductLocationTable";
 
 const ProductLocations: React.FC = () => {
   useTitle("Vị trí hàng hóa ");
@@ -23,8 +29,14 @@ const ProductLocations: React.FC = () => {
     direction: searchParams.get("direction") || "",
   };
 
+  const filter: ProductLocationFilterCriteria = {
+    query: searchParams.get("query") || undefined,
+    rackType: searchParams.get("rackType") || undefined,
+    status: searchParams.get("status") || undefined,
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["product-locations", pagination, sort].filter((key) => {
+    queryKey: ["product-locations", pagination, sort, filter].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -33,8 +45,17 @@ const ProductLocations: React.FC = () => {
         );
       }
     }),
-    queryFn: () => productLocationService.getPage(pagination, sort),
+    queryFn: () => productLocationService.getPage(pagination, sort, filter),
   });
+
+  const handleSearch: SearchProps["onSearch"] = (value) => {
+    if (value) {
+      searchParams.set("query", value);
+    } else {
+      searchParams.delete("query");
+    }
+    setSearchParams(searchParams);
+  };
 
   return (
     <Access permission={PERMISSIONS[Module.PRODUCT_LOCATION].GET_PAGE}>
@@ -42,15 +63,15 @@ const ProductLocations: React.FC = () => {
         <h2 className="mb-3 text-xl font-semibold">Vị trí hàng hóa </h2>
         <div className="mb-5 flex items-center justify-between">
           <div className="w-[40%]">
-            {/* <div className="flex gap-3">
+            <div className="flex gap-3">
               <Search
-                placeholder="Nhập ID, tên nhà cung cấp, email hoặc số điện thoại"
+                placeholder="Nhập tên vị trí (ví dụ A1.2)"
                 defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear
                 onSearch={handleSearch}
               />
-            </div> */}
+            </div>
           </div>
 
           <Access

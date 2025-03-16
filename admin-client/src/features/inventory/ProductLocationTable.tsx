@@ -2,14 +2,28 @@ import { TableProps } from "antd/lib";
 import { Table, TablePaginationConfig, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { IProductLocation, Page } from "../../interfaces";
-import { getSortDirection } from "../../utils/filter";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../utils/filter";
 import { LocationStatus, RackType } from "../../common/enums";
 import {
   LOCATION_STATUS_COLOR,
   LOCATION_STATUS_NAME,
   RACK_TYPE_NAME,
 } from "../../common/constants";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../utils/color";
 
 interface ProductLocationTableProps {
   productLocationPage?: Page<IProductLocation>;
@@ -106,24 +120,56 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       key: "rackType",
       width: "15%",
       render: (rackType: RackType) => RACK_TYPE_NAME[rackType],
+      filters: Object.values(RackType).map((rackType) => ({
+        text: RACK_TYPE_NAME[rackType],
+        value: rackType,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "rackType"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
     },
     {
       title: "Tên kệ hàng",
       dataIndex: "rackName",
       key: "rackName",
       width: "15%",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "rackName"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Ngăn",
       dataIndex: "rowNumber",
       key: "rowNumber",
       width: "15%",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "rowNumber"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Tầng",
       dataIndex: "columnNumber",
       key: "columnNumber",
       width: "15%",
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "columnNumber"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Trạng thái",
@@ -134,6 +180,14 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
         <Tag color={LOCATION_STATUS_COLOR[status]}>
           {LOCATION_STATUS_NAME[status]}
         </Tag>
+      ),
+      filters: Object.values(LocationStatus).map((status) => ({
+        text: LOCATION_STATUS_NAME[status],
+        value: status,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
       ),
     },
   ];
