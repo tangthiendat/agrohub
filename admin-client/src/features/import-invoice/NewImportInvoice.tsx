@@ -1,21 +1,19 @@
 import { ReloadOutlined, SaveFilled } from "@ant-design/icons";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, Space } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useShallow } from "zustand/react/shallow";
 import BackButton from "../../common/components/BackButton";
 import Loading from "../../common/components/Loading";
+import { useCurrentWarehouse } from "../../common/hooks";
+import { useCurrentUserInfo } from "../../common/hooks/useCurrentUserInfo";
+import { IProduct } from "../../interfaces";
+import { importInvoiceService } from "../../services";
+import { useImportInvoiceStore } from "../../store/import-invoice-store";
 import SearchProductBar from "../product/SearchProductBar";
 import ImportInvoiceDetailsTable from "./ImportInvoiceDetailsTable";
 import ImportInvoiceForm from "./ImportInvoiceForm";
-import { useImportInvoiceStore } from "../../store/import-invoice-store";
-import { IProduct } from "../../interfaces";
-import {
-  importInvoiceService,
-  userService,
-  warehouseService,
-} from "../../services";
 
 const NewImportInvoice: React.FC = () => {
   const [form] = Form.useForm();
@@ -33,15 +31,10 @@ const NewImportInvoice: React.FC = () => {
     addDetail(product);
   }
 
-  const { data: warehouseData, isLoading: isWarehouseLoading } = useQuery({
-    queryKey: ["warehouse", "me"],
-    queryFn: warehouseService.getCurrentUserWarehouse,
-  });
+  const { currentWarehouse, isLoading: isWarehouseLoading } =
+    useCurrentWarehouse();
 
-  const { data: userData, isLoading: isUserLoading } = useQuery({
-    queryKey: ["user", "info"],
-    queryFn: userService.getUserInfo,
-  });
+  const { currentUserInfo, isLoading: isUserLoading } = useCurrentUserInfo();
 
   const { mutate: createImportInvoice, isPending: isCreating } = useMutation({
     mutationFn: importInvoiceService.create,
@@ -55,13 +48,13 @@ const NewImportInvoice: React.FC = () => {
   });
 
   useEffect(() => {
-    if (warehouseData) {
-      setWarehouse(warehouseData.payload);
+    if (currentWarehouse) {
+      setWarehouse(currentWarehouse);
     }
-    if (userData) {
-      setUser(userData.payload);
+    if (currentUserInfo) {
+      setUser(currentUserInfo);
     }
-  }, [warehouseData, userData, setWarehouse, setUser]);
+  }, [currentWarehouse, currentUserInfo, setWarehouse, setUser]);
 
   if (isWarehouseLoading || isUserLoading) {
     return <Loading />;

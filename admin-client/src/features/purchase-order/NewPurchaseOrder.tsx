@@ -1,18 +1,19 @@
+import { ReloadOutlined, SaveFilled } from "@ant-design/icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button, Form, Space } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, Space } from "antd";
-import { ReloadOutlined, SaveFilled } from "@ant-design/icons";
 import { useShallow } from "zustand/react/shallow";
 import BackButton from "../../common/components/BackButton";
 import Loading from "../../common/components/Loading";
 import SearchProductBar from "../product/SearchProductBar";
 import PurchaseOrderDetailsTable from "./PurchaseOrderDetailsTable";
 import PurchaseOrderForm from "./PurchaseOrderForm";
-import { usePurchaseOrderStore } from "../../store/purchase-order-store";
+import { useCurrentWarehouse } from "../../common/hooks";
+import { useCurrentUserInfo } from "../../common/hooks/useCurrentUserInfo";
 import { IProduct } from "../../interfaces";
-import { userService, warehouseService } from "../../services";
-import { purchaseOrderService } from "../../services/purchase/purchase-order-service";
+import { purchaseOrderService } from "../../services";
+import { usePurchaseOrderStore } from "../../store/purchase-order-store";
 
 const NewPurchaseOrder: React.FC = () => {
   const [form] = Form.useForm();
@@ -30,15 +31,10 @@ const NewPurchaseOrder: React.FC = () => {
     addDetail(product);
   }
 
-  const { data: warehouseData, isLoading: isWarehouseLoading } = useQuery({
-    queryKey: ["warehouse", "me"],
-    queryFn: warehouseService.getCurrentUserWarehouse,
-  });
+  const { currentWarehouse, isLoading: isWarehouseLoading } =
+    useCurrentWarehouse();
 
-  const { data: userData, isLoading: isUserLoading } = useQuery({
-    queryKey: ["user", "info"],
-    queryFn: userService.getUserInfo,
-  });
+  const { currentUserInfo, isLoading: isUserLoading } = useCurrentUserInfo();
 
   const { mutate: createPurchaseOrder, isPending: isCreating } = useMutation({
     mutationFn: purchaseOrderService.create,
@@ -52,13 +48,13 @@ const NewPurchaseOrder: React.FC = () => {
   });
 
   useEffect(() => {
-    if (warehouseData) {
-      setWarehouse(warehouseData.payload);
+    if (currentWarehouse) {
+      setWarehouse(currentWarehouse);
     }
-    if (userData) {
-      setUser(userData.payload);
+    if (currentUserInfo) {
+      setUser(currentUserInfo);
     }
-  }, [warehouseData, userData, setWarehouse, setUser]);
+  }, [currentWarehouse, currentUserInfo, setWarehouse, setUser]);
 
   if (isWarehouseLoading || isUserLoading) {
     return <Loading />;
