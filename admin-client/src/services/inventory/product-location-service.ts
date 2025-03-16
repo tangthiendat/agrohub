@@ -10,12 +10,16 @@ import {
 import { createApiClient } from "../../config/axios/api-client";
 
 interface IProductLocationService {
-  create: (productLocation: IProductLocation) => Promise<ApiResponse<void>>;
+  create(productLocation: IProductLocation): Promise<ApiResponse<void>>;
   getPage(
     pagination: PaginationParams,
     sort?: SortParams,
     filter?: ProductLocationFilterCriteria,
   ): Promise<ApiResponse<Page<IProductLocation>>>;
+  update(
+    productLocationId: string,
+    updatedProductLocation: IProductLocation,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/product-locations", {
@@ -41,6 +45,15 @@ class ProductLocationService implements IProductLocationService {
           direction: sort?.direction !== "" ? sort?.direction : undefined,
         },
       })
+    ).data;
+  }
+
+  async update(
+    productLocationId: string,
+    updatedProductLocation: IProductLocation,
+  ): Promise<ApiResponse<void>> {
+    return (
+      await apiClient.put(`/${productLocationId}`, updatedProductLocation)
     ).data;
   }
 }

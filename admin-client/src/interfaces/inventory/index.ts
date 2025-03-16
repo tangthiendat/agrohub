@@ -14,7 +14,7 @@ export interface IWarehouseInfo {
 }
 
 export interface IProductLocation extends Auditable {
-  locationId: number;
+  locationId: string;
   warehouseId: number;
   rackName: string;
   rackType: RackType;

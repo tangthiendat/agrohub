@@ -1,5 +1,5 @@
 import { TableProps } from "antd/lib";
-import { Table, TablePaginationConfig, Tag } from "antd";
+import { Space, Table, TablePaginationConfig, Tag } from "antd";
 import { useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
 import {
@@ -7,16 +7,19 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
+import Access from "../auth/Access";
+import UpdateProductLocation from "./UpdateProductLocation";
 import { IProductLocation, Page } from "../../interfaces";
 import {
   getDefaultFilterValue,
   getDefaultSortOrder,
   getSortDirection,
 } from "../../utils/filter";
-import { LocationStatus, RackType } from "../../common/enums";
+import { LocationStatus, Module, RackType } from "../../common/enums";
 import {
   LOCATION_STATUS_COLOR,
   LOCATION_STATUS_NAME,
+  PERMISSIONS,
   RACK_TYPE_NAME,
 } from "../../common/constants";
 import {
@@ -118,7 +121,7 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       title: "Loại kệ hàng",
       dataIndex: "rackType",
       key: "rackType",
-      width: "15%",
+      width: "20%",
       render: (rackType: RackType) => RACK_TYPE_NAME[rackType],
       filters: Object.values(RackType).map((rackType) => ({
         text: RACK_TYPE_NAME[rackType],
@@ -188,6 +191,21 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       defaultFilteredValue: getDefaultFilterValue(searchParams, "status"),
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
+    },
+    {
+      title: "Hành động",
+      key: "action",
+
+      render: (_, productLocation: IProductLocation) => (
+        <Space>
+          <Access
+            permission={PERMISSIONS[Module.PRODUCT_LOCATION].UPDATE}
+            hideChildren
+          >
+            <UpdateProductLocation productLocation={productLocation} />
+          </Access>
+        </Space>
       ),
     },
   ];
