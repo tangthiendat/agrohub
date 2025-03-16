@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IProductLocation } from "../../interfaces";
 import { useCurrentWarehouse } from "../../common/hooks";
-import { RackType } from "../../common/enums";
+import { LocationStatus, RackType } from "../../common/enums";
 import { RACK_TYPE_NAME } from "../../common/constants";
 import { productLocationService } from "../../services";
 import { getNotificationMessage } from "../../utils/notification";
@@ -21,16 +21,11 @@ interface UpdateProductLocationFormProps {
   onCancel: () => void;
 }
 
-interface ProductLocationFormValues
-  extends Omit<IProductLocation, "warehouse"> {
-  warehouseId: number;
-}
-
 const UpdateProductLocationForm: React.FC<UpdateProductLocationFormProps> = ({
   productLocationToUpdate,
   onCancel,
 }) => {
-  const [form] = Form.useForm<ProductLocationFormValues>();
+  const [form] = Form.useForm<IProductLocation>();
   const queryClient = useQueryClient();
   const { currentWarehouse, isLoading: isWarehouseLoading } =
     useCurrentWarehouse();
@@ -48,7 +43,7 @@ const UpdateProductLocationForm: React.FC<UpdateProductLocationFormProps> = ({
     return <Skeleton active />;
   }
 
-  function handleFinish(values: ProductLocationFormValues) {
+  function handleFinish(values: IProductLocation) {
     if (productLocationToUpdate) {
       console.log("Updating product location");
     } else {
@@ -56,6 +51,7 @@ const UpdateProductLocationForm: React.FC<UpdateProductLocationFormProps> = ({
         {
           ...values,
           warehouseId: currentWarehouse!.warehouseId,
+          status: LocationStatus.AVAILABLE,
         },
         {
           onSuccess: () => {

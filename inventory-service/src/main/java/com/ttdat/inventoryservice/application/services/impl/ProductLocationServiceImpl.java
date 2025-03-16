@@ -1,7 +1,6 @@
 package com.ttdat.inventoryservice.application.services.impl;
 
-import com.ttdat.inventoryservice.api.dto.request.CreateProductLocationRequest;
-import com.ttdat.inventoryservice.api.dto.request.UpdateProductLocationRequest;
+import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
 import com.ttdat.inventoryservice.application.commands.location.CreateProductLocationCommand;
 import com.ttdat.inventoryservice.application.commands.location.UpdateProductLocationCommand;
 import com.ttdat.inventoryservice.application.services.ProductLocationService;
@@ -17,27 +16,27 @@ public class ProductLocationServiceImpl implements ProductLocationService {
     private final CommandGateway commandGateway;
 
     @Override
-    public void createProductLocation(CreateProductLocationRequest createProductLocationRequest) {
+    public void createProductLocation(ProductLocationDTO productLocationDTO) {
         CreateProductLocationCommand createProductLocationCommand = CreateProductLocationCommand.builder()
                 .locationId(UUID.randomUUID().toString())
-                .warehouseId(createProductLocationRequest.getWarehouseId())
-                .rackName(createProductLocationRequest.getRackName())
-                .rackType(createProductLocationRequest.getRackType())
-                .rowNumber(createProductLocationRequest.getRowNumber())
-                .columnNumber(createProductLocationRequest.getColumnNumber())
+                .warehouseId(productLocationDTO.getWarehouseId())
+                .rackName(productLocationDTO.getRackName())
+                .rackType(productLocationDTO.getRackType())
+                .rowNumber(productLocationDTO.getRowNumber())
+                .columnNumber(productLocationDTO.getColumnNumber())
                 .build();
         commandGateway.send(createProductLocationCommand);
     }
 
     @Override
-    public void updateProductLocation(String id, UpdateProductLocationRequest updateProductLocationRequest) {
+    public void updateProductLocation(String id, ProductLocationDTO productLocationDTO) {
         UpdateProductLocationCommand updateProductLocationCommand = UpdateProductLocationCommand.builder()
                 .locationId(id)
-                .warehouseId(updateProductLocationRequest.getWarehouseId())
-                .rackName(updateProductLocationRequest.getRackName())
-                .rackType(updateProductLocationRequest.getRackType())
-                .rowNumber(updateProductLocationRequest.getRowNumber())
-                .columnNumber(updateProductLocationRequest.getColumnNumber())
+                .warehouseId(productLocationDTO.getWarehouseId())
+                .rackName(productLocationDTO.getRackName())
+                .rackType(productLocationDTO.getRackType())
+                .rowNumber(productLocationDTO.getRowNumber())
+                .columnNumber(productLocationDTO.getColumnNumber())
                 .build();
         commandGateway.send(updateProductLocationCommand);
     }

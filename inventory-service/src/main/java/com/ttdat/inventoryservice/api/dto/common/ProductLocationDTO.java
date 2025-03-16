@@ -1,6 +1,5 @@
 package com.ttdat.inventoryservice.api.dto.common;
 
-import com.ttdat.core.api.dto.response.WarehouseInfo;
 import com.ttdat.inventoryservice.domain.entities.LocationStatus;
 import com.ttdat.inventoryservice.domain.entities.RackType;
 import lombok.*;
@@ -14,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class ProductLocationDTO {
     String locationId;
 
-    WarehouseInfo warehouse;
+    Long warehouseId;
 
     String rackName;
 

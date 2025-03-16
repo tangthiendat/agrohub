@@ -13,24 +13,8 @@ export interface IWarehouseInfo {
   address: string;
 }
 
-export interface CreateProductLocationRequest {
-  warehouseId: number;
-  rackName: string;
-  rackType: RackType;
-  rowNumber: number;
-  columnNumber: number;
-}
-
-export interface UpdateProductLocationRequest {
-  warehouseId: number;
-  rackName: string;
-  rackType: RackType;
-  rowNumber: number;
-  columnNumber: number;
-}
-
 export interface IProductLocation extends Auditable {
-  warehouse: IWarehouseInfo;
+  warehouseId: number;
   rackName: string;
   rackType: RackType;
   rowNumber: number;

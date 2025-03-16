@@ -1,11 +1,9 @@
 import { AxiosInstance } from "axios";
-import { ApiResponse, CreateProductLocationRequest } from "../../interfaces";
+import { ApiResponse, IProductLocation } from "../../interfaces";
 import { createApiClient } from "../../config/axios/api-client";
 
 interface IProductLocationService {
-  create: (
-    productLocation: CreateProductLocationRequest,
-  ) => Promise<ApiResponse<void>>;
+  create: (productLocation: IProductLocation) => Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/product-locations", {
@@ -13,9 +11,7 @@ const apiClient: AxiosInstance = createApiClient("api/v1/product-locations", {
 });
 
 class ProductLocationService implements IProductLocationService {
-  async create(
-    productLocation: CreateProductLocationRequest,
-  ): Promise<ApiResponse<void>> {
+  async create(productLocation: IProductLocation): Promise<ApiResponse<void>> {
     return (await apiClient.post("", productLocation)).data;
   }
 }

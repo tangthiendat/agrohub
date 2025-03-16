@@ -1,10 +1,9 @@
 package com.ttdat.inventoryservice.application.services;
 
-import com.ttdat.inventoryservice.api.dto.request.CreateProductLocationRequest;
-import com.ttdat.inventoryservice.api.dto.request.UpdateProductLocationRequest;
+import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
 
 public interface ProductLocationService {
-    void createProductLocation(CreateProductLocationRequest createProductLocationRequest);
+    void createProductLocation(ProductLocationDTO productLocationDTO);
 
-    void updateProductLocation(String id, UpdateProductLocationRequest updateProductLocationRequest);
+    void updateProductLocation(String id, ProductLocationDTO productLocationDTO);
 }
