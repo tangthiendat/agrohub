@@ -8,7 +8,13 @@ import {
   MdOutlineInventory,
 } from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
-import { FaFileInvoice, FaKey, FaUserCog, FaUsers } from "react-icons/fa";
+import {
+  FaBoxes,
+  FaFileInvoice,
+  FaKey,
+  FaUserCog,
+  FaUsers,
+} from "react-icons/fa";
 import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { FaLocationDot, FaWarehouse } from "react-icons/fa6";
@@ -111,7 +117,14 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
             PERMISSIONS[Module.PRODUCT_LOCATION].GET_PAGE.httpMethod,
       );
 
-      const hasStockItem = Boolean(viewProductLocations);
+      const viewProductBatches = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.PRODUCT_BATCH].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.PRODUCT_BATCH].GET_PAGE.httpMethod,
+      );
+
+      const hasStockItem = Boolean(viewProductLocations || viewProductBatches);
 
       const menuItems = [
         {
@@ -273,6 +286,17 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           ),
                           key: "product-locations",
                           icon: <FaLocationDot />,
+                        },
+                      ]
+                    : []),
+                  ...(viewProductBatches
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/product-batches">Lô hàng</NavLink>
+                          ),
+                          key: "product-batches",
+                          icon: <FaBoxes />,
                         },
                       ]
                     : []),

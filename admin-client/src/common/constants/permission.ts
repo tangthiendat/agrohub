@@ -195,4 +195,10 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PUT,
     },
   },
+  [Module.PRODUCT_BATCH]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/product-batches/page",
+      httpMethod: HttpMethod.GET,
+    },
+  },
 };

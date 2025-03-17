@@ -1,5 +1,6 @@
 import { LocationStatus, RackType } from "../../common/enums";
 import { Auditable } from "../common";
+import { IProductInfo } from "../product";
 
 export interface IWarehouse extends Auditable {
   warehouseId: number;
@@ -26,5 +27,18 @@ export interface IProductLocation extends Auditable {
 export interface ProductLocationFilterCriteria {
   status?: string;
   rackType?: string;
+  query?: string;
+}
+
+export interface IProductBatch {
+  batchId: string;
+  product: IProductInfo;
+  manufacturingDate: string;
+  expirationDate: string;
+  receivedDate: string;
+  quantity: number;
+}
+
+export interface ProductBatchFilterCriteria {
   query?: string;
 }

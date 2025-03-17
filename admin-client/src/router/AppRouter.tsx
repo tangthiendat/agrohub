@@ -22,6 +22,7 @@ import ViewPurchaseOrder from "../features/purchase-order/ViewPurchaseOrder";
 import ImportInvoices from "../pages/ImportInvoices";
 import NewImportInvoice from "../features/import-invoice/NewImportInvoice";
 import ProductLocations from "../pages/ProductLocations";
+import ProductBatches from "../pages/ProductBatches";
 
 const router = createBrowserRouter([
   {
@@ -136,6 +137,10 @@ const router = createBrowserRouter([
       {
         path: "/product-locations",
         element: <ProductLocations />,
+      },
+      {
+        path: "/product-batches",
+        element: <ProductBatches />,
       },
     ],
   },
