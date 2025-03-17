@@ -1,8 +1,8 @@
 import { Modal } from "antd";
 import { useState } from "react";
-import EditIcon from "../../common/components/icons/EditIcon";
+import EditIcon from "../../../common/components/icons/EditIcon";
 import UpdateProductLocationForm from "./UpdateProductLocationForm";
-import { IProductLocation } from "../../interfaces";
+import { IProductLocation } from "../../../interfaces";
 
 interface UpdateProductLocationProps {
   productLocation: IProductLocation;
