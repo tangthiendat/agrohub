@@ -123,7 +123,7 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
           quantity: detail.quantity,
           unitPrice: detail.unitPrice,
           batches: detail.batches.map((batch) => ({
-            manufacturerDate: batch.manufacturingDate,
+            manufacturingDate: batch.manufacturingDate,
             expirationDate: batch.expirationDate,
             receivedDate: batch.receivedDate,
             quantity: batch.quantity,
