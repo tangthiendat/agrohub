@@ -8,6 +8,7 @@ import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
 import com.ttdat.inventoryservice.api.dto.response.ProductLocationPageResult;
 import com.ttdat.inventoryservice.application.queries.location.GetAllProductLocationQuery;
 import com.ttdat.inventoryservice.application.queries.location.GetProductLocationPageQuery;
+import com.ttdat.inventoryservice.application.queries.location.SearchProductLocationQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
@@ -48,6 +49,20 @@ public class ProductLocationQueryController {
     public ApiResponse<List<ProductLocationDTO>> getProductLocations() {
         GetAllProductLocationQuery getAllProductLocationQuery = GetAllProductLocationQuery.builder().build();
         List<ProductLocationDTO> productLocations = queryGateway.query(getAllProductLocationQuery, ResponseTypes.multipleInstancesOf(ProductLocationDTO.class)).join();
+        return ApiResponse.<List<ProductLocationDTO>>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Product locations fetched successfully")
+                .payload(productLocations)
+                .build();
+    }
+
+    @GetMapping("/search")
+    public ApiResponse<List<ProductLocationDTO>> searchProductLocations(@RequestParam String query) {
+        SearchProductLocationQuery searchProductLocationQuery = SearchProductLocationQuery.builder()
+                .query(query)
+                .build();
+        List<ProductLocationDTO> productLocations = queryGateway.query(searchProductLocationQuery, ResponseTypes.multipleInstancesOf(ProductLocationDTO.class)).join();
         return ApiResponse.<List<ProductLocationDTO>>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)

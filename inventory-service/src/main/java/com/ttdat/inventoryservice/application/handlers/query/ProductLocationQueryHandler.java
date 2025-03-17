@@ -5,6 +5,7 @@ import com.ttdat.inventoryservice.api.dto.response.ProductLocationPageResult;
 import com.ttdat.inventoryservice.application.mappers.ProductLocationMapper;
 import com.ttdat.inventoryservice.application.queries.location.GetAllProductLocationQuery;
 import com.ttdat.inventoryservice.application.queries.location.GetProductLocationPageQuery;
+import com.ttdat.inventoryservice.application.queries.location.SearchProductLocationQuery;
 import com.ttdat.inventoryservice.domain.entities.ProductLocation;
 import com.ttdat.inventoryservice.domain.repositories.ProductLocationRepository;
 import com.ttdat.inventoryservice.infrastructure.utils.PaginationUtils;
@@ -16,6 +17,7 @@ import org.axonframework.queryhandling.QueryMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -72,6 +74,14 @@ public class ProductLocationQueryHandler {
     public List<ProductLocationDTO> handle(GetAllProductLocationQuery getAllProductLocationQuery, QueryMessage<?, ?> queryMessage) {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Specification<ProductLocation> productLocationSpec = getProductLocationSpec(Map.of("warehouseId", warehouseId.toString()));
+        List<ProductLocation> productLocations = productLocationRepository.findAll(productLocationSpec);
+        return productLocationMapper.toDTOList(productLocations);
+    }
+
+    @QueryHandler
+    public List<ProductLocationDTO> handle(SearchProductLocationQuery searchProductLocationQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        Specification<ProductLocation> productLocationSpec = getProductLocationSpec(Map.of("warehouseId", warehouseId.toString(), "query", searchProductLocationQuery.getQuery()));
         List<ProductLocation> productLocations = productLocationRepository.findAll(productLocationSpec);
         return productLocationMapper.toDTOList(productLocations);
     }
