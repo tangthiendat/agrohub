@@ -4,9 +4,15 @@ import Access from "../features/auth/Access";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
 import { PERMISSIONS } from "../common/constants";
-import { PaginationParams, SortParams } from "../interfaces";
+import {
+  PaginationParams,
+  ProductBatchFilterCriteria,
+  SortParams,
+} from "../interfaces";
 import { productBatchService } from "../services";
 import ProductBatchTable from "../features/inventory/batch/ProductBatchTable";
+import { SearchProps } from "antd/es/input";
+import Search from "antd/es/input/Search";
 
 const ProductBatches: React.FC = () => {
   useTitle("Lô hàng");
@@ -22,8 +28,12 @@ const ProductBatches: React.FC = () => {
     direction: searchParams.get("direction") || "",
   };
 
+  const filter: ProductBatchFilterCriteria = {
+    query: searchParams.get("query") || undefined,
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["product-locations", pagination, sort].filter((key) => {
+    queryKey: ["product-batches", pagination, sort, filter].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -32,8 +42,18 @@ const ProductBatches: React.FC = () => {
         );
       }
     }),
-    queryFn: () => productBatchService.getPage(pagination, sort),
+    queryFn: () => productBatchService.getPage(pagination, sort, filter),
   });
+
+  const handleSearch: SearchProps["onSearch"] = (value) => {
+    if (value) {
+      searchParams.set("query", value);
+    } else {
+      searchParams.delete("query");
+    }
+    setSearchParams(searchParams);
+  };
+
   return (
     <Access permission={PERMISSIONS[Module.PRODUCT_BATCH].GET_PAGE}>
       <div className="card">
@@ -41,13 +61,13 @@ const ProductBatches: React.FC = () => {
         <div className="mb-5 flex items-center justify-between">
           <div className="w-[40%]">
             <div className="flex gap-3">
-              {/* <Search
-                placeholder="Nhập tên vị trí (ví dụ A1.2)"
+              <Search
+                placeholder="Tìm kiếm theo mã lô hàng"
                 defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear
                 onSearch={handleSearch}
-              /> */}
+              />
             </div>
           </div>
         </div>

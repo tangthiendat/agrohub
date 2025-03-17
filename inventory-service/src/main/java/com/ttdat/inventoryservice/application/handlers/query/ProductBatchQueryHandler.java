@@ -11,6 +11,7 @@ import com.ttdat.inventoryservice.domain.entities.ProductLocation;
 import com.ttdat.inventoryservice.domain.repositories.ProductBatchRepository;
 import com.ttdat.inventoryservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.inventoryservice.infrastructure.utils.SpecificationUtils;
+import jakarta.persistence.criteria.Expression;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
@@ -53,6 +54,14 @@ public class ProductBatchQueryHandler {
     private Specification<ProductBatch> getProductBatchSpec(Map<String, String> filterParams) {
         Specification<ProductBatch> spec = Specification.where(null);
         spec = spec.and(SpecificationUtils.buildSpecification(filterParams, "warehouseId", Long.class));
+        if (filterParams.containsKey("query")) {
+            String searchValue = filterParams.get("query");
+            Specification<ProductBatch> querySpec = (root, query, criteriaBuilder) -> {
+                String likePattern = "%" + searchValue + "%";
+                return criteriaBuilder.like(root.get("batchId"), likePattern);
+            };
+            spec = spec.and(querySpec);
+        }
         return spec;
     }
 }
