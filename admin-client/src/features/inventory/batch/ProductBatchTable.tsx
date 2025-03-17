@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router";
 import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { IProductBatch, IProductInfo, Page } from "../../../interfaces";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
-import { formatDate } from "../../../utils/datetime";
+import { formatDate, formatTimestamp } from "../../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
 
 interface ProductBatchTableProps {
@@ -159,6 +159,8 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
       dataIndex: "createdAt",
       key: "createdAt",
       width: "15%",
+      render: (createdAt: string) =>
+        createdAt ? formatTimestamp(createdAt) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
       sortIcon: ({ sortOrder }) => (

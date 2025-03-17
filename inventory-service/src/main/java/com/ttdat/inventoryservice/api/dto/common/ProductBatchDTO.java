@@ -23,4 +23,8 @@ public class ProductBatchDTO {
     LocalDate receivedDate;
 
     Integer quantity;
+
+    LocalDate createdAt;
+
+    LocalDate updatedAt;
 }

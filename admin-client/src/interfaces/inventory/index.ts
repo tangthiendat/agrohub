@@ -30,7 +30,7 @@ export interface ProductLocationFilterCriteria {
   query?: string;
 }
 
-export interface IProductBatch {
+export interface IProductBatch extends Auditable {
   batchId: string;
   product: IProductInfo;
   manufacturingDate: string;

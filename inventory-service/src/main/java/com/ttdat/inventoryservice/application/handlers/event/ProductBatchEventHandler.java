@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class ProductBatchEventHandler {
     private final ProductBatchRepository productBatchRepository;
     private final ProductBatchMapper productBatchMapper;
 
+    @Transactional
     @EventHandler
     public void on(ProductBatchCreatedEvent productBatchCreatedEvent){
         ProductBatch productBatch = productBatchMapper.toEntity(productBatchCreatedEvent);

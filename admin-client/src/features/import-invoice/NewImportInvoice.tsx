@@ -42,6 +42,9 @@ const NewImportInvoice: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: ["import-invoices"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["product-batches"],
+      });
       form.resetFields();
       reset();
     },
