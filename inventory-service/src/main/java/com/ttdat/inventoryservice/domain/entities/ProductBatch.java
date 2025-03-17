@@ -1,5 +1,6 @@
 package com.ttdat.inventoryservice.domain.entities;
 
+import com.ttdat.inventoryservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "product_batches")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductBatch {
+public class ProductBatch extends Auditable {
     @Id
     @Column(length = 50)
     String batchId;

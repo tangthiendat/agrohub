@@ -1,5 +1,6 @@
 package com.ttdat.productservice.application.mappers;
 
+import com.ttdat.core.api.dto.response.CategoryInfo;
 import com.ttdat.productservice.api.dto.common.CategoryDTO;
 import com.ttdat.productservice.application.commands.category.CreateCategoryCommand;
 import com.ttdat.productservice.application.commands.category.UpdateCategoryCommand;
@@ -25,4 +26,6 @@ public interface CategoryMapper extends EntityMapper<CategoryDTO, Category> {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget Category category, CategoryUpdatedEvent categoryUpdatedEvent);
+
+    CategoryInfo toCategoryInfo(Category category);
 }

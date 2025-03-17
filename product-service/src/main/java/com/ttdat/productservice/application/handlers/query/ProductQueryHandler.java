@@ -1,11 +1,13 @@
 package com.ttdat.productservice.application.handlers.query;
 
+import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.productservice.api.dto.common.ProductDTO;
 import com.ttdat.productservice.api.dto.response.ProductPageResult;
 import com.ttdat.productservice.application.mappers.ProductMapper;
 import com.ttdat.productservice.application.queries.product.GetProductByIdQuery;
+import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
 import com.ttdat.productservice.application.queries.product.GetProductPageQuery;
 import com.ttdat.productservice.application.queries.product.SearchProductQuery;
 import com.ttdat.productservice.domain.entities.Product;
@@ -69,5 +71,12 @@ public class ProductQueryHandler {
         Specification<Product> productSpec = getProductSpec(Map.of("query", searchProductQuery.getQuery()));
         List<Product> products = productRepository.findAll(productSpec);
         return productMapper.toDTOList(products);
+    }
+
+    @QueryHandler
+    public ProductInfo handle(GetProductInfoByIdQuery getProductInfoByIdQuery){
+        Product product = productRepository.findById(getProductInfoByIdQuery.getProductId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        return productMapper.toProductInfo(product);
     }
 }

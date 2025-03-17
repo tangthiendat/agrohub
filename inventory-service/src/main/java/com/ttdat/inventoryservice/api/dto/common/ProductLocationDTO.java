@@ -5,6 +5,8 @@ import com.ttdat.inventoryservice.domain.entities.RackType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -24,4 +26,8 @@ public class ProductLocationDTO {
     Integer columnNumber;
 
     LocationStatus status;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }
