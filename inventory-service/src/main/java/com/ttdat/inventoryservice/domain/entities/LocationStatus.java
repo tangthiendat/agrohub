@@ -4,5 +4,6 @@ public enum LocationStatus {
     AVAILABLE,
     OCCUPIED,
     LOCKED,
-    UNDER_MAINTENANCE
+    UNDER_MAINTENANCE,
+    OUT_OF_SERVICE
 }

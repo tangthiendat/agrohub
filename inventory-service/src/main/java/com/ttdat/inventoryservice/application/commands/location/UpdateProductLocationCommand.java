@@ -26,4 +26,6 @@ public class UpdateProductLocationCommand {
     Integer columnNumber;
 
     LocationStatus status;
+
+    String reason;
 }

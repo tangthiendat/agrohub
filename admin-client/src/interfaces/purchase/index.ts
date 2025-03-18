@@ -121,7 +121,7 @@ export interface PurchaseOrderFilterCriteria {
 }
 
 export interface CreateBatchRequest {
-  manufacturerDate: string;
+  manufacturingDate: string;
   expirationDate: string;
   quantity: number;
 }

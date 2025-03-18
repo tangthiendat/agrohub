@@ -27,4 +27,6 @@ public class ProductLocationUpdatedEvent {
     Integer columnNumber;
 
     LocationStatus status;
+
+    String reason;
 }

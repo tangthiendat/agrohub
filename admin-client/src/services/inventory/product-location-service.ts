@@ -20,6 +20,7 @@ interface IProductLocationService {
     productLocationId: string,
     updatedProductLocation: IProductLocation,
   ): Promise<ApiResponse<void>>;
+  search(query: string): Promise<ApiResponse<IProductLocation[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/product-locations", {
@@ -54,6 +55,14 @@ class ProductLocationService implements IProductLocationService {
   ): Promise<ApiResponse<void>> {
     return (
       await apiClient.put(`/${productLocationId}`, updatedProductLocation)
+    ).data;
+  }
+
+  async search(query: string): Promise<ApiResponse<IProductLocation[]>> {
+    return (
+      await apiClient.get("/search", {
+        params: { query },
+      })
     ).data;
   }
 }

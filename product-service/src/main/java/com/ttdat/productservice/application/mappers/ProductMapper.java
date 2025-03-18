@@ -1,5 +1,6 @@
 package com.ttdat.productservice.application.mappers;
 
+import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.productservice.api.dto.common.ProductDTO;
 import com.ttdat.productservice.domain.entities.Category;
 import com.ttdat.productservice.domain.entities.Product;
@@ -18,6 +19,8 @@ public interface ProductMapper extends EntityMapper<ProductDTO, Product> {
     @Mapping(target = "category.categoryId", source = "categoryId")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget Product product, ProductUpdatedEvent productUpdatedEvent);
+
+    ProductInfo toProductInfo(Product product);
 
     @AfterMapping
     default void setProductIdForProductUnits(@MappingTarget Product product, ProductCreatedEvent productCreatedEvent) {

@@ -12,6 +12,11 @@ export interface ICategory extends Auditable {
   categoryName: string;
 }
 
+export interface ICategoryInfo {
+  categoryId: number;
+  categoryName: string;
+}
+
 export interface IProductUnitPrice {
   productUnitPriceId: string;
   price: number;
@@ -46,4 +51,10 @@ export interface IProduct extends Auditable {
 export interface ProductFilterCriteria {
   query?: string;
   categoryId?: number;
+}
+
+export interface IProductInfo {
+  productId: string;
+  productName: string;
+  category: ICategoryInfo;
 }

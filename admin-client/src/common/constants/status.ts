@@ -12,4 +12,5 @@ export const LOCATION_STATUS_NAME: Record<string, string> = {
   [LocationStatus.OCCUPIED]: "Đã sử dụng",
   [LocationStatus.LOCKED]: "Đã khóa",
   [LocationStatus.UNDER_MAINTENANCE]: "Đang bảo trì",
+  [LocationStatus.OUT_OF_SERVICE]: "Ngừng sử dụng",
 };

@@ -39,6 +39,7 @@ public class ProductLocationServiceImpl implements ProductLocationService {
                 .rowNumber(productLocationDTO.getRowNumber())
                 .columnNumber(productLocationDTO.getColumnNumber())
                 .status(productLocationDTO.getStatus())
+                .reason(productLocationDTO.getReason())
                 .build();
         commandGateway.sendAndWait(updateProductLocationCommand);
     }

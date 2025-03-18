@@ -106,6 +106,24 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
       });
       return;
     }
+
+    //check if sum of all batch quantity is equal to detail quantity
+    const invalidBatchQuantity = importInvoiceDetails.some((detail) => {
+      const totalBatchQuantity = detail.batches.reduce(
+        (acc, batch) => acc + batch.quantity,
+        0,
+      );
+      return totalBatchQuantity !== detail.quantity;
+    });
+
+    if (invalidBatchQuantity) {
+      modal.error({
+        title: "Lỗi",
+        content: "Tổng số lô hàng không bằng số lượng sản phẩm",
+      });
+      return;
+    }
+
     const newImportInvoice: CreateImportInvoiceRequest = {
       supplierId: importInvoiceFormValues.supplier.supplierId as string,
       warehouseId: warehouse.warehouseId,
@@ -123,7 +141,7 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
           quantity: detail.quantity,
           unitPrice: detail.unitPrice,
           batches: detail.batches.map((batch) => ({
-            manufacturerDate: batch.manufacturingDate,
+            manufacturingDate: batch.manufacturingDate,
             expirationDate: batch.expirationDate,
             receivedDate: batch.receivedDate,
             quantity: batch.quantity,

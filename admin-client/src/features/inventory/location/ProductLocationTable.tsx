@@ -7,26 +7,26 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import Access from "../auth/Access";
+import Access from "../../auth/Access";
 import UpdateProductLocation from "./UpdateProductLocation";
-import { IProductLocation, Page } from "../../interfaces";
+import { IProductLocation, Page } from "../../../interfaces";
 import {
   getDefaultFilterValue,
   getDefaultSortOrder,
   getSortDirection,
-} from "../../utils/filter";
-import { LocationStatus, Module, RackType } from "../../common/enums";
+} from "../../../utils/filter";
+import { LocationStatus, Module, RackType } from "../../../common/enums";
 import {
   LOCATION_STATUS_COLOR,
   LOCATION_STATUS_NAME,
   PERMISSIONS,
   RACK_TYPE_NAME,
-} from "../../common/constants";
+} from "../../../common/constants";
 import {
   getFilterIconColor,
   getSortDownIconColor,
   getSortUpIconColor,
-} from "../../utils/color";
+} from "../../../utils/color";
 
 interface ProductLocationTableProps {
   productLocationPage?: Page<IProductLocation>;

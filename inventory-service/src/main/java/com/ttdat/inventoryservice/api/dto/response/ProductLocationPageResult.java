@@ -2,7 +2,6 @@ package com.ttdat.inventoryservice.api.dto.response;
 
 import com.ttdat.core.api.dto.response.PaginationMeta;
 import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
-import com.ttdat.inventoryservice.api.dto.common.WarehouseDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
