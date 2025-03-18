@@ -19,7 +19,7 @@ public class ProductUpdatedEvent {
 
     String description;
 
-    Integer totalQuantity;
+    Double totalQuantity;
 
     String imageUrl;
 

@@ -11,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class ProductTotalQuantityUpdatedEvent {
     String productId;
 
-    Integer quantity;
+    Double quantity;
 }

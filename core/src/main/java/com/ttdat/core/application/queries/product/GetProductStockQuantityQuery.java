@@ -1,5 +1,6 @@
-package com.ttdat.core.domain.events;
+package com.ttdat.core.application.queries.product;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +12,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class ProductStockAddedEvent {
-    String productStockId;
-
-    Long warehouseId;
-
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class GetProductStockQuantityQuery {
     String productId;
+
+    String productUnitId;
 
     Double quantity;
 }

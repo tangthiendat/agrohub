@@ -23,7 +23,7 @@ public class ProductDTO {
 
     String description;
 
-    Integer totalQuantity;
+    Double totalQuantity;
 
     String imageUrl;
 

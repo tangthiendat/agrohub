@@ -24,7 +24,8 @@ public class Product extends Auditable {
     @Column(length = 200)
     String productName;
 
-    Integer totalQuantity;
+    @Column(scale = 2)
+    Double totalQuantity;
 
     @Column(length = 500)
     String description;

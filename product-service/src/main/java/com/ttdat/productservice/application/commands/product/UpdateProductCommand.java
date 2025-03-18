@@ -22,7 +22,7 @@ public class UpdateProductCommand {
 
     String description;
 
-    Integer totalQuantity;
+    Double totalQuantity;
 
     String imageUrl;
 

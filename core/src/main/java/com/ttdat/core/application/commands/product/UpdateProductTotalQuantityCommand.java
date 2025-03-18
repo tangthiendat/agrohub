@@ -15,5 +15,5 @@ public class UpdateProductTotalQuantityCommand {
     @TargetAggregateIdentifier
     String productId;
 
-    Integer quantity;
+    Double quantity;
 }

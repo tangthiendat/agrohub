@@ -20,7 +20,6 @@ public class ProductStockEventHandler {
 
     @EventHandler
     public void on(ProductStockAddedEvent productStockAddedEvent){
-        log.info("Product stock added event received: {}", productStockAddedEvent);
         ProductStock existingProductStock = productStockRepository.findProductStock(productStockAddedEvent.getWarehouseId(), productStockAddedEvent.getProductId());
         if(existingProductStock != null){
             existingProductStock.setQuantity(existingProductStock.getQuantity() + productStockAddedEvent.getQuantity());
