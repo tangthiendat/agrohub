@@ -7,7 +7,7 @@ import {
   Skeleton,
   Space,
 } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IProductLocation } from "../../../interfaces";
@@ -38,6 +38,9 @@ const UpdateProductLocationForm: React.FC<UpdateProductLocationFormProps> = ({
   const queryClient = useQueryClient();
   const { currentWarehouse, isLoading: isWarehouseLoading } =
     useCurrentWarehouse();
+  const [locationStatus, setLocationStatus] = useState<LocationStatus>(
+    productLocationToUpdate?.status || LocationStatus.AVAILABLE,
+  );
 
   const { mutate: createProductLocation, isPending: isCreating } = useMutation({
     mutationFn: productLocationService.create,
@@ -184,9 +187,15 @@ const UpdateProductLocationForm: React.FC<UpdateProductLocationFormProps> = ({
                   label: LOCATION_STATUS_NAME[status],
                   value: status,
                 }))}
+                onChange={(value: LocationStatus) => setLocationStatus(value)}
               />
             </Form.Item>
           </div>
+        )}
+        {locationStatus === LocationStatus.LOCKED && (
+          <Form.Item label="Lý do" name="reason">
+            <Input.TextArea placeholder="Lý do" rows={2} />
+          </Form.Item>
         )}
         <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
           <Space>

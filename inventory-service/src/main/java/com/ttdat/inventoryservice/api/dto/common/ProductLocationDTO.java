@@ -27,6 +27,8 @@ public class ProductLocationDTO {
 
     LocationStatus status;
 
+    String reason;
+
     LocalDateTime createdAt;
 
     LocalDateTime updatedAt;

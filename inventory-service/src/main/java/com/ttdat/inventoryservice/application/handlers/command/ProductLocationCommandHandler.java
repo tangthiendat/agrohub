@@ -39,6 +39,7 @@ public class ProductLocationCommandHandler {
                 .rowNumber(updateProductLocationCommand.getRowNumber())
                 .columnNumber(updateProductLocationCommand.getColumnNumber())
                 .status(updateProductLocationCommand.getStatus())
+                .reason(updateProductLocationCommand.getReason())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(productLocationUpdatedEvent));
     }

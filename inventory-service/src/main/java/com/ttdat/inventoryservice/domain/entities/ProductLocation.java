@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductLocation extends Auditable {
     @Id
+    @Column(length = 50)
     String locationId;
 
     @ManyToOne
@@ -32,4 +33,6 @@ public class ProductLocation extends Auditable {
 
     @Enumerated(EnumType.STRING)
     LocationStatus status;
+
+    String reason;
 }
