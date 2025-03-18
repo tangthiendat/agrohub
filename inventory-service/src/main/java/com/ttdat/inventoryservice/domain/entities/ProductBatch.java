@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,4 +38,7 @@ public class ProductBatch extends Auditable {
     LocalDate receivedDate;
 
     Integer quantity;
+
+    @OneToMany(mappedBy = "productBatch", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    List<ProductBatchLocation> batchLocations;
 }

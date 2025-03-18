@@ -1,11 +1,10 @@
-package com.ttdat.inventoryservice.api.dto.common;
+package com.ttdat.inventoryservice.application.commands.batch;
 
-import com.ttdat.core.api.dto.response.ProductInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -13,10 +12,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductBatchDTO {
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class UpdateProductBatchCommand {
     String batchId;
 
-    ProductInfo product;
+    String productId;
 
     LocalDate manufacturingDate;
 
@@ -26,9 +26,5 @@ public class ProductBatchDTO {
 
     Integer quantity;
 
-    List<ProductBatchLocationDTO> batchLocations;
-
-    LocalDateTime createdAt;
-
-    LocalDateTime updatedAt;
+    List<CmdProductBatchLocation> batchLocations;
 }

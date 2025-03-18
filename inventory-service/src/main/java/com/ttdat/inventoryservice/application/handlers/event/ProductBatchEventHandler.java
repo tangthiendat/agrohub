@@ -1,8 +1,11 @@
 package com.ttdat.inventoryservice.application.handlers.event;
 
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.inventoryservice.application.mappers.ProductBatchMapper;
 import com.ttdat.inventoryservice.domain.entities.ProductBatch;
 import com.ttdat.inventoryservice.domain.events.batch.ProductBatchCreatedEvent;
+import com.ttdat.inventoryservice.domain.events.batch.ProductBatchUpdatedEvent;
 import com.ttdat.inventoryservice.domain.repositories.ProductBatchRepository;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.config.ProcessingGroup;
@@ -21,6 +24,19 @@ public class ProductBatchEventHandler {
     @EventHandler
     public void on(ProductBatchCreatedEvent productBatchCreatedEvent){
         ProductBatch productBatch = productBatchMapper.toEntity(productBatchCreatedEvent);
+        productBatchRepository.save(productBatch);
+    }
+
+    private ProductBatch getProductBatchById(String batchId) {
+        return productBatchRepository.findById(batchId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_BATCH_NOT_FOUND));
+    }
+
+    @Transactional
+    @EventHandler
+    public void on(ProductBatchUpdatedEvent productBatchUpdatedEvent){
+        ProductBatch productBatch = getProductBatchById(productBatchUpdatedEvent.getBatchId());
+        productBatchMapper.updateEntityFromEvent(productBatch, productBatchUpdatedEvent);
         productBatchRepository.save(productBatch);
     }
 }

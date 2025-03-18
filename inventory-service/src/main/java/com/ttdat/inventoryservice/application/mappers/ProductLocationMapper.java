@@ -15,7 +15,6 @@ public interface ProductLocationMapper extends EntityMapper<ProductLocationDTO, 
     @Mapping(target = "warehouse.warehouseId", source = "warehouseId")
     ProductLocation toEntity(ProductLocationCreatedEvent productLocationCreatedEvent);
 
-    @Mapping(target = "warehouse.warehouseId", source = "warehouseId")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget ProductLocation productLocation, ProductLocationUpdatedEvent productLocationUpdatedEvent);
 }
