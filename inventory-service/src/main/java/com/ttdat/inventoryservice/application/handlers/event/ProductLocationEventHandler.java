@@ -6,6 +6,7 @@ import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.inventoryservice.application.mappers.ProductLocationMapper;
 import com.ttdat.inventoryservice.domain.entities.ProductLocation;
 import com.ttdat.inventoryservice.domain.events.location.ProductLocationCreatedEvent;
+import com.ttdat.inventoryservice.domain.events.location.ProductLocationStatusUpdatedEvent;
 import com.ttdat.inventoryservice.domain.events.location.ProductLocationUpdatedEvent;
 import com.ttdat.inventoryservice.domain.repositories.ProductLocationRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +38,26 @@ public class ProductLocationEventHandler {
         productLocationRepository.save(productLocation);
     }
 
+    private ProductLocation getProductLocationById(String locationId) {
+        return productLocationRepository.findById(locationId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_LOCATION_NOT_FOUND));
+    }
+
     @Transactional
     @EventHandler
     public void on(ProductLocationUpdatedEvent productLocationUpdatedEvent) {
-        ProductLocation productLocation = productLocationRepository.findById(productLocationUpdatedEvent.getLocationId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_LOCATION_NOT_FOUND));
+        ProductLocation productLocation = getProductLocationById(productLocationUpdatedEvent.getLocationId());
         productLocationMapper.updateEntityFromEvent(productLocation, productLocationUpdatedEvent);
         productLocationRepository.save(productLocation);
+    }
+
+    @Transactional
+    @EventHandler
+    public void on(ProductLocationStatusUpdatedEvent productLocationStatusUpdatedEvent) {
+        log.info("Product location status updated event: {}", productLocationStatusUpdatedEvent);
+        ProductLocation productLocation = getProductLocationById(productLocationStatusUpdatedEvent.getLocationId());
+        productLocation.setStatus(productLocationStatusUpdatedEvent.getStatus());
+        productLocationRepository.save(productLocation);
+
     }
 }
