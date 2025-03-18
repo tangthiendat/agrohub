@@ -1,4 +1,4 @@
-import { Table, TablePaginationConfig } from "antd";
+import { Space, Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
@@ -7,6 +7,7 @@ import { IProductBatch, IProductInfo, Page } from "../../../interfaces";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
 import { formatDate, formatTimestamp } from "../../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import AddBatchLocation from "./AddBatchLocation";
 
 interface ProductBatchTableProps {
   productBatchPage?: Page<IProductBatch>;
@@ -126,7 +127,7 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
       ),
     },
     {
-      title: "Ngày hết hạn",
+      title: "Hạn sử dụng",
       dataIndex: "expirationDate",
       key: "expirationDate",
       width: "15%",
@@ -174,6 +175,13 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
       title: "Hành động",
       key: "action",
       width: "15%",
+      render: (_, record: IProductBatch) => {
+        return (
+          <Space>
+            <AddBatchLocation productBatch={record} />
+          </Space>
+        );
+      },
     },
   ];
 

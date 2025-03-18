@@ -1,6 +1,6 @@
 import { snakeCase } from "lodash";
 import { DiscountType } from "../common/enums";
-import { IProduct, IProductUnitPrice } from "../interfaces";
+import { IProduct, IProductLocation, IProductUnitPrice } from "../interfaces";
 import dayjs from "dayjs";
 
 export function convertKeysToSnakeCase<T>(obj: T): T {
@@ -51,4 +51,8 @@ export function getCurrentProductUnitPrice(
   return sortedProductUnitPrices!.find((pup) =>
     dayjs().isAfter(pup.validFrom),
   )!;
+}
+
+export function getLocationName(location: IProductLocation) {
+  return `${location.rackName}${location.rowNumber}.${location.columnNumber}`;
 }

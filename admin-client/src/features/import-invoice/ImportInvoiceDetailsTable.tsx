@@ -2,7 +2,7 @@ import { InputNumber, Select, Table, TableProps, Typography } from "antd";
 import { FormInstance } from "antd/lib";
 import { useShallow } from "zustand/react/shallow";
 import DeleteIcon from "../../common/components/icons/DeleteIcon";
-import NewBatchForm from "./NewBatchForm";
+import NewBatchForm from "../inventory/batch/NewBatchForm";
 import { IProductUnit } from "../../interfaces";
 import {
   ImportInvoiceDetailState,

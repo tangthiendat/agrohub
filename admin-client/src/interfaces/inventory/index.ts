@@ -22,12 +22,19 @@ export interface IProductLocation extends Auditable {
   rowNumber: number;
   columnNumber: number;
   status: LocationStatus;
+  reason?: string;
 }
 
 export interface ProductLocationFilterCriteria {
   status?: string;
   rackType?: string;
   query?: string;
+}
+
+export interface IProductBatchLocation {
+  batchLocationId?: string;
+  location: IProductLocation;
+  quantity: number;
 }
 
 export interface IProductBatch extends Auditable {
@@ -37,6 +44,7 @@ export interface IProductBatch extends Auditable {
   expirationDate: string;
   receivedDate: string;
   quantity: number;
+  batchLocations: IProductBatchLocation[];
 }
 
 export interface ProductBatchFilterCriteria {

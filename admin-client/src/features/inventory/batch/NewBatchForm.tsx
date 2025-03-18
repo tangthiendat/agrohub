@@ -4,7 +4,7 @@ import dayjs, { Dayjs } from "dayjs";
 import {
   ImportInvoiceDetailState,
   useImportInvoiceStore,
-} from "../../store/import-invoice-store";
+} from "../../../store/import-invoice-store";
 import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
 
