@@ -18,7 +18,7 @@ import {
 } from "../../../interfaces";
 import { formatDate } from "../../../utils/datetime";
 import SearchProductLocationBar from "../location/SearchProductLocationBar";
-import { getLocationName } from "../../../utils/data";
+import { convertKeysToSnakeCase, getLocationName } from "../../../utils/data";
 import {
   LOCATION_STATUS_COLOR,
   LOCATION_STATUS_NAME,
@@ -26,6 +26,7 @@ import {
 } from "../../../common/constants";
 import { useState } from "react";
 import DeleteIcon from "../../../common/components/icons/DeleteIcon";
+import { LocationStatus } from "../../../common/enums";
 
 interface UpdateBatchLocationFormProps {
   productBatch: IProductBatch;
@@ -43,6 +44,16 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
   const [modal, contextHolder] = Modal.useModal();
 
   function onSelectLocation(productLocation: IProductLocation) {
+    //check if location status is not AVAILABLE
+    if (productLocation.status !== LocationStatus.AVAILABLE) {
+      modal.error({
+        title: "Vị trí không khả dụng",
+        content: "Vui lòng chọn vị trí khác",
+      });
+      return;
+    }
+
+    //check if location is already in currentProductBatch
     if (
       currentProductBatch.batchLocations.some(
         (item) => item.location.locationId === productLocation.locationId,
@@ -105,7 +116,7 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
       });
       return;
     }
-    console.log(currentProductBatch);
+    console.log(convertKeysToSnakeCase(currentProductBatch));
   }
 
   const items: DescriptionsProps["items"] = [
