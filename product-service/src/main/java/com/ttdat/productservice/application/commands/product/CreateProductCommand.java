@@ -22,7 +22,7 @@ public class CreateProductCommand {
 
     String description;
 
-    Integer totalQuantity;
+    Double totalQuantity;
 
     String imageUrl;
 

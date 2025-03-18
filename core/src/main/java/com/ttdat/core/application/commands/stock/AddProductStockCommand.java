@@ -17,5 +17,5 @@ public class AddProductStockCommand {
 
     String productId;
 
-    Integer quantity;
+    Double quantity;
 }

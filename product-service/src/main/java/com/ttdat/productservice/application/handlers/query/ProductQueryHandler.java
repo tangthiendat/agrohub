@@ -3,6 +3,7 @@ package com.ttdat.productservice.application.handlers.query;
 import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.core.application.queries.product.GetProductStockQuantityQuery;
 import com.ttdat.productservice.api.dto.common.ProductDTO;
 import com.ttdat.productservice.api.dto.response.ProductPageResult;
 import com.ttdat.productservice.application.mappers.ProductMapper;
@@ -11,6 +12,7 @@ import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
 import com.ttdat.productservice.application.queries.product.GetProductPageQuery;
 import com.ttdat.productservice.application.queries.product.SearchProductQuery;
 import com.ttdat.productservice.domain.entities.Product;
+import com.ttdat.productservice.domain.entities.ProductUnit;
 import com.ttdat.productservice.domain.repositories.ProductRepository;
 import com.ttdat.productservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.productservice.infrastructure.utils.SpecificationUtils;
@@ -59,10 +61,14 @@ public class ProductQueryHandler {
         return productPageSpec;
     }
 
+    private Product getProductById(String productId){
+        return productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+    }
+
     @QueryHandler
     public ProductDTO handle(GetProductByIdQuery getProductByIdQuery){
-        Product product = productRepository.findById(getProductByIdQuery.getProductId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        Product product = getProductById(getProductByIdQuery.getProductId());
         return productMapper.toDTO(product);
     }
 
@@ -75,8 +81,23 @@ public class ProductQueryHandler {
 
     @QueryHandler
     public ProductInfo handle(GetProductInfoByIdQuery getProductInfoByIdQuery){
-        Product product = productRepository.findById(getProductInfoByIdQuery.getProductId())
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
+        Product product = getProductById(getProductInfoByIdQuery.getProductId());
         return productMapper.toProductInfo(product);
+    }
+
+    @QueryHandler
+    public Double handle(GetProductStockQuantityQuery getProductStockQuantityQuery){
+        Product product = getProductById(getProductStockQuantityQuery.getProductId());
+        Double currentConversionFactor = product.getProductUnits().stream()
+                .filter(productUnit -> productUnit.getProductUnitId().equals(getProductStockQuantityQuery.getProductUnitId()))
+                .findFirst()
+                .map(ProductUnit::getConversionFactor)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.UNIT_NOT_FOUND));
+        Double defaultConversionFactor = product.getProductUnits().stream()
+                .filter(ProductUnit::isDefault)
+                .findFirst()
+                .map(ProductUnit::getConversionFactor)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.UNIT_NOT_FOUND));
+        return getProductStockQuantityQuery.getQuantity() * currentConversionFactor / defaultConversionFactor;
     }
 }

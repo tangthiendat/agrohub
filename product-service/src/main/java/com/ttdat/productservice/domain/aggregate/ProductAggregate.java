@@ -30,7 +30,7 @@ public class ProductAggregate {
 
     String productName;
 
-    Integer totalQuantity;
+    Double totalQuantity;
 
     String description;
 
@@ -186,8 +186,8 @@ public class ProductAggregate {
 
     @EventSourcingHandler
     public void on(ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent){
-        if(productTotalQuantityUpdatedEvent.getQuantity() == null){
-            this.totalQuantity = 0;
+        if(this.totalQuantity == null){
+            this.totalQuantity = 0.0;
         }
         totalQuantity += productTotalQuantityUpdatedEvent.getQuantity();
     }

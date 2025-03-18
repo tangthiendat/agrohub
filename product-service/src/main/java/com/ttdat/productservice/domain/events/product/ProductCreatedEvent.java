@@ -19,7 +19,7 @@ public class ProductCreatedEvent {
 
     String description;
 
-    Integer totalQuantity;
+    Double totalQuantity;
 
     String imageUrl;
 

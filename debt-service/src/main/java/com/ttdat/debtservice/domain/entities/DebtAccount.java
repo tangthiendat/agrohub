@@ -3,6 +3,7 @@ package com.ttdat.debtservice.domain.entities;
 import com.ttdat.core.domain.entities.DebtPartyType;
 import com.ttdat.core.domain.entities.DebtSourceType;
 import com.ttdat.core.domain.entities.DebtStatus;
+import com.ttdat.debtservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "debt_accounts")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DebtAccount {
+public class DebtAccount extends Auditable {
     @Id
     @Column(length = 50)
     String debtAccountId;

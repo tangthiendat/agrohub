@@ -27,5 +27,6 @@ public class ProductStock {
     @Column(length = 50)
     String productId;
 
-    Integer quantity;
+    @Column(scale = 2)
+    Double quantity;
 }
