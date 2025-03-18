@@ -200,5 +200,9 @@ export const PERMISSIONS = {
       apiPath: "/api/v1/product-batches/page",
       httpMethod: HttpMethod.GET,
     },
+    UPDATE: {
+      apiPath: "/api/v1/product-batches/{id}",
+      httpMethod: HttpMethod.PATCH,
+    },
   },
 };

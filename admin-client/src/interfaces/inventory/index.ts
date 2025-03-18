@@ -33,7 +33,7 @@ export interface ProductLocationFilterCriteria {
 
 export interface IProductBatchLocation {
   batchLocationId?: string;
-  location: IProductLocation;
+  productLocation: IProductLocation;
   quantity: number;
 }
 

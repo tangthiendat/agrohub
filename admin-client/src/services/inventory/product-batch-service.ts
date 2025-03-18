@@ -15,6 +15,10 @@ interface IProductBatchService {
     sort?: SortParams,
     filter?: ProductBatchFilterCriteria,
   ): Promise<ApiResponse<Page<IProductBatch>>>;
+  update(
+    batchId: string,
+    updatedProductBatch: IProductBatch,
+  ): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/product-batches", {
@@ -37,6 +41,13 @@ class ProductBatchService implements IProductBatchService {
         },
       })
     ).data;
+  }
+
+  async update(
+    batchId: string,
+    updatedProductBatch: IProductBatch,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.patch(`/${batchId}`, updatedProductBatch)).data;
   }
 }
 

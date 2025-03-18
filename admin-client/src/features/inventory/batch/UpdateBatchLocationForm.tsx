@@ -1,3 +1,4 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   Descriptions,
@@ -11,26 +12,34 @@ import {
   Tag,
   Typography,
 } from "antd";
-import {
-  IProductBatch,
-  IProductBatchLocation,
-  IProductLocation,
-} from "../../../interfaces";
-import { formatDate } from "../../../utils/datetime";
-import SearchProductLocationBar from "../location/SearchProductLocationBar";
-import { convertKeysToSnakeCase, getLocationName } from "../../../utils/data";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import DeleteIcon from "../../../common/components/icons/DeleteIcon";
 import {
   LOCATION_STATUS_COLOR,
   LOCATION_STATUS_NAME,
   RACK_TYPE_NAME,
 } from "../../../common/constants";
-import { useState } from "react";
-import DeleteIcon from "../../../common/components/icons/DeleteIcon";
 import { LocationStatus } from "../../../common/enums";
+import {
+  IProductBatch,
+  IProductBatchLocation,
+  IProductLocation,
+} from "../../../interfaces";
+import { productBatchService } from "../../../services";
+import { getLocationName } from "../../../utils/data";
+import { formatDate } from "../../../utils/datetime";
+import { getNotificationMessage } from "../../../utils/notification";
+import SearchProductLocationBar from "../location/SearchProductLocationBar";
 
 interface UpdateBatchLocationFormProps {
   productBatch: IProductBatch;
   onCancel: () => void;
+}
+
+interface UpdateProductBatchArgs {
+  batchId: string;
+  updatedProductBatch: IProductBatch;
 }
 
 const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
@@ -41,7 +50,18 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
   const [currentProductBatch, setCurrentProductBatch] = useState<IProductBatch>(
     { ...productBatch, batchLocations: productBatch.batchLocations || [] },
   );
+  const queryClient = useQueryClient();
   const [modal, contextHolder] = Modal.useModal();
+
+  const { mutate: updateProductBatch, isPending: isUpdating } = useMutation({
+    mutationFn: ({ batchId, updatedProductBatch }: UpdateProductBatchArgs) =>
+      productBatchService.update(batchId, updatedProductBatch),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["product-batches"],
+      });
+    },
+  });
 
   function onSelectLocation(productLocation: IProductLocation) {
     //check if location status is not AVAILABLE
@@ -56,7 +76,8 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
     //check if location is already in currentProductBatch
     if (
       currentProductBatch.batchLocations.some(
-        (item) => item.location.locationId === productLocation.locationId,
+        (item) =>
+          item.productLocation.locationId === productLocation.locationId,
       )
     ) {
       modal.error({
@@ -84,13 +105,13 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
       ...prev,
       batchLocations: [
         ...prev.batchLocations,
-        { location: productLocation, quantity: 0 },
+        { productLocation, quantity: 0 },
       ],
     }));
     form.setFieldsValue({
       batchLocations: [
         ...currentProductBatch.batchLocations,
-        { location: productLocation, quantity: 0 },
+        { productLocation, quantity: 0 },
       ],
     });
   }
@@ -116,7 +137,24 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
       });
       return;
     }
-    console.log(convertKeysToSnakeCase(currentProductBatch));
+    updateProductBatch(
+      {
+        batchId: currentProductBatch.batchId,
+        updatedProductBatch: currentProductBatch,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Cập nhật vị trí lô hàng thành công");
+          form.resetFields();
+          onCancel();
+        },
+        onError: (error: Error) => {
+          toast.error(
+            getNotificationMessage(error) || "Cập nhật vị trí lô hàng thất bại",
+          );
+        },
+      },
+    );
   }
 
   const items: DescriptionsProps["items"] = [
@@ -185,17 +223,18 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
   const columns: TableProps<IProductBatchLocation>["columns"] = [
     {
       title: "Vị trí",
-      dataIndex: "location",
+      dataIndex: "productLocation",
       key: "location",
       width: "20%",
-      render: (location: IProductLocation) => getLocationName(location),
+      render: (location: IProductLocation) =>
+        location ? getLocationName(location) : "",
     },
     {
       title: "Loại kệ",
       key: "rackType",
       width: "25%",
       render: (_, record: IProductBatchLocation) =>
-        RACK_TYPE_NAME[record.location.rackType],
+        RACK_TYPE_NAME[record.productLocation.rackType],
     },
     {
       title: "Số lượng",
@@ -220,7 +259,8 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
               setCurrentProductBatch((prev) => ({
                 ...prev,
                 batchLocations: prev.batchLocations.map((item) =>
-                  item.location.locationId === record.location.locationId
+                  item.productLocation.locationId ===
+                  record.productLocation.locationId
                     ? { ...item, quantity: value }
                     : item,
                 ),
@@ -228,7 +268,8 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
               form.setFieldsValue({
                 batchLocations: currentProductBatch.batchLocations.map(
                   (item) =>
-                    item.location.locationId === record.location.locationId
+                    item.productLocation.locationId ===
+                    record.productLocation.locationId
                       ? { ...item, quantity: value }
                       : item,
                 ),
@@ -244,28 +285,33 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
       width: "30%",
       render: (_, record: IProductBatchLocation) => {
         return (
-          <DeleteIcon
-            tooltipTitle="Xóa"
-            onClick={() => {
-              setCurrentProductBatch((prev) => ({
-                ...prev,
-                batchLocations: prev.batchLocations.filter(
-                  (item) =>
-                    item.location.locationId !== record.location.locationId,
-                ),
-              }));
-              form.setFieldsValue({
-                batchLocations: currentProductBatch.batchLocations.filter(
-                  (item) =>
-                    item.location.locationId !== record.location.locationId,
-                ),
-              });
-            }}
-          />
+          !record.batchLocationId && (
+            <DeleteIcon
+              tooltipTitle="Xóa"
+              onClick={() => {
+                setCurrentProductBatch((prev) => ({
+                  ...prev,
+                  batchLocations: prev.batchLocations.filter(
+                    (item) =>
+                      item.productLocation.locationId !==
+                      record.productLocation.locationId,
+                  ),
+                }));
+                form.setFieldsValue({
+                  batchLocations: currentProductBatch.batchLocations.filter(
+                    (item) =>
+                      item.productLocation.locationId !==
+                      record.productLocation.locationId,
+                  ),
+                });
+              }}
+            />
+          )
         );
       },
     },
   ];
+
   return (
     <>
       {contextHolder}
@@ -306,13 +352,15 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
           size="small"
           columns={columns}
           dataSource={currentProductBatch.batchLocations}
-          rowKey={(record) => record.location.locationId}
+          rowKey={(record) => record.productLocation.locationId}
           pagination={false}
         />
         <Form.Item className="mt-4 text-right" wrapperCol={{ span: 24 }}>
           <Space>
-            <Button onClick={onCancel}>Hủy</Button>
-            <Button type="primary" htmlType="submit">
+            <Button onClick={onCancel} loading={isUpdating}>
+              Hủy
+            </Button>
+            <Button type="primary" htmlType="submit" loading={isUpdating}>
               Cập nhật
             </Button>
           </Space>

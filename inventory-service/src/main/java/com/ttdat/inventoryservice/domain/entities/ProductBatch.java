@@ -39,6 +39,6 @@ public class ProductBatch extends Auditable {
 
     Integer quantity;
 
-    @OneToMany(mappedBy = "productBatch", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "productBatch",fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<ProductBatchLocation> batchLocations;
 }
