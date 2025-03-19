@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryHandler;
+import org.axonframework.queryhandling.QueryMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,8 +30,10 @@ public class ProductBatchQueryHandler {
     private final QueryGateway queryGateway;
 
     @QueryHandler
-    public ProductBatchPageResult handle(GetProductBatchPageQuery getProductBatchPageQuery) {
+    public ProductBatchPageResult handle(GetProductBatchPageQuery getProductBatchPageQuery, QueryMessage<?,?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Map<String, String> filterParams = getProductBatchPageQuery.getFilterParams();
+        filterParams.put("warehouseId", warehouseId.toString());
         Specification<ProductBatch> productBatchSpec = getProductBatchSpec(filterParams);
         Pageable pageable = PaginationUtils.getPageable(getProductBatchPageQuery.getPaginationParams(), getProductBatchPageQuery.getSortParams());
         Page<ProductBatch> productBatchPage = productBatchRepository.findAll(productBatchSpec, pageable);
@@ -51,7 +54,7 @@ public class ProductBatchQueryHandler {
 
     private Specification<ProductBatch> getProductBatchSpec(Map<String, String> filterParams) {
         Specification<ProductBatch> spec = Specification.where(null);
-        spec = spec.and(SpecificationUtils.buildSpecification(filterParams, "warehouseId", Long.class));
+        spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class));
         if (filterParams.containsKey("query")) {
             String searchValue = filterParams.get("query");
             Specification<ProductBatch> querySpec = (root, query, criteriaBuilder) -> {
