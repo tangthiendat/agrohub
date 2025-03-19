@@ -7,6 +7,7 @@ import com.ttdat.core.application.queries.product.GetProductStockQuantityQuery;
 import com.ttdat.productservice.api.dto.common.ProductDTO;
 import com.ttdat.productservice.api.dto.response.ProductPageResult;
 import com.ttdat.productservice.application.mappers.ProductMapper;
+import com.ttdat.productservice.application.mappers.UnitMapper;
 import com.ttdat.productservice.application.queries.product.GetProductByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
 import com.ttdat.productservice.application.queries.product.GetProductPageQuery;
@@ -31,6 +32,7 @@ import java.util.Map;
 public class ProductQueryHandler {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
+    private final UnitMapper unitMapper;
 
     @QueryHandler
     public ProductPageResult handle(GetProductPageQuery getProductPageQuery){
@@ -82,7 +84,13 @@ public class ProductQueryHandler {
     @QueryHandler
     public ProductInfo handle(GetProductInfoByIdQuery getProductInfoByIdQuery){
         Product product = getProductById(getProductInfoByIdQuery.getProductId());
-        return productMapper.toProductInfo(product);
+        ProductInfo productInfo = productMapper.toProductInfo(product);
+        ProductUnit defaultProductUnit = product.getProductUnits().stream()
+                .filter(ProductUnit::isDefault)
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.UNIT_NOT_FOUND));
+        productInfo.setUnit(unitMapper.toUnitInfo(defaultProductUnit.getUnit()));
+        return productInfo;
     }
 
     @QueryHandler
