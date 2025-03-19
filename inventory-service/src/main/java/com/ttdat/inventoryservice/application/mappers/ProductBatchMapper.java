@@ -17,7 +17,6 @@ public interface ProductBatchMapper {
     ProductBatchDTO toDTO(ProductBatch productBatch);
 
     @Mapping(target = "warehouse", ignore = true)
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget ProductBatch productBatch, ProductBatchUpdatedEvent productBatchUpdatedEvent);
 
