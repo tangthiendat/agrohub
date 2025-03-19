@@ -124,7 +124,16 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
             PERMISSIONS[Module.PRODUCT_BATCH].GET_PAGE.httpMethod,
       );
 
-      const hasStockItem = Boolean(viewProductLocations || viewProductBatches);
+      const viewProductStocks = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.PRODUCT_STOCK].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.PRODUCT_STOCK].GET_PAGE.httpMethod,
+      );
+
+      const hasStockItem = Boolean(
+        viewProductLocations || viewProductBatches || viewProductStocks,
+      );
 
       const menuItems = [
         {
@@ -297,6 +306,17 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           ),
                           key: "product-batches",
                           icon: <FaBoxes />,
+                        },
+                      ]
+                    : []),
+                  ...(viewProductStocks
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/product-stocks">Tồn kho</NavLink>
+                          ),
+                          key: "product-stocks",
+                          icon: <MdInventory />,
                         },
                       ]
                     : []),

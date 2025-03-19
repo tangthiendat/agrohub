@@ -8,14 +8,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductInfo {
-    String productId;
+public class UnitInfo {
+    Long unitId;
 
-    String productName;
-
-    CategoryInfo category;
-
-    UnitInfo unit;
-
-    String imageUrl;
+    String unitName;
 }

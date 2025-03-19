@@ -13,11 +13,10 @@ public interface ProductBatchMapper {
     @Mapping(target = "warehouse.warehouseId", source = "warehouseId")
     ProductBatch toEntity(ProductBatchCreatedEvent productBatchCreatedEvent);
 
-    @Mapping(target = "product.productId", source = "productId")
+    @Mapping(target = "product", ignore = true)
     ProductBatchDTO toDTO(ProductBatch productBatch);
 
     @Mapping(target = "warehouse", ignore = true)
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromEvent(@MappingTarget ProductBatch productBatch, ProductBatchUpdatedEvent productBatchUpdatedEvent);
 

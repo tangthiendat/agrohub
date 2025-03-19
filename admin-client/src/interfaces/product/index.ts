@@ -7,6 +7,11 @@ export interface IUnit extends Auditable {
   description: string;
 }
 
+export interface IUnitInfo {
+  unitId: number;
+  unitName: string;
+}
+
 export interface ICategory extends Auditable {
   categoryId: number;
   categoryName: string;
@@ -57,4 +62,6 @@ export interface IProductInfo {
   productId: string;
   productName: string;
   category: ICategoryInfo;
+  unit: IUnitInfo;
+  imageUrl: string;
 }

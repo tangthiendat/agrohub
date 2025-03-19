@@ -1,5 +1,6 @@
 package com.ttdat.inventoryservice.domain.entities;
 
+import com.ttdat.inventoryservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +15,7 @@ import lombok.experimental.FieldDefaults;
         @UniqueConstraint(columnNames = {"warehouse_id", "product_id"})
 })
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductStock {
+public class ProductStock extends Auditable {
 
     @Id
     @Column(length = 50)
