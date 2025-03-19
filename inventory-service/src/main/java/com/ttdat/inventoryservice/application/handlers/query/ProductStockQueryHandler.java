@@ -2,6 +2,7 @@ package com.ttdat.inventoryservice.application.handlers.query;
 
 import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
+import com.ttdat.core.application.queries.product.SearchProductIdListQuery;
 import com.ttdat.inventoryservice.api.dto.common.ProductStockDTO;
 import com.ttdat.inventoryservice.api.dto.response.ProductStockPageResult;
 import com.ttdat.inventoryservice.application.mappers.ProductStockMapper;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -30,7 +32,7 @@ public class ProductStockQueryHandler {
     private final QueryGateway queryGateway;
 
     @QueryHandler
-    public ProductStockPageResult handle(GetProductStockPageQuery getProductStockPageQuery, QueryMessage<?,?> queryMessage) {
+    public ProductStockPageResult handle(GetProductStockPageQuery getProductStockPageQuery, QueryMessage<?, ?> queryMessage) {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Map<String, String> filterParams = getProductStockPageQuery.getFilterParams();
         filterParams.put("warehouseId", warehouseId.toString());
@@ -55,6 +57,17 @@ public class ProductStockQueryHandler {
     private Specification<ProductStock> getProductStockSpec(Map<String, String> filterParams) {
         Specification<ProductStock> spec = Specification.where(null);
         spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class));
+        if (filterParams.containsKey("query")) {
+            SearchProductIdListQuery searchProductIdListQuery = SearchProductIdListQuery.builder()
+                    .query(filterParams.get("query"))
+                    .build();
+            List<String> productIdList = queryGateway.query(searchProductIdListQuery, ResponseTypes.multipleInstancesOf(String.class)).join();
+            if (!productIdList.isEmpty()) {
+                Specification<ProductStock> querySpec = (root, query, criteriaBuilder) ->
+                        root.get("productId").in(productIdList);
+                spec = spec.and(querySpec);
+            }
+        }
         return spec;
     }
 }
