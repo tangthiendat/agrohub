@@ -4,6 +4,8 @@ import com.ttdat.core.api.dto.response.ProductInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,4 +17,8 @@ public class ProductStockDTO {
     ProductInfo product;
 
     Double quantity;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }

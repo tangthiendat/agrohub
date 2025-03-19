@@ -50,3 +50,9 @@ export interface IProductBatch extends Auditable {
 export interface ProductBatchFilterCriteria {
   query?: string;
 }
+
+export interface IProductStock extends Auditable {
+  productStockId: string;
+  product: IProductInfo;
+  quantity: number;
+}

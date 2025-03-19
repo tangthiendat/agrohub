@@ -23,6 +23,7 @@ import ImportInvoices from "../pages/ImportInvoices";
 import NewImportInvoice from "../features/import-invoice/NewImportInvoice";
 import ProductLocations from "../pages/ProductLocations";
 import ProductBatches from "../pages/ProductBatches";
+import ProductStocks from "../pages/ProductStocks";
 
 const router = createBrowserRouter([
   {
@@ -141,6 +142,10 @@ const router = createBrowserRouter([
       {
         path: "/product-batches",
         element: <ProductBatches />,
+      },
+      {
+        path: "/product-stocks",
+        element: <ProductStocks />,
       },
     ],
   },

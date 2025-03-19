@@ -205,4 +205,10 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PATCH,
     },
   },
+  [Module.PRODUCT_STOCK]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/product-stocks/page",
+      httpMethod: HttpMethod.GET,
+    },
+  },
 };
