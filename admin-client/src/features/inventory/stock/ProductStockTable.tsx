@@ -121,9 +121,17 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
     },
     {
       title: "Số lượng",
+      dataIndex: "quantity",
       key: "quantity",
       width: "10%",
-      render: (_, productStock: IProductStock) => productStock.quantity,
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "quantity"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Đơn vị tính",
