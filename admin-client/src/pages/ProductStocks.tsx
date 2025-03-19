@@ -24,7 +24,7 @@ const ProductStocks: React.FC = () => {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["product-batches", pagination, sort].filter((key) => {
+    queryKey: ["product-stocks", pagination, sort].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
