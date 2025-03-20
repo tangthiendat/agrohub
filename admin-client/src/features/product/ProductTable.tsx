@@ -164,10 +164,6 @@ const ProductTable: React.FC<ProductTableProps> = ({
       width: "15%",
       render: (category) => category.categoryName,
       filters: categoryOptions,
-      // defaultFilteredValue: getDefaultFilterValue(
-      //   searchParams,
-      //   "categoryId",
-      // )?.map((categoryId) => Number(categoryId)),
       filteredValue: getDefaultFilterValue(searchParams, "categoryId")?.map(
         (categoryId) => Number(categoryId),
       ),

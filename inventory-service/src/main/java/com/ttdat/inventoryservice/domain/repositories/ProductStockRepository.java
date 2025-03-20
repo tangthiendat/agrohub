@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface ProductStockRepository extends JpaRepository<ProductStock, String>, JpaSpecificationExecutor<ProductStock> {
     @Query("SELECT ps FROM ProductStock ps WHERE ps.warehouse.warehouseId = :warehouseId AND ps.productId = :productId")
     ProductStock findProductStock(@Param("warehouseId") Long warehouseId, @Param("productId") String productId);
+
 }

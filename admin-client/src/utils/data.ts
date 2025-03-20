@@ -22,20 +22,26 @@ export function getVATValue(totalAmount: number, vatRate: number): number {
   return totalAmount * (vatRate / 100);
 }
 
+export function getDiscountValue(
+  totalAmount: number,
+  discountValue: number,
+  discountType: DiscountType,
+): number {
+  if (discountType === DiscountType.PERCENTAGE) {
+    return totalAmount * (discountValue / 100);
+  }
+  return discountValue;
+}
+
 export function getFinalAmount(
   totalAmount: number,
   discountValue: number,
   discountType: DiscountType,
   vatRate: number,
 ): number {
-  if (discountType === DiscountType.PERCENTAGE) {
-    return (
-      totalAmount -
-      totalAmount * (discountValue / 100) +
-      getVATValue(totalAmount, vatRate)
-    );
-  }
-  return totalAmount + getVATValue(totalAmount, vatRate) - discountValue;
+  const discount = getDiscountValue(totalAmount, discountValue, discountType);
+  const vat = getVATValue(totalAmount, vatRate);
+  return totalAmount - discount + vat;
 }
 
 export function getCurrentProductUnitPrice(

@@ -8,6 +8,8 @@ import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
 import com.ttdat.productservice.domain.events.product.ProductUpdatedEvent;
 import org.mapstruct.*;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         uses = {CategoryMapper.class, ProductUnitMapper.class})
@@ -21,6 +23,8 @@ public interface ProductMapper extends EntityMapper<ProductDTO, Product> {
     void updateEntityFromEvent(@MappingTarget Product product, ProductUpdatedEvent productUpdatedEvent);
 
     ProductInfo toProductInfo(Product product);
+
+    List<ProductInfo> toProductInfoList(List<Product> products);
 
     @AfterMapping
     default void setProductIdForProductUnits(@MappingTarget Product product, ProductCreatedEvent productCreatedEvent) {

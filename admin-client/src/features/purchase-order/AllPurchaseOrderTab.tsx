@@ -1,5 +1,6 @@
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
+import { PlusOutlined } from "@ant-design/icons";
 import { SearchProps } from "antd/es/input";
 import Search from "antd/es/input/Search";
 import PurchaseOrderTable from "./PurchaseOrderTable";
@@ -8,10 +9,15 @@ import {
   PurchaseOrderFilterCriteria,
   SortParams,
 } from "../../interfaces";
+import { Button } from "antd";
+import Access from "../auth/Access";
 import { purchaseOrderService } from "../../services";
+import { PERMISSIONS } from "../../common/constants";
+import { Module } from "../../common/enums";
 
 const AllPurchaseOrderTab: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const pagination: PaginationParams = {
     page: Number(searchParams.get("page")) || 1,
@@ -61,6 +67,18 @@ const AllPurchaseOrderTab: React.FC = () => {
             onSearch={handleSearch}
           />
         </div>
+        <Access
+          permission={PERMISSIONS[Module.PURCHASE_ORDER].CREATE}
+          hideChildren
+        >
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("new")}
+          >
+            Thêm mới
+          </Button>
+        </Access>
       </div>
       <PurchaseOrderTable
         purchaseOrderPage={data?.payload}

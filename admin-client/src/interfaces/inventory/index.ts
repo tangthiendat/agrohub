@@ -56,3 +56,8 @@ export interface IProductStock extends Auditable {
   product: IProductInfo;
   quantity: number;
 }
+
+export interface ProductStockFilterCriteria {
+  query?: string;
+  categoryId?: string;
+}

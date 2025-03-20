@@ -1,12 +1,12 @@
+import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { Space, Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { IProductBatch, IProductInfo, Page } from "../../../interfaces";
-import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
-import { formatDate, formatTimestamp } from "../../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import { formatDate } from "../../../utils/datetime";
+import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
 import AddBatchLocation from "./AddBatchLocation";
 
 interface ProductBatchTableProps {
@@ -156,20 +156,15 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
       ),
     },
     {
-      title: "Ngày tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: "15%",
-      render: (createdAt: string) =>
-        createdAt ? formatTimestamp(createdAt) : "",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
-      sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
-          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-        </div>
-      ),
+      title: "Đơn vị tính",
+      key: "unit",
+      width: "10%",
+      render: (_, record: IProductBatch) => {
+        const productUnit = record.product.productUnits.find(
+          (unit) => unit.isDefault,
+        );
+        return productUnit?.unit.unitName;
+      },
     },
     {
       title: "Hành động",

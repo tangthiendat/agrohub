@@ -37,6 +37,13 @@ export interface IProductUnit {
   productUnitPrices: IProductUnitPrice[];
 }
 
+export interface IProductUnitInfo {
+  productUnitId: string;
+  unit: IUnitInfo;
+  conversionFactor: number;
+  isDefault: boolean;
+}
+
 export interface IProduct extends Auditable {
   productId: string;
   productName: string;
@@ -55,13 +62,13 @@ export interface IProduct extends Auditable {
 
 export interface ProductFilterCriteria {
   query?: string;
-  categoryId?: number;
+  categoryId?: string;
 }
 
 export interface IProductInfo {
   productId: string;
   productName: string;
   category: ICategoryInfo;
-  unit: IUnitInfo;
   imageUrl: string;
+  productUnits: IProductUnitInfo[];
 }

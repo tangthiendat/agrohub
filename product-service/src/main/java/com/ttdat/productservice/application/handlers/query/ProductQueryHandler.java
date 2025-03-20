@@ -4,6 +4,7 @@ import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.core.application.queries.product.GetProductStockQuantityQuery;
+import com.ttdat.core.application.queries.product.SearchProductIdListQuery;
 import com.ttdat.productservice.api.dto.common.ProductDTO;
 import com.ttdat.productservice.api.dto.response.ProductPageResult;
 import com.ttdat.productservice.application.mappers.ProductMapper;
@@ -35,7 +36,7 @@ public class ProductQueryHandler {
     private final UnitMapper unitMapper;
 
     @QueryHandler
-    public ProductPageResult handle(GetProductPageQuery getProductPageQuery){
+    public ProductPageResult handle(GetProductPageQuery getProductPageQuery) {
         Pageable pageable = PaginationUtils.getPageable(getProductPageQuery.getPaginationParams(), getProductPageQuery.getSortParams());
         Specification<Product> productPageSpec = getProductSpec(getProductPageQuery.getFilterParams());
         Page<Product> productPage = productRepository.findAll(productPageSpec, pageable);
@@ -45,10 +46,10 @@ public class ProductQueryHandler {
                 .build();
     }
 
-    private Specification<Product> getProductSpec(Map<String, String> filterParams){
+    private Specification<Product> getProductSpec(Map<String, String> filterParams) {
         Specification<Product> productPageSpec = Specification.where(null);
         productPageSpec = productPageSpec.and(SpecificationUtils.buildJoinSpecification(filterParams, "category", "categoryId", Long.class));
-        if (filterParams.containsKey("query")){
+        if (filterParams.containsKey("query")) {
             String searchValue = filterParams.get("query").toLowerCase();
             Specification<Product> querySpec = (root, query, criteriaBuilder) -> {
                 String likePattern = "%" + searchValue + "%";
@@ -63,38 +64,39 @@ public class ProductQueryHandler {
         return productPageSpec;
     }
 
-    private Product getProductById(String productId){
+    private Product getProductById(String productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     @QueryHandler
-    public ProductDTO handle(GetProductByIdQuery getProductByIdQuery){
+    public ProductDTO handle(GetProductByIdQuery getProductByIdQuery) {
         Product product = getProductById(getProductByIdQuery.getProductId());
         return productMapper.toDTO(product);
     }
 
     @QueryHandler
-    public List<ProductDTO> handle(SearchProductQuery searchProductQuery){
+    public List<ProductDTO> handle(SearchProductQuery searchProductQuery) {
         Specification<Product> productSpec = getProductSpec(Map.of("query", searchProductQuery.getQuery()));
         List<Product> products = productRepository.findAll(productSpec);
         return productMapper.toDTOList(products);
     }
 
     @QueryHandler
-    public ProductInfo handle(GetProductInfoByIdQuery getProductInfoByIdQuery){
-        Product product = getProductById(getProductInfoByIdQuery.getProductId());
-        ProductInfo productInfo = productMapper.toProductInfo(product);
-        ProductUnit defaultProductUnit = product.getProductUnits().stream()
-                .filter(ProductUnit::isDefault)
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.UNIT_NOT_FOUND));
-        productInfo.setUnit(unitMapper.toUnitInfo(defaultProductUnit.getUnit()));
-        return productInfo;
+    public List<String> handle(SearchProductIdListQuery searchProductIdListQuery) {
+        Specification<Product> productSpec = getProductSpec(searchProductIdListQuery.getFilterParams());
+        List<Product> products = productRepository.findAll(productSpec);
+        return products.stream().map(Product::getProductId).toList();
     }
 
     @QueryHandler
-    public Double handle(GetProductStockQuantityQuery getProductStockQuantityQuery){
+    public ProductInfo handle(GetProductInfoByIdQuery getProductInfoByIdQuery) {
+        Product product = getProductById(getProductInfoByIdQuery.getProductId());
+        return productMapper.toProductInfo(product);
+    }
+
+    @QueryHandler
+    public Double handle(GetProductStockQuantityQuery getProductStockQuantityQuery) {
         Product product = getProductById(getProductStockQuantityQuery.getProductId());
         Double currentConversionFactor = product.getProductUnits().stream()
                 .filter(productUnit -> productUnit.getProductUnitId().equals(getProductStockQuantityQuery.getProductUnitId()))
