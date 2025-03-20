@@ -180,8 +180,12 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
       title: "Đơn vị tính",
       key: "unit",
       width: "10%",
-      render: (_, productStock: IProductStock) =>
-        productStock.product.unit.unitName,
+      render: (_, productStock: IProductStock) => {
+        const productUnit = productStock.product.productUnits.find(
+          (productUnit) => productUnit.isDefault,
+        );
+        return productUnit?.unit.unitName;
+      },
     },
   ];
 

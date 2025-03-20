@@ -21,6 +21,7 @@ public interface ProductUnitMapper extends EntityMapper<ProductUnitDTO, ProductU
     @Mapping(target = "isDefault", source = "default")
     ProductUnit toEntity(EvtProductUnit evtProductUnit);
 
+    @Mapping(target = "isDefault", source = "default")
     ProductUnitInfo toProductUnitInfo(ProductUnit productUnit);
 
     List<ProductUnitInfo> toProductUnitInfoList(List<ProductUnit> productUnits);

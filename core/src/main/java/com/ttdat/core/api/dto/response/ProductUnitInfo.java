@@ -1,5 +1,6 @@
 package com.ttdat.core.api.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,5 +16,6 @@ public class ProductUnitInfo {
 
     Double conversionFactor;
 
+    @JsonProperty("is_default")
     boolean isDefault;
 }
