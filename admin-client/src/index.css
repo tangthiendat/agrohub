@@ -32,4 +32,8 @@
   .right-aligned-number .ant-input-number-input {
     @apply text-right;
   }
+
+  .no-border-summary .ant-table-summary > tr > td {
+    border: none !important;
+  }
 }

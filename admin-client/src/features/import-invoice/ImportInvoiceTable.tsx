@@ -1,11 +1,12 @@
-import { Button, Table, TablePaginationConfig } from "antd";
-import { IImportInvoice, ISupplier, Page } from "../../interfaces";
-import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router";
+import { Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
-import { getSortDirection } from "../../utils/filter";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router";
+import { IImportInvoice, ISupplier, Page } from "../../interfaces";
 import { formatDate } from "../../utils/datetime";
+import { getSortDirection } from "../../utils/filter";
 import { formatCurrency } from "../../utils/number";
+import ViewImportInvoice from "./ViewImportInvoice";
 
 interface ImportInvoiceTableProps {
   importInvoicePage?: Page<IImportInvoice>;
@@ -21,7 +22,6 @@ const ImportInvoiceTable: React.FC<ImportInvoiceTableProps> = ({
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
@@ -142,7 +142,9 @@ const ImportInvoiceTable: React.FC<ImportInvoiceTableProps> = ({
       title: "Hành động",
       key: "action",
       width: "15%",
-      render: (_, record) => <div></div>,
+      render: (_, record: IImportInvoice) => (
+        <ViewImportInvoice importInvoice={record} />
+      ),
     },
   ];
 

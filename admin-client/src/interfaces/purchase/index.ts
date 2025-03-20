@@ -173,6 +173,7 @@ export interface IImportInvoice extends Auditable {
   discountType: DiscountType;
   vatRate: number;
   finalAmount: number;
+  note?: string;
 }
 
 export interface ImportInvoiceFilterCriteria {
