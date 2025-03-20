@@ -3,21 +3,17 @@ package com.ttdat.core.api.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductInfo {
-    String productId;
+public class ProductUnitInfo {
+    String productUnitId;
 
-    String productName;
+    UnitInfo unit;
 
-    CategoryInfo category;
+    Double conversionFactor;
 
-    List<ProductUnitInfo> productUnits;
-
-    String imageUrl;
+    boolean isDefault;
 }

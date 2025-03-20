@@ -92,13 +92,7 @@ public class ProductQueryHandler {
     @QueryHandler
     public ProductInfo handle(GetProductInfoByIdQuery getProductInfoByIdQuery) {
         Product product = getProductById(getProductInfoByIdQuery.getProductId());
-        ProductInfo productInfo = productMapper.toProductInfo(product);
-        ProductUnit defaultProductUnit = product.getProductUnits().stream()
-                .filter(ProductUnit::isDefault)
-                .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.UNIT_NOT_FOUND));
-        productInfo.setUnit(unitMapper.toUnitInfo(defaultProductUnit.getUnit()));
-        return productInfo;
+        return productMapper.toProductInfo(product);
     }
 
     @QueryHandler
