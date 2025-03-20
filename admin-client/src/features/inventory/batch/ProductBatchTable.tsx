@@ -1,12 +1,12 @@
+import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { Space, Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
 import { IProductBatch, IProductInfo, Page } from "../../../interfaces";
-import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
-import { formatDate, formatTimestamp } from "../../../utils/datetime";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import { formatDate } from "../../../utils/datetime";
+import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
 import AddBatchLocation from "./AddBatchLocation";
 
 interface ProductBatchTableProps {

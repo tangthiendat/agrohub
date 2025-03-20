@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ImportInvoiceDTO {
-    String importedInvoiceId;
+    String importInvoiceId;
 
     SupplierDTO supplier;
 
