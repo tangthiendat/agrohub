@@ -84,7 +84,7 @@ public class ProductQueryHandler {
 
     @QueryHandler
     public List<String> handle(SearchProductIdListQuery searchProductIdListQuery) {
-        Specification<Product> productSpec = getProductSpec(Map.of("query", searchProductIdListQuery.getQuery()));
+        Specification<Product> productSpec = getProductSpec(searchProductIdListQuery.getFilterParams());
         List<Product> products = productRepository.findAll(productSpec);
         return products.stream().map(Product::getProductId).toList();
     }

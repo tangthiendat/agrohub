@@ -2,11 +2,24 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { TableProps } from "antd/lib";
 import { Image, Table, TablePaginationConfig } from "antd";
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { IProductStock, Page } from "../../../interfaces";
-import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
-import { formatTimestamp } from "../../../utils/datetime";
-import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../../utils/filter";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../../utils/color";
+import { useQuery } from "@tanstack/react-query";
+import { categoryService } from "../../../services";
 
 interface ProductStockTableProps {
   productStockPage?: Page<IProductStock>;
@@ -30,6 +43,19 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
       showTotal: (total) => `Tổng ${total} hàng tồn kho`,
     },
   }));
+
+  const { data: categoryOptions, isLoading: isCategoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: categoryService.getAll,
+    select: (data) => {
+      if (data.payload) {
+        return data.payload.map((category) => ({
+          value: category.categoryId,
+          text: category.categoryName,
+        }));
+      }
+    },
+  });
 
   useEffect(() => {
     if (productStockPage) {
@@ -61,14 +87,16 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
 
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
+        const paramKey = key === "category" ? "categoryId" : key;
         if (!value) {
-          searchParams.delete(key);
+          searchParams.delete(paramKey);
           return;
         }
         const paramValue = Array.isArray(value)
           ? value.join(",")
           : String(value);
-        searchParams.set(key, paramValue);
+
+        searchParams.set(paramKey, paramValue);
       });
     }
 
@@ -120,6 +148,22 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
         productStock.product.productName,
     },
     {
+      title: "Danh mục",
+      // dataIndex: "category",
+      key: "category",
+      width: "15%",
+      render: (_, record: IProductStock) =>
+        record.product.category.categoryName,
+      filters: categoryOptions,
+      filterMultiple: false,
+      filteredValue: getDefaultFilterValue(searchParams, "categoryId")?.map(
+        (categoryId) => Number(categoryId),
+      ),
+      filterIcon: (filtered: boolean) => {
+        return <FilterFilled style={{ color: getFilterIconColor(filtered) }} />;
+      },
+    },
+    {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
@@ -140,22 +184,6 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
       render: (_, productStock: IProductStock) =>
         productStock.product.unit.unitName,
     },
-    {
-      title: "Ngày cập nhật",
-      dataIndex: "updatedAt",
-      key: "updatedAt",
-      width: "15%",
-      render: (updatedAt: string) =>
-        updatedAt ? formatTimestamp(updatedAt) : "",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "updatedAt"),
-      sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
-          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-        </div>
-      ),
-    },
   ];
 
   return (
@@ -170,7 +198,7 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
       }
       rowHoverable={false}
       loading={{
-        spinning: isLoading,
+        spinning: isLoading || isCategoriesLoading,
         tip: "Đang tải dữ liệu...",
       }}
       onChange={handleTableChange}

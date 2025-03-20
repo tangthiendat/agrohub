@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,9 +58,16 @@ public class ProductStockQueryHandler {
     private Specification<ProductStock> getProductStockSpec(Map<String, String> filterParams) {
         Specification<ProductStock> spec = Specification.where(null);
         spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class));
+        Map<String, String> productFilterParams = new HashMap<>();
+        if(filterParams.containsKey("categoryId")) {
+            productFilterParams.put("categoryId", filterParams.get("categoryId"));
+        }
         if (filterParams.containsKey("query")) {
+            productFilterParams.put("query", filterParams.get("query"));
+        }
+        if (!productFilterParams.isEmpty()) {
             SearchProductIdListQuery searchProductIdListQuery = SearchProductIdListQuery.builder()
-                    .query(filterParams.get("query"))
+                    .filterParams(productFilterParams)
                     .build();
             List<String> productIdList = queryGateway.query(searchProductIdListQuery, ResponseTypes.multipleInstancesOf(String.class)).join();
             if (!productIdList.isEmpty()) {
