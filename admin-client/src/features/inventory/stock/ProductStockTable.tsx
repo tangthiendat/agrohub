@@ -155,7 +155,6 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
       render: (_, record: IProductStock) =>
         record.product.category.categoryName,
       filters: categoryOptions,
-      filterMultiple: false,
       filteredValue: getDefaultFilterValue(searchParams, "categoryId")?.map(
         (categoryId) => Number(categoryId),
       ),

@@ -55,7 +55,7 @@ export interface IProduct extends Auditable {
 
 export interface ProductFilterCriteria {
   query?: string;
-  categoryId?: number;
+  categoryId?: string;
 }
 
 export interface IProductInfo {

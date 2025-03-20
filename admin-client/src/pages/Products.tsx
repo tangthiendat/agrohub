@@ -33,7 +33,7 @@ const Products: React.FC = () => {
 
   const filter: ProductFilterCriteria = {
     query: searchParams.get("query") || undefined,
-    categoryId: Number(searchParams.get("categoryId")) || undefined,
+    categoryId: searchParams.get("categoryId") || undefined,
   };
 
   const { data, isLoading } = useQuery({
