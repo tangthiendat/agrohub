@@ -24,6 +24,8 @@ axon:
     processors:
       debt-group:
         mode: subscribing
+      debt-transaction-group:
+        mode: subscribing
 application:
   security:
     rsa:

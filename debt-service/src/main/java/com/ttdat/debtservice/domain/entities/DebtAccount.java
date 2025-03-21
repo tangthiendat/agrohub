@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -49,4 +50,7 @@ public class DebtAccount extends Auditable {
 
     @Enumerated(EnumType.STRING)
     DebtStatus debtStatus;
+
+    @OneToMany(mappedBy = "debtAccount")
+    List<DebtTransaction> debtTransactions;
 }
