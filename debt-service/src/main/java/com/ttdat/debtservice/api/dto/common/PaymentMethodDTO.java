@@ -3,6 +3,8 @@ package com.ttdat.debtservice.api.dto.common;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,4 +16,8 @@ public class PaymentMethodDTO {
     String paymentMethodName;
 
     String description;
+
+    LocalDateTime createdAt;
+
+    LocalDateTime updatedAt;
 }

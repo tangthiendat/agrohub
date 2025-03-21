@@ -1,7 +1,9 @@
 package com.ttdat.debtservice.application.handlers.query;
 
+import com.ttdat.debtservice.api.dto.common.PaymentMethodDTO;
 import com.ttdat.debtservice.api.dto.response.PaymentMethodPageResult;
 import com.ttdat.debtservice.application.mappers.PaymentMethodMapper;
+import com.ttdat.debtservice.application.queries.paymentmethod.GetAllPaymentMethodQuery;
 import com.ttdat.debtservice.application.queries.paymentmethod.GetPaymentMethodPageQuery;
 import com.ttdat.debtservice.application.repositories.PaymentMethodRepository;
 import com.ttdat.debtservice.domain.entities.PaymentMethod;
@@ -11,6 +13,8 @@ import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -26,5 +30,11 @@ public class PaymentMethodQueryHandler {
                 .meta(PaginationUtils.getPaginationMeta(paymentMethods))
                 .content(paymentMethodMapper.toDTOList(paymentMethods.getContent()))
                 .build();
+    }
+
+    @QueryHandler
+    public List<PaymentMethodDTO> handle(GetAllPaymentMethodQuery getAllPaymentMethodQuery){
+        List<PaymentMethod> paymentMethods = paymentMethodRepository.findAll();
+        return paymentMethodMapper.toDTOList(paymentMethods);
     }
 }
