@@ -13,7 +13,7 @@ public class DebtServiceInterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         String[] whitelist = new String[]{
-                "/api/v1/warehouses/me",
+                "/api/v1/payment-methods",
         };
         registry.addInterceptor(permissionInterceptor)
                 .excludePathPatterns(whitelist);
