@@ -1,4 +1,4 @@
-package com.ttdat.debtservice.api.dto.common;
+package com.ttdat.debtservice.api.dto.response;
 
 import com.ttdat.core.domain.entities.DebtSourceType;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DebtAccountDTO {
+public class PartyDebtAccount {
     String debtAccountId;
 
     String sourceId;

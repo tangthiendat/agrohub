@@ -48,7 +48,7 @@ public class DebtAccount extends Auditable {
     @Column(precision = 15, scale = 2, nullable = false)
     BigDecimal remainingAmount;
 
-    @Column(precision = 2, scale = 2, nullable = false)
+    @Column(precision = 2, nullable = false)
     Double interestRate;
 
     @Column(nullable = false)
