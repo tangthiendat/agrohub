@@ -18,8 +18,6 @@ public class CreateDebtTransactionCommand {
 
     String debtAccountId;
 
-    String paymentMethodId;
-
     BigDecimal amount;
 
     DebtTransactionType transactionType;

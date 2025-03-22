@@ -19,8 +19,6 @@ public class DebtTransactionCreatedEvent {
 
     String debtAccountId;
 
-    String paymentMethodId;
-
     BigDecimal amount;
 
     DebtTransactionType transactionType;

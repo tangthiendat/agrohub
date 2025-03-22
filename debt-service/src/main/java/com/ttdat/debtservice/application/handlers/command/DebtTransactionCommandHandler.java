@@ -18,7 +18,6 @@ public class DebtTransactionCommandHandler {
         DebtTransactionCreatedEvent debtTransactionCreatedEvent = DebtTransactionCreatedEvent.builder()
                 .debtTransactionId(createDebtTransactionCommand.getDebtTransactionId())
                 .debtAccountId(createDebtTransactionCommand.getDebtAccountId())
-                .paymentMethodId(createDebtTransactionCommand.getPaymentMethodId())
                 .amount(createDebtTransactionCommand.getAmount())
                 .transactionType(createDebtTransactionCommand.getTransactionType())
                 .build();

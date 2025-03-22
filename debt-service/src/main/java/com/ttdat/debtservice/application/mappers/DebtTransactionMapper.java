@@ -9,6 +9,5 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface DebtTransactionMapper {
     @Mapping(target = "debtAccount.debtAccountId", source = "debtAccountId")
-    @Mapping(target = "paymentMethod.paymentMethodId", source = "paymentMethodId")
     DebtTransaction toEntity(DebtTransactionCreatedEvent debtTransactionCreatedEvent);
 }

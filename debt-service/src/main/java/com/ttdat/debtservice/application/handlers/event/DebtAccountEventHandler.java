@@ -28,6 +28,13 @@ public class DebtAccountEventHandler {
     public void on(DebtAccountCreatedEvent debtAccountCreatedEvent){
         DebtAccount debtAccount = debtAccountMapper.toEntity(debtAccountCreatedEvent);
         debtAccountRepository.save(debtAccount);
+        CreateDebtTransactionCommand createDebtTransactionCommand = CreateDebtTransactionCommand.builder()
+                .debtTransactionId(idGeneratorService.generateTransactionId())
+                .debtAccountId(debtAccount.getDebtAccountId())
+                .transactionType(DebtTransactionType.DEBT)
+                .amount(debtAccount.getTotalAmount())
+                .build();
+        commandGateway.send(createDebtTransactionCommand);
     }
 
 }

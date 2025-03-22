@@ -25,12 +25,10 @@ public class DebtTransaction extends Auditable {
     @JoinColumn(name = "debt_account_id")
     DebtAccount debtAccount;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_method_id")
-    PaymentMethod paymentMethod;
-
+    @Column(precision = 15, scale = 2)
     BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     DebtTransactionType transactionType;
 }
