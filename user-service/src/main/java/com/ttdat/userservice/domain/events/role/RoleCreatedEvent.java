@@ -15,8 +15,12 @@ import java.util.List;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class RoleCreatedEvent {
     Long roleId;
+
     String roleName;
+
     boolean active;
+
     String description;
+
     List<Long> permissionIds;
 }

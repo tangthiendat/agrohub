@@ -28,7 +28,7 @@ public class UserCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateUser(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
+    public ApiResponse<Object> updateUser(@PathVariable String id, @RequestBody UserDTO userDTO) {
         userService.updateUser(id, userDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -38,7 +38,7 @@ public class UserCommandController {
     }
 
     @PatchMapping("/{id}/status")
-    public ApiResponse<Object> updateUserStatus(@PathVariable UUID id, @RequestBody UpdateUserStatusRequest updateUserStatusRequest) {
+    public ApiResponse<Object> updateUserStatus(@PathVariable String id, @RequestBody UpdateUserStatusRequest updateUserStatusRequest) {
         userService.updateUserStatus(id, updateUserStatusRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

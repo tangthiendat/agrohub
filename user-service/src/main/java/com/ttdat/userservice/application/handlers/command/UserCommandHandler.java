@@ -22,7 +22,7 @@ public class UserCommandHandler {
     @CommandHandler
     public void handle(CreateUserCommand createUserCommand) {
         UserCreatedEvent userCreatedEvent = UserCreatedEvent.builder()
-                .userId(UUID.randomUUID())
+                .userId(UUID.randomUUID().toString())
                 .fullName(createUserCommand.getFullName())
                 .gender(createUserCommand.getGender())
                 .email(createUserCommand.getEmail())

@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
             String tokenKey = "token" + ":" + tokenId;
             tokenBlacklistService.blacklistToken(tokenKey, timeToExpire);
         }
-        String userRoleKey = redisKeyService.getUserRoleKey(UUID.fromString(userId));
+        String userRoleKey = redisKeyService.getUserRoleKey(userId);
         redisService.delete(userRoleKey);
 
         // Remove refresh token from http only cookie

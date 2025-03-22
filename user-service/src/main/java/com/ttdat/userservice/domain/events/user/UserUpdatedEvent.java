@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -16,13 +15,21 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class UserUpdatedEvent {
-    UUID userId;
+    String userId;
+
     String fullName;
+
     boolean active;
+
     Long warehouseId;
+
     Gender gender;
+
     String email;
+
     LocalDate dob;
+
     String phoneNumber;
+
     Long roleId;
 }

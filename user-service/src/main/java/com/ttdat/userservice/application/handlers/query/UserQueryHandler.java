@@ -40,14 +40,14 @@ public class UserQueryHandler {
         return userMapper.toDTO(user);
     }
 
-    private User getUserById(UUID userId){
+    private User getUserById(String userId){
         return userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 
     @QueryHandler
     public UserDTO handle(GetUserByIdQuery getUserByIdQuery){
-        User user = getUserById(UUID.fromString(getUserByIdQuery.getUserId()));
+        User user = getUserById(getUserByIdQuery.getUserId());
         return userMapper.toDTO(user);
     }
 
@@ -87,13 +87,13 @@ public class UserQueryHandler {
     @QueryHandler
     public UserInfo handle(GetUserInfoQuery getUserInfoQuery, QueryMessage<?,?> queryMessage){
         String userIdStr = (String) queryMessage.getMetaData().get("userId");
-        User user = getUserById(UUID.fromString(userIdStr));
+        User user = getUserById(userIdStr);
         return userMapper.toUserInfo(user);
     }
 
     @QueryHandler
     public UserInfo handle(GetUserInfoByIdQuery getUserInfoByIdQuery){
-        User user = getUserById(UUID.fromString(getUserInfoByIdQuery.getUserId()));
+        User user = getUserById(getUserInfoByIdQuery.getUserId());
         return userMapper.toUserInfo(user);
     }
 }
