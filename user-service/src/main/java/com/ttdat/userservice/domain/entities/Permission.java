@@ -21,17 +21,20 @@ public class Permission extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long permissionId;
 
+    @Column(length = 100)
     String permissionName;
 
     String description;
 
+    @Column(length = 100)
     String apiPath;
 
+    @Column(length = 10)
     String httpMethod;
 
+    @Column(length = 50)
     String module;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "permissions")
     List<Role> roles;
 }

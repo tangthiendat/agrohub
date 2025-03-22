@@ -22,9 +22,11 @@ public class ProductLocation extends Auditable {
     @JoinColumn(name = "warehouse_id")
     Warehouse warehouse;
 
+    @Column(length = 10)
     String rackName;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     RackType rackType;
 
     Integer rowNumber;
@@ -32,6 +34,7 @@ public class ProductLocation extends Auditable {
     Integer columnNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 30)
     LocationStatus status;
 
     String reason;

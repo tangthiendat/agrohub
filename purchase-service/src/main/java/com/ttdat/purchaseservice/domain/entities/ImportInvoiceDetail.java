@@ -23,7 +23,7 @@ public class ImportInvoiceDetail {
     @JoinColumn(name = "import_invoice_id")
     ImportInvoice importInvoice;
 
-    @Column(length = 100)
+    @Column(length = 50)
     String productId;
 
     @Column(length = 50)

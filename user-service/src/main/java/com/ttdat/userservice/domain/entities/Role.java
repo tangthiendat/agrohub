@@ -23,6 +23,7 @@ public class Role extends Auditable implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long roleId;
 
+    @Column(length = 50)
     String roleName;
 
     boolean active;

@@ -45,6 +45,7 @@ public class ImportInvoice extends Auditable {
     BigDecimal discountValue;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     DiscountType discountType;
 
     @Column(precision = 15, scale = 2)

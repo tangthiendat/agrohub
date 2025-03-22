@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 public class PurchaseOrderDetail {
 
     @Id
+    @Column(length = 50)
     String purchaseOrderDetailId;
 
     @ManyToOne

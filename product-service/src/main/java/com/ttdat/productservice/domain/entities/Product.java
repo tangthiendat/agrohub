@@ -50,7 +50,7 @@ public class Product extends Auditable {
     @Column(length = 50)
     String packaging;
 
-    @Column(length = 500)
+    @Column(length = 300)
     String safetyInstructions;
 
     @Column(length = 200)

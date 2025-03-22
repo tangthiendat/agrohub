@@ -37,10 +37,13 @@ public class DebtAccount extends Auditable {
     @Enumerated(EnumType.STRING)
     DebtSourceType sourceType;
 
+    @Column(precision = 15, scale = 2)
     BigDecimal totalAmount;
 
+    @Column(precision = 15, scale = 2)
     BigDecimal paidAmount;
 
+    @Column(precision = 15, scale = 2)
     BigDecimal remainingAmount;
 
     @Column(precision = 2)
@@ -49,6 +52,7 @@ public class DebtAccount extends Auditable {
     LocalDate dueDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     DebtStatus debtStatus;
 
     @OneToMany(mappedBy = "debtAccount")

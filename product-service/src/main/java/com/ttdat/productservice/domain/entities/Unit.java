@@ -21,6 +21,7 @@ public class Unit extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long unitId;
 
+    @Column(length = 50)
     String unitName;
 
     String description;

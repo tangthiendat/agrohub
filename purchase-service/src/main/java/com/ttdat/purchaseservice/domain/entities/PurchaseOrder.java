@@ -20,6 +20,7 @@ import java.util.List;
 public class PurchaseOrder extends Auditable {
 
     @Id
+    @Column(length = 20)
     String purchaseOrderId;
 
     Long warehouseId;
@@ -28,6 +29,7 @@ public class PurchaseOrder extends Auditable {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
+    @Column(length = 50)
     String userId;
 
     LocalDate orderDate;
@@ -35,6 +37,7 @@ public class PurchaseOrder extends Auditable {
     LocalDate expectedDeliveryDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     PurchaseOrderStatus status;
 
     String note;
@@ -55,7 +58,6 @@ public class PurchaseOrder extends Auditable {
 
     @Column(precision = 15, scale = 2)
     BigDecimal finalAmount;
-
 
     @OneToMany(mappedBy = "purchaseOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<PurchaseOrderDetail> purchaseOrderDetails;

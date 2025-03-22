@@ -25,11 +25,13 @@ public class User extends Auditable implements UserDetails {
     @Id
     UUID userId;
 
+    @Column(length = 100)
     String fullName;
 
     LocalDate dob;
 
     @Enumerated(EnumType.STRING)
+            @Column(length = 10)
     Gender gender;
 
     boolean active;
@@ -40,6 +42,7 @@ public class User extends Auditable implements UserDetails {
 
     String password;
 
+    @Column(length = 20)
     String phoneNumber;
 
     @ManyToOne

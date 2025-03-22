@@ -21,10 +21,9 @@ public class Supplier extends Auditable {
     @Column(length = 50)
     String supplierId;
 
-    @Column(length = 200)
+    @Column(length = 150)
     String supplierName;
 
-    @Column(length = 50)
     String email;
 
     @Column(length = 20)
@@ -32,7 +31,6 @@ public class Supplier extends Auditable {
 
     boolean active;
 
-    @Column(length = 200)
     String address;
 
     @Column(length = 20)
