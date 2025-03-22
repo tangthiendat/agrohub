@@ -25,24 +25,28 @@ public class User extends Auditable implements UserDetails {
     @Id
     UUID userId;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     String fullName;
 
+    @Column(nullable = false)
     LocalDate dob;
 
     @Enumerated(EnumType.STRING)
-            @Column(length = 10)
+    @Column(length = 10, nullable = false)
     Gender gender;
 
     boolean active;
 
+    @Column( nullable = false)
     Long warehouseId;
 
+    @Column(nullable = false)
     String email;
 
+    @Column(nullable = false)
     String password;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     String phoneNumber;
 
     @ManyToOne

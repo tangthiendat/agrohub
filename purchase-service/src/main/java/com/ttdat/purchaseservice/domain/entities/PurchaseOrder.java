@@ -26,7 +26,7 @@ public class PurchaseOrder extends Auditable {
     Long warehouseId;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
+    @JoinColumn(name = "supplier_id", nullable = false)
     Supplier supplier;
 
     @Column(length = 50)

@@ -1,10 +1,7 @@
 package com.ttdat.inventoryservice.domain.entities;
 
 import com.ttdat.inventoryservice.infrastructure.audit.Auditable;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,6 +20,7 @@ public class Warehouse extends Auditable {
     @Id
     Long warehouseId;
 
+    @Column(length = 100, nullable = false)
     String warehouseName;
 
     String address;

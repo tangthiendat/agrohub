@@ -22,21 +22,25 @@ public class ProductBatch extends Auditable {
     String batchId;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id")
+    @JoinColumn(name = "warehouse_id", nullable = false)
     Warehouse warehouse;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     String productId;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     String importInvoiceDetailId;
 
+    @Column(nullable = false)
     LocalDate manufacturingDate;
 
+    @Column(nullable = false)
     LocalDate expirationDate;
 
+    @Column(nullable = false)
     LocalDate receivedDate;
 
+    @Column(nullable = false)
     Integer quantity;
 
     @OneToMany(mappedBy = "productBatch",fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE})

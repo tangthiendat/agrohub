@@ -22,7 +22,7 @@ public class SupplierProduct {
     String supplierProductId;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
+    @JoinColumn(name = "supplier_id", nullable = false)
     Supplier supplier;
 
     @Column(length = 50)

@@ -20,7 +20,7 @@ public class ImportInvoiceDetail {
     String importInvoiceDetailId;
 
     @ManyToOne
-    @JoinColumn(name = "import_invoice_id")
+    @JoinColumn(name = "import_invoice_id", nullable = false)
     ImportInvoice importInvoice;
 
     @Column(length = 50)

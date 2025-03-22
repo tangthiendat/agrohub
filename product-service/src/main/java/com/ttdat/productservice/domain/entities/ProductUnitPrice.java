@@ -22,7 +22,7 @@ public class ProductUnitPrice {
     String productUnitPriceId;
 
     @ManyToOne
-    @JoinColumn(name = "product_unit_id")
+    @JoinColumn(name = "product_unit_id", nullable = false)
     ProductUnit productUnit;
 
     @Column(precision = 15, scale = 2)

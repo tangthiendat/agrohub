@@ -21,7 +21,7 @@ public class PurchaseOrderDetail {
     String purchaseOrderDetailId;
 
     @ManyToOne
-    @JoinColumn(name = "purchase_order_id")
+    @JoinColumn(name = "purchase_order_id", nullable = false)
     PurchaseOrder purchaseOrder;
 
     @Column(length = 100)
