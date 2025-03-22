@@ -20,7 +20,7 @@ import java.util.List;
 public class DebtAccountQueryController {
     private final QueryGateway queryGateway;
 
-    @GetMapping("/unpaid/party/{partyId}")
+    @GetMapping("/party/{partyId}/unpaid")
     public ApiResponse<List<PartyDebtAccount>> getUnpaidDebtAccountByPartyId(@PathVariable String partyId) {
         GetUnpaidDebtAccountByPartyIdQuery getUnpaidDebtAccountByPartyIdQuery = GetUnpaidDebtAccountByPartyIdQuery.builder()
                 .partyId(partyId)

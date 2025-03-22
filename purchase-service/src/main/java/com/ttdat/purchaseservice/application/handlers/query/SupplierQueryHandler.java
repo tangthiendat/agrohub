@@ -1,9 +1,12 @@
 package com.ttdat.purchaseservice.application.handlers.query;
 
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.api.dto.response.SupplierPageResult;
 import com.ttdat.purchaseservice.application.mappers.SupplierMapper;
 import com.ttdat.purchaseservice.application.mappers.SupplierRatingMapper;
+import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierByIdQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierByProductIdQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierPageQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.SearchSupplierQuery;
@@ -86,6 +89,13 @@ public class SupplierQueryHandler {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         List<Supplier> suppliers = supplierRepository.findByProductId(query.getProductId());
         return toDTOList(suppliers, warehouseId);
+    }
+
+    @QueryHandler
+    public SupplierDTO handle(GetSupplierByIdQuery query) {
+        Supplier supplier = supplierRepository.findById(query.getSupplierId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.SUPPLIER_NOT_FOUND));
+        return supplierMapper.toDTO(supplier);
     }
 
 }
