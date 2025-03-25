@@ -34,6 +34,7 @@ interface ISupplierService {
     ratingId: string,
     supplierRating: ISupplierRating,
   ): Promise<ApiResponse<void>>;
+  getById(supplierId: string): Promise<ApiResponse<ISupplier>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/suppliers", {
@@ -101,6 +102,10 @@ class SupplierService implements ISupplierService {
         supplierRating,
       )
     ).data;
+  }
+
+  async getById(supplierId: string): Promise<ApiResponse<ISupplier>> {
+    return (await apiClient.get(`/${supplierId}`)).data;
   }
 }
 

@@ -24,6 +24,7 @@ import NewImportInvoice from "../features/import-invoice/NewImportInvoice";
 import ProductLocations from "../pages/ProductLocations";
 import ProductBatches from "../pages/ProductBatches";
 import ProductStocks from "../pages/ProductStocks";
+import SupplierDebt from "../features/debt/SupplierDebt";
 
 const router = createBrowserRouter([
   {
@@ -97,7 +98,17 @@ const router = createBrowserRouter([
       },
       {
         path: "/suppliers",
-        element: <Suppliers />,
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <Suppliers />,
+          },
+          {
+            path: ":id/debt",
+            element: <SupplierDebt />,
+          },
+        ],
       },
       {
         path: "/warehouses",
