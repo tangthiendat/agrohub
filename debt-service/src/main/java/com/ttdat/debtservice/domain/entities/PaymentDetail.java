@@ -1,6 +1,5 @@
 package com.ttdat.debtservice.domain.entities;
 
-import com.ttdat.debtservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,22 +12,23 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "debt_transactions")
+@Table(name = "payment_details", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"payment_id", "debt_account_id"})
+})
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class DebtTransaction extends Auditable {
-
+public class PaymentDetail {
     @Id
-    @Column(length = 20)
-    String debtTransactionId;
+    @Column(length = 50)
+    String paymentDetailId;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_id", nullable = false)
+    Payment payment;
 
     @ManyToOne
     @JoinColumn(name = "debt_account_id", nullable = false)
     DebtAccount debtAccount;
 
-    @Column(precision = 15, scale = 2, nullable = false)
-    BigDecimal amount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
-    DebtTransactionType transactionType;
+    @Column(precision = 15, scale = 2)
+    BigDecimal paymentAmount;
 }

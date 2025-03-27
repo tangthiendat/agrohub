@@ -1,12 +1,11 @@
 package com.ttdat.debtservice.domain.entities;
 
 import com.ttdat.debtservice.infrastructure.audit.Auditable;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +26,7 @@ public class PaymentMethod extends Auditable {
 
     @Column(length = 150)
     String description;
+
+    @OneToMany(mappedBy = "paymentMethod")
+    List<Payment> payments;
 }
