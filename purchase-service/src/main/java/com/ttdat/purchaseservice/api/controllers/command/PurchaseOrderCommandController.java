@@ -6,6 +6,7 @@ import com.ttdat.purchaseservice.api.dto.request.CreatePurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderRequest;
 import com.ttdat.purchaseservice.api.dto.request.UpdatePurchaseOrderStatusRequest;
 import com.ttdat.purchaseservice.application.services.PurchaseOrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class PurchaseOrderCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createPurchaseOrder(@RequestBody CreatePurchaseOrderRequest createPurchaseOrderRequest) {
+    public ApiResponse<Object> createPurchaseOrder(@RequestBody @Valid CreatePurchaseOrderRequest createPurchaseOrderRequest) {
         purchaseOrderService.createPurchaseOrder(createPurchaseOrderRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -28,7 +29,7 @@ public class PurchaseOrderCommandController {
     }
 
     @PatchMapping("/{id}/status")
-    public ApiResponse<Object> updatePurchaseOrderStatus(@PathVariable String id, @RequestBody UpdatePurchaseOrderStatusRequest updatePurchaseOrderStatusRequest) {
+    public ApiResponse<Object> updatePurchaseOrderStatus(@PathVariable String id, @RequestBody @Valid UpdatePurchaseOrderStatusRequest updatePurchaseOrderStatusRequest) {
         purchaseOrderService.updatePurchaseOrderStatus(id, updatePurchaseOrderStatusRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -38,7 +39,7 @@ public class PurchaseOrderCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updatePurchaseOrder(@PathVariable String id, @RequestBody UpdatePurchaseOrderRequest updatePurchaseOrderRequest) {
+    public ApiResponse<Object> updatePurchaseOrder(@PathVariable String id, @RequestBody @Valid UpdatePurchaseOrderRequest updatePurchaseOrderRequest) {
         purchaseOrderService.updatePurchaseOrder(id, updatePurchaseOrderRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -48,7 +49,7 @@ public class PurchaseOrderCommandController {
     }
 
     @PatchMapping("/{id}/cancel")
-    public ApiResponse<Object> cancelPurchaseOrder(@PathVariable String id, @RequestBody CancelPurchaseOrderRequest cancelPurchaseOrderRequest) {
+    public ApiResponse<Object> cancelPurchaseOrder(@PathVariable String id, @RequestBody @Valid CancelPurchaseOrderRequest cancelPurchaseOrderRequest) {
         purchaseOrderService.cancelPurchaseOrder(id, cancelPurchaseOrderRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

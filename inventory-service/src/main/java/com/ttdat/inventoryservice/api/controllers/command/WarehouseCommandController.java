@@ -16,7 +16,7 @@ public class WarehouseCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createWarehouse(@Valid @RequestBody WarehouseDTO warehouseDTO) {
+    public ApiResponse<Object> createWarehouse(@RequestBody @Valid WarehouseDTO warehouseDTO) {
         warehouseService.createWarehouse(warehouseDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -26,7 +26,7 @@ public class WarehouseCommandController {
     }
 
     @PutMapping({"/{id}"})
-    public ApiResponse<Object> updateWarehouse(@PathVariable Long id, @Valid @RequestBody WarehouseDTO warehouseDTO) {
+    public ApiResponse<Object> updateWarehouse(@PathVariable Long id, @RequestBody @Valid WarehouseDTO warehouseDTO) {
         warehouseService.updateWarehouse(id, warehouseDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

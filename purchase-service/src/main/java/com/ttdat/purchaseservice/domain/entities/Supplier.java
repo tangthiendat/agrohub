@@ -21,12 +21,13 @@ public class Supplier extends Auditable {
     @Column(length = 50)
     String supplierId;
 
-    @Column(length = 150)
+    @Column(length = 150, nullable = false)
     String supplierName;
 
+    @Column(nullable = false)
     String email;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     String phoneNumber;
 
     boolean active;

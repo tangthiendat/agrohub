@@ -26,6 +26,6 @@ public class ProductBatchLocation {
     @JoinColumn(name = "location_id", nullable = false)
     ProductLocation productLocation;
 
-    @Column(precision = 2)
+    @Column(scale = 2, nullable = false)
     Double quantity;
 }

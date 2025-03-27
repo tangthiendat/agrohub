@@ -16,7 +16,7 @@ public class UnitCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createUnit(@Valid @RequestBody UnitDTO unitDTO) {
+    public ApiResponse<Object> createUnit(@RequestBody @Valid UnitDTO unitDTO) {
         unitService.createUnit(unitDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -26,7 +26,7 @@ public class UnitCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateUnit(@PathVariable Long id, @Valid @RequestBody UnitDTO unitDTO) {
+    public ApiResponse<Object> updateUnit(@PathVariable Long id, @RequestBody @Valid UnitDTO unitDTO) {
         unitService.updateUnit(id, unitDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

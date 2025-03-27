@@ -16,7 +16,7 @@ public class PermissionCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createPermission(@Valid @RequestBody PermissionDTO permissionDTO) {
+    public ApiResponse<Object> createPermission(@RequestBody @Valid PermissionDTO permissionDTO) {
         permissionService.createPermission(permissionDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -26,7 +26,7 @@ public class PermissionCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updatePermission(@Valid @PathVariable Long id, @RequestBody PermissionDTO permissionDTO) {
+    public ApiResponse<Object> updatePermission(@PathVariable Long id, @RequestBody @Valid PermissionDTO permissionDTO) {
         permissionService.updatePermission(id, permissionDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

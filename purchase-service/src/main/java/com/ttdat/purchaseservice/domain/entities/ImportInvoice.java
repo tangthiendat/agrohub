@@ -35,7 +35,7 @@ public class ImportInvoice extends Auditable {
 
     String note;
 
-    @OneToMany(mappedBy = "importInvoice", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "importInvoice", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     List<ImportInvoiceDetail> importInvoiceDetails;
 
     @Column(precision = 15, scale = 2)
@@ -48,7 +48,7 @@ public class ImportInvoice extends Auditable {
     @Column(length = 20)
     DiscountType discountType;
 
-    @Column(precision = 15, scale = 2)
+    @Column(precision = 2, scale = 2)
     BigDecimal vatRate;
 
     @Column(precision = 15, scale = 2)

@@ -53,12 +53,12 @@ public class PurchaseOrder extends Auditable {
     @Enumerated(EnumType.STRING)
     DiscountType discountType;
 
-    @Column(precision = 15, scale = 2)
+    @Column(precision = 2, scale = 2)
     BigDecimal vatRate;
 
     @Column(precision = 15, scale = 2)
     BigDecimal finalAmount;
 
-    @OneToMany(mappedBy = "purchaseOrder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "purchaseOrder", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     List<PurchaseOrderDetail> purchaseOrderDetails;
 }

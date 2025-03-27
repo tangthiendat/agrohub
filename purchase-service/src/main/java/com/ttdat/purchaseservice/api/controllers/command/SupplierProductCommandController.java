@@ -16,7 +16,7 @@ public class SupplierProductCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createSupplierProduct(@Valid @RequestBody SupplierProductDTO supplierProductDTO) {
+    public ApiResponse<Object> createSupplierProduct(@RequestBody @Valid SupplierProductDTO supplierProductDTO) {
         supplierService.createSupplierProduct(supplierProductDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())

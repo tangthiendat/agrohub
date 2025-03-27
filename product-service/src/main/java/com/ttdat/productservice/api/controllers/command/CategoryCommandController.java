@@ -16,7 +16,7 @@ public class CategoryCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ApiResponse<Object> createCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
         categoryService.createCategory(categoryDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -26,7 +26,7 @@ public class CategoryCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDTO categoryDTO) {
+    public ApiResponse<Object> updateCategory(@PathVariable Long id, @RequestBody @Valid CategoryDTO categoryDTO) {
         categoryService.updateCategory(id, categoryDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
