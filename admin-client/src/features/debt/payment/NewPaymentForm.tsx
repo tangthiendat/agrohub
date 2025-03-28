@@ -64,7 +64,7 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
 
   const { data: partyDebtAccounts, isLoading: isDebtAccountLoading } = useQuery(
     {
-      queryKey: ["debt-accounts", "party", supplier.supplierId],
+      queryKey: ["debt-accounts", "party", supplier.supplierId, "unpaid"],
       queryFn: () =>
         debtAccountService.getUnpaidPartyDebtAccount(supplier.supplierId),
       enabled: !!supplier.supplierId,

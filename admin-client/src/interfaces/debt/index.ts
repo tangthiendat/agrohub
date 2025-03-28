@@ -1,4 +1,8 @@
-import { DebtSourceType } from "../../common/enums";
+import {
+  DebtSourceType,
+  DebtStatus,
+  DebtTransactionType,
+} from "../../common/enums";
 
 export interface IPaymentMethod {
   paymentMethodId: string;
@@ -15,6 +19,27 @@ export interface IPartyDebtAccount {
   remainingAmount: number;
   interestRate: number;
   dueDate: string;
+}
+
+export interface IDebtTransaction {
+  debtTransactionId: string;
+  amount: number;
+  sourceId: string;
+  transactionType: DebtTransactionType;
+  createdAt: string;
+}
+
+export interface IPartyDebtAccount {
+  debtAccountId: string;
+  partyId: string;
+  sourceId: string;
+  sourceType: DebtSourceType;
+  totalAmount: number;
+  paidAmount: number;
+  remainingAmount: number;
+  interestRate: number;
+  dueDate: string;
+  debtStatus: DebtStatus;
 }
 
 export interface CreatePaymentDetailRequest {

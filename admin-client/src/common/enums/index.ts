@@ -73,3 +73,17 @@ export enum DebtSourceType {
   SALES_ORDER = "SALES_ORDER",
   ADJUSTMENT = "ADJUSTMENT",
 }
+
+export enum DebtStatus {
+  UNPAID = "UNPAID",
+  PAID = "PAID",
+  OVERDUE = "OVERDUE",
+  PARTIALLY_PAID = "PARTIALLY_PAID",
+}
+
+export enum DebtTransactionType {
+  PAYMENT = "PAYMENT",
+  DEBT = "DEBT",
+  ADJUSTMENT = "ADJUSTMENT",
+  INTEREST = "INTEREST",
+}
