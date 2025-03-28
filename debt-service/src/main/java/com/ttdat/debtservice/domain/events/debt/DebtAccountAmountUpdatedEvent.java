@@ -1,6 +1,5 @@
 package com.ttdat.debtservice.domain.events.debt;
 
-import com.ttdat.core.domain.entities.DebtStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +17,6 @@ public class DebtAccountAmountUpdatedEvent {
     String debtAccountId;
 
     BigDecimal paidAmount;
+
+    String sourceId;
 }

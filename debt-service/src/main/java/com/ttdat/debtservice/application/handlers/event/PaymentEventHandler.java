@@ -29,6 +29,7 @@ public class PaymentEventHandler {
             UpdateDebtAccountAmountCommand updateDebtAccountAmountCommand = UpdateDebtAccountAmountCommand.builder()
                     .debtAccountId(evtPaymentDetail.getDebtAccountId())
                     .paidAmount(evtPaymentDetail.getPaymentAmount())
+                    .sourceId(payment.getPaymentId())
                     .build();
             commandGateway.send(updateDebtAccountAmountCommand);
         });

@@ -18,4 +18,6 @@ public class UpdateDebtAccountAmountCommand {
     String debtAccountId;
 
     BigDecimal paidAmount;
+
+    String sourceId;
 }

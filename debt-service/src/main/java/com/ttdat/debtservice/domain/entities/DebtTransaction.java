@@ -28,6 +28,9 @@ public class DebtTransaction extends Auditable {
     @Column(precision = 15, scale = 2, nullable = false)
     BigDecimal amount;
 
+    @Column(length = 50)
+    String sourceId;
+
     @Enumerated(EnumType.STRING)
     @Column(length = 20, nullable = false)
     DebtTransactionType transactionType;

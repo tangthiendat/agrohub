@@ -12,7 +12,6 @@ import com.ttdat.debtservice.domain.events.debt.DebtAccountAmountUpdatedEvent;
 import com.ttdat.debtservice.domain.services.DebtDomainService;
 import com.ttdat.debtservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
-import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.config.ProcessingGroup;
 import org.axonframework.eventhandling.EventHandler;
@@ -41,6 +40,7 @@ public class DebtAccountEventHandler {
                 .debtAccountId(debtAccount.getDebtAccountId())
                 .transactionType(DebtTransactionType.DEBT)
                 .amount(debtAccount.getTotalAmount())
+                .sourceId(debtAccount.getSourceId())
                 .build();
         commandGateway.send(createDebtTransactionCommand);
     }
@@ -65,6 +65,7 @@ public class DebtAccountEventHandler {
                 .debtAccountId(debtAccount.getDebtAccountId())
                 .transactionType(DebtTransactionType.PAYMENT)
                 .amount(debtAccountAmountUpdatedEvent.getPaidAmount())
+                .sourceId(debtAccountAmountUpdatedEvent.getSourceId())
                 .build();
         commandGateway.send(createDebtTransactionCommand);
     }

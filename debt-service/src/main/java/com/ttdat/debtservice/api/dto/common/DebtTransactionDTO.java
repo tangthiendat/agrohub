@@ -1,6 +1,5 @@
-package com.ttdat.debtservice.application.commands.transaction;
+package com.ttdat.debtservice.api.dto.common;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ttdat.debtservice.domain.entities.DebtTransactionType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,11 +11,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
-public class CreateDebtTransactionCommand {
+public class DebtTransactionDTO {
     String debtTransactionId;
-
-    String debtAccountId;
 
     BigDecimal amount;
 
