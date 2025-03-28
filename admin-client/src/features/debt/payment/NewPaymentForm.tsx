@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   DatePicker,
@@ -11,14 +11,15 @@ import {
 } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useShallow } from "zustand/react/shallow";
 import { useCurrentUserInfo, useCurrentWarehouse } from "../../../common/hooks";
 import { CreatePaymentRequest, ISupplier } from "../../../interfaces";
-import { debtAccountService } from "../../../services/debt/debt-account-service";
-import { paymentMethodService } from "../../../services/debt/payment-method-service";
-import { usePaymentStore } from "../../../store/payment-store";
-import { convertKeysToSnakeCase } from "../../../utils/data";
+import { paymentService } from "../../../services";
+import { debtAccountService, paymentMethodService } from "../../../services";
 import { formatCurrency, parseCurrency } from "../../../utils/number";
+import { usePaymentStore } from "../../../store/payment-store";
+import { getNotificationMessage } from "../../../utils/notification";
 import PaymentDetailTable from "./PaymentDetailTable";
 
 interface NewPaymentFormProps {
@@ -31,6 +32,7 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
   const {
     createdDate,
     totalPaidAmount,
@@ -83,6 +85,19 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
         })),
     });
 
+  const { mutate: createPayment, isPending: isCreating } = useMutation({
+    mutationFn: paymentService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("debt-accounts") ||
+          query.queryKey.includes("payments"),
+      });
+
+      onCancel();
+    },
+  });
+
   useEffect(() => {
     if (currentWarehouse) {
       setWarehouse(currentWarehouse);
@@ -103,7 +118,7 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
   ]);
 
   const totalDebt = partyDebtAccounts?.reduce<number>(
-    (acc, cur) => acc + cur.totalAmount,
+    (acc, cur) => acc + cur.remainingAmount,
     0,
   );
 
@@ -120,7 +135,16 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
         paymentAmount: detail.paymentAmount,
       })),
     };
-    console.log(convertKeysToSnakeCase(newPayment));
+    createPayment(newPayment, {
+      onSuccess: () => {
+        toast.success("Lập phiếu chi thành công");
+        reset();
+        form.resetFields();
+      },
+      onError: (error) => {
+        toast.error(getNotificationMessage(error) || "Lập phiếu chi thất bại");
+      },
+    });
   }
 
   return (
@@ -259,10 +283,11 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
                 onCancel();
                 reset();
               }}
+              loading={isCreating}
             >
               Hủy
             </Button>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={isCreating}>
               Lưu
             </Button>
           </Space>
