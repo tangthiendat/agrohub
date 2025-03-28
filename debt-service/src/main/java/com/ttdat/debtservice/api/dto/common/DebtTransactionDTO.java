@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -19,4 +20,6 @@ public class DebtTransactionDTO {
     String sourceId;
 
     DebtTransactionType transactionType;
+
+    LocalDateTime createdAt;
 }
