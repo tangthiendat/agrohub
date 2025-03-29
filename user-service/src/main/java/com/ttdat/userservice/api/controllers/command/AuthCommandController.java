@@ -5,6 +5,7 @@ import com.ttdat.userservice.api.dto.request.AuthRequest;
 import com.ttdat.userservice.api.dto.response.AuthResponse;
 import com.ttdat.userservice.application.services.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class AuthCommandController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ApiResponse<AuthResponse> login(@RequestBody AuthRequest authRequest,
+    public ApiResponse<AuthResponse> login(@RequestBody @Valid AuthRequest authRequest,
                                            HttpServletResponse response) {
         return ApiResponse.<AuthResponse>builder()
                 .status(HttpStatus.OK.value())

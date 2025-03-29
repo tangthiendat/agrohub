@@ -19,7 +19,7 @@ public class SupplierCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createSupplier(@Valid @RequestBody SupplierDTO supplierDTO) {
+    public ApiResponse<Object> createSupplier(@RequestBody @Valid SupplierDTO supplierDTO) {
         supplierService.createSupplier(supplierDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -29,7 +29,7 @@ public class SupplierCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateSupplier(@PathVariable String id, @Valid @RequestBody SupplierDTO supplierDTO) {
+    public ApiResponse<Object> updateSupplier(@PathVariable String id, @RequestBody @Valid SupplierDTO supplierDTO) {
         supplierService.updateSupplier(id, supplierDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -39,7 +39,7 @@ public class SupplierCommandController {
     }
 
     @PatchMapping("/{id}/status")
-    public ApiResponse<Object> updateSupplierStatus(@PathVariable String id, @Valid @RequestBody UpdateSupplierStatusRequest updateSupplierStatusRequest) {
+    public ApiResponse<Object> updateSupplierStatus(@PathVariable String id, @RequestBody UpdateSupplierStatusRequest updateSupplierStatusRequest) {
         supplierService.updateSupplierStatus(id, updateSupplierStatusRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -50,7 +50,7 @@ public class SupplierCommandController {
 
     @PostMapping("/{id}/ratings")
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createSupplierRating(@PathVariable String id, @RequestBody CreateSupplierRatingRequest createSupplierRatingRequest) {
+    public ApiResponse<Object> createSupplierRating(@PathVariable String id, @RequestBody @Valid CreateSupplierRatingRequest createSupplierRatingRequest) {
         supplierService.createSupplierRating(id, createSupplierRatingRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())

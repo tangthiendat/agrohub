@@ -19,13 +19,13 @@ public class ProductBatchLocation {
     String batchLocationId;
 
     @ManyToOne
-    @JoinColumn(name = "batch_id")
+    @JoinColumn(name = "batch_id", nullable = false)
     ProductBatch productBatch;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     ProductLocation productLocation;
 
-    @Column(precision = 2)
+    @Column(scale = 2, nullable = false)
     Double quantity;
 }

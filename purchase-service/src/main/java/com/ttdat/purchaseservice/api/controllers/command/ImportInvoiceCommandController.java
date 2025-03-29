@@ -3,6 +3,7 @@ package com.ttdat.purchaseservice.api.controllers.command;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.purchaseservice.api.dto.request.CreateImportInvoiceRequest;
 import com.ttdat.purchaseservice.application.services.ImportInvoiceService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class ImportInvoiceCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createImportInvoice(@RequestBody CreateImportInvoiceRequest createImportInvoiceRequest) {
+    public ApiResponse<Object> createImportInvoice(@RequestBody @Valid CreateImportInvoiceRequest createImportInvoiceRequest) {
         importInvoiceService.createImportInvoice(createImportInvoiceRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())

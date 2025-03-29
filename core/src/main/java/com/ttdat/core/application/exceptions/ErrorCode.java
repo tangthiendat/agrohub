@@ -36,6 +36,7 @@ public enum ErrorCode {
     PRODUCT_LOCATION_ALREADY_EXISTS("AGH-320", "Product location with this name already exists", ErrorType.RESOURCE),
     PRODUCT_BATCH_NOT_FOUND("AGH-321", "Product batch not found", ErrorType.RESOURCE),
     PRODUCT_UNIT_NOT_FOUND("AGH-322", "Product unit not found", ErrorType.RESOURCE),
+    DEBT_ACCOUNT_NOT_FOUND("AGH-323", "Debt account not found", ErrorType.RESOURCE),
 
     INTERNAL_SERVER_ERROR("AGH-501", "Internal server error", ErrorType.SYSTEM),;
 

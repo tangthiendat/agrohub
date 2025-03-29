@@ -19,19 +19,24 @@ public class ProductLocation extends Auditable {
     String locationId;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id")
+    @JoinColumn(name = "warehouse_id", nullable = false)
     Warehouse warehouse;
 
+    @Column(length = 10, nullable = false)
     String rackName;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
     RackType rackType;
 
+    @Column(nullable = false)
     Integer rowNumber;
 
+    @Column(nullable = false)
     Integer columnNumber;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 30, nullable = false)
     LocationStatus status;
 
     String reason;

@@ -16,3 +16,7 @@ export * from "./inventory/warehouse-service.ts";
 export * from "./inventory/product-location-service.ts";
 export * from "./inventory/product-batch-service.ts";
 export * from "./inventory/product-stock-service.ts";
+
+export * from "./debt/payment-method-service.ts";
+export * from "./debt/debt-account-service.ts";
+export * from "./debt/payment-service.ts";

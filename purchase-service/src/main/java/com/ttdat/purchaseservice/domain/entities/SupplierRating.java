@@ -22,7 +22,7 @@ public class SupplierRating extends Auditable {
     String ratingId;
 
     @ManyToOne
-    @JoinColumn(name = "supplier_id")
+    @JoinColumn(name = "supplier_id", nullable = false)
     Supplier supplier;
 
     Long warehouseId;

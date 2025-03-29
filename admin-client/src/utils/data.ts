@@ -1,7 +1,8 @@
+import dayjs from "dayjs";
 import { snakeCase } from "lodash";
 import { DiscountType } from "../common/enums";
 import { IProduct, IProductLocation, IProductUnitPrice } from "../interfaces";
-import dayjs from "dayjs";
+import { parseCurrency } from "./number";
 
 export function convertKeysToSnakeCase<T>(obj: T): T {
   if (Array.isArray(obj)) {
@@ -61,4 +62,11 @@ export function getCurrentProductUnitPrice(
 
 export function getLocationName(location: IProductLocation) {
   return `${location.rackName}${location.rowNumber}.${location.columnNumber}`;
+}
+
+export function getTransactionAmount(amount: string): string {
+  if (parseCurrency(amount) > 0) {
+    return `+${amount}`;
+  }
+  return `${amount}`;
 }

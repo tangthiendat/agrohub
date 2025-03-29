@@ -1,4 +1,4 @@
-import { LocationStatus, PurchaseOrderStatus } from "../enums";
+import { DebtStatus, LocationStatus, PurchaseOrderStatus } from "../enums";
 
 export * from "./notification";
 export * from "./permission";
@@ -25,4 +25,11 @@ export const LOCATION_STATUS_COLOR: Record<string, string> = {
   [LocationStatus.OCCUPIED]: "blue",
   [LocationStatus.LOCKED]: "red",
   [LocationStatus.UNDER_MAINTENANCE]: "yellow",
+};
+
+export const DEBT_STATUS_COLOR: Record<string, string> = {
+  [DebtStatus.UNPAID]: "red",
+  [DebtStatus.PAID]: "green",
+  [DebtStatus.OVERDUE]: "orange",
+  [DebtStatus.PARTIALLY_PAID]: "blue",
 };

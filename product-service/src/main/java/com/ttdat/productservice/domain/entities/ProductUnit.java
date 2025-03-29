@@ -21,11 +21,11 @@ public class ProductUnit {
     String productUnitId;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     Product product;
 
     @ManyToOne
-    @JoinColumn(name = "unit_id")
+    @JoinColumn(name = "unit_id", nullable = false)
     Unit unit;
 
     Double conversionFactor;

@@ -22,12 +22,12 @@ public class ProductStock extends Auditable {
     String productStockId;
 
     @ManyToOne
-    @JoinColumn(name = "warehouse_id")
+    @JoinColumn(name = "warehouse_id", nullable = false)
     Warehouse warehouse;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     String productId;
 
-    @Column(scale = 2)
+    @Column(scale = 2, nullable = false)
     Double quantity;
 }

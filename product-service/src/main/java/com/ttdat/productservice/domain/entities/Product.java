@@ -21,7 +21,7 @@ public class Product extends Auditable {
     @Column(length = 50)
     String productId;
 
-    @Column(length = 200)
+    @Column(length = 200, nullable = false)
     String productName;
 
     @Column(scale = 2)
@@ -30,12 +30,14 @@ public class Product extends Auditable {
     @Column(length = 500)
     String description;
 
+    @Column(nullable = false)
     String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
+    @Column(nullable = false)
     Integer defaultExpDays;
 
     @Column(length = 200)
@@ -45,12 +47,13 @@ public class Product extends Auditable {
     List<ProductUnit> productUnits;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20, nullable = false)
     PhysicalState physicalState;
 
     @Column(length = 50)
     String packaging;
 
-    @Column(length = 500)
+    @Column(length = 300)
     String safetyInstructions;
 
     @Column(length = 200)

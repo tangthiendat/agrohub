@@ -6,16 +6,14 @@ import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.api.dto.response.SupplierPageResult;
+import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierByIdQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierPageQuery;
 import com.ttdat.purchaseservice.application.queries.supplier.SearchSupplierQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -55,6 +53,20 @@ public class SupplierQueryController {
                 .message("Search suppliers successfully")
                 .success(true)
                 .payload(supplierDTOS)
+                .build();
+    }
+
+    @GetMapping("/{id}")
+    public ApiResponse<SupplierDTO> getSupplierById(@PathVariable String id) {
+        GetSupplierByIdQuery getSupplierByIdQuery = GetSupplierByIdQuery.builder()
+                .supplierId(id)
+                .build();
+        SupplierDTO supplierDTO = queryGateway.query(getSupplierByIdQuery, ResponseTypes.instanceOf(SupplierDTO.class)).join();
+        return ApiResponse.<SupplierDTO>builder()
+                .status(HttpStatus.OK.value())
+                .message("Get supplier by id successfully")
+                .success(true)
+                .payload(supplierDTO)
                 .build();
     }
 }

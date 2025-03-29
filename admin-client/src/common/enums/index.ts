@@ -66,3 +66,24 @@ export enum LocationStatus {
   UNDER_MAINTENANCE = "UNDER_MAINTENANCE",
   OUT_OF_SERVICE = "OUT_OF_SERVICE",
 }
+
+export enum DebtSourceType {
+  IMPORT_INVOICE = "IMPORT_INVOICE",
+  EXPORT_INVOICE = "EXPORT_INVOICE",
+  SALES_ORDER = "SALES_ORDER",
+  ADJUSTMENT = "ADJUSTMENT",
+}
+
+export enum DebtStatus {
+  UNPAID = "UNPAID",
+  PAID = "PAID",
+  OVERDUE = "OVERDUE",
+  PARTIALLY_PAID = "PARTIALLY_PAID",
+}
+
+export enum DebtTransactionType {
+  PAYMENT = "PAYMENT",
+  DEBT = "DEBT",
+  ADJUSTMENT = "ADJUSTMENT",
+  INTEREST = "INTEREST",
+}

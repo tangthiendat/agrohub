@@ -5,7 +5,7 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import Access from "../auth/Access";
 import ViewSupplier from "./ViewSupplier";
 import UpdateSupplier from "./UpdateSupplier";
@@ -25,6 +25,7 @@ import {
 import { PERMISSIONS } from "../../common/constants";
 import { Module } from "../../common/enums";
 import RateSupplier from "./RateSupplier";
+import MoneyIcon from "../../common/components/icons/MoneyIcon";
 
 interface SupplierTableProps {
   supplierPage?: Page<ISupplier>;
@@ -40,6 +41,7 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
@@ -200,6 +202,10 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
           <Access permission={PERMISSIONS[Module.SUPPLIER].RATE} hideChildren>
             <RateSupplier supplier={supplier} />
           </Access>
+          <MoneyIcon
+            tooltipTitle="Công nợ"
+            onClick={() => navigate(`${supplier.supplierId}/debt`)}
+          />
           <Access
             permission={PERMISSIONS[Module.SUPPLIER].UPDATE_STATUS}
             hideChildren

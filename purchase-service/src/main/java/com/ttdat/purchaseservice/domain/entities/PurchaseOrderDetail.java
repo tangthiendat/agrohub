@@ -17,13 +17,14 @@ import java.math.BigDecimal;
 public class PurchaseOrderDetail {
 
     @Id
+    @Column(length = 50)
     String purchaseOrderDetailId;
 
     @ManyToOne
-    @JoinColumn(name = "purchase_order_id")
+    @JoinColumn(name = "purchase_order_id", nullable = false)
     PurchaseOrder purchaseOrder;
 
-    @Column(length = 100)
+    @Column(length = 50)
     String productId;
 
     @Column(length = 50)

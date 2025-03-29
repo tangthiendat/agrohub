@@ -23,16 +23,18 @@ public class Role extends Auditable implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long roleId;
 
+    @Column(length = 50, nullable = false)
     String roleName;
 
+    @Column(nullable = false)
     boolean active;
 
     String description;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "permission_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "permission_id"))
+            joinColumns = @JoinColumn(name = "role_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "permission_id", nullable = false))
     List<Permission> permissions;
 
     @JsonIgnore

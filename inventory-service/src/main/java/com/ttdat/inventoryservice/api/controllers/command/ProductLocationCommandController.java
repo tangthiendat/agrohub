@@ -3,6 +3,7 @@ package com.ttdat.inventoryservice.api.controllers.command;
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.inventoryservice.api.dto.common.ProductLocationDTO;
 import com.ttdat.inventoryservice.application.services.ProductLocationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class ProductLocationCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createProductLocation(@RequestBody ProductLocationDTO productLocationDTO) {
+    public ApiResponse<Object> createProductLocation(@RequestBody @Valid ProductLocationDTO productLocationDTO) {
         productLocationService.createProductLocation(productLocationDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -25,7 +26,7 @@ public class ProductLocationCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateProductLocation(@PathVariable String id, @RequestBody ProductLocationDTO productLocationDTO    ) {
+    public ApiResponse<Object> updateProductLocation(@PathVariable String id, @RequestBody @Valid ProductLocationDTO productLocationDTO    ) {
         productLocationService.updateProductLocation(id, productLocationDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

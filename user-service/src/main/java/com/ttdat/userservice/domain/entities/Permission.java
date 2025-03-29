@@ -1,6 +1,5 @@
 package com.ttdat.userservice.domain.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ttdat.userservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,17 +20,20 @@ public class Permission extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long permissionId;
 
+    @Column(length = 100, nullable = false)
     String permissionName;
 
     String description;
 
+    @Column(length = 100, nullable = false)
     String apiPath;
 
+    @Column(length = 10, nullable = false)
     String httpMethod;
 
+    @Column(length = 50, nullable = false)
     String module;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "permissions")
     List<Role> roles;
 }

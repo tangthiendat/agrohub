@@ -4,6 +4,7 @@ import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.userservice.api.dto.common.UserDTO;
 import com.ttdat.userservice.api.dto.request.UpdateUserStatusRequest;
 import com.ttdat.userservice.application.services.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class UserCommandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse<Object> createUser(@RequestBody UserDTO userDTO) {
+    public ApiResponse<Object> createUser(@RequestBody @Valid UserDTO userDTO) {
         userService.createUser(userDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.CREATED.value())
@@ -28,7 +29,7 @@ public class UserCommandController {
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<Object> updateUser(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
+    public ApiResponse<Object> updateUser(@PathVariable String id, @RequestBody @Valid UserDTO userDTO) {
         userService.updateUser(id, userDTO);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())
@@ -38,7 +39,7 @@ public class UserCommandController {
     }
 
     @PatchMapping("/{id}/status")
-    public ApiResponse<Object> updateUserStatus(@PathVariable UUID id, @RequestBody UpdateUserStatusRequest updateUserStatusRequest) {
+    public ApiResponse<Object> updateUserStatus(@PathVariable String id, @RequestBody UpdateUserStatusRequest updateUserStatusRequest) {
         userService.updateUserStatus(id, updateUserStatusRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

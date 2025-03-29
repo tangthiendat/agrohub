@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,23 +22,31 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends Auditable implements UserDetails {
     @Id
-    UUID userId;
+    @Column(length = 50)
+    String userId;
 
+    @Column(length = 100, nullable = false)
     String fullName;
 
+    @Column(nullable = false)
     LocalDate dob;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 10, nullable = false)
     Gender gender;
 
     boolean active;
 
+    @Column(nullable = false)
     Long warehouseId;
 
+    @Column(nullable = false)
     String email;
 
+    @Column(nullable = false)
     String password;
 
+    @Column(length = 20, nullable = false)
     String phoneNumber;
 
     @ManyToOne
