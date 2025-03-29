@@ -19,6 +19,7 @@ export interface IPartyDebtAccount {
   remainingAmount: number;
   interestRate: number;
   dueDate: string;
+  debtTransactions: IDebtTransaction[];
 }
 
 export interface IDebtTransaction {

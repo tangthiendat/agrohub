@@ -12,6 +12,7 @@ import {
   getDefaultSortOrder,
   getSortDirection,
 } from "../../utils/filter";
+import ViewDebtAccount from "./ViewDebtAccount";
 import { DebtStatus } from "../../common/enums";
 import { formatCurrency } from "../../utils/number";
 import { formatDate } from "../../utils/datetime";
@@ -119,7 +120,7 @@ const DebtAccountTable: React.FC<DebtAccountTableProps> = ({
       render: (_, __, index) => <span>{index + 1}</span>,
     },
     {
-      title: "Mã phiếu",
+      title: "Mã phiếu nhập",
       dataIndex: "sourceId",
       key: "sourceId",
       width: "15%",
@@ -216,7 +217,7 @@ const DebtAccountTable: React.FC<DebtAccountTableProps> = ({
       title: "Hành động",
       key: "action",
       width: "10%",
-      render: (_, record) => <span>{/* Add action buttons here */}</span>,
+      render: (_, record) => <ViewDebtAccount debtAccount={record} />,
     },
   ];
 

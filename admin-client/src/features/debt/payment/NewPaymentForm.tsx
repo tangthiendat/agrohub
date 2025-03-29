@@ -287,7 +287,12 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
             >
               Hủy
             </Button>
-            <Button type="primary" htmlType="submit" loading={isCreating}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isCreating}
+              disabled={partyDebtAccounts?.length === 0}
+            >
               Lưu
             </Button>
           </Space>

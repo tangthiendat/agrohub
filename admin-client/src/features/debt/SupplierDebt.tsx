@@ -1,24 +1,23 @@
-import { Descriptions, DescriptionsProps, Space } from "antd";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useParams, useSearchParams } from "react-router";
-import Loading from "../../common/components/Loading";
-import AddPayment from "./payment/AddPayment";
+import { Descriptions, DescriptionsProps, Space } from "antd";
+import { useParams, useSearchParams } from "react-router";
 import BackButton from "../../common/components/BackButton";
-import { supplierService } from "../../services";
+import Loading from "../../common/components/Loading";
 import { useTitle } from "../../common/hooks";
 import {
   PaginationParams,
   PartyDebtAccountFilterCriteria,
   SortParams,
 } from "../../interfaces";
+import { supplierService } from "../../services";
 import { debtAccountService } from "../../services/debt/debt-account-service";
 import DebtAccountTable from "./DebtAccountTable";
+import AddPayment from "./payment/AddPayment";
 
 const SupplierDebt: React.FC = () => {
   useTitle("Công nợ nhà cung cấp");
   const { id } = useParams<{ id: string }>();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const { data: supplier, isLoading } = useQuery({
     queryKey: ["suppliers", id],

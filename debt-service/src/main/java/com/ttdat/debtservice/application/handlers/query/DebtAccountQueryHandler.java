@@ -1,5 +1,6 @@
 package com.ttdat.debtservice.application.handlers.query;
 
+import com.ttdat.debtservice.api.dto.common.DebtAccountDTO;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccount;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccountPageResult;
 import com.ttdat.debtservice.application.mappers.DebtAccountMapper;
@@ -38,9 +39,19 @@ public class DebtAccountQueryHandler {
         filterParams.put("partyId", getPartyDebtAccountPageQuery.getPartyId());
         Specification<DebtAccount> debtAccountSpec = getPartyDebtAccountSpec(getPartyDebtAccountPageQuery.getFilterParams());
         Page<DebtAccount> debtAccounts = debtAccountRepository.findAll(debtAccountSpec, pageable);
+        List<DebtAccountDTO> partyDebtAccounts = debtAccountMapper.toDTOList(debtAccounts.getContent());
+        partyDebtAccounts.forEach(debtAccountDTO -> {
+            // Sort the transactions by createdAt in descending order
+            debtAccountDTO.getDebtTransactions().sort( (debtTransaction1, debtTransaction2) -> {
+                if (debtTransaction1.getCreatedAt() == null || debtTransaction2.getCreatedAt() == null) {
+                    return 0;
+                }
+                return debtTransaction2.getCreatedAt().compareTo(debtTransaction1.getCreatedAt());
+            });
+        });
         return PartyDebtAccountPageResult.builder()
                 .meta(PaginationUtils.getPaginationMeta(debtAccounts))
-                .content(debtAccountMapper.toDTOList(debtAccounts.getContent()))
+                .content(partyDebtAccounts)
                 .build();
     }
 

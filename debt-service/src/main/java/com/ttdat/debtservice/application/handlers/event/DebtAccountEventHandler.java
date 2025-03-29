@@ -65,7 +65,7 @@ public class DebtAccountEventHandler {
                 .debtAccountId(debtAccount.getDebtAccountId())
                 .transactionType(DebtTransactionType.PAYMENT)
                 .amount(debtAccountAmountUpdatedEvent.getPaidAmount().negate())
-                .sourceId(debtAccountAmountUpdatedEvent.getSourceId())
+                .sourceId(debtAccountAmountUpdatedEvent.getTransactionSourceId())
                 .build();
         commandGateway.send(createDebtTransactionCommand);
     }
