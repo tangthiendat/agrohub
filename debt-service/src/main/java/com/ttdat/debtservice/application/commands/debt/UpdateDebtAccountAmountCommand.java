@@ -19,5 +19,5 @@ public class UpdateDebtAccountAmountCommand {
 
     BigDecimal paidAmount;
 
-    String sourceId;
+    String transactionSourceId;
 }

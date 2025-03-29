@@ -18,5 +18,5 @@ public class DebtAccountAmountUpdatedEvent {
 
     BigDecimal paidAmount;
 
-    String sourceId;
+    String transactionSourceId;
 }

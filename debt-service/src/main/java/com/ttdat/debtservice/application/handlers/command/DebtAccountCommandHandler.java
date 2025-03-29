@@ -38,6 +38,7 @@ public class DebtAccountCommandHandler {
         DebtAccountAmountUpdatedEvent debtAccountAmountUpdatedEvent = DebtAccountAmountUpdatedEvent.builder()
                 .debtAccountId(updateDebtAccountAmountCommand.getDebtAccountId())
                 .paidAmount(updateDebtAccountAmountCommand.getPaidAmount())
+                .transactionSourceId(updateDebtAccountAmountCommand.getTransactionSourceId())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(debtAccountAmountUpdatedEvent));
     }
