@@ -13,14 +13,14 @@ import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useShallow } from "zustand/react/shallow";
+import PaymentDetailTable from "./PaymentDetailTable";
+import { useUnpaidDebtAccount } from "../hooks/useUnpaidDebtAccount";
 import { useCurrentUserInfo, useCurrentWarehouse } from "../../../common/hooks";
 import { CreatePaymentRequest, ISupplier } from "../../../interfaces";
-import { paymentService } from "../../../services";
-import { debtAccountService, paymentMethodService } from "../../../services";
-import { formatCurrency, parseCurrency } from "../../../utils/number";
+import { paymentMethodService, paymentService } from "../../../services";
 import { usePaymentStore } from "../../../store/payment-store";
 import { getNotificationMessage } from "../../../utils/notification";
-import PaymentDetailTable from "./PaymentDetailTable";
+import { formatCurrency, parseCurrency } from "../../../utils/number";
 
 interface NewPaymentFormProps {
   supplier: ISupplier;
@@ -64,15 +64,8 @@ const NewPaymentForm: React.FC<NewPaymentFormProps> = ({
 
   const { currentUserInfo, isLoading: isUserLoading } = useCurrentUserInfo();
 
-  const { data: partyDebtAccounts, isLoading: isDebtAccountLoading } = useQuery(
-    {
-      queryKey: ["debt-accounts", "party", supplier.supplierId, "unpaid"],
-      queryFn: () =>
-        debtAccountService.getUnpaidPartyDebtAccount(supplier.supplierId),
-      enabled: !!supplier.supplierId,
-      select: (data) => data.payload,
-    },
-  );
+  const { partyDebtAccounts, isLoading: isDebtAccountLoading } =
+    useUnpaidDebtAccount(supplier.supplierId);
 
   const { data: paymentMethodOptions, isLoading: isPaymentMethodLoading } =
     useQuery({
