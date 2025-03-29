@@ -1,13 +1,27 @@
 import { Table, TablePaginationConfig, Tag } from "antd";
-import { IPartyDebtAccount, Page } from "../../interfaces";
+import { TableProps } from "antd/lib";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  FilterFilled,
+} from "@ant-design/icons";
 import { useSearchParams } from "react-router";
 import { useEffect, useState } from "react";
-import { TableProps } from "antd/lib";
-import { getSortDirection } from "../../utils/filter";
-import { formatDate } from "../../utils/datetime";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../utils/filter";
 import { DebtStatus } from "../../common/enums";
-import { DEBT_STATUS_COLOR, DEBT_STATUS_NAME } from "../../common/constants";
 import { formatCurrency } from "../../utils/number";
+import { formatDate } from "../../utils/datetime";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../utils/color";
+import { DEBT_STATUS_COLOR, DEBT_STATUS_NAME } from "../../common/constants";
+import { IPartyDebtAccount, Page } from "../../interfaces";
 
 interface DebtAccountTableProps {
   partyDebtAccountPage?: Page<IPartyDebtAccount>;
@@ -114,9 +128,17 @@ const DebtAccountTable: React.FC<DebtAccountTableProps> = ({
       title: "Số tiền nợ",
       dataIndex: "totalAmount",
       key: "totalAmount",
-      width: "15%",
+      width: "10%",
       align: "right",
       render: (_, record) => formatCurrency(record.totalAmount),
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "totalAmount"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="ml-1 flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Đã trả",
@@ -125,6 +147,14 @@ const DebtAccountTable: React.FC<DebtAccountTableProps> = ({
       width: "10%",
       align: "right",
       render: (_, record) => formatCurrency(record.paidAmount),
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "paidAmount"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="ml-1 flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Còn lại",
@@ -133,6 +163,14 @@ const DebtAccountTable: React.FC<DebtAccountTableProps> = ({
       width: "10%",
       align: "right",
       render: (_, record) => formatCurrency(record.remainingAmount),
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "remainingAmount"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="ml-1 flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
     },
     {
       title: "Ngày đến hạn",
@@ -140,14 +178,38 @@ const DebtAccountTable: React.FC<DebtAccountTableProps> = ({
       key: "dueDate",
       width: "10%",
       render: (dueDate: string) => formatDate(dueDate),
+      sorter: true,
+      defaultSortOrder: getDefaultSortOrder(searchParams, "dueDate"),
+      sortIcon: ({ sortOrder }) => (
+        <div className="ml-1 flex flex-col text-[10px]">
+          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+        </div>
+      ),
+    },
+    {
+      title: "Lãi suất",
+      dataIndex: "interestRate",
+      key: "interestRate",
+      width: "10%",
+      align: "right",
+      render: (_, record) => `${record.interestRate}%`,
     },
     {
       title: "Trạng thái",
       dataIndex: "debtStatus",
-      key: "status",
+      key: "debtStatus",
       width: "15%",
       render: (status: DebtStatus) => (
         <Tag color={DEBT_STATUS_COLOR[status]}>{DEBT_STATUS_NAME[status]}</Tag>
+      ),
+      filters: Object.values(DebtStatus).map((status) => ({
+        text: DEBT_STATUS_NAME[status],
+        value: status,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "debtStatus"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
       ),
     },
     {

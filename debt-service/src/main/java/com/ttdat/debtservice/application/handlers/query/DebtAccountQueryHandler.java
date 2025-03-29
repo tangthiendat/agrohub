@@ -8,13 +8,16 @@ import com.ttdat.debtservice.application.queries.debtaccount.GetUnpaidDebtAccoun
 import com.ttdat.debtservice.application.repositories.DebtAccountRepository;
 import com.ttdat.debtservice.domain.entities.DebtAccount;
 import com.ttdat.debtservice.infrastructure.utils.PaginationUtils;
+import com.ttdat.debtservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -31,11 +34,21 @@ public class DebtAccountQueryHandler {
     @QueryHandler
     public PartyDebtAccountPageResult handle(GetPartyDebtAccountPageQuery getPartyDebtAccountPageQuery) {
         Pageable pageable = PaginationUtils.getPageable(getPartyDebtAccountPageQuery.getPaginationParams(), getPartyDebtAccountPageQuery.getSortParams());
-        Page<DebtAccount> debtAccounts = debtAccountRepository.findByPartyId(getPartyDebtAccountPageQuery.getPartyId(), pageable);
+        Map<String, String> filterParams = getPartyDebtAccountPageQuery.getFilterParams();
+        filterParams.put("partyId", getPartyDebtAccountPageQuery.getPartyId());
+        Specification<DebtAccount> debtAccountSpec = getPartyDebtAccountSpec(getPartyDebtAccountPageQuery.getFilterParams());
+        Page<DebtAccount> debtAccounts = debtAccountRepository.findAll(debtAccountSpec, pageable);
         return PartyDebtAccountPageResult.builder()
                 .meta(PaginationUtils.getPaginationMeta(debtAccounts))
                 .content(debtAccountMapper.toDTOList(debtAccounts.getContent()))
                 .build();
+    }
+
+    private Specification<DebtAccount> getPartyDebtAccountSpec(Map<String, String> filterParams) {
+        Specification<DebtAccount> spec = Specification.where(null);
+        spec = spec.and(SpecificationUtils.buildSpecification(filterParams, "partyId", String.class))
+                .and(SpecificationUtils.buildSpecification(filterParams, "debtStatus", String.class));
+        return spec;
     }
 
 }

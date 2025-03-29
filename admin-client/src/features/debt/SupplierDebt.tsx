@@ -6,7 +6,11 @@ import AddPayment from "./payment/AddPayment";
 import BackButton from "../../common/components/BackButton";
 import { supplierService } from "../../services";
 import { useTitle } from "../../common/hooks";
-import { PaginationParams, SortParams } from "../../interfaces";
+import {
+  PaginationParams,
+  PartyDebtAccountFilterCriteria,
+  SortParams,
+} from "../../interfaces";
 import { debtAccountService } from "../../services/debt/debt-account-service";
 import DebtAccountTable from "./DebtAccountTable";
 
@@ -33,9 +37,13 @@ const SupplierDebt: React.FC = () => {
     direction: searchParams.get("direction") || "",
   };
 
+  const filter: PartyDebtAccountFilterCriteria = {
+    debtStatus: searchParams.get("debtStatus") || undefined,
+  };
+
   const { data: partyDebtAccount, isLoading: isSupplierDebtLoading } = useQuery(
     {
-      queryKey: ["debt-accounts", "party", id, pagination, sort].filter(
+      queryKey: ["debt-accounts", "party", id, pagination, sort, filter].filter(
         (key) => {
           if (typeof key === "string") {
             return key !== "";
@@ -47,7 +55,12 @@ const SupplierDebt: React.FC = () => {
         },
       ),
       queryFn: () =>
-        debtAccountService.getPartyDebtAccount(id || "", pagination, sort),
+        debtAccountService.getPartyDebtAccount(
+          id || "",
+          pagination,
+          sort,
+          filter,
+        ),
     },
   );
 

@@ -5,6 +5,7 @@ import {
   IPartyDebtAccount,
   Page,
   PaginationParams,
+  PartyDebtAccountFilterCriteria,
   SortParams,
 } from "../../interfaces";
 
@@ -16,6 +17,7 @@ export interface IDebtAccountService {
     partyId: string,
     pagination: PaginationParams,
     sort?: SortParams,
+    filter?: PartyDebtAccountFilterCriteria,
   ): Promise<ApiResponse<Page<IPartyDebtAccount>>>;
 }
 
@@ -34,11 +36,13 @@ class DebtAccountService implements IDebtAccountService {
     partyId: string,
     pagination: PaginationParams,
     sort?: SortParams,
+    filter?: PartyDebtAccountFilterCriteria,
   ): Promise<ApiResponse<Page<IPartyDebtAccount>>> {
     return (
       await apiClient.get(`/party/${partyId}/page`, {
         params: {
           ...pagination,
+          ...filter,
           sortBy: sort?.sortBy !== "" ? sort?.sortBy : undefined,
           direction: sort?.direction !== "" ? sort?.direction : undefined,
         },

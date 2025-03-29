@@ -42,6 +42,10 @@ export interface IPartyDebtAccount {
   debtStatus: DebtStatus;
 }
 
+export interface PartyDebtAccountFilterCriteria {
+  debtStatus?: string;
+}
+
 export interface CreatePaymentDetailRequest {
   debtAccountId: string;
   paymentAmount: number;

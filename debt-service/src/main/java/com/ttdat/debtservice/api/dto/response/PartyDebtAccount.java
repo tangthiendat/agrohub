@@ -25,7 +25,7 @@ public class PartyDebtAccount {
 
     BigDecimal remainingAmount;
 
-    Double interestRate;
+    BigDecimal interestRate;
 
     LocalDate dueDate;
 }

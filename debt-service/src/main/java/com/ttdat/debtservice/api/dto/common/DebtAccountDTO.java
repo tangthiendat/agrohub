@@ -29,7 +29,7 @@ public class DebtAccountDTO {
 
     BigDecimal remainingAmount;
 
-    Double interestRate;
+    BigDecimal interestRate;
 
     LocalDate dueDate;
 

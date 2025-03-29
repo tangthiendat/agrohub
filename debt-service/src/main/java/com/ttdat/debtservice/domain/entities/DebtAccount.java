@@ -48,8 +48,8 @@ public class DebtAccount extends Auditable {
     @Column(precision = 15, scale = 2, nullable = false)
     BigDecimal remainingAmount;
 
-    @Column(precision = 2, nullable = false)
-    Double interestRate;
+    @Column(precision = 5, scale = 2, nullable = false)
+    BigDecimal interestRate;
 
     @Column(nullable = false)
     LocalDate dueDate;
