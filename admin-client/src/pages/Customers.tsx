@@ -3,9 +3,40 @@ import { PERMISSIONS } from "../common/constants";
 import { useTitle } from "../common/hooks";
 import { Module } from "../common/enums";
 import AddCustomer from "../features/customer/AddCustomer";
+import { useSearchParams } from "react-router";
+import { PaginationParams, SortParams } from "../interfaces";
+import { useQuery } from "@tanstack/react-query";
+import { customerService } from "../services";
+import CustomerTable from "../features/customer/CustomerTable";
 
 const Customers: React.FC = () => {
   useTitle("Khách hàng");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const pagination: PaginationParams = {
+    page: Number(searchParams.get("page")) || 1,
+    pageSize: Number(searchParams.get("pageSize")) || 10,
+  };
+
+  const sort: SortParams = {
+    sortBy: searchParams.get("sortBy") || "",
+    direction: searchParams.get("direction") || "",
+  };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["customers", pagination, sort].filter((key) => {
+      if (typeof key === "string") {
+        return key !== "";
+      } else if (key instanceof Object) {
+        return Object.values(key).some(
+          (value) => value !== undefined && value !== "",
+        );
+      }
+    }),
+    queryFn: () => customerService.getPage(pagination, sort),
+  });
+
   return (
     <Access permission={PERMISSIONS[Module.CUSTOMER].GET_PAGE}>
       <div className="card">
@@ -27,7 +58,7 @@ const Customers: React.FC = () => {
             <AddCustomer />
           </Access>
         </div>
-        {/* <SupplierTable supplierPage={data?.payload} isLoading={isLoading} /> */}
+        <CustomerTable customerPage={data?.payload} isLoading={isLoading} />
       </div>
     </Access>
   );

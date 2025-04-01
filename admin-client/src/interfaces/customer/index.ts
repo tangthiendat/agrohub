@@ -12,3 +12,8 @@ export interface ICustomer extends Auditable {
   taxCode?: string;
   notes?: string;
 }
+
+export interface CustomerFilterCriteria {
+  query?: string;
+  active?: boolean;
+}
