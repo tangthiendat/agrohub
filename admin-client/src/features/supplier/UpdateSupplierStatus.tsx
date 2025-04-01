@@ -17,7 +17,7 @@ const UpdateSupplierStatus: React.FC<UpdateSupplierStatusProps> = ({
   supplier,
 }) => {
   const queryClient = useQueryClient();
-  const { mutate: updateRoleStatus, isPending: isUpdating } = useMutation({
+  const { mutate: updateSupplierStatus, isPending: isUpdating } = useMutation({
     mutationFn: ({ supplierId, active }: UpdateSupplierStatusArgs) =>
       supplierService.updateStatus(supplierId, active),
     onSuccess: () => {
@@ -35,7 +35,7 @@ const UpdateSupplierStatus: React.FC<UpdateSupplierStatusProps> = ({
         loading={isUpdating}
         checked={supplier.active}
         onChange={(checked) => {
-          updateRoleStatus(
+          updateSupplierStatus(
             { supplierId: supplier.supplierId, active: checked },
             {
               onSuccess: () => {
@@ -47,9 +47,9 @@ const UpdateSupplierStatus: React.FC<UpdateSupplierStatusProps> = ({
               },
               onError: () => {
                 if (checked) {
-                  toast.success("Kích hoạt nhà cung cấp thất bại");
+                  toast.error("Kích hoạt nhà cung cấp thất bại");
                 } else {
-                  toast.success("Huỷ kích hoạt nhà cung cấp thất bại");
+                  toast.error("Huỷ kích hoạt nhà cung cấp thất bại");
                 }
               },
             },
