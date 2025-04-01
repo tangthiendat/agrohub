@@ -20,6 +20,10 @@ spring:
 axon:
   axonserver:
     servers: ${AXON_SERVER}
+  eventhandling:
+    processors:
+      customer-group:
+        mode: subscribing
 application:
   security:
     rsa:

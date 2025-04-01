@@ -211,4 +211,42 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.GET,
     },
   },
+  [Module.DEBT_ACCOUNT]: {
+    GET_SUPPLIER_UNPAID: {
+      apiPath: "/api/v1/debt-accounts/supplier/{supplierId}/unpaid",
+      httpMethod: HttpMethod.GET,
+    },
+    GET_SUPPLIER_PAGE: {
+      apiPath: "/api/v1/debt-accounts/supplier/{supplierId}/page",
+      httpMethod: HttpMethod.GET,
+    },
+  },
+  [Module.PAYMENT]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/payments/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/payments",
+      httpMethod: HttpMethod.POST,
+    },
+  },
+  [Module.CUSTOMER]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/customers/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/customers",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/customers/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+    UPDATE_STATUS: {
+      apiPath: "/api/v1/customers/{id}/status",
+      httpMethod: HttpMethod.PATCH,
+    },
+  },
 };

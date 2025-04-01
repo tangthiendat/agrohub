@@ -28,6 +28,9 @@ export enum Module {
   PRODUCT_LOCATION = "PRODUCT LOCATION",
   PRODUCT_BATCH = "PRODUCT BATCH",
   PRODUCT_STOCK = "PRODUCT STOCK",
+  DEBT_ACCOUNT = "DEBT ACCOUNT",
+  PAYMENT = "PAYMENT",
+  CUSTOMER = "CUSTOMER",
 }
 
 export enum Gender {
@@ -86,4 +89,9 @@ export enum DebtTransactionType {
   DEBT = "DEBT",
   ADJUSTMENT = "ADJUSTMENT",
   INTEREST = "INTEREST",
+}
+
+export enum CustomerType {
+  INDIVIDUAL = "INDIVIDUAL",
+  BUSINESS = "BUSINESS",
 }

@@ -189,12 +189,12 @@ const DebtAccountTable: React.FC<DebtAccountTableProps> = ({
       ),
     },
     {
-      title: "Lãi suất",
+      title: "Lãi suất quá hạn",
       dataIndex: "interestRate",
       key: "interestRate",
       width: "10%",
       align: "right",
-      render: (_, record) => `${record.interestRate}%`,
+      render: (_, record) => `${record.interestRate}%/ngày`,
     },
     {
       title: "Trạng thái",

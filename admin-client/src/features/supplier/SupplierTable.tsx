@@ -202,10 +202,15 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
           <Access permission={PERMISSIONS[Module.SUPPLIER].RATE} hideChildren>
             <RateSupplier supplier={supplier} />
           </Access>
-          <MoneyIcon
-            tooltipTitle="Công nợ"
-            onClick={() => navigate(`${supplier.supplierId}/debt`)}
-          />
+          <Access
+            permission={PERMISSIONS[Module.DEBT_ACCOUNT].GET_SUPPLIER_PAGE}
+            hideChildren
+          >
+            <MoneyIcon
+              tooltipTitle="Công nợ"
+              onClick={() => navigate(`${supplier.supplierId}/debt`)}
+            />
+          </Access>
           <Access
             permission={PERMISSIONS[Module.SUPPLIER].UPDATE_STATUS}
             hideChildren

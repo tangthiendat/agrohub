@@ -25,6 +25,7 @@ import ProductLocations from "../pages/ProductLocations";
 import ProductBatches from "../pages/ProductBatches";
 import ProductStocks from "../pages/ProductStocks";
 import SupplierDebt from "../features/debt/SupplierDebt";
+import Customers from "../pages/Customers";
 
 const router = createBrowserRouter([
   {
@@ -107,6 +108,16 @@ const router = createBrowserRouter([
           {
             path: ":id/debt",
             element: <SupplierDebt />,
+          },
+        ],
+      },
+      {
+        path: "/customers",
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <Customers />,
           },
         ],
       },

@@ -13,6 +13,9 @@ import { supplierService } from "../../services";
 import { debtAccountService } from "../../services/debt/debt-account-service";
 import DebtAccountTable from "./DebtAccountTable";
 import AddPayment from "./payment/AddPayment";
+import Access from "../auth/Access";
+import { PERMISSIONS } from "../../common/constants";
+import { Module } from "../../common/enums";
 
 const SupplierDebt: React.FC = () => {
   useTitle("Công nợ nhà cung cấp");
@@ -42,19 +45,24 @@ const SupplierDebt: React.FC = () => {
 
   const { data: partyDebtAccount, isLoading: isSupplierDebtLoading } = useQuery(
     {
-      queryKey: ["debt-accounts", "party", id, pagination, sort, filter].filter(
-        (key) => {
-          if (typeof key === "string") {
-            return key !== "";
-          } else if (key instanceof Object) {
-            return Object.values(key).some(
-              (value) => value !== undefined && value !== "",
-            );
-          }
-        },
-      ),
+      queryKey: [
+        "debt-accounts",
+        "supplier",
+        id,
+        pagination,
+        sort,
+        filter,
+      ].filter((key) => {
+        if (typeof key === "string") {
+          return key !== "";
+        } else if (key instanceof Object) {
+          return Object.values(key).some(
+            (value) => value !== undefined && value !== "",
+          );
+        }
+      }),
       queryFn: () =>
-        debtAccountService.getPartyDebtAccount(
+        debtAccountService.getSupplierDebtAccount(
           id || "",
           pagination,
           sort,
@@ -97,7 +105,9 @@ const SupplierDebt: React.FC = () => {
           <BackButton />
           <h2 className="text-xl font-semibold">Công nợ nhà cung cấp</h2>
         </Space>
-        <AddPayment supplier={supplier!} />
+        <Access permission={PERMISSIONS[Module.PAYMENT].CREATE}>
+          <AddPayment supplier={supplier!} />
+        </Access>
       </div>
       <Descriptions items={items} />
       <div className="mt-5">
