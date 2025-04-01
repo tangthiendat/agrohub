@@ -6,11 +6,15 @@ import com.ttdat.customerservice.application.queries.customer.GetCustomerQueryPa
 import com.ttdat.customerservice.application.repositories.CustomerRepository;
 import com.ttdat.customerservice.domain.entities.Customer;
 import com.ttdat.customerservice.infrastructure.utils.PaginationUtils;
+import com.ttdat.customerservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.queryhandling.QueryHandler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -21,10 +25,31 @@ public class CustomerQueryHandler {
     @QueryHandler
     public CustomerPageResult handle(GetCustomerQueryPageQuery getCustomerQueryPageQuery) {
         Pageable pageable = PaginationUtils.getPageable(getCustomerQueryPageQuery.getPaginationParams(), getCustomerQueryPageQuery.getSortParams());
-        Page<Customer> customerPage = customerRepository.findAll(pageable);
+        Specification<Customer> customerSpec = getCustomerSpec(getCustomerQueryPageQuery.getFilterParams());
+        Page<Customer> customerPage = customerRepository.findAll(customerSpec, pageable);
         return CustomerPageResult.builder()
                 .meta(PaginationUtils.getPaginationMeta(customerPage))
                 .content(customerMapper.toDTOList(customerPage.getContent()))
                 .build();
+    }
+
+    private Specification<Customer> getCustomerSpec(Map<String, String> filterParams) {
+        Specification<Customer> customerSpec = Specification.where(null);
+        customerSpec = customerSpec.and(SpecificationUtils.buildSpecification(filterParams, "active", Boolean.class));
+        if (filterParams.containsKey("query")) {
+            String searchValue = filterParams.get("query").toLowerCase();
+            Specification<Customer> querySpec = (root, query, criteriaBuilder) -> {
+                String likePattern = "%" + searchValue + "%";
+                return criteriaBuilder.or(
+                        criteriaBuilder.like(root.get("customerId"), likePattern),
+                        criteriaBuilder.like(criteriaBuilder.function("unaccent", String.class, criteriaBuilder.lower(root.get("customerName"))),
+                                likePattern),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), likePattern),
+                        criteriaBuilder.like(criteriaBuilder.lower(root.get("phoneNumber")), likePattern)
+                );
+            };
+            customerSpec = customerSpec.and(querySpec);
+        }
+        return customerSpec;
     }
 }
