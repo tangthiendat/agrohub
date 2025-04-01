@@ -1,7 +1,9 @@
 package com.ttdat.customerservice.application.handlers.command;
 
 import com.ttdat.customerservice.application.commands.customer.CreateCustomerCommand;
-import com.ttdat.customerservice.domain.events.CustomerCreatedEvent;
+import com.ttdat.customerservice.application.commands.customer.UpdateCustomerCommand;
+import com.ttdat.customerservice.domain.events.customer.CustomerCreatedEvent;
+import com.ttdat.customerservice.domain.events.customer.CustomerUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;
@@ -27,5 +29,21 @@ public class CustomerCommandHandler {
                 .notes(createCustomerCommand.getNotes())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(customerCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateCustomerCommand updateCustomerCommand){
+        CustomerUpdatedEvent customerUpdatedEvent = CustomerUpdatedEvent.builder()
+                .customerId(updateCustomerCommand.getCustomerId())
+                .customerName(updateCustomerCommand.getCustomerName())
+                .customerType(updateCustomerCommand.getCustomerType())
+                .email(updateCustomerCommand.getEmail())
+                .phoneNumber(updateCustomerCommand.getPhoneNumber())
+                .active(updateCustomerCommand.isActive())
+                .address(updateCustomerCommand.getAddress())
+                .taxCode(updateCustomerCommand.getTaxCode())
+                .notes(updateCustomerCommand.getNotes())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(customerUpdatedEvent));
     }
 }

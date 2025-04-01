@@ -1,18 +1,17 @@
-package com.ttdat.customerservice.domain.events;
+package com.ttdat.customerservice.application.commands.customer;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.ttdat.customerservice.domain.entities.CustomerType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CustomerCreatedEvent {
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+public class UpdateCustomerCommand {
     String customerId;
 
     String customerName;

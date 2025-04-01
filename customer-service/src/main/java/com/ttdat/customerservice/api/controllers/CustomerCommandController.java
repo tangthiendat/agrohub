@@ -25,4 +25,13 @@ public class CustomerCommandController {
                 .build();
     }
 
+    @PutMapping("/{id}")
+    public ApiResponse<Object> update(@PathVariable String id, @RequestBody @Valid CustomerDTO customerDTO) {
+        customerService.updateCustomer(id, customerDTO);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Customer updated successfully")
+                .build();
+    }
 }
