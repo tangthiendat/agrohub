@@ -66,3 +66,16 @@ services:
       - "8084:8084"
     networks:
       - agrohub
+
+  customer-service:
+    build:
+      context: .
+      dockerfile: customer-service/Dockerfile.dev
+    image: agrohub/customer-service:dev
+    container_name: customer-service
+    env_file:
+      - customer-service/.env.docker
+    ports:
+      - "8085:8085"
+    networks:
+      - agrohub
