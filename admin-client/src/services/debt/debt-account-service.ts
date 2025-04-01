@@ -10,11 +10,11 @@ import {
 } from "../../interfaces";
 
 export interface IDebtAccountService {
-  getUnpaidPartyDebtAccount(
-    partyId: string,
+  getUnpaidSupplierDebtAccount(
+    supplierId: string,
   ): Promise<ApiResponse<IPartyDebtAccount[]>>;
-  getPartyDebtAccount(
-    partyId: string,
+  getSupplierDebtAccount(
+    supplierId: string,
     pagination: PaginationParams,
     sort?: SortParams,
     filter?: PartyDebtAccountFilterCriteria,
@@ -26,20 +26,20 @@ const apiClient: AxiosInstance = createApiClient("api/v1/debt-accounts", {
 });
 
 class DebtAccountService implements IDebtAccountService {
-  async getUnpaidPartyDebtAccount(
-    partyId: string,
+  async getUnpaidSupplierDebtAccount(
+    supplierId: string,
   ): Promise<ApiResponse<IPartyDebtAccount[]>> {
-    return (await apiClient.get(`/party/${partyId}/unpaid`)).data;
+    return (await apiClient.get(`/supplier/${supplierId}/unpaid`)).data;
   }
 
-  async getPartyDebtAccount(
-    partyId: string,
+  async getSupplierDebtAccount(
+    supplierId: string,
     pagination: PaginationParams,
     sort?: SortParams,
     filter?: PartyDebtAccountFilterCriteria,
   ): Promise<ApiResponse<Page<IPartyDebtAccount>>> {
     return (
-      await apiClient.get(`/party/${partyId}/page`, {
+      await apiClient.get(`/supplier/${supplierId}/page`, {
         params: {
           ...pagination,
           ...filter,

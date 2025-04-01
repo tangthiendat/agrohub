@@ -41,9 +41,9 @@ const DebtAccountInfo: React.FC<DebtAccountInfoProps> = ({ debtAccount }) => {
       children: formatDate(debtAccount.dueDate),
     },
     {
-      label: "Lãi suất",
+      label: "Lãi suất quá hạn",
       key: "interestRate",
-      children: `${debtAccount.interestRate}%`,
+      children: `${debtAccount.interestRate}%/ngày`,
     },
     {
       label: "Trạng thái",

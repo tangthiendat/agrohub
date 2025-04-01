@@ -45,19 +45,24 @@ const SupplierDebt: React.FC = () => {
 
   const { data: partyDebtAccount, isLoading: isSupplierDebtLoading } = useQuery(
     {
-      queryKey: ["debt-accounts", "party", id, pagination, sort, filter].filter(
-        (key) => {
-          if (typeof key === "string") {
-            return key !== "";
-          } else if (key instanceof Object) {
-            return Object.values(key).some(
-              (value) => value !== undefined && value !== "",
-            );
-          }
-        },
-      ),
+      queryKey: [
+        "debt-accounts",
+        "supplier",
+        id,
+        pagination,
+        sort,
+        filter,
+      ].filter((key) => {
+        if (typeof key === "string") {
+          return key !== "";
+        } else if (key instanceof Object) {
+          return Object.values(key).some(
+            (value) => value !== undefined && value !== "",
+          );
+        }
+      }),
       queryFn: () =>
-        debtAccountService.getPartyDebtAccount(
+        debtAccountService.getSupplierDebtAccount(
           id || "",
           pagination,
           sort,
