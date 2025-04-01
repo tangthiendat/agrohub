@@ -2,6 +2,7 @@ package com.ttdat.customerservice.api.controllers.command;
 
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.customerservice.api.dto.CustomerDTO;
+import com.ttdat.customerservice.api.dto.request.UpdateCustomerStatusRequest;
 import com.ttdat.customerservice.application.services.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,16 @@ public class CustomerCommandController {
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Customer updated successfully")
+                .build();
+    }
+
+    @PatchMapping("/{id}/status")
+    public ApiResponse<Object> updateStatus(@PathVariable String id, UpdateCustomerStatusRequest updateCustomerStatusRequest) {
+        customerService.updateStatus(id, updateCustomerStatusRequest);
+        return ApiResponse.builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Customer status updated successfully")
                 .build();
     }
 }

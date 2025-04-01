@@ -1,8 +1,10 @@
 package com.ttdat.customerservice.application.services.impl;
 
 import com.ttdat.customerservice.api.dto.CustomerDTO;
+import com.ttdat.customerservice.api.dto.request.UpdateCustomerStatusRequest;
 import com.ttdat.customerservice.application.commands.customer.CreateCustomerCommand;
 import com.ttdat.customerservice.application.commands.customer.UpdateCustomerCommand;
+import com.ttdat.customerservice.application.commands.customer.UpdateCustomerStatusCommand;
 import com.ttdat.customerservice.application.services.CustomerService;
 import com.ttdat.customerservice.infrastructure.services.IdGeneratorService;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +47,14 @@ public class CustomerServiceImpl implements CustomerService {
                 .notes(customerDTO.getNotes())
                 .build();
         commandGateway.sendAndWait(updateCustomerCommand);
+    }
+
+    @Override
+    public void updateStatus(String customerId, UpdateCustomerStatusRequest updateCustomerStatusRequest) {
+        UpdateCustomerStatusCommand updateCustomerStatusCommand = UpdateCustomerStatusCommand.builder()
+                .customerId(customerId)
+                .active(updateCustomerStatusRequest.isActive())
+                .build();
+        commandGateway.sendAndWait(updateCustomerStatusCommand);
     }
 }

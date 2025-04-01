@@ -2,7 +2,9 @@ package com.ttdat.customerservice.application.handlers.command;
 
 import com.ttdat.customerservice.application.commands.customer.CreateCustomerCommand;
 import com.ttdat.customerservice.application.commands.customer.UpdateCustomerCommand;
+import com.ttdat.customerservice.application.commands.customer.UpdateCustomerStatusCommand;
 import com.ttdat.customerservice.domain.events.customer.CustomerCreatedEvent;
+import com.ttdat.customerservice.domain.events.customer.CustomerStatusUpdatedEvent;
 import com.ttdat.customerservice.domain.events.customer.CustomerUpdatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
@@ -45,5 +47,14 @@ public class CustomerCommandHandler {
                 .notes(updateCustomerCommand.getNotes())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(customerUpdatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateCustomerStatusCommand updateCustomerStatusCommand){
+        CustomerStatusUpdatedEvent customerStatusUpdatedEvent = CustomerStatusUpdatedEvent.builder()
+                .customerId(updateCustomerStatusCommand.getCustomerId())
+                .active(updateCustomerStatusCommand.isActive())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(customerStatusUpdatedEvent));
     }
 }

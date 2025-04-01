@@ -1,6 +1,7 @@
-package com.ttdat.customerservice.api.dto;
+package com.ttdat.customerservice.api.dto.response;
 
 import com.ttdat.core.api.dto.response.PaginationMeta;
+import com.ttdat.customerservice.api.dto.CustomerDTO;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

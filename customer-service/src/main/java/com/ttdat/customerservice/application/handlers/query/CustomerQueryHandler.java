@@ -1,7 +1,7 @@
 package com.ttdat.customerservice.application.handlers.query;
 
 import com.ttdat.customerservice.api.dto.CustomerDTO;
-import com.ttdat.customerservice.api.dto.CustomerPageResult;
+import com.ttdat.customerservice.api.dto.response.CustomerPageResult;
 import com.ttdat.customerservice.application.mappers.CustomerMapper;
 import com.ttdat.customerservice.application.queries.customer.GetCustomerQueryPageQuery;
 import com.ttdat.customerservice.application.queries.customer.SearchCustomerQuery;
