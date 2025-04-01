@@ -28,7 +28,7 @@ public class DebtAccountQueryHandler {
 
     @QueryHandler
     public List<PartyDebtAccount> handle(GetUnpaidDebtAccountByPartyIdQuery getUnpaidDebtAccountByPartyIdQuery) {
-        List<DebtAccount> debtAccounts = debtAccountRepository.getPartyDebtAccounts(getUnpaidDebtAccountByPartyIdQuery.getPartyId());
+        List<DebtAccount> debtAccounts = debtAccountRepository.getPartyUnpaidDebtAccounts(getUnpaidDebtAccountByPartyIdQuery.getPartyId(), getUnpaidDebtAccountByPartyIdQuery.getPartyType());
         return debtAccountMapper.toPartyDebtAccountList(debtAccounts);
     }
 
@@ -37,6 +37,7 @@ public class DebtAccountQueryHandler {
         Pageable pageable = PaginationUtils.getPageable(getPartyDebtAccountPageQuery.getPaginationParams(), getPartyDebtAccountPageQuery.getSortParams());
         Map<String, String> filterParams = getPartyDebtAccountPageQuery.getFilterParams();
         filterParams.put("partyId", getPartyDebtAccountPageQuery.getPartyId());
+        filterParams.put("partyType", getPartyDebtAccountPageQuery.getPartyType().toString());
         Specification<DebtAccount> debtAccountSpec = getPartyDebtAccountSpec(getPartyDebtAccountPageQuery.getFilterParams());
         Page<DebtAccount> debtAccounts = debtAccountRepository.findAll(debtAccountSpec, pageable);
         List<DebtAccountDTO> partyDebtAccounts = debtAccountMapper.toDTOList(debtAccounts.getContent());
@@ -58,6 +59,7 @@ public class DebtAccountQueryHandler {
     private Specification<DebtAccount> getPartyDebtAccountSpec(Map<String, String> filterParams) {
         Specification<DebtAccount> spec = Specification.where(null);
         spec = spec.and(SpecificationUtils.buildSpecification(filterParams, "partyId", String.class))
+                .and(SpecificationUtils.buildSpecification(filterParams, "partyType", String.class))
                 .and(SpecificationUtils.buildSpecification(filterParams, "debtStatus", String.class));
         return spec;
     }

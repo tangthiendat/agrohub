@@ -3,6 +3,7 @@ package com.ttdat.debtservice.api.controllers.query;
 import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
+import com.ttdat.core.domain.entities.DebtPartyType;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccount;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccountPageResult;
@@ -23,26 +24,28 @@ import java.util.Map;
 public class DebtAccountQueryController {
     private final QueryGateway queryGateway;
 
-    @GetMapping("/party/{partyId}/unpaid")
-    public ApiResponse<List<PartyDebtAccount>> getUnpaidDebtAccountByPartyId(@PathVariable String partyId) {
+    @GetMapping("/supplier/{supplierId}/unpaid")
+    public ApiResponse<List<PartyDebtAccount>> getUnpaidDebtAccountByPartyId(@PathVariable String supplierId) {
         GetUnpaidDebtAccountByPartyIdQuery getUnpaidDebtAccountByPartyIdQuery = GetUnpaidDebtAccountByPartyIdQuery.builder()
-                .partyId(partyId)
+                .partyId(supplierId)
+                .partyType(DebtPartyType.SUPPLIER)
                 .build();
         List<PartyDebtAccount> partyDebtAccounts = queryGateway.query(getUnpaidDebtAccountByPartyIdQuery, ResponseTypes.multipleInstancesOf(PartyDebtAccount.class)).join();
         return ApiResponse.<List<PartyDebtAccount>>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
-                .message("Debt account retrieved successfully")
+                .message("Supplier unpaid debt account retrieved successfully")
                 .payload(partyDebtAccounts)
                 .build();
     }
 
-    @GetMapping("/party/{partyId}/page")
-    public ApiResponse<PartyDebtAccountPageResult> getPartyDebtAccountPage(@PathVariable String partyId, @RequestParam Map<String, String> filterParams) {
+    @GetMapping("/supplier/{supplierId}/page")
+    public ApiResponse<PartyDebtAccountPageResult> getPartyDebtAccountPage(@PathVariable String supplierId, @RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetPartyDebtAccountPageQuery getPartyDebtAccountPageQuery = GetPartyDebtAccountPageQuery.builder()
-                .partyId(partyId)
+                .partyId(supplierId)
+                .partyType(DebtPartyType.SUPPLIER)
                 .sortParams(sortParams)
                 .paginationParams(paginationParams)
                 .filterParams(filterParams)
@@ -51,7 +54,7 @@ public class DebtAccountQueryController {
         return ApiResponse.<PartyDebtAccountPageResult>builder()
                 .status(HttpStatus.OK.value())
                 .success(true)
-                .message("Debt account page retrieved successfully")
+                .message("Supplier debt account page retrieved successfully")
                 .payload(partyDebtAccountPageResult)
                 .build();
     }
