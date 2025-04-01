@@ -37,7 +37,7 @@ public class CustomerCommandController {
     }
 
     @PatchMapping("/{id}/status")
-    public ApiResponse<Object> updateStatus(@PathVariable String id, UpdateCustomerStatusRequest updateCustomerStatusRequest) {
+    public ApiResponse<Object> updateStatus(@PathVariable String id, @RequestBody UpdateCustomerStatusRequest updateCustomerStatusRequest) {
         customerService.updateStatus(id, updateCustomerStatusRequest);
         return ApiResponse.builder()
                 .status(HttpStatus.OK.value())

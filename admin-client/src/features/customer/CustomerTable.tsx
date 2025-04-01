@@ -24,6 +24,7 @@ import { CustomerType, Module } from "../../common/enums";
 import { CUSTOMER_TYPE_NAME, PERMISSIONS } from "../../common/constants";
 import UpdateCustomer from "./UpdateCustomer";
 import Access from "../auth/Access";
+import UpdateCustomerStatus from "./UpdateCustomerStatus";
 
 interface CustomerTableProps {
   customerPage?: Page<ICustomer>;
@@ -204,6 +205,9 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
           <ViewCustomer customer={customer} />
           <Access permission={PERMISSIONS[Module.CUSTOMER].UPDATE}>
             <UpdateCustomer customer={customer} />
+          </Access>
+          <Access permission={PERMISSIONS[Module.CUSTOMER].UPDATE_STATUS}>
+            <UpdateCustomerStatus customer={customer} />
           </Access>
         </Space>
       ),

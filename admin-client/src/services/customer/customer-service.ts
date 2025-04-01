@@ -20,6 +20,7 @@ interface ICustomerService {
     customerId: string,
     updatedCustomer: ICustomer,
   ): Promise<ApiResponse<void>>;
+  updateStatus(customerId: string, active: boolean): Promise<ApiResponse<void>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/customers", {
@@ -53,6 +54,13 @@ class CustomerService implements ICustomerService {
     updatedCustomer: ICustomer,
   ): Promise<ApiResponse<void>> {
     return (await apiClient.put(`/${customerId}`, updatedCustomer)).data;
+  }
+
+  async updateStatus(
+    customerId: string,
+    active: boolean,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.patch(`/${customerId}/status`, { active })).data;
   }
 }
 
