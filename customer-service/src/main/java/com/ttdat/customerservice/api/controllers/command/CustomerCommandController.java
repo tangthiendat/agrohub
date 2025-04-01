@@ -1,4 +1,4 @@
-package com.ttdat.customerservice.api.controllers;
+package com.ttdat.customerservice.api.controllers.command;
 
 import com.ttdat.core.api.dto.response.ApiResponse;
 import com.ttdat.customerservice.api.dto.CustomerDTO;
