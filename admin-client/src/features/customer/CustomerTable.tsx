@@ -20,8 +20,10 @@ import {
   getSortUpIconColor,
 } from "../../utils/color";
 import ViewCustomer from "./ViewCustomer";
-import { CustomerType } from "../../common/enums";
-import { CUSTOMER_TYPE_NAME } from "../../common/constants";
+import { CustomerType, Module } from "../../common/enums";
+import { CUSTOMER_TYPE_NAME, PERMISSIONS } from "../../common/constants";
+import UpdateCustomer from "./UpdateCustomer";
+import Access from "../auth/Access";
 
 interface CustomerTableProps {
   customerPage?: Page<ICustomer>;
@@ -122,7 +124,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
       title: "Tên khách hàng",
       dataIndex: "customerName",
       key: "customerName",
-      width: "18%",
+      width: "16%",
     },
     {
       title: "Trạng thái",
@@ -175,7 +177,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
       title: "Email",
       dataIndex: "email",
       key: "email",
-      width: "16%",
+      width: "18%",
     },
     {
       title: "Ngày cập nhật",
@@ -200,6 +202,9 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
       render: (_, customer: ICustomer) => (
         <Space>
           <ViewCustomer customer={customer} />
+          <Access permission={PERMISSIONS[Module.CUSTOMER].UPDATE}>
+            <UpdateCustomer customer={customer} />
+          </Access>
         </Space>
       ),
     },

@@ -1,15 +1,21 @@
+import { useEffect } from "react";
 import { Button, Form, Input, Select, Space, Switch } from "antd";
+import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ICustomer } from "../../interfaces";
 import { CustomerType } from "../../common/enums";
 import { CUSTOMER_TYPE_NAME } from "../../common/constants";
 import { customerService } from "../../services";
-import toast from "react-hot-toast";
 import { getNotificationMessage } from "../../utils/notification";
 
 interface UpdateCustomerFormProps {
   customerToUpdate?: ICustomer;
   onCancel: () => void;
+}
+
+interface UpdateCustomerArgs {
+  customerId: string;
+  updatedCustomer: ICustomer;
 }
 
 const UpdateCustomerForm: React.FC<UpdateCustomerFormProps> = ({
@@ -28,9 +34,42 @@ const UpdateCustomerForm: React.FC<UpdateCustomerFormProps> = ({
     },
   });
 
+  const { mutate: updateSupplier, isPending: isUpdating } = useMutation({
+    mutationFn: ({ customerId, updatedCustomer }: UpdateCustomerArgs) =>
+      customerService.update(customerId, updatedCustomer),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["customers"],
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (customerToUpdate) {
+      form.setFieldsValue(customerToUpdate);
+    }
+  }, [customerToUpdate, form]);
+
   function handleFinish(values: ICustomer) {
     if (customerToUpdate) {
-      console.log("Cập nhật khách hàng", values);
+      updateSupplier(
+        {
+          customerId: customerToUpdate.customerId,
+          updatedCustomer: values,
+        },
+        {
+          onSuccess: () => {
+            toast.success("Cập nhật khách hàng thành công");
+            form.resetFields();
+            onCancel();
+          },
+          onError: (error: Error) => {
+            toast.error(
+              getNotificationMessage(error) || "Cập nhật khách hàng thất bại",
+            );
+          },
+        },
+      );
     } else {
       createCustomer(values, {
         onSuccess: () => {
@@ -145,10 +184,14 @@ const UpdateCustomerForm: React.FC<UpdateCustomerFormProps> = ({
       </div>
       <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
         <Space>
-          <Button onClick={onCancel} loading={isCreating}>
+          <Button onClick={onCancel} loading={isCreating || isUpdating}>
             Hủy
           </Button>
-          <Button type="primary" htmlType="submit" loading={isCreating}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={isCreating || isUpdating}
+          >
             {customerToUpdate ? "Cập nhật" : "Thêm mới"}
           </Button>
         </Space>
