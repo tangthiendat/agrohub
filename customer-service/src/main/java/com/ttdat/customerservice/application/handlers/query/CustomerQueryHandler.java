@@ -1,8 +1,10 @@
 package com.ttdat.customerservice.application.handlers.query;
 
+import com.ttdat.customerservice.api.dto.CustomerDTO;
 import com.ttdat.customerservice.api.dto.CustomerPageResult;
 import com.ttdat.customerservice.application.mappers.CustomerMapper;
 import com.ttdat.customerservice.application.queries.customer.GetCustomerQueryPageQuery;
+import com.ttdat.customerservice.application.queries.customer.SearchCustomerQuery;
 import com.ttdat.customerservice.application.repositories.CustomerRepository;
 import com.ttdat.customerservice.domain.entities.Customer;
 import com.ttdat.customerservice.infrastructure.utils.PaginationUtils;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -51,5 +54,12 @@ public class CustomerQueryHandler {
             customerSpec = customerSpec.and(querySpec);
         }
         return customerSpec;
+    }
+
+    @QueryHandler
+    public List<CustomerDTO> handle(SearchCustomerQuery searchCustomerQuery){
+        Specification<Customer> customerSpec = getCustomerSpec(Map.of("query", searchCustomerQuery.getQuery()));
+        List<Customer> customers = customerRepository.findAll(customerSpec);
+        return customerMapper.toDTOList(customers);
     }
 }
