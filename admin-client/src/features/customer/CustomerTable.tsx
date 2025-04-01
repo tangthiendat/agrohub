@@ -20,6 +20,8 @@ import {
   getSortUpIconColor,
 } from "../../utils/color";
 import ViewCustomer from "./ViewCustomer";
+import { CustomerType } from "../../common/enums";
+import { CUSTOMER_TYPE_NAME } from "../../common/constants";
 
 interface CustomerTableProps {
   customerPage?: Page<ICustomer>;
@@ -143,6 +145,22 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
         },
       ],
       defaultFilteredValue: getDefaultFilterValue(searchParams, "active"),
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
+    },
+
+    {
+      title: "Loại khách hàng",
+      dataIndex: "customerType",
+      key: "customerType",
+      width: "12%",
+      render: (customerType: CustomerType) => CUSTOMER_TYPE_NAME[customerType],
+      filters: Object.values(CustomerType).map((customerType: string) => ({
+        text: CUSTOMER_TYPE_NAME[customerType],
+        value: customerType,
+      })),
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "customerType"),
       filterIcon: (filtered) => (
         <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
       ),

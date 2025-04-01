@@ -38,7 +38,8 @@ public class CustomerQueryHandler {
 
     private Specification<Customer> getCustomerSpec(Map<String, String> filterParams) {
         Specification<Customer> customerSpec = Specification.where(null);
-        customerSpec = customerSpec.and(SpecificationUtils.buildSpecification(filterParams, "active", Boolean.class));
+        customerSpec = customerSpec.and(SpecificationUtils.buildSpecification(filterParams, "active", Boolean.class))
+                .and(SpecificationUtils.buildSpecification(filterParams, "customerType", String.class));
         if (filterParams.containsKey("query")) {
             String searchValue = filterParams.get("query").toLowerCase();
             Specification<Customer> querySpec = (root, query, criteriaBuilder) -> {
@@ -57,7 +58,7 @@ public class CustomerQueryHandler {
     }
 
     @QueryHandler
-    public List<CustomerDTO> handle(SearchCustomerQuery searchCustomerQuery){
+    public List<CustomerDTO> handle(SearchCustomerQuery searchCustomerQuery) {
         Specification<Customer> customerSpec = getCustomerSpec(Map.of("query", searchCustomerQuery.getQuery()));
         List<Customer> customers = customerRepository.findAll(customerSpec);
         return customerMapper.toDTOList(customers);

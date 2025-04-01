@@ -4,10 +4,16 @@ import { useTitle } from "../common/hooks";
 import { Module } from "../common/enums";
 import AddCustomer from "../features/customer/AddCustomer";
 import { useSearchParams } from "react-router";
-import { PaginationParams, SortParams } from "../interfaces";
+import {
+  CustomerFilterCriteria,
+  PaginationParams,
+  SortParams,
+} from "../interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { customerService } from "../services";
 import CustomerTable from "../features/customer/CustomerTable";
+import { SearchProps } from "antd/es/input";
+import Search from "antd/es/input/Search";
 
 const Customers: React.FC = () => {
   useTitle("Khách hàng");
@@ -24,8 +30,19 @@ const Customers: React.FC = () => {
     direction: searchParams.get("direction") || "",
   };
 
+  const filter: CustomerFilterCriteria = {
+    query: searchParams.get("query") || undefined,
+    active:
+      searchParams.get("active") == "true"
+        ? true
+        : searchParams.get("active") == "false"
+          ? false
+          : undefined,
+    customerType: searchParams.get("customerType") || undefined,
+  };
+
   const { data, isLoading } = useQuery({
-    queryKey: ["customers", pagination, sort].filter((key) => {
+    queryKey: ["customers", pagination, sort, filter].filter((key) => {
       if (typeof key === "string") {
         return key !== "";
       } else if (key instanceof Object) {
@@ -34,8 +51,17 @@ const Customers: React.FC = () => {
         );
       }
     }),
-    queryFn: () => customerService.getPage(pagination, sort),
+    queryFn: () => customerService.getPage(pagination, sort, filter),
   });
+
+  const handleSearch: SearchProps["onSearch"] = (value) => {
+    if (value) {
+      searchParams.set("query", value);
+    } else {
+      searchParams.delete("query");
+    }
+    setSearchParams(searchParams);
+  };
 
   return (
     <Access permission={PERMISSIONS[Module.CUSTOMER].GET_PAGE}>
@@ -44,13 +70,13 @@ const Customers: React.FC = () => {
         <div className="mb-5 flex items-center justify-between">
           <div className="w-[40%]">
             <div className="flex gap-3">
-              {/* <Search
-                placeholder="Nhập ID, tên nhà cung cấp, email hoặc số điện thoại"
+              <Search
+                placeholder="Nhập ID, tên khách hàng, email hoặc số điện thoại"
                 defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear
                 onSearch={handleSearch}
-              /> */}
+              />
             </div>
           </div>
 

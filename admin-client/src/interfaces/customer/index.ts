@@ -16,4 +16,5 @@ export interface ICustomer extends Auditable {
 export interface CustomerFilterCriteria {
   query?: string;
   active?: boolean;
+  customerType?: string;
 }
