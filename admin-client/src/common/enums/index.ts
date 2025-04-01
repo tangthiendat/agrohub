@@ -90,3 +90,8 @@ export enum DebtTransactionType {
   ADJUSTMENT = "ADJUSTMENT",
   INTEREST = "INTEREST",
 }
+
+export enum CustomerType {
+  INDIVIDUAL = "INDIVIDUAL",
+  BUSINESS = "BUSINESS",
+}

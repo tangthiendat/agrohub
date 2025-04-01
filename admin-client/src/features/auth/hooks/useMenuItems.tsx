@@ -6,6 +6,7 @@ import {
   MdDashboard,
   MdInventory,
   MdOutlineInventory,
+  MdPeopleAlt,
 } from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
 import {
@@ -77,6 +78,12 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           item.httpMethod === PERMISSIONS[Module.SUPPLIER].GET_PAGE.httpMethod,
       );
 
+      const viewCustomers = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.CUSTOMER].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.CUSTOMER].GET_PAGE.httpMethod,
+      );
+
       const viewWarehouses = permissions.find(
         (item) =>
           item.apiPath === PERMISSIONS[Module.WAREHOUSE].GET_PAGE.apiPath &&
@@ -88,6 +95,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           viewUnits ||
           viewProducts ||
           viewSuppliers ||
+          viewCustomers ||
           viewWarehouses,
       );
 
@@ -227,6 +235,15 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           ),
                           key: "suppliers",
                           icon: <FaBuilding />,
+                        },
+                      ]
+                    : []),
+                  ...(viewCustomers
+                    ? [
+                        {
+                          label: <NavLink to="/customers">Khách hàng</NavLink>,
+                          key: "customers",
+                          icon: <MdPeopleAlt />,
                         },
                       ]
                     : []),
