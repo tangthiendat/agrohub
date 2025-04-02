@@ -203,10 +203,13 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
       render: (_, customer: ICustomer) => (
         <Space>
           <ViewCustomer customer={customer} />
-          <Access permission={PERMISSIONS[Module.CUSTOMER].UPDATE}>
+          <Access permission={PERMISSIONS[Module.CUSTOMER].UPDATE} hideChildren>
             <UpdateCustomer customer={customer} />
           </Access>
-          <Access permission={PERMISSIONS[Module.CUSTOMER].UPDATE_STATUS}>
+          <Access
+            permission={PERMISSIONS[Module.CUSTOMER].UPDATE_STATUS}
+            hideChildren
+          >
             <UpdateCustomerStatus customer={customer} />
           </Access>
         </Space>

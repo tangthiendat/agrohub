@@ -41,8 +41,6 @@ public class CreatePurchaseOrderRequest {
     @NotEmpty(message = "Purchase order details are required")
     List<CreatePurchaseOrderDetailRequest> purchaseOrderDetails;
 
-    @NotNull(message = "Total amount is required")
-    @DecimalMin(value = "0.01", message = "Total amount must be greater than 0")
     @Digits(integer = 13, fraction = 2, message = "Total amount must have at most 13 digits and 2 decimal places")
     BigDecimal totalAmount;
 
