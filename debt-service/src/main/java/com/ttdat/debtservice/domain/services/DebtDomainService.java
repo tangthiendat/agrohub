@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 @Service
 public class DebtDomainService {
 
-    public DebtStatus getDebtStatus(BigDecimal remainingAmount) {
+    public DebtStatus getDebtStatus(BigDecimal remainingAmount, BigDecimal totalAmount) {
         if (remainingAmount.compareTo(BigDecimal.ZERO) == 0) {
             return DebtStatus.PAID;
-        } else if (remainingAmount.compareTo(BigDecimal.ZERO) > 0) {
+        } else if (remainingAmount.compareTo(BigDecimal.ZERO) > 0 && remainingAmount.compareTo(totalAmount) < 0) {
             return DebtStatus.PARTIALLY_PAID;
         } else {
             return DebtStatus.UNPAID;

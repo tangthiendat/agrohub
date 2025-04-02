@@ -58,7 +58,7 @@ public class DebtAccountEventHandler {
         debtAccount.setPaidAmount(debtAccount.getPaidAmount().add(debtAccountAmountUpdatedEvent.getPaidAmount()));
         BigDecimal remainingAmount = debtAccount.getRemainingAmount().subtract(debtAccountAmountUpdatedEvent.getPaidAmount());
         debtAccount.setRemainingAmount(remainingAmount);
-        debtAccount.setDebtStatus(debtDomainService.getDebtStatus(remainingAmount));
+        debtAccount.setDebtStatus(debtDomainService.getDebtStatus(remainingAmount, debtAccount.getTotalAmount()));
         debtAccountRepository.save(debtAccount);
         CreateDebtTransactionCommand createDebtTransactionCommand = CreateDebtTransactionCommand.builder()
                 .debtTransactionId(idGeneratorService.generateTransactionId())
