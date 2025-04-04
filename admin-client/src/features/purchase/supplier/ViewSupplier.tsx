@@ -1,5 +1,5 @@
+import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
 import { useState } from "react";
-import { Descriptions, DescriptionsProps, Drawer, Tag, Typography } from "antd";
 import ViewIcon from "../../../common/components/icons/ViewIcon";
 import { ISupplier } from "../../../interfaces";
 import { formatTimestamp } from "../../../utils/datetime";
@@ -96,9 +96,9 @@ const ViewSupplier: React.FC<ViewSupplierProps> = ({ supplier }) => {
         onClose={onClose}
         title="Chi tiết nhà cung cấp"
       >
-        <Typography.Title level={5} className="mb-2">
+        {/* <Typography.Title level={5} className="mb-2">
           Thông tin cơ bản
-        </Typography.Title>
+        </Typography.Title> */}
         <Descriptions
           className="mb-4"
           size="middle"
@@ -108,7 +108,7 @@ const ViewSupplier: React.FC<ViewSupplierProps> = ({ supplier }) => {
             width: "28%",
           }}
         />
-        <Typography.Title level={5} className="mb-2">
+        {/* <Typography.Title level={5} className="mb-2">
           Thông tin đánh giá
         </Typography.Title>
         <Descriptions
@@ -141,7 +141,7 @@ const ViewSupplier: React.FC<ViewSupplierProps> = ({ supplier }) => {
           labelStyle={{
             width: "28%",
           }}
-        />
+        /> */}
       </Drawer>
     </>
   );

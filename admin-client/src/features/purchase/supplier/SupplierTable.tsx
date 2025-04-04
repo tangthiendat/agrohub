@@ -165,13 +165,13 @@ const SupplierTable: React.FC<SupplierTableProps> = ({
       key: "phoneNumber",
       width: "10%",
     },
-    {
-      title: "Điểm tín nhiệm",
-      key: "trustScore",
-      width: "12%",
-      render: (_, supplier: ISupplier) =>
-        supplier.supplierRating && `${supplier.supplierRating.trustScore}/100`,
-    },
+    // {
+    //   title: "Điểm tín nhiệm",
+    //   key: "trustScore",
+    //   width: "12%",
+    //   render: (_, supplier: ISupplier) =>
+    //     supplier.supplierRating && `${supplier.supplierRating.trustScore}/100`,
+    // },
     {
       title: "Thời gian cập nhật",
       dataIndex: "updatedAt",

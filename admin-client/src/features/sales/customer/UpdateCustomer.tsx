@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { ICustomer } from "../../interfaces";
-import EditIcon from "../../common/components/icons/EditIcon";
+import { ICustomer } from "../../../interfaces";
+import EditIcon from "../../../common/components/icons/EditIcon";
 import { Modal } from "antd";
 import UpdateCustomerForm from "./UpdateCustomerForm";
 

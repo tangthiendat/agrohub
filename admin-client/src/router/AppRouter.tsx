@@ -20,7 +20,7 @@ import PurchaseOrders from "../pages/PurchaseOrders";
 import NewPurchaseOrder from "../features/purchase/purchase-order/NewPurchaseOrder";
 import ViewPurchaseOrder from "../features/purchase/purchase-order/ViewPurchaseOrder";
 import ImportInvoices from "../pages/ImportInvoices";
-import NewImportInvoice from "../features/import-invoice/NewImportInvoice";
+import NewImportInvoice from "../features/purchase/import-invoice/NewImportInvoice";
 import ProductLocations from "../pages/ProductLocations";
 import ProductBatches from "../pages/ProductBatches";
 import ProductStocks from "../pages/ProductStocks";

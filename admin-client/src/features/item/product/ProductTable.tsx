@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Space, Table, TablePaginationConfig } from "antd";
+import { Image, Space, Table, TablePaginationConfig } from "antd";
 import {
   CaretDownFilled,
   CaretUpFilled,
@@ -137,6 +137,16 @@ const ProductTable: React.FC<ProductTableProps> = ({
       key: "productId",
       width: "12%",
     },
+
+    {
+      title: "Hình ảnh",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      width: "10%",
+      render: (imageUrl: string) => (
+        <Image src={imageUrl} width={75} height={75} />
+      ),
+    },
     {
       title: "Tên sản phẩm",
       dataIndex: "productName",
@@ -148,6 +158,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
       dataIndex: "totalQuantity",
       key: "totalQuantity",
       width: "13%",
+      render: (totalQuantity: number) => (totalQuantity ? totalQuantity : 0),
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "totalQuantity"),
       sortIcon: ({ sortOrder }) => (
@@ -171,24 +182,24 @@ const ProductTable: React.FC<ProductTableProps> = ({
         return <FilterFilled style={{ color: getFilterIconColor(filtered) }} />;
       },
     },
+    // {
+    //   title: "Thời gian tạo",
+    //   dataIndex: "createdAt",
+    //   key: "createdAt",
+    //   width: "15%",
+    //   render: (createdAt: string) =>
+    //     createdAt ? formatTimestamp(createdAt) : "",
+    //   sorter: true,
+    //   defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
+    //   sortIcon: ({ sortOrder }) => (
+    //     <div className="flex flex-col text-[10px]">
+    //       <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
+    //       <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
+    //     </div>
+    //   ),
+    // },
     {
-      title: "Thời gian tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: "15%",
-      render: (createdAt: string) =>
-        createdAt ? formatTimestamp(createdAt) : "",
-      sorter: true,
-      defaultSortOrder: getDefaultSortOrder(searchParams, "createdAt"),
-      sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
-          <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
-          <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
-        </div>
-      ),
-    },
-    {
-      title: "Thời gian cập nhật",
+      title: "Ngày cập nhật",
       dataIndex: "updatedAt",
       key: "updatedAt",
       width: "15%",

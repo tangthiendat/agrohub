@@ -1,9 +1,9 @@
 import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
 import { useState } from "react";
-import { ICustomer } from "../../interfaces";
-import { formatTimestamp } from "../../utils/datetime";
-import ViewIcon from "../../common/components/icons/ViewIcon";
-import { CUSTOMER_TYPE_NAME } from "../../common/constants";
+import { ICustomer } from "../../../interfaces";
+import { formatTimestamp } from "../../../utils/datetime";
+import ViewIcon from "../../../common/components/icons/ViewIcon";
+import { CUSTOMER_TYPE_NAME } from "../../../common/constants";
 
 interface ViewCustomerProps {
   customer: ICustomer;

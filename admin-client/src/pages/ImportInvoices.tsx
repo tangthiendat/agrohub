@@ -5,7 +5,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import Access from "../features/auth/Access";
-import ImportInvoiceTable from "../features/import-invoice/ImportInvoiceTable";
+import ImportInvoiceTable from "../features/purchase/import-invoice/ImportInvoiceTable";
 import { useTitle } from "../common/hooks";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";

@@ -2,10 +2,10 @@ import { Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { IImportInvoice, ISupplier, Page } from "../../interfaces";
-import { formatDate } from "../../utils/datetime";
-import { getSortDirection } from "../../utils/filter";
-import { formatCurrency } from "../../utils/number";
+import { IImportInvoice, ISupplier, Page } from "../../../interfaces";
+import { formatDate } from "../../../utils/datetime";
+import { getSortDirection } from "../../../utils/filter";
+import { formatCurrency } from "../../../utils/number";
 import ViewImportInvoice from "./ViewImportInvoice";
 
 interface ImportInvoiceTableProps {
@@ -136,6 +136,7 @@ const ImportInvoiceTable: React.FC<ImportInvoiceTableProps> = ({
       dataIndex: "finalAmount",
       key: "finalAmount",
       width: "15%",
+      align: "right",
       render: (finalAmount) => formatCurrency(finalAmount),
     },
     {

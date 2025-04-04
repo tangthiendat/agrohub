@@ -2,7 +2,7 @@ import Access from "../features/auth/Access";
 import { PERMISSIONS } from "../common/constants";
 import { useTitle } from "../common/hooks";
 import { Module } from "../common/enums";
-import AddCustomer from "../features/customer/AddCustomer";
+import AddCustomer from "../features/sales/customer/AddCustomer";
 import { useSearchParams } from "react-router";
 import {
   CustomerFilterCriteria,
@@ -11,7 +11,7 @@ import {
 } from "../interfaces";
 import { useQuery } from "@tanstack/react-query";
 import { customerService } from "../services";
-import CustomerTable from "../features/customer/CustomerTable";
+import CustomerTable from "../features/sales/customer/CustomerTable";
 import { SearchProps } from "antd/es/input";
 import Search from "antd/es/input/Search";
 

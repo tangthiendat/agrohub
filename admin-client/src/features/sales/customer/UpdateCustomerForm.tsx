@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { Button, Form, Input, Select, Space, Switch } from "antd";
 import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ICustomer } from "../../interfaces";
-import { CustomerType } from "../../common/enums";
-import { CUSTOMER_TYPE_NAME } from "../../common/constants";
-import { customerService } from "../../services";
-import { getNotificationMessage } from "../../utils/notification";
+import { ICustomer } from "../../../interfaces";
+import { CustomerType } from "../../../common/enums";
+import { CUSTOMER_TYPE_NAME } from "../../../common/constants";
+import { customerService } from "../../../services";
+import { getNotificationMessage } from "../../../utils/notification";
 
 interface UpdateCustomerFormProps {
   customerToUpdate?: ICustomer;

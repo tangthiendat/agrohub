@@ -11,19 +11,19 @@ import {
   getDefaultFilterValue,
   getDefaultSortOrder,
   getSortDirection,
-} from "../../utils/filter";
-import { ICustomer, Page } from "../../interfaces";
-import { formatTimestamp } from "../../utils/datetime";
+} from "../../../utils/filter";
+import { ICustomer, Page } from "../../../interfaces";
+import { formatTimestamp } from "../../../utils/datetime";
 import {
   getFilterIconColor,
   getSortDownIconColor,
   getSortUpIconColor,
-} from "../../utils/color";
+} from "../../../utils/color";
 import ViewCustomer from "./ViewCustomer";
-import { CustomerType, Module } from "../../common/enums";
-import { CUSTOMER_TYPE_NAME, PERMISSIONS } from "../../common/constants";
+import { CustomerType, Module } from "../../../common/enums";
+import { CUSTOMER_TYPE_NAME, PERMISSIONS } from "../../../common/constants";
 import UpdateCustomer from "./UpdateCustomer";
-import Access from "../auth/Access";
+import Access from "../../auth/Access";
 import UpdateCustomerStatus from "./UpdateCustomerStatus";
 
 interface CustomerTableProps {

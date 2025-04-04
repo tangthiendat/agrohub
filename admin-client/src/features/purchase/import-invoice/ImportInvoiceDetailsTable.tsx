@@ -1,14 +1,14 @@
 import { InputNumber, Select, Table, TableProps, Typography } from "antd";
 import { FormInstance } from "antd/lib";
 import { useShallow } from "zustand/react/shallow";
-import DeleteIcon from "../../common/components/icons/DeleteIcon";
-import NewBatchForm from "../inventory/batch/NewBatchForm";
-import { IProductUnit } from "../../interfaces";
+import DeleteIcon from "../../../common/components/icons/DeleteIcon";
+import NewBatchForm from "../../inventory/batch/NewBatchForm";
+import { IProductUnit } from "../../../interfaces";
 import {
   ImportInvoiceDetailState,
   useImportInvoiceStore,
-} from "../../store/import-invoice-store";
-import { formatCurrency, parseCurrency } from "../../utils/number";
+} from "../../../store/import-invoice-store";
+import { formatCurrency, parseCurrency } from "../../../utils/number";
 
 interface ImportInvoiceDetailsTableProps {
   form: FormInstance;
@@ -117,7 +117,7 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
               finalAmount: finalAmount,
             });
           }}
-          addonAfter="VND"
+          // addonAfter="VND"
         />
       ),
     },
@@ -135,7 +135,7 @@ const ImportInvoiceDetailsTable: React.FC<ImportInvoiceDetailsTableProps> = ({
           parser={(value) => parseCurrency(value) as unknown as 0}
           step={1000}
           min={0}
-          addonAfter="VND"
+          // addonAfter="VND"
         />
       ),
     },

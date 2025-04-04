@@ -1,16 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { PurchaseOrderFilterCriteria } from "../../interfaces";
+import { PurchaseOrderFilterCriteria } from "../../../interfaces";
 import { Button, Card, List, Tag } from "antd";
 import dayjs from "dayjs";
-import Loading from "../../common/components/Loading";
-import { purchaseOrderService } from "../../services";
+import Loading from "../../../common/components/Loading";
+import { purchaseOrderService } from "../../../services";
 import {
   PURCHASE_ORDER_STATUS_COLOR,
   PURCHASE_ORDER_STATUS_NAME,
-} from "../../common/constants";
-import { PurchaseOrderStatus } from "../../common/enums";
-import { getNotificationMessage } from "../../utils/notification";
+} from "../../../common/constants";
+import { PurchaseOrderStatus } from "../../../common/enums";
+import { getNotificationMessage } from "../../../utils/notification";
 
 interface UpdatePurchaseOrderStatusArgs {
   purchaseOrderId: string;

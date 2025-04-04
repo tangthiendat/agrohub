@@ -239,7 +239,7 @@ const ViewPurchaseOrder: React.FC = () => {
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   step={1000}
                   min={0}
-                  addonAfter="VND"
+                  // addonAfter="VND"
                   onChange={(value) => {
                     const newPODetails =
                       currentPurchaseOrder?.purchaseOrderDetails.map((pod) => {
@@ -304,7 +304,7 @@ const ViewPurchaseOrder: React.FC = () => {
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   step={1000}
                   min={0}
-                  addonAfter="VND"
+                  // addonAfter="VND"
                 />
               );
             },
@@ -606,7 +606,7 @@ const ViewPurchaseOrder: React.FC = () => {
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   step={1000}
                   min={0}
-                  addonAfter={<div className="w-[55px]">VND</div>}
+                  // addonAfter={<div className="w-[55px]">VND</div>}
                 />
               </Form.Item>
               <Form.Item
@@ -829,7 +829,7 @@ const ViewPurchaseOrder: React.FC = () => {
                   formatter={(value) => formatCurrency(value)}
                   parser={(value) => parseCurrency(value) as unknown as 0}
                   min={0}
-                  addonAfter={<div className="w-[55px]">VND</div>}
+                  // addonAfter={<div className="w-[55px]">VND</div>}
                 />
               </Form.Item>
             </Card>

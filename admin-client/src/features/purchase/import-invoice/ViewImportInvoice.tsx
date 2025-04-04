@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { IImportInvoice } from "../../interfaces";
-import ViewIcon from "../../common/components/icons/ViewIcon";
+import { IImportInvoice } from "../../../interfaces";
+import ViewIcon from "../../../common/components/icons/ViewIcon";
 import { Modal } from "antd";
 import ImportInvoiceInfo from "./ImportInvoiceInfo";
 

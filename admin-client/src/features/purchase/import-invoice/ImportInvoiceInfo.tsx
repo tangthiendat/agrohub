@@ -1,9 +1,19 @@
-import { Descriptions, DescriptionsProps, Table, Typography } from "antd";
-import { IImportInvoice, IImportInvoiceDetail } from "../../interfaces";
-import { formatDate } from "../../utils/datetime";
+import {
+  Descriptions,
+  DescriptionsProps,
+  Image,
+  Table,
+  Typography,
+} from "antd";
+import {
+  IImportInvoice,
+  IImportInvoiceDetail,
+  IProduct,
+} from "../../../interfaces";
+import { formatDate } from "../../../utils/datetime";
 import { TableProps } from "antd/lib";
-import { formatCurrency } from "../../utils/number";
-import { getDiscountValue, getVATValue } from "../../utils/data";
+import { formatCurrency } from "../../../utils/number";
+import { getDiscountValue, getVATValue } from "../../../utils/data";
 
 interface ImportInvoiceInfoProps {
   importInvoice: IImportInvoice;
@@ -89,6 +99,21 @@ const ImportInvoiceInfo: React.FC<ImportInvoiceInfoProps> = ({
 
   const columns: TableProps<IImportInvoiceDetail>["columns"] = [
     {
+      title: "STT",
+      width: "5%",
+      key: "index",
+      render: (_, __, index: number) => index + 1,
+    },
+    {
+      title: "Hình ảnh",
+      dataIndex: "product",
+      key: "imageUrl",
+      width: "10%",
+      render: (product: IProduct) => (
+        <Image src={product?.imageUrl} width={75} height={75} />
+      ),
+    },
+    {
       title: "Tên sản phẩm",
       dataIndex: "product",
       key: "product",
@@ -148,7 +173,7 @@ const ImportInvoiceInfo: React.FC<ImportInvoiceInfoProps> = ({
               <Table.Summary.Row>
                 <Table.Summary.Cell
                   index={0}
-                  colSpan={4}
+                  colSpan={6}
                   align="right"
                   className="!pt-4 font-semibold"
                 >
@@ -161,7 +186,7 @@ const ImportInvoiceInfo: React.FC<ImportInvoiceInfoProps> = ({
               <Table.Summary.Row>
                 <Table.Summary.Cell
                   index={0}
-                  colSpan={4}
+                  colSpan={6}
                   align="right"
                   className="font-semibold"
                 >
@@ -179,7 +204,7 @@ const ImportInvoiceInfo: React.FC<ImportInvoiceInfoProps> = ({
               <Table.Summary.Row>
                 <Table.Summary.Cell
                   index={0}
-                  colSpan={4}
+                  colSpan={6}
                   align="right"
                   className="font-semibold"
                 >
@@ -205,7 +230,7 @@ const ImportInvoiceInfo: React.FC<ImportInvoiceInfoProps> = ({
               <Table.Summary.Row>
                 <Table.Summary.Cell
                   index={0}
-                  colSpan={4}
+                  colSpan={6}
                   align="right"
                   className="font-semibold"
                 >

@@ -13,19 +13,19 @@ import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useShallow } from "zustand/react/shallow";
-import SearchSupplierBar from "../purchase/supplier/SearchSupplierBar";
-import { DiscountType } from "../../common/enums";
+import SearchSupplierBar from "../supplier/SearchSupplierBar";
+import { DiscountType } from "../../../common/enums";
 import {
   ApiResponse,
   CreateImportInvoiceRequest,
   ISupplier,
-} from "../../interfaces";
+} from "../../../interfaces";
 import {
   ImportInvoiceDetailState,
   useImportInvoiceStore,
-} from "../../store/import-invoice-store";
-import { getNotificationMessage } from "../../utils/notification";
-import { formatCurrency, parseCurrency } from "../../utils/number";
+} from "../../../store/import-invoice-store";
+import { getNotificationMessage } from "../../../utils/notification";
+import { formatCurrency, parseCurrency } from "../../../utils/number";
 
 interface ImportInvoiceFormProps {
   form: FormInstance;
@@ -225,7 +225,7 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 step={1000}
                 min={0}
-                addonAfter={<div className="w-[55px]">VND</div>}
+                // addonAfter={<div className="w-[55px]">VND</div>}
               />
             </Form.Item>
             <Form.Item label="Chiết khấu" name="discountValue">
@@ -305,7 +305,7 @@ const ImportInvoiceForm: React.FC<ImportInvoiceFormProps> = ({
                 formatter={(value) => formatCurrency(value)}
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 min={0}
-                addonAfter={<div className="w-[55px]">VND</div>}
+                // addonAfter={<div className="w-[55px]">VND</div>}
               />
             </Form.Item>
           </Card>

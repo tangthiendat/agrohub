@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Switch, Tooltip } from "antd";
 import toast from "react-hot-toast";
-import { ICustomer } from "../../interfaces";
-import { customerService } from "../../services";
+import { ICustomer } from "../../../interfaces";
+import { customerService } from "../../../services";
 
 interface UpdateCustomerStatusProps {
   customer: ICustomer;
