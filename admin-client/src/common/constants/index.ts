@@ -2,11 +2,8 @@ import { DebtStatus, LocationStatus, PurchaseOrderStatus } from "../enums";
 
 export * from "./notification";
 export * from "./permission";
-export * from "./user";
 export * from "./status";
-export * from "./product";
-export * from "./location";
-export * from "./customer";
+export * from "./name";
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 

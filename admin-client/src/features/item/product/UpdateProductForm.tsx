@@ -20,7 +20,7 @@ import {
 import { useEffect, useState } from "react";
 import EditProductUnitPrice from "./EditProductUnitPrice";
 import { ProductUnitPriceContextProvider } from "../../../context/ProductUnitPriceContext";
-import { PHYSICAL_STATE_NAME } from "../../../common/constants/product";
+import { PHYSICAL_STATE_NAME } from "../../../common/constants";
 import { useTitle } from "../../../common/hooks";
 import {
   ApiResponse,
