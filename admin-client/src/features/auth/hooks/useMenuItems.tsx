@@ -6,6 +6,7 @@ import {
   MdDashboard,
   MdInventory,
   MdOutlineInventory,
+  MdOutlineShoppingCartCheckout,
   MdPeopleAlt,
 } from "react-icons/md";
 import { IoShieldCheckmark } from "react-icons/io5";
@@ -72,18 +73,6 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           item.httpMethod === PERMISSIONS[Module.PRODUCT].GET_PAGE.httpMethod,
       );
 
-      const viewSuppliers = permissions.find(
-        (item) =>
-          item.apiPath === PERMISSIONS[Module.SUPPLIER].GET_PAGE.apiPath &&
-          item.httpMethod === PERMISSIONS[Module.SUPPLIER].GET_PAGE.httpMethod,
-      );
-
-      const viewCustomers = permissions.find(
-        (item) =>
-          item.apiPath === PERMISSIONS[Module.CUSTOMER].GET_PAGE.apiPath &&
-          item.httpMethod === PERMISSIONS[Module.CUSTOMER].GET_PAGE.httpMethod,
-      );
-
       const viewWarehouses = permissions.find(
         (item) =>
           item.apiPath === PERMISSIONS[Module.WAREHOUSE].GET_PAGE.apiPath &&
@@ -91,12 +80,13 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
       );
 
       const hasItemListChildren: boolean = Boolean(
-        viewCategories ||
-          viewUnits ||
-          viewProducts ||
-          viewSuppliers ||
-          viewCustomers ||
-          viewWarehouses,
+        viewCategories || viewUnits || viewProducts || viewWarehouses,
+      );
+
+      const viewSuppliers = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.SUPPLIER].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.SUPPLIER].GET_PAGE.httpMethod,
       );
 
       const viewPurchaseOrders = permissions.find(
@@ -115,7 +105,9 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
             PERMISSIONS[Module.IMPORT_INVOICE].GET_PAGE.httpMethod,
       );
 
-      const hasPurchaseItem = Boolean(viewPurchaseOrders || viewImportInvoices);
+      const hasPurchaseItem = Boolean(
+        viewSuppliers || viewPurchaseOrders || viewImportInvoices,
+      );
 
       const viewProductLocations = permissions.find(
         (item) =>
@@ -142,6 +134,14 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
       const hasStockItem = Boolean(
         viewProductLocations || viewProductBatches || viewProductStocks,
       );
+
+      const viewCustomers = permissions.find(
+        (item) =>
+          item.apiPath === PERMISSIONS[Module.CUSTOMER].GET_PAGE.apiPath &&
+          item.httpMethod === PERMISSIONS[Module.CUSTOMER].GET_PAGE.httpMethod,
+      );
+
+      const hasSalesItem = Boolean(viewCustomers);
 
       const menuItems = [
         {
@@ -227,26 +227,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                         },
                       ]
                     : []),
-                  ...(viewSuppliers
-                    ? [
-                        {
-                          label: (
-                            <NavLink to="/suppliers">Nhà cung cấp</NavLink>
-                          ),
-                          key: "suppliers",
-                          icon: <FaBuilding />,
-                        },
-                      ]
-                    : []),
-                  ...(viewCustomers
-                    ? [
-                        {
-                          label: <NavLink to="/customers">Khách hàng</NavLink>,
-                          key: "customers",
-                          icon: <MdPeopleAlt />,
-                        },
-                      ]
-                    : []),
+
                   ...(viewWarehouses
                     ? [
                         {
@@ -267,6 +248,17 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                 key: "purchase",
                 icon: <BiPurchaseTag />,
                 children: [
+                  ...(viewSuppliers
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/suppliers">Nhà cung cấp</NavLink>
+                          ),
+                          key: "suppliers",
+                          icon: <FaBuilding />,
+                        },
+                      ]
+                    : []),
                   ...(viewPurchaseOrders
                     ? [
                         {
@@ -334,6 +326,26 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           ),
                           key: "product-stocks",
                           icon: <MdInventory />,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(hasSalesItem
+          ? [
+              {
+                label: "Bán hàng",
+                key: "sales",
+                icon: <MdOutlineShoppingCartCheckout />,
+                children: [
+                  ...(viewCustomers
+                    ? [
+                        {
+                          label: <NavLink to="/customers">Khách hàng</NavLink>,
+                          key: "customers",
+                          icon: <MdPeopleAlt />,
                         },
                       ]
                     : []),
