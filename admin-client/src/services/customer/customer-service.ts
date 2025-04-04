@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import { createApiClient } from "../../config/axios/api-client";
 import {
   ApiResponse,
   Page,
@@ -6,7 +7,6 @@ import {
   SortParams,
 } from "../../interfaces";
 import { CustomerFilterCriteria, ICustomer } from "../../interfaces/customer";
-import { createApiClient } from "../../config/axios/api-client";
 
 interface ICustomerService {
   create(newCustomer: ICustomer): Promise<ApiResponse<void>>;
@@ -21,6 +21,7 @@ interface ICustomerService {
     updatedCustomer: ICustomer,
   ): Promise<ApiResponse<void>>;
   updateStatus(customerId: string, active: boolean): Promise<ApiResponse<void>>;
+  search(query?: string): Promise<ApiResponse<ICustomer[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/customers", {
@@ -61,6 +62,10 @@ class CustomerService implements ICustomerService {
     active: boolean,
   ): Promise<ApiResponse<void>> {
     return (await apiClient.patch(`/${customerId}/status`, { active })).data;
+  }
+
+  async search(query?: string): Promise<ApiResponse<ICustomer[]>> {
+    return (await apiClient.get("/search", { params: { query } })).data;
   }
 }
 

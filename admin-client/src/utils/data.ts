@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { snakeCase } from "lodash";
 import { DiscountType } from "../common/enums";
-import { IProduct, IProductLocation, IProductUnitPrice } from "../interfaces";
+import { IProduct, IProductLocation } from "../interfaces";
 import { parseCurrency } from "./number";
 
 export function convertKeysToSnakeCase<T>(obj: T): T {
@@ -48,16 +48,15 @@ export function getFinalAmount(
 export function getCurrentProductUnitPrice(
   product: IProduct,
   productUnitId: string,
-): IProductUnitPrice {
+): number {
   const productUnit = product.productUnits.find(
     (pu) => pu.productUnitId === productUnitId,
   );
   const sortedProductUnitPrices = productUnit!.productUnitPrices!.sort((a, b) =>
     dayjs(b.validFrom).diff(dayjs(a.validFrom)),
   );
-  return sortedProductUnitPrices!.find((pup) =>
-    dayjs().isAfter(pup.validFrom),
-  )!;
+  return sortedProductUnitPrices!.find((pup) => dayjs().isAfter(pup.validFrom))!
+    .price;
 }
 
 export function getLocationName(location: IProductLocation) {

@@ -21,7 +21,7 @@ import { FaBuilding, FaList } from "react-icons/fa";
 import { FiPackage } from "react-icons/fi";
 import { FaLocationDot, FaWarehouse } from "react-icons/fa6";
 import { BiPurchaseTag } from "react-icons/bi";
-import { TbPackageImport } from "react-icons/tb";
+import { TbPackageExport, TbPackageImport } from "react-icons/tb";
 import { IUser } from "../../../interfaces";
 import { PERMISSIONS } from "../../../common/constants";
 import { Module } from "../../../common/enums";
@@ -141,7 +141,15 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           item.httpMethod === PERMISSIONS[Module.CUSTOMER].GET_PAGE.httpMethod,
       );
 
-      const hasSalesItem = Boolean(viewCustomers);
+      const viewExportInvoices = permissions.find(
+        (item) =>
+          item.apiPath ===
+            PERMISSIONS[Module.EXPORT_INVOICE].GET_PAGE.apiPath &&
+          item.httpMethod ===
+            PERMISSIONS[Module.EXPORT_INVOICE].GET_PAGE.httpMethod,
+      );
+
+      const hasSalesItem = Boolean(viewCustomers || viewExportInvoices);
 
       const menuItems = [
         {
@@ -346,6 +354,19 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
                           label: <NavLink to="/customers">Khách hàng</NavLink>,
                           key: "customers",
                           icon: <MdPeopleAlt />,
+                        },
+                      ]
+                    : []),
+                  ...(viewExportInvoices
+                    ? [
+                        {
+                          label: (
+                            <NavLink to="/export-invoices">
+                              Phiếu xuất kho
+                            </NavLink>
+                          ),
+                          key: "export-invoices",
+                          icon: <TbPackageExport size={18} />,
                         },
                       ]
                     : []),

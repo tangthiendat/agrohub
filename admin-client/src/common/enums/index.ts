@@ -31,6 +31,7 @@ export enum Module {
   DEBT_ACCOUNT = "DEBT ACCOUNT",
   PAYMENT = "PAYMENT",
   CUSTOMER = "CUSTOMER",
+  EXPORT_INVOICE = "EXPORT INVOICE",
 }
 
 export enum Gender {
