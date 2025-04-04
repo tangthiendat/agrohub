@@ -14,7 +14,7 @@ import {
   SortParams,
 } from "../interfaces";
 import { productService } from "../services";
-import ProductTable from "../features/product/ProductTable";
+import ProductTable from "../features/item/product/ProductTable";
 
 const Products: React.FC = () => {
   useTitle("Sản phẩm");

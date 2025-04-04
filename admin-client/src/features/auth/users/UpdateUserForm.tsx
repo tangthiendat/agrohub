@@ -19,7 +19,7 @@ import removeAccents from "remove-accents";
 import { GENDER_NAME } from "../../../common/constants";
 import { IUser, IWarehouse } from "../../../interfaces";
 import { roleService, userService, warehouseService } from "../../../services";
-import WarehouseOption from "../../warehouse/WarehouseOption";
+import WarehouseOption from "../../item/warehouse/WarehouseOption";
 
 interface UpdateUserFormProps {
   userToUpdate?: IUser;

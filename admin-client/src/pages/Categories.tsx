@@ -1,9 +1,9 @@
 import Access from "../features/auth/Access";
-import AddCategory from "../features/category/AddCategory";
+import AddCategory from "../features/item/category/AddCategory";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
-import CategoryTable from "../features/category/CategoryTable";
+import CategoryTable from "../features/item/category/CategoryTable";
 
 const Categories = () => {
   useTitle("Loại sản phẩm");

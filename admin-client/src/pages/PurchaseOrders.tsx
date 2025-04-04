@@ -2,7 +2,7 @@ import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
 import Access from "../features/auth/Access";
-import AllPurchaseOrderTab from "../features/purchase-order/AllPurchaseOrderTab";
+import AllPurchaseOrderTab from "../features/purchase/purchase-order/AllPurchaseOrderTab";
 
 const PurchaseOrders: React.FC = () => {
   useTitle("Đơn đặt hàng nhà cung cấp");

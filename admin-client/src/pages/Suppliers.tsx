@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import AddSupplier from "../features/supplier/AddSupplier";
-import SupplierTable from "../features/supplier/SupplierTable";
+import AddSupplier from "../features/purchase/supplier/AddSupplier";
+import SupplierTable from "../features/purchase/supplier/SupplierTable";
 import { useTitle } from "../common/hooks";
 import Access from "../features/auth/Access";
 import { PERMISSIONS } from "../common/constants";

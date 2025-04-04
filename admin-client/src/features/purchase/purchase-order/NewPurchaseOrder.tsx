@@ -4,21 +4,21 @@ import { Button, Form, Space } from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useShallow } from "zustand/react/shallow";
-import BackButton from "../../common/components/BackButton";
-import Loading from "../../common/components/Loading";
-import { useCurrentWarehouse } from "../../common/hooks";
-import { useCurrentUserInfo } from "../../common/hooks/useCurrentUserInfo";
-import { IProduct } from "../../interfaces";
-import { importInvoiceService } from "../../services";
-import { useImportInvoiceStore } from "../../store/import-invoice-store";
-import SearchProductBar from "../item/product/SearchProductBar";
-import ImportInvoiceDetailsTable from "./ImportInvoiceDetailsTable";
-import ImportInvoiceForm from "./ImportInvoiceForm";
+import BackButton from "../../../common/components/BackButton";
+import Loading from "../../../common/components/Loading";
+import SearchProductBar from "../../item/product/SearchProductBar";
+import PurchaseOrderDetailsTable from "./PurchaseOrderDetailsTable";
+import PurchaseOrderForm from "./PurchaseOrderForm";
+import { useCurrentWarehouse } from "../../../common/hooks";
+import { useCurrentUserInfo } from "../../../common/hooks/useCurrentUserInfo";
+import { IProduct } from "../../../interfaces";
+import { purchaseOrderService } from "../../../services";
+import { usePurchaseOrderStore } from "../../../store/purchase-order-store";
 
-const NewImportInvoice: React.FC = () => {
+const NewPurchaseOrder: React.FC = () => {
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
-  const { addDetail, setWarehouse, setUser, reset } = useImportInvoiceStore(
+  const { addDetail, setWarehouse, setUser, reset } = usePurchaseOrderStore(
     useShallow((state) => ({
       addDetail: state.addDetail,
       setWarehouse: state.setWarehouse,
@@ -36,17 +36,11 @@ const NewImportInvoice: React.FC = () => {
 
   const { currentUserInfo, isLoading: isUserLoading } = useCurrentUserInfo();
 
-  const { mutate: createImportInvoice, isPending: isCreating } = useMutation({
-    mutationFn: importInvoiceService.create,
+  const { mutate: createPurchaseOrder, isPending: isCreating } = useMutation({
+    mutationFn: purchaseOrderService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["import-invoices"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["product-batches"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["debt-accounts"],
+        queryKey: ["purchase-orders"],
       });
       form.resetFields();
       reset();
@@ -71,7 +65,9 @@ const NewImportInvoice: React.FC = () => {
       <div className="mb-4 flex items-center justify-between">
         <Space align="start" size="middle">
           <BackButton />
-          <h2 className="text-xl font-semibold">Thêm phiếu nhập kho</h2>
+          <h2 className="text-xl font-semibold">
+            Thêm đơn đặt hàng nhà cung cấp
+          </h2>
         </Space>
         <Space>
           <Button
@@ -95,9 +91,9 @@ const NewImportInvoice: React.FC = () => {
         </Space>
       </div>
 
-      <ImportInvoiceForm
+      <PurchaseOrderForm
         form={form}
-        createImportInvoice={createImportInvoice}
+        createPurchaseOrder={createPurchaseOrder}
       />
 
       <div className="flex items-center justify-between">
@@ -133,9 +129,9 @@ const NewImportInvoice: React.FC = () => {
           })}
         />
       </div>
-      <ImportInvoiceDetailsTable form={form} />
+      <PurchaseOrderDetailsTable />
     </div>
   );
 };
 
-export default NewImportInvoice;
+export default NewPurchaseOrder;

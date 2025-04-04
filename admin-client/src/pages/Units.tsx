@@ -2,8 +2,8 @@ import Access from "../features/auth/Access";
 import { PERMISSIONS } from "../common/constants";
 import { Module } from "../common/enums";
 import { useTitle } from "../common/hooks";
-import AddUnit from "../features/unit/AddUnit";
-import UnitTable from "../features/unit/UnitTable";
+import AddUnit from "../features/item/unit/AddUnit";
+import UnitTable from "../features/item/unit/UnitTable";
 
 const Units: React.FC = () => {
   useTitle("Đơn vị tính");

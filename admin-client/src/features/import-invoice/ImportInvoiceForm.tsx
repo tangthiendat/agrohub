@@ -13,7 +13,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useShallow } from "zustand/react/shallow";
-import SearchSupplierBar from "../supplier/SearchSupplierBar";
+import SearchSupplierBar from "../purchase/supplier/SearchSupplierBar";
 import { DiscountType } from "../../common/enums";
 import {
   ApiResponse,
