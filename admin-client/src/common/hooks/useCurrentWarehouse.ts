@@ -6,5 +6,8 @@ export function useCurrentWarehouse() {
     queryKey: ["warehouse", "me"],
     queryFn: warehouseService.getCurrentUserWarehouse,
   });
-  return { currentWarehouse: data?.payload, isLoading };
+  return {
+    currentWarehouse: data?.payload,
+    isLoading,
+  };
 }

@@ -1,21 +1,26 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { FormInstance, InputNumber, Select, Table } from "antd";
+import { TableProps } from "antd/lib";
+import { useShallow } from "zustand/react/shallow";
+import BatchesTable from "./BatchesTable";
+import DeleteIcon from "../../../common/components/icons/DeleteIcon";
+import { IProductUnit } from "../../../interfaces";
 import {
   ExportInvoiceDetailState,
   useExportInvoiceStore,
 } from "../../../store/export-invoice-store";
-import { useShallow } from "zustand/react/shallow";
-import { TableProps } from "antd/lib";
-import DeleteIcon from "../../../common/components/icons/DeleteIcon";
-import { IProductUnit } from "../../../interfaces";
 import { formatCurrency, parseCurrency } from "../../../utils/number";
 
 interface ExportInvoiceDetailsTableProps {
   form: FormInstance;
+  setCurrentProductId: (productId: string | undefined) => void;
 }
 
 const ExportInvoiceDetailsTable: React.FC<ExportInvoiceDetailsTableProps> = ({
   form,
+  setCurrentProductId,
 }) => {
+  const queryClient = useQueryClient();
   const {
     totalAmount,
     finalAmount,
@@ -84,6 +89,10 @@ const ExportInvoiceDetailsTable: React.FC<ExportInvoiceDetailsTableProps> = ({
         <InputNumber
           value={record.quantity}
           min={1}
+          max={record.selectedBatches.reduce<number>(
+            (total, batch) => total + batch.productBatch.quantity,
+            0,
+          )}
           onClick={(e) => e.stopPropagation()}
           onChange={(value) => {
             updateQuantity(record.product.productId, value as number);
@@ -146,7 +155,14 @@ const ExportInvoiceDetailsTable: React.FC<ExportInvoiceDetailsTableProps> = ({
       render: (_, record: ExportInvoiceDetailState) => (
         <DeleteIcon
           tooltipTitle="Xoá"
-          onClick={() => deleteDetail(record.product.productId)}
+          onClick={() => {
+            setCurrentProductId(undefined);
+            queryClient.removeQueries({
+              queryKey: ["product-batches", "product"],
+            });
+
+            deleteDetail(record.product.productId);
+          }}
         />
       ),
     },
@@ -158,18 +174,14 @@ const ExportInvoiceDetailsTable: React.FC<ExportInvoiceDetailsTableProps> = ({
       rowKey={(detail: ExportInvoiceDetailState) => detail.product.productId}
       dataSource={exportInvoiceDetails}
       pagination={false}
-      // expandable={{
-      //   expandedRowRender: (record: ExportInvoiceDetailState) => (
-      //     <>
-      //       <Typography.Title level={5} className="mb-2">
-      //         Thông tin lô hàng
-      //       </Typography.Title>
-      //       <NewBatchForm importInvoiceDetail={record} />
-      //     </>
-      //   ),
-      //   // expandRowByClick: true,
-      // }}
       columns={columns}
+      expandable={{
+        expandedRowRender: (record: ExportInvoiceDetailState) => (
+          <BatchesTable productId={record.product.productId} />
+        ),
+        rowExpandable: (record) => record.selectedBatches?.length > 0,
+        defaultExpandAllRows: true,
+      }}
       bordered={false}
       size="middle"
       rowClassName={(_, index) =>

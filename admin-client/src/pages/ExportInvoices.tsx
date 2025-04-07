@@ -12,7 +12,7 @@ const ExportInvoices: React.FC = () => {
   return (
     <Access permission={PERMISSIONS[Module.EXPORT_INVOICE].GET_PAGE}>
       <div className="card">
-        <h2 className="mb-3 text-xl font-semibold">Phiếu xuất kho kho</h2>
+        <h2 className="mb-3 text-xl font-semibold">Phiếu xuất kho</h2>
         <div className="mb-5 flex items-center justify-between">
           <div className="w-[40%]">
             <div className="flex justify-between gap-3">

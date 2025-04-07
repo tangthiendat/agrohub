@@ -77,6 +77,7 @@ public class ProductBatchQueryHandler {
         Specification<ProductBatch> productBatchSpec = getProductBatchSpec(filterParams);
         List<ProductBatch> productBatches = productBatchRepository.findAll(productBatchSpec);
         return productBatches.stream()
+                .filter(productBatch -> !productBatch.getBatchLocations().isEmpty())
                 .map(productBatchMapper::toDTO)
                 .toList();
     }
