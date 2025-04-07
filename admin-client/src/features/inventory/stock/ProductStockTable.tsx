@@ -167,10 +167,11 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
       dataIndex: "quantity",
       key: "quantity",
       width: "10%",
+      align: "right",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "quantity"),
       sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
+        <div className="ml-1 flex flex-col text-[10px]">
           <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
           <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
         </div>
