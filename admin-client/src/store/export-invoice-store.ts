@@ -1,9 +1,10 @@
+import type {} from "@redux-devtools/extension";
 import dayjs from "dayjs";
-import { DiscountType } from "../common/enums";
+import { create } from "zustand";
+import Decimal from "decimal.js";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import type {} from "@redux-devtools/extension";
-import { create } from "zustand";
+import { DiscountType } from "../common/enums";
 import {
   IProduct,
   IProductBatch,
@@ -13,7 +14,11 @@ import {
   IUserInfo,
   IWarehouse,
 } from "../interfaces";
-import { getCurrentProductUnitPrice, getFinalAmount } from "../utils/data";
+import {
+  getCurrentProductUnitPrice,
+  getFinalAmount,
+  getProductStockQuantity,
+} from "../utils/data";
 
 export interface SelectedLocationState {
   location: IProductBatchLocation;
@@ -132,6 +137,7 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
             "deleteDetail",
           );
         },
+
         updateProductUnit: (productId: string, productUnitId: string) => {
           set(
             (state) => {
@@ -143,10 +149,57 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                   (pu) => pu.productUnitId === productUnitId,
                 );
                 if (newProductUnit) {
+                  // Get the last product unit
+                  const lastProductUnit = detail.productUnit;
+
+                  const newConversionFactor = new Decimal(
+                    newProductUnit.conversionFactor,
+                  );
+                  const lastConversionFactor = new Decimal(
+                    lastProductUnit.conversionFactor,
+                  );
+
+                  const conversionRatio =
+                    newConversionFactor.div(lastConversionFactor);
+
+                  // Update product unit and price
                   detail.productUnit = newProductUnit;
                   detail.unitPrice = getCurrentProductUnitPrice(
                     detail.product,
                     newProductUnit.productUnitId,
+                  );
+
+                  // Convert quantities in selectedBatches and selectedLocations
+                  detail.selectedBatches.forEach((batch) => {
+                    // Convert batch quantity
+                    const batchQuantity = new Decimal(batch.quantity);
+                    const convertedBatchQuantity = batchQuantity
+                      .mul(conversionRatio)
+                      .toDecimalPlaces(2, Decimal.ROUND_HALF_UP)
+                      .toNumber();
+                    batch.quantity = convertedBatchQuantity;
+
+                    // Convert each location's quantity
+                    batch.selectedLocations.forEach((location) => {
+                      const locationQuantity = new Decimal(location.quantity);
+                      const convertedLocationQuantity = locationQuantity
+                        .mul(conversionRatio)
+                        .toDecimalPlaces(2, Decimal.ROUND_HALF_UP)
+                        .toNumber();
+                      location.quantity = convertedLocationQuantity;
+                    });
+                  });
+
+                  // Update total amount and final amount
+                  state.totalAmount = state.exportInvoiceDetails.reduce(
+                    (acc, cur) => acc + cur.quantity * cur.unitPrice,
+                    0,
+                  );
+                  state.finalAmount = getFinalAmount(
+                    state.totalAmount,
+                    state.discountValue,
+                    state.discountType,
+                    state.vatRate,
                   );
                 }
               }
@@ -164,7 +217,15 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
               if (detail) {
                 const previousQuantity = detail.quantity;
 
-                detail.quantity = quantity;
+                // Convert the quantity to the stock unit using getProductStockQuantity
+                const convertedQuantity = getProductStockQuantity(
+                  detail.product,
+                  detail.productUnit.productUnitId,
+                  quantity,
+                );
+
+                detail.quantity = quantity; // Update the detail's quantity
+
                 // Update total amount and final amount
                 state.totalAmount = state.exportInvoiceDetails.reduce(
                   (acc, cur) => acc + cur.quantity * cur.unitPrice,
@@ -177,10 +238,16 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                   state.vatRate,
                 );
 
-                const difference = quantity - previousQuantity;
+                const difference =
+                  convertedQuantity -
+                  getProductStockQuantity(
+                    detail.product,
+                    detail.productUnit.productUnitId,
+                    previousQuantity,
+                  );
 
                 if (difference > 0) {
-                  // Increasing quantity - add sequentially from start to end using for with index
+                  // Increasing quantity - add sequentially from start to end
                   let remainingToAdd = difference;
                   for (
                     let i = 0;
@@ -194,11 +261,14 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                       remainingToAdd > 0;
                       j++
                     ) {
-                      const location = selectedBatch.selectedLocations[j];
+                      const selectedLocation =
+                        selectedBatch.selectedLocations[j];
                       const availableSpace =
-                        location.location.quantity - location.quantity;
+                        selectedLocation.location.quantity -
+                        selectedLocation.quantity;
+
                       const toAdd = Math.min(availableSpace, remainingToAdd);
-                      location.quantity += toAdd;
+                      selectedLocation.quantity += toAdd;
                       remainingToAdd -= toAdd;
                     }
                     // Recalculate batch total quantity
@@ -213,7 +283,7 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                     selectedBatch.quantity = batchTotal;
                   }
                 } else if (difference < 0) {
-                  // Decreasing quantity - remove sequentially from end to start using for with index
+                  // Decreasing quantity - remove sequentially from end to start
                   let remainingToRemove = -difference;
                   for (
                     let i = detail.selectedBatches.length - 1;
@@ -226,12 +296,13 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                       j >= 0 && remainingToRemove > 0;
                       j--
                     ) {
-                      const location = selectedBatch.selectedLocations[j];
+                      const selectedLocation =
+                        selectedBatch.selectedLocations[j];
                       const toRemove = Math.min(
-                        location.quantity,
+                        selectedLocation.quantity,
                         remainingToRemove,
                       );
-                      location.quantity -= toRemove;
+                      selectedLocation.quantity -= toRemove;
                       remainingToRemove -= toRemove;
                     }
                     // Recalculate batch total quantity

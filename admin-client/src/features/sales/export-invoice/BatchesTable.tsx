@@ -51,6 +51,20 @@ const BatchesTable: React.FC<BatchesTableProps> = ({ productId }) => {
       render: (_, record) => record.productBatch.quantity,
     },
     {
+      title: "Đơn vị tính",
+      key: "unit",
+      width: "10%",
+      render: () => {
+        const currentDetailProduct = exportInvoiceDetails.find(
+          (detail) => detail.product.productId === productId,
+        )?.product;
+        const defaultProductUnit = currentDetailProduct?.productUnits.find(
+          (unit) => unit.isDefault,
+        );
+        return defaultProductUnit?.unit.unitName;
+      },
+    },
+    {
       title: "Vị trí",
       key: "locations",
       width: "35%",

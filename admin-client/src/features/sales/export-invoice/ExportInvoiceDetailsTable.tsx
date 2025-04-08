@@ -85,24 +85,44 @@ const ExportInvoiceDetailsTable: React.FC<ExportInvoiceDetailsTableProps> = ({
       title: "Số lượng",
       key: "quantity",
       width: "10%",
-      render: (_, record: ExportInvoiceDetailState) => (
-        <InputNumber
-          value={record.quantity}
-          min={1}
-          max={record.selectedBatches.reduce<number>(
-            (total, batch) => total + batch.productBatch.quantity,
-            0,
-          )}
-          onClick={(e) => e.stopPropagation()}
-          onChange={(value) => {
-            updateQuantity(record.product.productId, value as number);
-            form.setFieldsValue({
-              totalAmount: totalAmount,
-              finalAmount: finalAmount,
-            });
-          }}
-        />
-      ),
+      render: (_, record: ExportInvoiceDetailState) => {
+        const totalBatchQuantity = record.selectedBatches.reduce<number>(
+          (total, batch) => total + batch.productBatch.quantity,
+          0,
+        );
+        const currentDetail = exportInvoiceDetails.find(
+          (detail) => detail.product.productId === record.product.productId,
+        );
+
+        const currentConversionFactor =
+          currentDetail?.product.productUnits.find(
+            (pu) =>
+              pu.productUnitId === currentDetail?.productUnit.productUnitId,
+          )?.conversionFactor;
+        const defaultConversionFactor =
+          currentDetail?.product.productUnits.find(
+            (pu) => pu.isDefault,
+          )?.conversionFactor;
+        const maxStockQuantity =
+          (totalBatchQuantity * defaultConversionFactor!) /
+          currentConversionFactor!;
+
+        return (
+          <InputNumber
+            value={record.quantity}
+            min={1}
+            max={maxStockQuantity}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(value) => {
+              updateQuantity(record.product.productId, value as number);
+              form.setFieldsValue({
+                totalAmount: totalAmount,
+                finalAmount: finalAmount,
+              });
+            }}
+          />
+        );
+      },
     },
     {
       title: "Đơn giá",
