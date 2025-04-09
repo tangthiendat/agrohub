@@ -78,6 +78,68 @@ const initialState = {
   exportInvoiceDetails: [] as ExportInvoiceDetailState[],
 };
 
+const allocateQuantities = (
+  detail: ExportInvoiceDetailState,
+  difference: number,
+) => {
+  if (difference > 0) {
+    // Increasing quantity - add sequentially from start to end
+    let remainingToAdd = difference;
+    for (
+      let i = 0;
+      i < detail.selectedBatches.length && remainingToAdd > 0;
+      i++
+    ) {
+      const selectedBatch = detail.selectedBatches[i];
+      for (
+        let j = 0;
+        j < selectedBatch.selectedLocations.length && remainingToAdd > 0;
+        j++
+      ) {
+        const selectedLocation = selectedBatch.selectedLocations[j];
+        const availableSpace =
+          selectedLocation.location.quantity - selectedLocation.quantity;
+
+        const toAdd = Math.min(availableSpace, remainingToAdd);
+        selectedLocation.quantity += toAdd;
+        remainingToAdd -= toAdd;
+      }
+      // Recalculate batch total quantity
+      let batchTotal = 0;
+      for (let j = 0; j < selectedBatch.selectedLocations.length; j++) {
+        batchTotal += selectedBatch.selectedLocations[j].quantity;
+      }
+      selectedBatch.quantity = batchTotal;
+    }
+  } else if (difference < 0) {
+    // Decreasing quantity - remove sequentially from end to start
+    let remainingToRemove = -difference;
+    for (
+      let i = detail.selectedBatches.length - 1;
+      i >= 0 && remainingToRemove > 0;
+      i--
+    ) {
+      const selectedBatch = detail.selectedBatches[i];
+      for (
+        let j = selectedBatch.selectedLocations.length - 1;
+        j >= 0 && remainingToRemove > 0;
+        j--
+      ) {
+        const selectedLocation = selectedBatch.selectedLocations[j];
+        const toRemove = Math.min(selectedLocation.quantity, remainingToRemove);
+        selectedLocation.quantity -= toRemove;
+        remainingToRemove -= toRemove;
+      }
+      // Recalculate batch total quantity
+      let batchTotal = 0;
+      for (let j = 0; j < selectedBatch.selectedLocations.length; j++) {
+        batchTotal += selectedBatch.selectedLocations[j].quantity;
+      }
+      selectedBatch.quantity = batchTotal;
+    }
+  }
+};
+
 export const useExportInvoiceStore = create<ExportInvoiceState>()(
   devtools(
     persist(
@@ -137,7 +199,6 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
             "deleteDetail",
           );
         },
-
         updateProductUnit: (productId: string, productUnitId: string) => {
           set(
             (state) => {
@@ -168,6 +229,9 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                     detail.product,
                     newProductUnit.productUnitId,
                   );
+
+                  const previousQuantity = detail.quantity;
+                  detail.quantity = 1;
 
                   // Convert quantities in selectedBatches and selectedLocations
                   detail.selectedBatches.forEach((batch) => {
@@ -201,6 +265,23 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                     state.discountType,
                     state.vatRate,
                   );
+
+                  // Allocate quantities to batches and locations
+                  const convertedQuantity = getProductStockQuantity(
+                    detail.product,
+                    detail.productUnit.productUnitId,
+                    detail.quantity,
+                  );
+
+                  const difference =
+                    convertedQuantity -
+                    getProductStockQuantity(
+                      detail.product,
+                      detail.productUnit.productUnitId,
+                      previousQuantity,
+                    );
+
+                  allocateQuantities(detail, difference);
                 }
               }
             },
@@ -246,77 +327,7 @@ export const useExportInvoiceStore = create<ExportInvoiceState>()(
                     previousQuantity,
                   );
 
-                if (difference > 0) {
-                  // Increasing quantity - add sequentially from start to end
-                  let remainingToAdd = difference;
-                  for (
-                    let i = 0;
-                    i < detail.selectedBatches.length && remainingToAdd > 0;
-                    i++
-                  ) {
-                    const selectedBatch = detail.selectedBatches[i];
-                    for (
-                      let j = 0;
-                      j < selectedBatch.selectedLocations.length &&
-                      remainingToAdd > 0;
-                      j++
-                    ) {
-                      const selectedLocation =
-                        selectedBatch.selectedLocations[j];
-                      const availableSpace =
-                        selectedLocation.location.quantity -
-                        selectedLocation.quantity;
-
-                      const toAdd = Math.min(availableSpace, remainingToAdd);
-                      selectedLocation.quantity += toAdd;
-                      remainingToAdd -= toAdd;
-                    }
-                    // Recalculate batch total quantity
-                    let batchTotal = 0;
-                    for (
-                      let j = 0;
-                      j < selectedBatch.selectedLocations.length;
-                      j++
-                    ) {
-                      batchTotal += selectedBatch.selectedLocations[j].quantity;
-                    }
-                    selectedBatch.quantity = batchTotal;
-                  }
-                } else if (difference < 0) {
-                  // Decreasing quantity - remove sequentially from end to start
-                  let remainingToRemove = -difference;
-                  for (
-                    let i = detail.selectedBatches.length - 1;
-                    i >= 0 && remainingToRemove > 0;
-                    i--
-                  ) {
-                    const selectedBatch = detail.selectedBatches[i];
-                    for (
-                      let j = selectedBatch.selectedLocations.length - 1;
-                      j >= 0 && remainingToRemove > 0;
-                      j--
-                    ) {
-                      const selectedLocation =
-                        selectedBatch.selectedLocations[j];
-                      const toRemove = Math.min(
-                        selectedLocation.quantity,
-                        remainingToRemove,
-                      );
-                      selectedLocation.quantity -= toRemove;
-                      remainingToRemove -= toRemove;
-                    }
-                    // Recalculate batch total quantity
-                    let batchTotal = 0;
-                    for (
-                      let j = 0;
-                      j < selectedBatch.selectedLocations.length;
-                      j++
-                    ) {
-                      batchTotal += selectedBatch.selectedLocations[j].quantity;
-                    }
-                    selectedBatch.quantity = batchTotal;
-                  }
-                }
+                allocateQuantities(detail, difference);
               }
             },
             false,
