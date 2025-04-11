@@ -40,8 +40,8 @@ public class ProductBatch extends Auditable {
     @Column(nullable = false)
     LocalDate receivedDate;
 
-    @Column(nullable = false)
-    Integer quantity;
+    @Column(scale = 2, nullable = false)
+    Double quantity;
 
     @OneToMany(mappedBy = "productBatch",fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<ProductBatchLocation> batchLocations;

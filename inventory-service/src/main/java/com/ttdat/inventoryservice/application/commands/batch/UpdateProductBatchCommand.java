@@ -24,7 +24,7 @@ public class UpdateProductBatchCommand {
 
     LocalDate receivedDate;
 
-    Integer quantity;
+    Double quantity;
 
     List<CmdProductBatchLocation> batchLocations;
 }

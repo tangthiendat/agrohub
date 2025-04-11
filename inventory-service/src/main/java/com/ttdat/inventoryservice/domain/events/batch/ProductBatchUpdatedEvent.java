@@ -25,7 +25,7 @@ public class ProductBatchUpdatedEvent {
 
     LocalDate receivedDate;
 
-    Integer quantity;
+    Double quantity;
 
     List<EvtProductBatchLocation> batchLocations;
 }

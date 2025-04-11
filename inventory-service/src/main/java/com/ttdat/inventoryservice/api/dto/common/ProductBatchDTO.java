@@ -35,8 +35,7 @@ public class ProductBatchDTO {
     LocalDate receivedDate;
 
     @NotNull(message = "Quantity is required")
-    @Positive(message = "Quantity must be greater than 0")
-    Integer quantity;
+    Double quantity;
 
     @Valid
     List<ProductBatchLocationDTO> batchLocations;
