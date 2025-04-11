@@ -49,7 +49,7 @@ public class ImportInvoice extends Auditable {
     @Column(length = 20)
     DiscountType discountType;
 
-    @Column(precision = 2, scale = 2)
+    @Column(precision = 5, scale = 2)
     BigDecimal vatRate;
 
     @Column(precision = 15, scale = 2)
