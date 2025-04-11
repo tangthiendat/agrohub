@@ -19,6 +19,7 @@ import {
 } from "../../../store/export-invoice-store";
 import { formatCurrency, parseCurrency } from "../../../utils/number";
 import { DiscountType } from "../../../common/enums";
+import { convertKeysToSnakeCase } from "../../../utils/data";
 
 interface ExportInvoiceFormProps {
   form: FormInstance;
@@ -97,10 +98,25 @@ const ExportInvoiceForm: React.FC<ExportInvoiceFormProps> = ({ form }) => {
           productUnitId: detail.productUnit.productUnitId,
           quantity: detail.quantity,
           unitPrice: detail.unitPrice,
+          detailBatches: detail.selectedBatches
+            .filter((batch) => batch.quantity > 0)
+            .map((selectedBatch) => ({
+              batchId: selectedBatch.productBatch.batchId,
+              quantity: selectedBatch.quantity,
+              batchLocations: selectedBatch.selectedLocations
+                .filter((selectedLocation) => selectedLocation.quantity > 0)
+                .map((selectedLocation) => ({
+                  batchLocationId: selectedLocation.location.batchLocationId!,
+                  quantity: selectedLocation.quantity,
+                })),
+            })),
         }),
       ),
     };
-    console.log("New Export Invoice: ", newExportInvoice);
+    console.log(
+      "New Export Invoice: ",
+      convertKeysToSnakeCase(newExportInvoice),
+    );
   }
 
   return (

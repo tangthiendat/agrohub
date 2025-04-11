@@ -2,7 +2,7 @@ package com.ttdat.purchaseservice.api.dto.common;
 
 import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.core.api.dto.response.WarehouseInfo;
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
+import com.ttdat.core.domain.entities.DiscountType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

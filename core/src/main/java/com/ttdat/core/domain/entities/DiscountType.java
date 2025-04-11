@@ -1,4 +1,4 @@
-package com.ttdat.purchaseservice.domain.entities;
+package com.ttdat.core.domain.entities;
 
 public enum DiscountType {
     PERCENTAGE,

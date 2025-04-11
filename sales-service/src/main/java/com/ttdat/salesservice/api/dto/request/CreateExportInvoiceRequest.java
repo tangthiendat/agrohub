@@ -1,7 +1,6 @@
-package com.ttdat.purchaseservice.api.dto.request;
+package com.ttdat.salesservice.api.dto.request;
 
 import com.ttdat.core.domain.entities.DiscountType;
-import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -17,32 +16,30 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreatePurchaseOrderRequest {
+public class CreateExportInvoiceRequest {
     @NotNull(message = "Warehouse ID is required")
     Long warehouseId;
 
-    @NotBlank(message = "Supplier ID is required")
-    String supplierId;
+    @NotBlank(message = "Customer ID is required")
+    String customerId;
 
     @NotBlank(message = "User ID is required")
     @Size(max = 50, message = "User ID must not exceed 50 characters")
     String userId;
 
-    @NotNull(message = "Order date is required")
+    @NotNull(message = "Created date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    LocalDate orderDate;
+    LocalDate createdDate;
 
-    @NotNull(message = "Expected delivery date is required")
-    @Future(message = "Expected delivery date must be in the future")
-    LocalDate expectedDeliveryDate;
-
-    @NotNull(message = "Status is required")
-    PurchaseOrderStatus status;
+    @Size(max = 255, message = "Note must not exceed 255 characters")
+    String note;
 
     @Valid
-    @NotEmpty(message = "Purchase order details are required")
-    List<CreatePurchaseOrderDetailRequest> purchaseOrderDetails;
+    @NotEmpty(message = "Export invoice details are required")
+    List<CreateExportInvoiceDetailRequest> exportInvoiceDetails;
 
+    @NotNull(message = "Total amount is required")
+    @DecimalMin(value = "0", message = "Final amount must not be negative")
     @Digits(integer = 13, fraction = 2, message = "Total amount must have at most 13 digits and 2 decimal places")
     BigDecimal totalAmount;
 
@@ -61,7 +58,4 @@ public class CreatePurchaseOrderRequest {
     @DecimalMin(value = "0", message = "Final amount must not be negative")
     @Digits(integer = 13, fraction = 2, message = "Final amount must have at most 13 digits and 2 decimal places")
     BigDecimal finalAmount;
-
-    @Size(max = 255, message = "Note must not exceed 255 characters")
-    String note;
 }

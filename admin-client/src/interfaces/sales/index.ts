@@ -1,10 +1,22 @@
 import { DiscountType } from "../../common/enums";
 
+export interface CreateDetailBatchLocation {
+  batchLocationId: string;
+  quantity: number;
+}
+
+export interface CreateDetailBatch {
+  batchId: string;
+  quantity: number;
+  batchLocations: CreateDetailBatchLocation[];
+}
+
 export interface CreateExportInvoiceDetail {
   productId: string;
   productUnitId: string;
   quantity: number;
   unitPrice: number;
+  detailBatches: CreateDetailBatch[];
 }
 
 export interface CreateExportInvoiceRequest {

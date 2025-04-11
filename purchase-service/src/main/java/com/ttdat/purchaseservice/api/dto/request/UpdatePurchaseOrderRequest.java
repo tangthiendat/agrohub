@@ -1,6 +1,6 @@
 package com.ttdat.purchaseservice.api.dto.request;
 
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;

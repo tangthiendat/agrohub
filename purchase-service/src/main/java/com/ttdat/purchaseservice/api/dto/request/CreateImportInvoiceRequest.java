@@ -1,10 +1,11 @@
 package com.ttdat.purchaseservice.api.dto.request;
 
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
+import com.ttdat.core.domain.entities.DiscountType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ public class CreateImportInvoiceRequest {
     String userId;
 
     @NotNull(message = "Created date is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate createdDate;
 
     @Size(max = 255, message = "Note must not exceed 255 characters")
