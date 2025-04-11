@@ -16,9 +16,6 @@ import org.axonframework.commandhandling.distributed.AnnotationRoutingStrategy;
 import org.axonframework.commandhandling.distributed.RoutingStrategy;
 import org.axonframework.config.ConfigurerModule;
 import org.axonframework.eventhandling.EventBus;
-import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
-import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
-import org.axonframework.eventsourcing.Snapshotter;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 import org.axonframework.queryhandling.QueryBus;
 import org.axonframework.queryhandling.QueryUpdateEmitter;
@@ -100,11 +97,6 @@ public class AxonConfig {
                 .build();
         axonServerEventStore.registerDispatchInterceptor(new MetadataDispatchInterceptor());
         return axonServerEventStore;
-    }
-
-    @Bean
-    public SnapshotTriggerDefinition productSnapshotTriggerDefinition(Snapshotter snapshotter) {
-        return new EventCountSnapshotTriggerDefinition(snapshotter, 100);
     }
 
 }

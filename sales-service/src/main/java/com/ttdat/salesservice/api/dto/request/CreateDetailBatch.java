@@ -25,5 +25,5 @@ public class CreateDetailBatch {
     @NotNull(message = "Batch locations are required")
     @Size(min = 1, message = "At least one batch location is required")
     @Valid
-    List<CreateDetailBatchLocation> batchLocations;
+    List<CreateDetailBatchLocation> detailBatchLocations;
 }
