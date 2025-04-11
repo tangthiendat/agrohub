@@ -1,6 +1,6 @@
 package com.ttdat.debtservice.application.mappers;
 
-import com.ttdat.core.domain.events.DebtAccountCreatedEvent;
+import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import com.ttdat.debtservice.api.dto.common.DebtAccountDTO;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccount;
 import com.ttdat.debtservice.domain.entities.DebtAccount;

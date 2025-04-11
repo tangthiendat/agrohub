@@ -1,6 +1,6 @@
 package com.ttdat.inventoryservice.application.handlers.event;
 
-import com.ttdat.core.domain.events.ProductStockAddedEvent;
+import com.ttdat.inventoryservice.domain.events.stock.ProductStockAddedEvent;
 import com.ttdat.inventoryservice.application.mappers.ProductStockMapper;
 import com.ttdat.inventoryservice.domain.entities.ProductStock;
 import com.ttdat.inventoryservice.domain.repositories.ProductStockRepository;

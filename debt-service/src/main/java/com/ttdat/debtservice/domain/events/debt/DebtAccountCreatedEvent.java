@@ -1,4 +1,4 @@
-package com.ttdat.core.domain.events;
+package com.ttdat.debtservice.domain.events.debt;
 
 import com.ttdat.core.domain.entities.DebtPartyType;
 import com.ttdat.core.domain.entities.DebtSourceType;

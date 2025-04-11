@@ -2,7 +2,7 @@ package com.ttdat.debtservice.application.handlers.event;
 
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
-import com.ttdat.core.domain.events.DebtAccountCreatedEvent;
+import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import com.ttdat.debtservice.application.commands.transaction.CreateDebtTransactionCommand;
 import com.ttdat.debtservice.application.mappers.DebtAccountMapper;
 import com.ttdat.debtservice.application.repositories.DebtAccountRepository;

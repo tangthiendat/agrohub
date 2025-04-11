@@ -1,4 +1,4 @@
-package com.ttdat.core.domain.events;
+package com.ttdat.inventoryservice.domain.events.stock;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

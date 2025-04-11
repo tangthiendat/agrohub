@@ -1,7 +1,7 @@
 package com.ttdat.debtservice.application.handlers.command;
 
 import com.ttdat.core.application.commands.debt.CreateDebtAccountCommand;
-import com.ttdat.core.domain.events.DebtAccountCreatedEvent;
+import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import com.ttdat.debtservice.application.commands.debt.UpdateDebtAccountAmountCommand;
 import com.ttdat.debtservice.domain.events.debt.DebtAccountAmountUpdatedEvent;
 import lombok.RequiredArgsConstructor;
