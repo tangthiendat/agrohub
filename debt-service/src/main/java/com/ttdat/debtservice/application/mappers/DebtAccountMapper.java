@@ -1,9 +1,9 @@
 package com.ttdat.debtservice.application.mappers;
 
-import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import com.ttdat.debtservice.api.dto.common.DebtAccountDTO;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccount;
 import com.ttdat.debtservice.domain.entities.DebtAccount;
+import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

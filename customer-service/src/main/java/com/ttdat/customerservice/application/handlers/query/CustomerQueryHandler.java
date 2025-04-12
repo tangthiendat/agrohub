@@ -1,5 +1,10 @@
 package com.ttdat.customerservice.application.handlers.query;
 
+import com.ttdat.core.api.dto.response.CustomerInfo;
+import com.ttdat.core.application.exceptions.ErrorCode;
+import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.core.application.queries.customer.GetCustomerInfoByIdQuery;
+import com.ttdat.core.application.queries.customer.SearchCustomerIdListQuery;
 import com.ttdat.customerservice.api.dto.CustomerDTO;
 import com.ttdat.customerservice.api.dto.response.CustomerPageResult;
 import com.ttdat.customerservice.application.mappers.CustomerMapper;
@@ -62,5 +67,19 @@ public class CustomerQueryHandler {
         Specification<Customer> customerSpec = getCustomerSpec(Map.of("query", searchCustomerQuery.getQuery()));
         List<Customer> customers = customerRepository.findAll(customerSpec);
         return customerMapper.toDTOList(customers);
+    }
+
+    @QueryHandler
+    public CustomerInfo handle(GetCustomerInfoByIdQuery getCustomerInfoByIdQuery) {
+        Customer customer = customerRepository.findById(getCustomerInfoByIdQuery.getCustomerId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND));
+        return customerMapper.toCustomerInfo(customer);
+    }
+
+    @QueryHandler
+    public List<String> handle(SearchCustomerIdListQuery searchCustomerIdListQuery){
+        Specification<Customer> customerSpec = getCustomerSpec(searchCustomerIdListQuery.getFilterParams());
+        List<Customer> customers = customerRepository.findAll(customerSpec);
+        return customers.stream().map(Customer::getCustomerId).toList();
     }
 }

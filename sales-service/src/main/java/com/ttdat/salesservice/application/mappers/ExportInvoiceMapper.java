@@ -1,5 +1,6 @@
 package com.ttdat.salesservice.application.mappers;
 
+import com.ttdat.salesservice.api.dto.common.ExportInvoiceDTO;
 import com.ttdat.salesservice.domain.entities.ExportInvoice;
 import com.ttdat.salesservice.domain.events.exportinvoice.ExportInvoiceCreatedEvent;
 import org.mapstruct.*;
@@ -7,7 +8,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         uses = {ExportInvoiceDetailMapper.class})
-public interface ExportInvoiceMapper {
+public interface ExportInvoiceMapper extends EntityMapper<ExportInvoiceDTO, ExportInvoice> {
     ExportInvoice toEntity(ExportInvoiceCreatedEvent exportInvoiceCreatedEvent);
 
     @AfterMapping

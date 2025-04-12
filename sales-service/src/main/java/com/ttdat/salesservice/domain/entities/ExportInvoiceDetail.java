@@ -36,6 +36,6 @@ public class ExportInvoiceDetail {
     @Column(precision = 15, scale = 2, nullable = false)
     BigDecimal unitPrice;
 
-    @OneToMany(mappedBy = "exportInvoiceDetail", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "exportInvoiceDetail", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     List<ExportInvoiceDetailBatch> detailBatches;
 }

@@ -1,7 +1,7 @@
 package com.ttdat.purchaseservice.domain.aggregate;
 
-import com.ttdat.purchaseservice.application.commands.importinvoice.CreateImportInvoiceCommand;
 import com.ttdat.core.domain.entities.DiscountType;
+import com.ttdat.purchaseservice.application.commands.importinvoice.CreateImportInvoiceCommand;
 import com.ttdat.purchaseservice.domain.events.importinvoice.ImportInvoiceCreatedEvent;
 import com.ttdat.purchaseservice.domain.valueobject.EvtImportInvoiceDetail;
 import lombok.NoArgsConstructor;

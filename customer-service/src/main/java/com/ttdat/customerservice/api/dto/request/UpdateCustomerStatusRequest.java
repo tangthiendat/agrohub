@@ -1,6 +1,5 @@
 package com.ttdat.customerservice.api.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

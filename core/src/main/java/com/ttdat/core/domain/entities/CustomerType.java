@@ -1,4 +1,4 @@
-package com.ttdat.customerservice.domain.entities;
+package com.ttdat.core.domain.entities;
 
 public enum CustomerType {
     INDIVIDUAL,

@@ -1,7 +1,10 @@
 package com.ttdat.inventoryservice.domain.entities;
 
 import com.ttdat.inventoryservice.infrastructure.audit.Auditable;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;

@@ -1,8 +1,8 @@
 package com.ttdat.inventoryservice.application.mappers;
 
-import com.ttdat.inventoryservice.domain.events.stock.ProductStockAddedEvent;
 import com.ttdat.inventoryservice.api.dto.common.ProductStockDTO;
 import com.ttdat.inventoryservice.domain.entities.ProductStock;
+import com.ttdat.inventoryservice.domain.events.stock.ProductStockAddedEvent;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

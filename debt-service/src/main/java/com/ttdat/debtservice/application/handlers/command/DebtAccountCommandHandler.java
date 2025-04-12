@@ -1,9 +1,9 @@
 package com.ttdat.debtservice.application.handlers.command;
 
 import com.ttdat.core.application.commands.debt.CreateDebtAccountCommand;
-import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import com.ttdat.debtservice.application.commands.debt.UpdateDebtAccountAmountCommand;
 import com.ttdat.debtservice.domain.events.debt.DebtAccountAmountUpdatedEvent;
+import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;

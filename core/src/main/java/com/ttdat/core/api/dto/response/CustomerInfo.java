@@ -1,18 +1,15 @@
-package com.ttdat.customerservice.domain.events.customer;
+package com.ttdat.core.api.dto.response;
 
 import com.ttdat.core.domain.entities.CustomerType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class CustomerCreatedEvent {
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class CustomerInfo {
     String customerId;
 
     String customerName;
