@@ -1,6 +1,7 @@
 package com.ttdat.salesservice.application.handlers.query;
 
 import com.ttdat.core.api.dto.response.*;
+import com.ttdat.core.application.queries.customer.GetCustomerInfoByIdQuery;
 import com.ttdat.core.application.queries.customer.SearchCustomerIdListQuery;
 import com.ttdat.core.application.queries.inventory.GetProductBatchInfoByIdQuery;
 import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
@@ -64,6 +65,11 @@ public class ExportInvoiceQueryHandler {
                                     .build();
                             UserInfo userInfo = queryGateway.query(getUserInfoByIdQuery, ResponseTypes.instanceOf(UserInfo.class)).join();
                             exportInvoiceDTO.setUser(userInfo);
+                            GetCustomerInfoByIdQuery getCustomerInfoByIdQuery = GetCustomerInfoByIdQuery.builder()
+                                    .customerId(exportInvoice.getCustomerId())
+                                    .build();
+                            CustomerInfo customerInfo = queryGateway.query(getCustomerInfoByIdQuery, ResponseTypes.instanceOf(CustomerInfo.class)).join();
+                            exportInvoiceDTO.setCustomer(customerInfo);
                             List<ExportInvoiceDetailDTO> exportInvoiceDetails = exportInvoice.getExportInvoiceDetails().stream()
                                     .map(exportInvoiceDetail -> {
                                         ExportInvoiceDetailDTO importInvoiceDetailDTO = exportInvoiceDetailMapper.toDTO(exportInvoiceDetail);
