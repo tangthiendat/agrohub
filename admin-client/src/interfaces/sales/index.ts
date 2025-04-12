@@ -8,7 +8,7 @@ export interface CreateDetailBatchLocation {
 export interface CreateDetailBatch {
   batchId: string;
   quantity: number;
-  batchLocations: CreateDetailBatchLocation[];
+  detailBatchLocations: CreateDetailBatchLocation[];
 }
 
 export interface CreateExportInvoiceDetail {

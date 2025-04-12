@@ -2,6 +2,7 @@ package com.ttdat.debtservice.application.handlers.event;
 
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.debtservice.domain.entities.DebtTransaction;
 import com.ttdat.debtservice.domain.events.debt.DebtAccountCreatedEvent;
 import com.ttdat.debtservice.application.commands.transaction.CreateDebtTransactionCommand;
 import com.ttdat.debtservice.application.mappers.DebtAccountMapper;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -34,15 +36,24 @@ public class DebtAccountEventHandler {
     @EventHandler
     public void on(DebtAccountCreatedEvent debtAccountCreatedEvent) {
         DebtAccount debtAccount = debtAccountMapper.toEntity(debtAccountCreatedEvent);
+        debtAccount.setDebtTransactions(
+                List.of(DebtTransaction.builder()
+                        .debtTransactionId(idGeneratorService.generateTransactionId())
+                        .debtAccount(debtAccount)
+                        .transactionType(DebtTransactionType.DEBT)
+                        .amount(debtAccount.getTotalAmount())
+                        .sourceId(debtAccount.getSourceId())
+                        .build())
+        );
         debtAccountRepository.save(debtAccount);
-        CreateDebtTransactionCommand createDebtTransactionCommand = CreateDebtTransactionCommand.builder()
-                .debtTransactionId(idGeneratorService.generateTransactionId())
-                .debtAccountId(debtAccount.getDebtAccountId())
-                .transactionType(DebtTransactionType.DEBT)
-                .amount(debtAccount.getTotalAmount())
-                .sourceId(debtAccount.getSourceId())
-                .build();
-        commandGateway.send(createDebtTransactionCommand);
+//        CreateDebtTransactionCommand createDebtTransactionCommand = CreateDebtTransactionCommand.builder()
+//                .debtTransactionId(idGeneratorService.generateTransactionId())
+//                .debtAccountId(debtAccount.getDebtAccountId())
+//                .transactionType(DebtTransactionType.DEBT)
+//                .amount(debtAccount.getTotalAmount())
+//                .sourceId(debtAccount.getSourceId())
+//                .build();
+//        commandGateway.sendAndWait(createDebtTransactionCommand);
     }
 
     private DebtAccount getDebtAccountById(String debtAccountId) {

@@ -22,3 +22,5 @@ export * from "./debt/debt-account-service.ts";
 export * from "./debt/payment-service.ts";
 
 export * from "./customer/customer-service.ts";
+
+export * from "./sales/export-invoice-service.ts";

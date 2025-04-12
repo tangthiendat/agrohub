@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ReloadOutlined, SaveFilled } from "@ant-design/icons";
 import { Button, Form, Modal, Space } from "antd";
 import { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import ExportInvoiceDetailsTable from "./ExportInvoiceDetailsTable";
 import { useCurrentUserInfo, useCurrentWarehouse } from "../../../common/hooks";
 import { IProduct } from "../../../interfaces";
 import { useExportInvoiceStore } from "../../../store/export-invoice-store";
-import { productBatchService } from "../../../services";
+import { exportInvoiceService, productBatchService } from "../../../services";
 
 const NewExportInvoice: React.FC = () => {
   const [form] = Form.useForm();
@@ -44,6 +44,22 @@ const NewExportInvoice: React.FC = () => {
     queryFn: () => productBatchService.getByProductId(currentProductId!),
     enabled: !!currentProductId,
     select: (data) => data.payload,
+  });
+
+  const { mutate: createExportInvoice, isPending: isCreating } = useMutation({
+    mutationFn: exportInvoiceService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("export-invoices") ||
+          query.queryKey.includes("product-locations") ||
+          query.queryKey.includes("product-batches") ||
+          query.queryKey.includes("products") ||
+          query.queryKey.includes("debt-accounts"),
+      });
+      form.resetFields();
+      reset();
+    },
   });
 
   useEffect(() => {
@@ -104,7 +120,7 @@ const NewExportInvoice: React.FC = () => {
                 });
                 toast.success("Làm mới thành công");
               }}
-              // loading={isCreating}
+              loading={isCreating}
             >
               Làm mới
             </Button>
@@ -112,13 +128,16 @@ const NewExportInvoice: React.FC = () => {
               icon={<SaveFilled />}
               type="primary"
               onClick={() => form.submit()}
-              // loading={isCreating}
+              loading={isCreating}
             >
               Lưu
             </Button>
           </Space>
         </div>
-        <ExportInvoiceForm form={form} />
+        <ExportInvoiceForm
+          form={form}
+          createExportInvoice={createExportInvoice}
+        />
 
         <div className="flex items-center justify-between">
           <SearchProductBar

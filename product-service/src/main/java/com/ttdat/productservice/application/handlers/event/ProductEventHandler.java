@@ -1,10 +1,12 @@
 package com.ttdat.productservice.application.handlers.event;
 
+import com.ttdat.core.application.exceptions.BusinessException;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.productservice.application.mappers.ProductMapper;
 import com.ttdat.productservice.domain.entities.Product;
 import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
+import com.ttdat.productservice.domain.events.product.ProductTotalQuantityReducedEvent;
 import com.ttdat.productservice.domain.events.product.ProductTotalQuantityUpdatedEvent;
 import com.ttdat.productservice.domain.events.product.ProductUpdatedEvent;
 import com.ttdat.productservice.domain.repositories.ProductRepository;
@@ -45,14 +47,28 @@ public class ProductEventHandler {
 
     @Transactional
     @EventHandler
-    public void on(ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent){
+    public void on(ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent) {
         Product product = getProductById(productTotalQuantityUpdatedEvent.getProductId());
-        if(product.getTotalQuantity() == null){
+        if (product.getTotalQuantity() == null) {
             product.setTotalQuantity(productTotalQuantityUpdatedEvent.getQuantity());
         } else {
             product.setTotalQuantity(product.getTotalQuantity() + productTotalQuantityUpdatedEvent.getQuantity());
         }
         productRepository.save(product);
+    }
+
+    @Transactional
+    @EventHandler
+    public void on(ProductTotalQuantityReducedEvent productTotalQuantityReducedEvent) {
+        log.info("ProductTotalQuantityReducedEvent: {}", productTotalQuantityReducedEvent);
+        Product product = getProductById(productTotalQuantityReducedEvent.getProductId());
+        if (product.getTotalQuantity() == null || product.getTotalQuantity() < productTotalQuantityReducedEvent.getQuantity()) {
+            throw new BusinessException(ErrorCode.PRODUCT_OUT_OF_STOCK);
+        } else {
+            product.setTotalQuantity(product.getTotalQuantity() - productTotalQuantityReducedEvent.getQuantity());
+            productRepository.save(product);
+        }
+
     }
 
 }

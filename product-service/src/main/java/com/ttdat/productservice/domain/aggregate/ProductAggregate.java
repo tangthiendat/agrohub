@@ -1,10 +1,14 @@
 package com.ttdat.productservice.domain.aggregate;
 
+import com.ttdat.core.application.commands.product.ReduceProductTotalQuantityCommand;
 import com.ttdat.core.application.commands.product.UpdateProductTotalQuantityCommand;
+import com.ttdat.core.application.exceptions.BusinessException;
+import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.productservice.application.commands.product.CreateProductCommand;
 import com.ttdat.productservice.application.commands.product.UpdateProductCommand;
 import com.ttdat.productservice.domain.entities.PhysicalState;
 import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
+import com.ttdat.productservice.domain.events.product.ProductTotalQuantityReducedEvent;
 import com.ttdat.productservice.domain.events.product.ProductTotalQuantityUpdatedEvent;
 import com.ttdat.productservice.domain.events.product.ProductUpdatedEvent;
 import com.ttdat.productservice.domain.valueobject.EvtProductUnit;
@@ -141,12 +145,21 @@ public class ProductAggregate {
     }
 
     @CommandHandler
-    public void handle(UpdateProductTotalQuantityCommand updateProductTotalQuantityCommand){
+    public void handle(UpdateProductTotalQuantityCommand updateProductTotalQuantityCommand) {
         ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent = ProductTotalQuantityUpdatedEvent.builder()
                 .productId(updateProductTotalQuantityCommand.getProductId())
                 .quantity(updateProductTotalQuantityCommand.getQuantity())
                 .build();
         AggregateLifecycle.apply(productTotalQuantityUpdatedEvent);
+    }
+
+    @CommandHandler
+    public void handle(ReduceProductTotalQuantityCommand reduceProductTotalQuantityCommand) {
+        ProductTotalQuantityReducedEvent productTotalQuantityReducedEvent = ProductTotalQuantityReducedEvent.builder()
+                .productId(reduceProductTotalQuantityCommand.getProductId())
+                .quantity(reduceProductTotalQuantityCommand.getQuantity())
+                .build();
+        AggregateLifecycle.apply(productTotalQuantityReducedEvent);
     }
 
     @EventSourcingHandler
@@ -185,11 +198,20 @@ public class ProductAggregate {
     }
 
     @EventSourcingHandler
-    public void on(ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent){
-        if(this.totalQuantity == null){
+    public void on(ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent) {
+        if (this.totalQuantity == null) {
             this.totalQuantity = 0.0;
         }
         totalQuantity += productTotalQuantityUpdatedEvent.getQuantity();
+    }
+
+    @EventSourcingHandler
+    public void on(ProductTotalQuantityReducedEvent productTotalQuantityReducedEvent) {
+        if (this.totalQuantity == null || this.totalQuantity < productTotalQuantityReducedEvent.getQuantity()) {
+            throw new BusinessException(ErrorCode.PRODUCT_OUT_OF_STOCK);
+        } else {
+            totalQuantity -= productTotalQuantityReducedEvent.getQuantity();
+        }
     }
 
 }

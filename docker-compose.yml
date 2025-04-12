@@ -79,3 +79,16 @@ services:
       - "8085:8085"
     networks:
       - agrohub
+
+  sales-service:
+    build:
+      context: .
+      dockerfile: sales-service/Dockerfile.dev
+    image: agrohub/sales-service:dev
+    container_name: sales-service
+    env_file:
+      - sales-service/.env.docker
+    ports:
+      - "8086:8086"
+    networks:
+      - agrohub

@@ -1,3 +1,4 @@
+import { UseMutateFunction } from "@tanstack/react-query";
 import {
   Card,
   DatePicker,
@@ -9,23 +10,37 @@ import {
   Select,
 } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import { useShallow } from "zustand/react/shallow";
 import { useEffect } from "react";
-import SearchCustomerBar from "../customer/SearchCustomerBar";
-import { CreateExportInvoiceRequest, ICustomer } from "../../../interfaces";
+import { useShallow } from "zustand/react/shallow";
+import { DiscountType } from "../../../common/enums";
+import {
+  ApiResponse,
+  CreateExportInvoiceRequest,
+  ICustomer,
+} from "../../../interfaces";
 import {
   ExportInvoiceDetailState,
   useExportInvoiceStore,
 } from "../../../store/export-invoice-store";
-import { formatCurrency, parseCurrency } from "../../../utils/number";
-import { DiscountType } from "../../../common/enums";
 import { convertKeysToSnakeCase } from "../../../utils/data";
+import { formatCurrency, parseCurrency } from "../../../utils/number";
+import SearchCustomerBar from "../customer/SearchCustomerBar";
+import toast from "react-hot-toast";
 
 interface ExportInvoiceFormProps {
   form: FormInstance;
+  createExportInvoice: UseMutateFunction<
+    ApiResponse<void>,
+    Error,
+    CreateExportInvoiceRequest,
+    unknown
+  >;
 }
 
-const ExportInvoiceForm: React.FC<ExportInvoiceFormProps> = ({ form }) => {
+const ExportInvoiceForm: React.FC<ExportInvoiceFormProps> = ({
+  form,
+  createExportInvoice,
+}) => {
   const [modal, contextHolder] = Modal.useModal();
   const {
     warehouse,
@@ -103,7 +118,7 @@ const ExportInvoiceForm: React.FC<ExportInvoiceFormProps> = ({ form }) => {
             .map((selectedBatch) => ({
               batchId: selectedBatch.productBatch.batchId,
               quantity: selectedBatch.quantity,
-              batchLocations: selectedBatch.selectedLocations
+              detailBatchLocations: selectedBatch.selectedLocations
                 .filter((selectedLocation) => selectedLocation.quantity > 0)
                 .map((selectedLocation) => ({
                   batchLocationId: selectedLocation.location.batchLocationId!,
@@ -117,6 +132,11 @@ const ExportInvoiceForm: React.FC<ExportInvoiceFormProps> = ({ form }) => {
       "New Export Invoice: ",
       convertKeysToSnakeCase(newExportInvoice),
     );
+    createExportInvoice(newExportInvoice, {
+      onSuccess: () => {
+        toast.success("Tạo phiếu xuất kho thành công");
+      },
+    });
   }
 
   return (

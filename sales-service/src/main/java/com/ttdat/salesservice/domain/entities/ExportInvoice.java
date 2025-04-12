@@ -1,6 +1,7 @@
 package com.ttdat.salesservice.domain.entities;
 
 import com.ttdat.core.domain.entities.DiscountType;
+import com.ttdat.salesservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "export_invoices")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ExportInvoice {
+public class ExportInvoice extends Auditable {
     @Id
     @Column(length = 20)
     String exportInvoiceId;
