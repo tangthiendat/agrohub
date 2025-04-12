@@ -1,13 +1,19 @@
-import { CaretDownFilled, CaretUpFilled } from "@ant-design/icons";
+import {
+  CaretDownFilled,
+  CaretUpFilled,
+  CheckCircleFilled,
+  CloseCircleFilled,
+} from "@ant-design/icons";
 import { Space, Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
+import AddBatchLocation from "./AddBatchLocation";
+import ViewBatchLocation from "./ViewBatchLocation";
 import { IProductBatch, IProductInfo, Page } from "../../../interfaces";
 import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
 import { formatDate } from "../../../utils/datetime";
 import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
-import AddBatchLocation from "./AddBatchLocation";
 
 interface ProductBatchTableProps {
   productBatchPage?: Page<IProductBatch>;
@@ -146,10 +152,11 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
       dataIndex: "quantity",
       key: "quantity",
       width: "10%",
+      align: "right",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "quantity"),
       sortIcon: ({ sortOrder }) => (
-        <div className="flex flex-col text-[10px]">
+        <div className="ml-1 flex flex-col text-[10px]">
           <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
           <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
         </div>
@@ -167,12 +174,28 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
       },
     },
     {
+      title: "Đã sắp xếp",
+      key: "isArranged",
+      width: "10%",
+      align: "center",
+      render: (_, record: IProductBatch) => {
+        const isArranged =
+          record.batchLocations && record.batchLocations.length > 0;
+        return isArranged ? (
+          <CheckCircleFilled className="text-lg text-[#4CAF50]" />
+        ) : (
+          <CloseCircleFilled className="text-lg text-[#F44336]" />
+        );
+      },
+    },
+    {
       title: "Hành động",
       key: "action",
       width: "15%",
       render: (_, record: IProductBatch) => {
         return (
           <Space>
+            <ViewBatchLocation productBatch={record} />
             <AddBatchLocation productBatch={record} />
           </Space>
         );

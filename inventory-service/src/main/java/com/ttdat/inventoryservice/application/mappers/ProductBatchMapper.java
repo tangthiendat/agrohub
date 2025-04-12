@@ -1,5 +1,6 @@
 package com.ttdat.inventoryservice.application.mappers;
 
+import com.ttdat.core.api.dto.response.ProductBatchInfo;
 import com.ttdat.inventoryservice.api.dto.common.ProductBatchDTO;
 import com.ttdat.inventoryservice.domain.entities.ProductBatch;
 import com.ttdat.inventoryservice.domain.events.batch.ProductBatchCreatedEvent;
@@ -15,6 +16,8 @@ public interface ProductBatchMapper {
 
     @Mapping(target = "product", ignore = true)
     ProductBatchDTO toDTO(ProductBatch productBatch);
+
+    ProductBatchInfo toProductBatchInfo(ProductBatch productBatch);
 
     @Mapping(target = "warehouse", ignore = true)
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

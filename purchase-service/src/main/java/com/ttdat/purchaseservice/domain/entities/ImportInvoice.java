@@ -1,5 +1,6 @@
 package com.ttdat.purchaseservice.domain.entities;
 
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,7 +49,7 @@ public class ImportInvoice extends Auditable {
     @Column(length = 20)
     DiscountType discountType;
 
-    @Column(precision = 2, scale = 2)
+    @Column(precision = 5, scale = 2)
     BigDecimal vatRate;
 
     @Column(precision = 15, scale = 2)

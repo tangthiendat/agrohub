@@ -1,6 +1,6 @@
 package com.ttdat.customerservice.domain.events.customer;
 
-import com.ttdat.customerservice.domain.entities.CustomerType;
+import com.ttdat.core.domain.entities.CustomerType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

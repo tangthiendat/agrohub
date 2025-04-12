@@ -47,6 +47,15 @@ export interface IProductBatch extends Auditable {
   batchLocations: IProductBatchLocation[];
 }
 
+export interface IProductBatchInfo {
+  batchId: string;
+  product: IProductInfo;
+  manufacturingDate: string;
+  expirationDate: string;
+  receivedDate: string;
+  quantity: number;
+}
+
 export interface ProductBatchFilterCriteria {
   query?: string;
 }

@@ -249,4 +249,14 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.PATCH,
     },
   },
+  [Module.EXPORT_INVOICE]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/export-invoices/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/export-invoices",
+      httpMethod: HttpMethod.POST,
+    },
+  },
 };

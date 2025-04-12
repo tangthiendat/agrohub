@@ -1,6 +1,6 @@
 package com.ttdat.customerservice.api.dto;
 
-import com.ttdat.customerservice.domain.entities.CustomerType;
+import com.ttdat.core.domain.entities.CustomerType;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

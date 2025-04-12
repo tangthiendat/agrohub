@@ -1,5 +1,6 @@
 package com.ttdat.purchaseservice.domain.entities;
 
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;

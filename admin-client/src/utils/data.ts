@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import { snakeCase } from "lodash";
 import { DiscountType } from "../common/enums";
-import { IProduct, IProductLocation, IProductUnitPrice } from "../interfaces";
-import { parseCurrency } from "./number";
+import { IProduct, IProductLocation } from "../interfaces";
+import { parseCurrency, roundToTwoDecimalPlaces } from "./number";
+import Decimal from "decimal.js";
 
 export function convertKeysToSnakeCase<T>(obj: T): T {
   if (Array.isArray(obj)) {
@@ -48,16 +49,42 @@ export function getFinalAmount(
 export function getCurrentProductUnitPrice(
   product: IProduct,
   productUnitId: string,
-): IProductUnitPrice {
+): number {
   const productUnit = product.productUnits.find(
     (pu) => pu.productUnitId === productUnitId,
   );
   const sortedProductUnitPrices = productUnit!.productUnitPrices!.sort((a, b) =>
     dayjs(b.validFrom).diff(dayjs(a.validFrom)),
   );
-  return sortedProductUnitPrices!.find((pup) =>
-    dayjs().isAfter(pup.validFrom),
-  )!;
+  return sortedProductUnitPrices!.find((pup) => dayjs().isAfter(pup.validFrom))!
+    .price;
+}
+
+export function getProductStockQuantity(
+  product: IProduct,
+  productUnitId: string,
+  quantity: number,
+): number {
+  const currentConversionFactor = product.productUnits.find(
+    (pu) => pu.productUnitId === productUnitId,
+  )?.conversionFactor;
+  const defaultConversionFactor = product.productUnits.find(
+    (pu) => pu.isDefault,
+  )?.conversionFactor;
+
+  if (!currentConversionFactor || !defaultConversionFactor) {
+    return 0; // Or handle the error as appropriate
+  }
+
+  const quantityDecimal = new Decimal(quantity);
+  const currentConversionFactorDecimal = new Decimal(currentConversionFactor);
+  const defaultConversionFactorDecimal = new Decimal(defaultConversionFactor);
+
+  const result = quantityDecimal
+    .mul(currentConversionFactorDecimal)
+    .div(defaultConversionFactorDecimal);
+
+  return result.toNumber();
 }
 
 export function getLocationName(location: IProductLocation) {

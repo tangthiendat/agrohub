@@ -1,10 +1,10 @@
 package com.ttdat.inventoryservice.application.handlers.command;
 
 import com.ttdat.core.application.commands.batch.CreateProductBatchCommand;
+import com.ttdat.core.application.commands.batch.ReduceProductBatchQuantityCommand;
+import com.ttdat.core.application.commands.location.ReduceProductBatchLocationQuantityCommand;
 import com.ttdat.inventoryservice.application.commands.batch.UpdateProductBatchCommand;
-import com.ttdat.inventoryservice.domain.events.batch.EvtProductBatchLocation;
-import com.ttdat.inventoryservice.domain.events.batch.ProductBatchCreatedEvent;
-import com.ttdat.inventoryservice.domain.events.batch.ProductBatchUpdatedEvent;
+import com.ttdat.inventoryservice.domain.events.batch.*;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;
@@ -52,5 +52,23 @@ public class ProductBatchCommandHandler {
                 .batchLocations(evtProductBatchLocations)
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(productBatchUpdatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(ReduceProductBatchQuantityCommand reduceProductBatchQuantityCommand){
+        ProductBatchQuantityReducedEvent productBatchQuantityReducedEvent = ProductBatchQuantityReducedEvent.builder()
+                .batchId(reduceProductBatchQuantityCommand.getBatchId())
+                .quantity(reduceProductBatchQuantityCommand.getQuantity())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(productBatchQuantityReducedEvent));
+    }
+
+    @CommandHandler
+    public void handle(ReduceProductBatchLocationQuantityCommand reduceProductBatchLocationQuantityCommand){
+        ProductBatchLocationQuantityReducedEvent productBatchLocationQuantityReducedEvent = ProductBatchLocationQuantityReducedEvent.builder()
+                .batchLocationId(reduceProductBatchLocationQuantityCommand.getBatchLocationId())
+                .quantity(reduceProductBatchLocationQuantityCommand.getQuantity())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(productBatchLocationQuantityReducedEvent));
     }
 }

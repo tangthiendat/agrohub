@@ -1,7 +1,8 @@
 package com.ttdat.inventoryservice.application.handlers.command;
 
 import com.ttdat.core.application.commands.stock.AddProductStockCommand;
-import com.ttdat.core.domain.events.ProductStockAddedEvent;
+import com.ttdat.inventoryservice.domain.events.stock.ProductStockAddedEvent;
+import com.ttdat.inventoryservice.domain.events.stock.ProductStockReducedEvent;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;
@@ -23,4 +24,15 @@ public class ProductStockCommandHandler {
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(productStockAddedEvent));
     }
+
+    @CommandHandler
+    public void handle(com.ttdat.core.application.commands.stock.ReduceProductStockCommand reduceProductStockCommand) {
+        ProductStockReducedEvent productStockReducedEvent = ProductStockReducedEvent.builder()
+                .warehouseId(reduceProductStockCommand.getWarehouseId())
+                .productId(reduceProductStockCommand.getProductId())
+                .quantity(reduceProductStockCommand.getQuantity())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(productStockReducedEvent));
+    }
+
 }

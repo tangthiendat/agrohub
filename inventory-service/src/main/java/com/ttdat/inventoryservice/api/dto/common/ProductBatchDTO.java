@@ -2,7 +2,10 @@ package com.ttdat.inventoryservice.api.dto.common;
 
 import com.ttdat.core.api.dto.response.ProductInfo;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -35,8 +38,7 @@ public class ProductBatchDTO {
     LocalDate receivedDate;
 
     @NotNull(message = "Quantity is required")
-    @Positive(message = "Quantity must be greater than 0")
-    Integer quantity;
+    Double quantity;
 
     @Valid
     List<ProductBatchLocationDTO> batchLocations;

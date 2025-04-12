@@ -1,10 +1,13 @@
 package com.ttdat.inventoryservice.application.handlers.query;
 
+import com.ttdat.core.api.dto.response.ProductBatchInfo;
 import com.ttdat.core.api.dto.response.ProductInfo;
+import com.ttdat.core.application.queries.inventory.GetProductBatchInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
 import com.ttdat.inventoryservice.api.dto.common.ProductBatchDTO;
 import com.ttdat.inventoryservice.api.dto.response.ProductBatchPageResult;
 import com.ttdat.inventoryservice.application.mappers.ProductBatchMapper;
+import com.ttdat.inventoryservice.application.queries.batch.GetAllProductBatchQuery;
 import com.ttdat.inventoryservice.application.queries.batch.GetProductBatchPageQuery;
 import com.ttdat.inventoryservice.domain.entities.ProductBatch;
 import com.ttdat.inventoryservice.domain.repositories.ProductBatchRepository;
@@ -20,6 +23,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -30,7 +35,7 @@ public class ProductBatchQueryHandler {
     private final QueryGateway queryGateway;
 
     @QueryHandler
-    public ProductBatchPageResult handle(GetProductBatchPageQuery getProductBatchPageQuery, QueryMessage<?,?> queryMessage) {
+    public ProductBatchPageResult handle(GetProductBatchPageQuery getProductBatchPageQuery, QueryMessage<?, ?> queryMessage) {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Map<String, String> filterParams = getProductBatchPageQuery.getFilterParams();
         filterParams.put("warehouseId", warehouseId.toString());
@@ -54,7 +59,8 @@ public class ProductBatchQueryHandler {
 
     private Specification<ProductBatch> getProductBatchSpec(Map<String, String> filterParams) {
         Specification<ProductBatch> spec = Specification.where(null);
-        spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class));
+        spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class))
+                .and(SpecificationUtils.buildSpecification(filterParams, "productId", String.class));
         if (filterParams.containsKey("query")) {
             String searchValue = filterParams.get("query");
             Specification<ProductBatch> querySpec = (root, query, criteriaBuilder) -> {
@@ -64,5 +70,31 @@ public class ProductBatchQueryHandler {
             spec = spec.and(querySpec);
         }
         return spec;
+    }
+
+    @QueryHandler
+    public List<ProductBatchDTO> handle(GetAllProductBatchQuery getAllProductBatchQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        Map<String, String> filterParams = getAllProductBatchQuery.getFilterParams();
+        filterParams.put("warehouseId", warehouseId.toString());
+        Specification<ProductBatch> productBatchSpec = getProductBatchSpec(filterParams);
+        List<ProductBatch> productBatches = productBatchRepository.findAll(productBatchSpec);
+        return productBatches.stream()
+                .filter(productBatch -> !productBatch.getBatchLocations().isEmpty())
+                .map(productBatchMapper::toDTO)
+                .toList();
+    }
+
+    @QueryHandler
+    public ProductBatchInfo handle(GetProductBatchInfoByIdQuery getProductBatchInfoByIdQuery, QueryMessage<?, ?> queryMessage){
+        Map<String, String> filterParams = new HashMap<>();
+        filterParams.put("warehouseId", getProductBatchInfoByIdQuery.getWarehouseId().toString());
+        Specification<ProductBatch> productBatchSpec = getProductBatchSpec(filterParams);
+        List<ProductBatch> productBatches = productBatchRepository.findAll(productBatchSpec);
+        ProductBatch productBatch = productBatches.stream()
+                .filter(batch -> batch.getBatchId().equals(getProductBatchInfoByIdQuery.getProductBatchId()))
+                .findFirst()
+                .orElse(null);
+        return productBatchMapper.toProductBatchInfo(productBatch);
     }
 }

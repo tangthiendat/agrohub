@@ -58,6 +58,6 @@ public class DebtAccount extends Auditable {
     @Column(length = 30, nullable = false)
     DebtStatus debtStatus;
 
-    @OneToMany(mappedBy = "debtAccount", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "debtAccount", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<DebtTransaction> debtTransactions;
 }

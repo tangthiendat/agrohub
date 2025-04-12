@@ -121,7 +121,7 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       title: "Loại kệ hàng",
       dataIndex: "rackType",
       key: "rackType",
-      width: "20%",
+      width: "15%",
       render: (rackType: RackType) => RACK_TYPE_NAME[rackType],
       filters: Object.values(RackType).map((rackType) => ({
         text: RACK_TYPE_NAME[rackType],
@@ -136,7 +136,7 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       title: "Tên kệ hàng",
       dataIndex: "rackName",
       key: "rackName",
-      width: "15%",
+      width: "10%",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "rackName"),
       sortIcon: ({ sortOrder }) => (
@@ -150,7 +150,7 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       title: "Ngăn",
       dataIndex: "rowNumber",
       key: "rowNumber",
-      width: "15%",
+      width: "10%",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "rowNumber"),
       sortIcon: ({ sortOrder }) => (
@@ -164,7 +164,7 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       title: "Tầng",
       dataIndex: "columnNumber",
       key: "columnNumber",
-      width: "15%",
+      width: "10%",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(searchParams, "columnNumber"),
       sortIcon: ({ sortOrder }) => (
@@ -178,7 +178,7 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      width: "15%",
+      width: "10%",
       render: (status: LocationStatus) => (
         <Tag color={LOCATION_STATUS_COLOR[status]}>
           {LOCATION_STATUS_NAME[status]}
@@ -194,9 +194,15 @@ const ProductLocationTable: React.FC<ProductLocationTableProps> = ({
       ),
     },
     {
+      title: "Lý do",
+      dataIndex: "reason",
+      key: "reason",
+      width: "20%",
+    },
+    {
       title: "Hành động",
       key: "action",
-
+      width: "10%",
       render: (_, productLocation: IProductLocation) => (
         <Space>
           <Access

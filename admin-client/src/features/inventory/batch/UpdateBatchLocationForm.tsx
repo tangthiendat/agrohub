@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  Alert,
   Button,
   Descriptions,
   DescriptionsProps,
@@ -14,6 +15,7 @@ import {
 } from "antd";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import SearchProductLocationBar from "../location/SearchProductLocationBar";
 import DeleteIcon from "../../../common/components/icons/DeleteIcon";
 import {
   LOCATION_STATUS_COLOR,
@@ -30,11 +32,11 @@ import { productBatchService } from "../../../services";
 import { getLocationName } from "../../../utils/data";
 import { formatDate } from "../../../utils/datetime";
 import { getNotificationMessage } from "../../../utils/notification";
-import SearchProductLocationBar from "../location/SearchProductLocationBar";
 
 interface UpdateBatchLocationFormProps {
   productBatch: IProductBatch;
   onCancel: () => void;
+  viewOnly?: boolean;
 }
 
 interface UpdateProductBatchArgs {
@@ -45,6 +47,7 @@ interface UpdateProductBatchArgs {
 const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
   productBatch,
   onCancel,
+  viewOnly = false,
 }) => {
   const [form] = Form.useForm<IProductBatch>();
   const [currentProductBatch, setCurrentProductBatch] = useState<IProductBatch>(
@@ -241,9 +244,12 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
       dataIndex: "quantity",
       key: "quantity",
       width: "25%",
+      align: "right",
       render: (quantity: number, record: IProductBatchLocation) => (
         <InputNumber
           value={quantity}
+          controls={false}
+          readOnly={viewOnly}
           min={0}
           max={currentProductBatch.quantity}
           status={
@@ -279,37 +285,42 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
         />
       ),
     },
-    {
-      title: "Hành động",
-      key: "action",
-      width: "30%",
-      render: (_, record: IProductBatchLocation) => {
-        return (
-          !record.batchLocationId && (
-            <DeleteIcon
-              tooltipTitle="Xóa"
-              onClick={() => {
-                setCurrentProductBatch((prev) => ({
-                  ...prev,
-                  batchLocations: prev.batchLocations.filter(
-                    (item) =>
-                      item.productLocation.locationId !==
-                      record.productLocation.locationId,
-                  ),
-                }));
-                form.setFieldsValue({
-                  batchLocations: currentProductBatch.batchLocations.filter(
-                    (item) =>
-                      item.productLocation.locationId !==
-                      record.productLocation.locationId,
-                  ),
-                });
-              }}
-            />
-          )
-        );
-      },
-    },
+    ...(viewOnly
+      ? []
+      : [
+          {
+            title: "Hành động",
+            key: "action",
+            width: "30%",
+            render: (_: unknown, record: IProductBatchLocation) => {
+              return (
+                !record.batchLocationId && (
+                  <DeleteIcon
+                    tooltipTitle="Xóa"
+                    onClick={() => {
+                      setCurrentProductBatch((prev) => ({
+                        ...prev,
+                        batchLocations: prev.batchLocations.filter(
+                          (item) =>
+                            item.productLocation.locationId !==
+                            record.productLocation.locationId,
+                        ),
+                      }));
+                      form.setFieldsValue({
+                        batchLocations:
+                          currentProductBatch.batchLocations.filter(
+                            (item) =>
+                              item.productLocation.locationId !==
+                              record.productLocation.locationId,
+                          ),
+                      });
+                    }}
+                  />
+                )
+              );
+            },
+          },
+        ]),
   ];
 
   return (
@@ -320,33 +331,44 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
         <Typography.Title level={5} className="my-3">
           Vị trí lô hàng
         </Typography.Title>
-        <SearchProductLocationBar
-          className="w-[40%]"
-          placeholder="Tìm kiếm vị trí"
-          onSelect={onSelectLocation}
-          optionRenderer={(location) => {
-            return {
-              value: location.locationId,
-              label: (
-                <div className="flex flex-col">
-                  <div className="flex items-center justify-between">
-                    <div className="font-semibold">
-                      {getLocationName(location)}
+        {!viewOnly && (
+          <Alert
+            // message="Lưu ý"
+            description="Đối với các sản phẩm có kích thước lớn (vd, bao, ...) thì hãy lựa chọn kệ pallet"
+            type="warning"
+            showIcon
+            className="mb-4"
+          />
+        )}
+        {!viewOnly && (
+          <SearchProductLocationBar
+            className="w-[40%]"
+            placeholder="Tìm kiếm vị trí"
+            onSelect={onSelectLocation}
+            optionRenderer={(location) => {
+              return {
+                value: location.locationId,
+                label: (
+                  <div className="flex flex-col">
+                    <div className="flex items-center justify-between">
+                      <div className="font-semibold">
+                        {getLocationName(location)}
+                      </div>
+                      <Tag color={LOCATION_STATUS_COLOR[location.status]}>
+                        {LOCATION_STATUS_NAME[location.status]}
+                      </Tag>
                     </div>
-                    <Tag color={LOCATION_STATUS_COLOR[location.status]}>
-                      {LOCATION_STATUS_NAME[location.status]}
-                    </Tag>
+                    <div className="text-sm">
+                      <span className="text-gray-600">
+                        {RACK_TYPE_NAME[location.rackType]}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-sm">
-                    <span className="text-gray-600">
-                      {RACK_TYPE_NAME[location.rackType]}
-                    </span>
-                  </div>
-                </div>
-              ),
-            };
-          }}
-        />
+                ),
+              };
+            }}
+          />
+        )}
         <Table
           className="mt-3"
           size="small"
@@ -355,16 +377,18 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
           rowKey={(record) => record.productLocation.locationId}
           pagination={false}
         />
-        <Form.Item className="mt-4 text-right" wrapperCol={{ span: 24 }}>
-          <Space>
-            <Button onClick={onCancel} loading={isUpdating}>
-              Hủy
-            </Button>
-            <Button type="primary" htmlType="submit" loading={isUpdating}>
-              Cập nhật
-            </Button>
-          </Space>
-        </Form.Item>
+        {!viewOnly && (
+          <Form.Item className="mt-4 text-right" wrapperCol={{ span: 24 }}>
+            <Space>
+              <Button onClick={onCancel} loading={isUpdating}>
+                Hủy
+              </Button>
+              <Button type="primary" htmlType="submit" loading={isUpdating}>
+                Cập nhật
+              </Button>
+            </Space>
+          </Form.Item>
+        )}
       </Form>
     </>
   );

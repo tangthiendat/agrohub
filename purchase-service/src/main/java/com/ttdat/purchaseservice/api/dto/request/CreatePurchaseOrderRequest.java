@@ -1,11 +1,12 @@
 package com.ttdat.purchaseservice.api.dto.request;
 
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -28,6 +29,7 @@ public class CreatePurchaseOrderRequest {
     String userId;
 
     @NotNull(message = "Order date is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate orderDate;
 
     @NotNull(message = "Expected delivery date is required")

@@ -22,6 +22,7 @@ public class DebtTransactionEventHandler {
     @Transactional
     @EventHandler
     public void on(DebtTransactionCreatedEvent debtTransactionCreatedEvent) {
+        log.info("Handling DebtTransactionCreatedEvent: {}", debtTransactionCreatedEvent);
         DebtTransaction debtTransaction = debtTransactionMapper.toEntity(debtTransactionCreatedEvent);
         debtTransactionRepository.save(debtTransaction);
     }

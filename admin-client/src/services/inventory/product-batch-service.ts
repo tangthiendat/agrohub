@@ -19,6 +19,7 @@ interface IProductBatchService {
     batchId: string,
     updatedProductBatch: IProductBatch,
   ): Promise<ApiResponse<void>>;
+  getByProductId(productId: string): Promise<ApiResponse<IProductBatch[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/product-batches", {
@@ -48,6 +49,16 @@ class ProductBatchService implements IProductBatchService {
     updatedProductBatch: IProductBatch,
   ): Promise<ApiResponse<void>> {
     return (await apiClient.patch(`/${batchId}`, updatedProductBatch)).data;
+  }
+
+  async getByProductId(
+    productId: string,
+  ): Promise<ApiResponse<IProductBatch[]>> {
+    return (
+      await apiClient.get("", {
+        params: { productId },
+      })
+    ).data;
   }
 }
 

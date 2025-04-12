@@ -1,6 +1,6 @@
 package com.ttdat.purchaseservice.domain.events.importinvoice;
 
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.valueobject.EvtImportInvoiceDetail;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

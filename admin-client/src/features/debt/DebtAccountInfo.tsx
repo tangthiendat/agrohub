@@ -5,7 +5,7 @@ import { formatCurrency } from "../../utils/number";
 import { formatDate, formatTimestamp } from "../../utils/datetime";
 import { DEBT_STATUS_COLOR, DEBT_STATUS_NAME } from "../../common/constants";
 import { getTransactionAmount } from "../../utils/data";
-import { DEBT_TRANSACTION_TYPE_NAME } from "../../common/constants/debt";
+import { DEBT_TRANSACTION_TYPE_NAME } from "../../common/constants";
 import { DebtTransactionType } from "../../common/enums";
 
 interface DebtAccountInfoProps {

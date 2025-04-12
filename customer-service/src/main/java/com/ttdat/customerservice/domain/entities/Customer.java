@@ -1,5 +1,6 @@
 package com.ttdat.customerservice.domain.entities;
 
+import com.ttdat.core.domain.entities.CustomerType;
 import com.ttdat.customerservice.infrastructure.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
