@@ -25,7 +25,7 @@ public class DebtAccountQueryController {
     private final QueryGateway queryGateway;
 
     @GetMapping("/supplier/{supplierId}/unpaid")
-    public ApiResponse<List<PartyDebtAccount>> getUnpaidDebtAccountByPartyId(@PathVariable String supplierId) {
+    public ApiResponse<List<PartyDebtAccount>> getUnpaidDebtAccountBySupplierId(@PathVariable String supplierId) {
         GetUnpaidDebtAccountByPartyIdQuery getUnpaidDebtAccountByPartyIdQuery = GetUnpaidDebtAccountByPartyIdQuery.builder()
                 .partyId(supplierId)
                 .partyType(DebtPartyType.SUPPLIER)
@@ -35,6 +35,21 @@ public class DebtAccountQueryController {
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Supplier unpaid debt account retrieved successfully")
+                .payload(partyDebtAccounts)
+                .build();
+    }
+
+    @GetMapping("/customer/{customerId}/unpaid")
+    public ApiResponse<List<PartyDebtAccount>> getUnpaidDebtAccountByCustomerId(@PathVariable String customerId) {
+        GetUnpaidDebtAccountByPartyIdQuery getUnpaidDebtAccountByPartyIdQuery = GetUnpaidDebtAccountByPartyIdQuery.builder()
+                .partyId(customerId)
+                .partyType(DebtPartyType.CUSTOMER)
+                .build();
+        List<PartyDebtAccount> partyDebtAccounts = queryGateway.query(getUnpaidDebtAccountByPartyIdQuery, ResponseTypes.multipleInstancesOf(PartyDebtAccount.class)).join();
+        return ApiResponse.<List<PartyDebtAccount>>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Customer unpaid debt account retrieved successfully")
                 .payload(partyDebtAccounts)
                 .build();
     }
