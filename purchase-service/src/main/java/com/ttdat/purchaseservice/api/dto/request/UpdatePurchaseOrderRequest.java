@@ -30,7 +30,6 @@ public class UpdatePurchaseOrderRequest {
     @NotNull(message = "Order date is required")
     LocalDate orderDate;
 
-    @NotNull(message = "Expected delivery date is required")
     @Future(message = "Expected delivery date must be in the future")
     LocalDate expectedDeliveryDate;
 

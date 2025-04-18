@@ -143,7 +143,7 @@ const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
             >
               <DatePicker disabled className="w-full" format="DD/MM/YYYY" />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Ngày dự kiến nhận hàng"
               name="expectedDeliveryDate"
               rules={[
@@ -172,7 +172,7 @@ const PurchaseOrderForm: React.FC<PurchaseOrderFormProps> = ({
                   });
                 }}
               />
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item label="Ghi chú" name="note">
               <Input.TextArea rows={2} />
             </Form.Item>

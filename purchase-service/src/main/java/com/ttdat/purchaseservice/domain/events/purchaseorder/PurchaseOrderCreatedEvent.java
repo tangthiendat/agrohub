@@ -26,7 +26,7 @@ public class PurchaseOrderCreatedEvent {
 
     LocalDate orderDate;
 
-    LocalDate expectedDeliveryDate;
+//    LocalDate expectedDeliveryDate;
 
     PurchaseOrderStatus status;
 

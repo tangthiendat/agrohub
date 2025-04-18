@@ -32,9 +32,6 @@ public class CreatePurchaseOrderRequest {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate orderDate;
 
-    @NotNull(message = "Expected delivery date is required")
-    @Future(message = "Expected delivery date must be in the future")
-    LocalDate expectedDeliveryDate;
 
     @NotNull(message = "Status is required")
     PurchaseOrderStatus status;

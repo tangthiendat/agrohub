@@ -37,7 +37,7 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 .supplierId(createPurchaseOrderRequest.getSupplierId())
                 .userId(createPurchaseOrderRequest.getUserId())
                 .orderDate(createPurchaseOrderRequest.getOrderDate())
-                .expectedDeliveryDate(createPurchaseOrderRequest.getExpectedDeliveryDate())
+//                .expectedDeliveryDate(createPurchaseOrderRequest.getExpectedDeliveryDate())
                 .status(createPurchaseOrderRequest.getStatus())
                 .purchaseOrderDetails(cmdPurchaseOrderDetails)
                 .totalAmount(createPurchaseOrderRequest.getTotalAmount())
