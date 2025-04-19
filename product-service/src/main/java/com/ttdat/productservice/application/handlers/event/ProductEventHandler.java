@@ -6,8 +6,8 @@ import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.productservice.application.mappers.ProductMapper;
 import com.ttdat.productservice.domain.entities.Product;
 import com.ttdat.productservice.domain.events.product.ProductCreatedEvent;
+import com.ttdat.productservice.domain.events.product.ProductTotalQuantityAddedEvent;
 import com.ttdat.productservice.domain.events.product.ProductTotalQuantityReducedEvent;
-import com.ttdat.productservice.domain.events.product.ProductTotalQuantityUpdatedEvent;
 import com.ttdat.productservice.domain.events.product.ProductUpdatedEvent;
 import com.ttdat.productservice.domain.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,12 +47,12 @@ public class ProductEventHandler {
 
     @Transactional
     @EventHandler
-    public void on(ProductTotalQuantityUpdatedEvent productTotalQuantityUpdatedEvent) {
-        Product product = getProductById(productTotalQuantityUpdatedEvent.getProductId());
+    public void on(ProductTotalQuantityAddedEvent productTotalQuantityAddedEvent) {
+        Product product = getProductById(productTotalQuantityAddedEvent.getProductId());
         if (product.getTotalQuantity() == null) {
-            product.setTotalQuantity(productTotalQuantityUpdatedEvent.getQuantity());
+            product.setTotalQuantity(productTotalQuantityAddedEvent.getQuantity());
         } else {
-            product.setTotalQuantity(product.getTotalQuantity() + productTotalQuantityUpdatedEvent.getQuantity());
+            product.setTotalQuantity(product.getTotalQuantity() + productTotalQuantityAddedEvent.getQuantity());
         }
         productRepository.save(product);
     }
