@@ -132,7 +132,7 @@ const Home: React.FC = () => {
           <h2 className="text-xl font-bold">Biểu đồ hoạt động kho</h2>
           <FilterTimeWithOutDate onDateChange={handleDateChange} />
         </div>
-        <div className="rounded-lg bg-white p-4 shadow">
+        <div className="bg-white p-4 shadow">
           <InventoryActivityChart data={inventoryActivity} />
         </div>
       </div>
@@ -140,7 +140,7 @@ const Home: React.FC = () => {
       {/* Secondary Charts - 2x2 Grid */}
       <Row gutter={[16, 16]}>
         <Col xs={24} md={12}>
-          <div className="rounded-lg bg-white p-4 shadow">
+          <div className="bg-white p-4 shadow">
             <h3 className="mb-4 text-lg font-semibold">
               Tỉ lệ tồn kho theo danh mục
             </h3>
@@ -148,7 +148,7 @@ const Home: React.FC = () => {
           </div>
         </Col>
         <Col xs={24} md={12}>
-          <div className="rounded-lg bg-white p-4 shadow">
+          <div className="bg-white p-4 shadow">
             <h3 className="mb-4 text-lg font-semibold">
               Top 5 khách hàng có công nợ cao nhất
             </h3>
@@ -156,7 +156,7 @@ const Home: React.FC = () => {
           </div>
         </Col>
         <Col xs={24} md={12}>
-          <div className="rounded-lg bg-white p-4 shadow">
+          <div className="bg-white p-4 shadow">
             <h3 className="mb-4 text-lg font-semibold">
               Top 5 sản phẩm bán chạy nhất
             </h3>
