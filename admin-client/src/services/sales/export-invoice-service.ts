@@ -5,6 +5,7 @@ import {
   CreateExportInvoiceRequest,
   ExportInvoiceFilterCriteria,
   IExportInvoice,
+  IStatsCardValue,
   Page,
   PaginationParams,
   SortParams,
@@ -19,6 +20,7 @@ interface IExportInvoiceService {
     sort?: SortParams,
     filter?: ExportInvoiceFilterCriteria,
   ): Promise<ApiResponse<Page<IExportInvoice>>>;
+  getExportStatsCard(): Promise<ApiResponse<IStatsCardValue>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/export-invoices", {
@@ -47,6 +49,10 @@ class ExportInvoiceService implements IExportInvoiceService {
         },
       })
     ).data;
+  }
+
+  async getExportStatsCard(): Promise<ApiResponse<IStatsCardValue>> {
+    return (await apiClient.get("/stats/card")).data;
   }
 }
 export const exportInvoiceService = new ExportInvoiceService();

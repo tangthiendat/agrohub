@@ -17,6 +17,7 @@ import com.ttdat.salesservice.application.mappers.ExportInvoiceDetailBatchMapper
 import com.ttdat.salesservice.application.mappers.ExportInvoiceDetailMapper;
 import com.ttdat.salesservice.application.mappers.ExportInvoiceMapper;
 import com.ttdat.salesservice.application.queries.exportinvoice.GetExportInvoicePageQuery;
+import com.ttdat.salesservice.application.queries.exportinvoice.GetTotalExportInRangeQuery;
 import com.ttdat.salesservice.domain.entities.ExportInvoice;
 import com.ttdat.salesservice.domain.repositories.ExportInvoiceRepository;
 import com.ttdat.salesservice.infrastructure.utils.PaginationUtils;
@@ -31,6 +32,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,5 +150,18 @@ public class ExportInvoiceQueryHandler {
         return exportInvoiceRepository.findByRange(warehouseId, searchExportInvoiceIdListQuery.getStartDate(), searchExportInvoiceIdListQuery.getEndDate()).stream()
                 .map(ExportInvoice::getExportInvoiceId)
                 .toList();
+    }
+
+    @QueryHandler
+    public BigDecimal handle(GetTotalExportInRangeQuery getTotalExportInRangeQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        List<ExportInvoice> exportInvoices = exportInvoiceRepository.findByRange(warehouseId, getTotalExportInRangeQuery.getStartDate(), getTotalExportInRangeQuery.getEndDate());
+        return exportInvoices.stream()
+                .map(exportInvoice -> exportInvoice.getExportInvoiceDetails().stream()
+                        .map(exportInvoiceDetail -> exportInvoiceDetail.getDetailBatches().stream()
+                                .map(batch -> BigDecimal.valueOf(batch.getQuantity()))
+                                .reduce(BigDecimal.ZERO, BigDecimal::add))
+                        .reduce(BigDecimal.ZERO, BigDecimal::add))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

@@ -20,6 +20,7 @@ import TopSellingProductsChart from "../features/dashboard/TopSellingProductsCha
 import { useQuery } from "@tanstack/react-query";
 import {
   debtAccountService,
+  exportInvoiceService,
   importInvoiceService,
   invoiceService,
 } from "../services";
@@ -53,11 +54,10 @@ const Home: React.FC = () => {
     select: (data) => data.payload,
   });
 
-  const [stats, setStats] = useState({
-    ordersCount: dashboardOrderStats,
-    customerDebt: dashboardCustomerDebtStats,
-    importCount: dashboardImportStats,
-    exportCount: dashboardExportStats,
+  const { data: exportStats, isLoading: isExportLoading } = useQuery({
+    queryFn: () => exportInvoiceService.getExportStatsCard(),
+    queryKey: ["export-invoices", "stats", "card"],
+    select: (data) => data.payload,
   });
 
   const [inventoryActivity, setInventoryActivity] = useState(
@@ -93,7 +93,12 @@ const Home: React.FC = () => {
   // useEffect(() => {
   //   // Fetch data based on dateFilter
   // }, [dateFilter]);
-  if (isOrderCountLoading || isCustomerDebtLoading || isImportLoading) {
+  if (
+    isOrderCountLoading ||
+    isCustomerDebtLoading ||
+    isImportLoading ||
+    isExportLoading
+  ) {
     return <Loading />;
   }
 
@@ -115,7 +120,7 @@ const Home: React.FC = () => {
         {customerDebtStats && (
           <Col xs={24} sm={12} md={6}>
             <StatsCard
-              title="Tổng công nợ"
+              title="Tổng công nợ khách hàng"
               value={customerDebtStats.value}
               isCurrency={true}
               changePercentage={customerDebtStats.changePercentage}
@@ -136,13 +141,15 @@ const Home: React.FC = () => {
           </Col>
         )}
         <Col xs={24} sm={12} md={6}>
-          <StatsCard
-            title="Tổng xuất kho"
-            value={stats.exportCount.value}
-            changePercentage={stats.exportCount.changePercentage}
-            trend={stats.exportCount.trend}
-            icon="export"
-          />
+          {exportStats && (
+            <StatsCard
+              title="Tổng xuất kho"
+              value={exportStats.value}
+              changePercentage={exportStats.changePercentage}
+              trend={exportStats.trend}
+              icon="export"
+            />
+          )}
         </Col>
       </Row>
 

@@ -19,16 +19,17 @@ public class NumberUtils {
     }
 
     public static TrendType getTrendType(BigDecimal previousValue, BigDecimal currentValue) {
+        if (previousValue.compareTo(BigDecimal.ZERO) == 0 || currentValue.compareTo(previousValue) == 0) {
+            return TrendType.STABLE;
+        }
         if (currentValue.compareTo(previousValue) > 0) {
             return TrendType.UP;
-        } else if (currentValue.compareTo(previousValue) < 0) {
-            return TrendType.DOWN;
         }
-        return TrendType.STABLE;
+        return TrendType.DOWN;
     }
 
     public static BigDecimal getChangePercentage(BigDecimal previousValue, BigDecimal currentValue) {
-        if(previousValue.compareTo(BigDecimal.ZERO) == 0) {
+        if (previousValue.compareTo(BigDecimal.ZERO) == 0) {
             return BigDecimal.ZERO;
         }
         BigDecimal ratio = currentValue.divide(previousValue, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
