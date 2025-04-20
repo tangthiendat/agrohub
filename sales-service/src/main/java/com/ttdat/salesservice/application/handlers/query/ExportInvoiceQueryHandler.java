@@ -128,9 +128,8 @@ public class ExportInvoiceQueryHandler {
             if (!customerIdList.isEmpty()) {
                 Specification<ExportInvoice> customerNameSpec = (root, query, criteriaBuilder) ->
                         root.get("customerId").in(customerIdList);
-                querySpec = querySpec.and(customerNameSpec);
+                querySpec = querySpec.or(customerNameSpec);
             }
-
             importInvoiceSpec = importInvoiceSpec.and(querySpec);
         }
         return importInvoiceSpec;
