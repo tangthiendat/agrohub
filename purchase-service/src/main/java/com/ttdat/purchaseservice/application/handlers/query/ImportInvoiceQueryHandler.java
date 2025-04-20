@@ -6,6 +6,7 @@ import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.core.api.dto.response.WarehouseInfo;
 import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
+import com.ttdat.core.application.queries.product.GetProductStockQuantityQuery;
 import com.ttdat.core.application.queries.stats.GetImportInvoiceCountQuery;
 import com.ttdat.core.application.queries.user.GetUserInfoByIdQuery;
 import com.ttdat.purchaseservice.api.dto.common.ImportInvoiceDTO;
@@ -14,6 +15,7 @@ import com.ttdat.purchaseservice.api.dto.response.ImportInvoicePageResult;
 import com.ttdat.purchaseservice.application.mappers.ImportInvoiceDetailMapper;
 import com.ttdat.purchaseservice.application.mappers.ImportInvoiceMapper;
 import com.ttdat.purchaseservice.application.queries.importinvoice.GetImportInvoicePageQuery;
+import com.ttdat.purchaseservice.application.queries.importinvoice.GetTotalImportInRangeQuery;
 import com.ttdat.purchaseservice.domain.entities.ImportInvoice;
 import com.ttdat.purchaseservice.domain.repositories.ImportInvoiceRepository;
 import com.ttdat.purchaseservice.infrastructure.utils.PaginationUtils;
@@ -28,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -108,5 +111,24 @@ public class ImportInvoiceQueryHandler {
     public Long handle(GetImportInvoiceCountQuery getImportInvoiceCountQuery, QueryMessage<?, ?> queryMessage) {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         return importInvoiceRepository.countByRange(warehouseId, getImportInvoiceCountQuery.getStartDate(), getImportInvoiceCountQuery.getEndDate());
+    }
+
+    @QueryHandler
+    public BigDecimal handle(GetTotalImportInRangeQuery getTotalImportInRangeQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        List<ImportInvoice> importInvoices = importInvoiceRepository.findByRange(warehouseId, getTotalImportInRangeQuery.getStartDate(), getTotalImportInRangeQuery.getEndDate());
+        return importInvoices.stream()
+                .map(importInvoice -> importInvoice.getImportInvoiceDetails().stream()
+                        .map(importInvoiceDetail -> {
+                            GetProductStockQuantityQuery getProductStockQuantityQuery = GetProductStockQuantityQuery.builder()
+                                    .productId(importInvoiceDetail.getProductId())
+                                    .productUnitId(importInvoiceDetail.getProductUnitId())
+                                    .quantity(Double.valueOf(importInvoiceDetail.getQuantity()))
+                                    .build();
+                            Double stockQuantity = queryGateway.query(getProductStockQuantityQuery, ResponseTypes.instanceOf(Double.class)).join();
+                            return BigDecimal.valueOf(stockQuantity);
+                        })
+                        .reduce(BigDecimal.ZERO, BigDecimal::add))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

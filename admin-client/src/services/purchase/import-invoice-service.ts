@@ -5,6 +5,7 @@ import {
   CreateImportInvoiceRequest,
   IImportInvoice,
   ImportInvoiceFilterCriteria,
+  IStatsCardValue,
   Page,
   PaginationParams,
   SortParams,
@@ -19,6 +20,7 @@ interface IImportInvoiceService {
     sort?: SortParams,
     filter?: ImportInvoiceFilterCriteria,
   ): Promise<ApiResponse<Page<IImportInvoice>>>;
+  getImportStatsCard(): Promise<ApiResponse<IStatsCardValue>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/import-invoices", {
@@ -47,6 +49,10 @@ class ImportInvoiceService implements IImportInvoiceService {
         },
       })
     ).data;
+  }
+
+  async getImportStatsCard(): Promise<ApiResponse<IStatsCardValue>> {
+    return (await apiClient.get("/stats/card")).data;
   }
 }
 

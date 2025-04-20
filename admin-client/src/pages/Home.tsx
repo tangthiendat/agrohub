@@ -18,7 +18,11 @@ import CategoryInventoryPieChart from "../features/dashboard/CategoryInventoryPi
 import TopCustomersDebtChart from "../features/dashboard/TopCustomersDebtChart";
 import TopSellingProductsChart from "../features/dashboard/TopSellingProductsChart";
 import { useQuery } from "@tanstack/react-query";
-import { debtAccountService, invoiceService } from "../services";
+import {
+  debtAccountService,
+  importInvoiceService,
+  invoiceService,
+} from "../services";
 import Loading from "../common/components/Loading";
 
 const Home: React.FC = () => {
@@ -42,6 +46,12 @@ const Home: React.FC = () => {
       queryKey: ["debt-accounts", "stats", "card"],
       select: (data) => data.payload,
     });
+
+  const { data: importStats, isLoading: isImportLoading } = useQuery({
+    queryFn: () => importInvoiceService.getImportStatsCard(),
+    queryKey: ["import-invoices", "stats", "card"],
+    select: (data) => data.payload,
+  });
 
   const [stats, setStats] = useState({
     ordersCount: dashboardOrderStats,
@@ -83,7 +93,7 @@ const Home: React.FC = () => {
   // useEffect(() => {
   //   // Fetch data based on dateFilter
   // }, [dateFilter]);
-  if (isOrderCountLoading) {
+  if (isOrderCountLoading || isCustomerDebtLoading || isImportLoading) {
     return <Loading />;
   }
 
@@ -114,15 +124,17 @@ const Home: React.FC = () => {
             />
           </Col>
         )}
-        <Col xs={24} sm={12} md={6}>
-          <StatsCard
-            title="Tổng nhập kho"
-            value={stats.importCount.value}
-            changePercentage={stats.importCount.changePercentage}
-            trend={stats.importCount.trend}
-            icon="import"
-          />
-        </Col>
+        {importStats && (
+          <Col xs={24} sm={12} md={6}>
+            <StatsCard
+              title="Tổng nhập kho"
+              value={importStats.value}
+              changePercentage={importStats.changePercentage}
+              trend={importStats.trend}
+              icon="import"
+            />
+          </Col>
+        )}
         <Col xs={24} sm={12} md={6}>
           <StatsCard
             title="Tổng xuất kho"
