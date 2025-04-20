@@ -1,4 +1,4 @@
-package com.ttdat.debtservice.application.repositories;
+package com.ttdat.debtservice.domain.repositories;
 
 import com.ttdat.core.domain.entities.DebtPartyType;
 import com.ttdat.debtservice.domain.entities.DebtAccount;
@@ -12,6 +12,6 @@ import java.util.List;
 @Repository
 public interface DebtAccountRepository extends JpaRepository<DebtAccount, String>, JpaSpecificationExecutor<DebtAccount> {
     @Query("SELECT da FROM DebtAccount da WHERE da.partyId = :partyId AND da.partyType = :partyType " +
-            "AND da.remainingAmount > 0")
+            "AND da.remainingAmount > 0 ORDER BY da.createdAt")
     List<DebtAccount> getPartyUnpaidDebtAccounts(String partyId, DebtPartyType partyType);
 }

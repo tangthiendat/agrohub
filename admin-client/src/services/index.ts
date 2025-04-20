@@ -20,6 +20,7 @@ export * from "./inventory/product-stock-service.ts";
 export * from "./debt/payment-method-service.ts";
 export * from "./debt/debt-account-service.ts";
 export * from "./debt/payment-service.ts";
+export * from "./debt/receipt-service.ts";
 
 export * from "./customer/customer-service.ts";
 

@@ -5,7 +5,7 @@ import com.ttdat.debtservice.api.dto.response.PaymentMethodPageResult;
 import com.ttdat.debtservice.application.mappers.PaymentMethodMapper;
 import com.ttdat.debtservice.application.queries.paymentmethod.GetAllPaymentMethodQuery;
 import com.ttdat.debtservice.application.queries.paymentmethod.GetPaymentMethodPageQuery;
-import com.ttdat.debtservice.application.repositories.PaymentMethodRepository;
+import com.ttdat.debtservice.domain.repositories.PaymentMethodRepository;
 import com.ttdat.debtservice.domain.entities.PaymentMethod;
 import com.ttdat.debtservice.infrastructure.utils.PaginationUtils;
 import lombok.RequiredArgsConstructor;

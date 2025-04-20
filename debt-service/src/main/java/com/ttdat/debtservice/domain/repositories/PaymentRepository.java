@@ -1,4 +1,4 @@
-package com.ttdat.debtservice.application.repositories;
+package com.ttdat.debtservice.domain.repositories;
 
 import com.ttdat.debtservice.domain.entities.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;

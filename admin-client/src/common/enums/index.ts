@@ -32,6 +32,7 @@ export enum Module {
   PAYMENT = "PAYMENT",
   CUSTOMER = "CUSTOMER",
   EXPORT_INVOICE = "EXPORT INVOICE",
+  RECEIPT = "RECEIPT",
 }
 
 export enum Gender {

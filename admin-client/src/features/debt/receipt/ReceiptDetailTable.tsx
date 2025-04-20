@@ -1,22 +1,20 @@
 import { InputNumber, Table, TableProps } from "antd";
+import { useShallow } from "zustand/react/shallow";
+import {
+  ReceiptDetailState,
+  useReceiptStore,
+} from "../../../store/receipt-store";
 import { formatDate } from "../../../utils/datetime";
 import { formatCurrency, parseCurrency } from "../../../utils/number";
-import { IPartyDebtAccount } from "../../../interfaces";
 
-interface ReceiptDetailTableProps {
-  receiptDetails: IPartyDebtAccount[];
-}
+const ReceiptDetailTable: React.FC = () => {
+  const { receiptDetails } = useReceiptStore(
+    useShallow((state) => ({
+      receiptDetails: state.receiptDetails,
+    })),
+  );
 
-const ReceiptDetailTable: React.FC<ReceiptDetailTableProps> = ({
-  receiptDetails,
-}) => {
-  // const { receiptDetails } = useReceiptStore(
-  //   useShallow((state) => ({
-  //     receiptDetails: state.receiptDetails,
-  //   })),
-  // );
-
-  const columns: TableProps<IPartyDebtAccount>["columns"] = [
+  const columns: TableProps<ReceiptDetailState>["columns"] = [
     {
       title: "STT",
       width: "5%",
@@ -27,48 +25,49 @@ const ReceiptDetailTable: React.FC<ReceiptDetailTableProps> = ({
       title: "Mã phiếu",
       key: "exportInvoiceId",
       width: "10%",
-      render: (_, record: IPartyDebtAccount) => record.sourceId,
+      render: (_, record: ReceiptDetailState) => record.debtAccount.sourceId,
     },
     {
       title: "Số tiền nợ",
       key: "debtAmount",
       width: "15%",
       align: "right",
-      render: (_, record: IPartyDebtAccount) =>
-        formatCurrency(record.totalAmount),
+      render: (_, record: ReceiptDetailState) =>
+        formatCurrency(record.debtAccount.totalAmount),
     },
     {
       title: "Đã trả",
       key: "paidAmount",
       width: "15%",
       align: "right",
-      render: (_, record: IPartyDebtAccount) =>
-        formatCurrency(record.paidAmount),
+      render: (_, record: ReceiptDetailState) =>
+        formatCurrency(record.debtAccount.paidAmount),
     },
     {
       title: "Còn lại",
       key: "remainingAmount",
       width: "15%",
       align: "right",
-      render: (_, record: IPartyDebtAccount) =>
-        formatCurrency(record.remainingAmount),
+      render: (_, record: ReceiptDetailState) =>
+        formatCurrency(record.debtAccount.remainingAmount),
     },
     {
       title: "Ngày đến hạn",
       key: "dueDate",
       width: "15%",
-      render: (_, record: IPartyDebtAccount) => formatDate(record.dueDate),
+      render: (_, record: ReceiptDetailState) =>
+        formatDate(record.debtAccount.dueDate),
     },
     {
       title: "Số tiền thu",
       key: "receiptAmount",
       width: "15%",
-      render: (_, record: IPartyDebtAccount) => (
+      render: (_, record: ReceiptDetailState) => (
         <InputNumber
           className="right-aligned-number w-full"
           controls={false}
           readOnly
-          // value={record.receiptAmount}
+          value={record.receiptAmount}
           min={0}
           step={1000}
           formatter={(value) => formatCurrency(value)}
@@ -81,7 +80,7 @@ const ReceiptDetailTable: React.FC<ReceiptDetailTableProps> = ({
   return (
     <Table
       className="mb-4"
-      rowKey={(record) => record.debtAccountId}
+      rowKey={(record) => record.debtAccount.debtAccountId}
       dataSource={receiptDetails}
       pagination={false}
       columns={columns}

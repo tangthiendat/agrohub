@@ -4,7 +4,7 @@ import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.debtservice.application.commands.transaction.CreateDebtTransactionCommand;
 import com.ttdat.debtservice.application.mappers.DebtAccountMapper;
-import com.ttdat.debtservice.application.repositories.DebtAccountRepository;
+import com.ttdat.debtservice.domain.repositories.DebtAccountRepository;
 import com.ttdat.debtservice.domain.entities.DebtAccount;
 import com.ttdat.debtservice.domain.entities.DebtTransaction;
 import com.ttdat.debtservice.domain.entities.DebtTransactionType;

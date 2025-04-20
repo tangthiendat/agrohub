@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
   DatePicker,
@@ -10,13 +10,20 @@ import {
   Space,
 } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-// import ReceiptDetailTable from "./ReceiptDetailTable";
-import { useCurrentUserInfo, useCurrentWarehouse } from "../../../common/hooks";
-import { debtAccountService, paymentMethodService } from "../../../services";
-// import { useReceiptStore } from "../../../store/receipt-store";
-import { ICustomer } from "../../../interfaces";
-import { formatCurrency, parseCurrency } from "../../../utils/number";
+import { useShallow } from "zustand/react/shallow";
+import { useEffect } from "react";
 import ReceiptDetailTable from "./ReceiptDetailTable";
+import { useCurrentUserInfo, useCurrentWarehouse } from "../../../common/hooks";
+import {
+  debtAccountService,
+  paymentMethodService,
+  receiptService,
+} from "../../../services";
+import { CreateReceiptRequest, ICustomer } from "../../../interfaces";
+import { formatCurrency, parseCurrency } from "../../../utils/number";
+import { useReceiptStore } from "../../../store/receipt-store";
+import toast from "react-hot-toast";
+import { getNotificationMessage } from "../../../utils/notification";
 
 interface NewReceiptFormProps {
   customer: ICustomer;
@@ -28,37 +35,37 @@ const NewReceiptForm: React.FC<NewReceiptFormProps> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
-  // const queryClient = useQueryClient();
-  // const {
-  //   createdDate,
-  //   totalReceivedAmount,
-  //   paymentMethodId,
-  //   receiptDetails,
-  //   setWarehouse,
-  //   setUser,
-  //   initReceiptDetails,
-  //   reset,
-  //   setTotalReceivedAmount,
-  //   setPaymentMethodId,
-  // } = useReceiptStore(
-  //   useShallow((state) => ({
-  //     createdDate: state.createdDate,
-  //     totalReceivedAmount: state.totalReceivedAmount,
-  //     paymentMethodId: state.paymentMethodId,
-  //     receiptDetails: state.receiptDetails,
-  //     setWarehouse: state.setWarehouse,
-  //     setUser: state.setUser,
-  //     initReceiptDetails: state.initReceiptDetails,
-  //     reset: state.reset,
-  //     setTotalReceivedAmount: state.setTotalReceivedAmount,
-  //     setPaymentMethodId: state.setPaymentMethodId,
-  //   })),
-  // );
+  const queryClient = useQueryClient();
+  const {
+    createdDate,
+    totalReceivedAmount,
+    paymentMethodId,
+    receiptDetails,
+    setWarehouse,
+    setUser,
+    initReceiptDetails,
+    reset,
+    setTotalReceivedAmount,
+    setPaymentMethodId,
+  } = useReceiptStore(
+    useShallow((state) => ({
+      createdDate: state.createdDate,
+      totalReceivedAmount: state.totalReceivedAmount,
+      paymentMethodId: state.paymentMethodId,
+      receiptDetails: state.receiptDetails,
+      setWarehouse: state.setWarehouse,
+      setUser: state.setUser,
+      initReceiptDetails: state.initReceiptDetails,
+      reset: state.reset,
+      setTotalReceivedAmount: state.setTotalReceivedAmount,
+      setPaymentMethodId: state.setPaymentMethodId,
+    })),
+  );
 
-  // const { currentWarehouse, isLoading: isWarehouseLoading } =
-  //   useCurrentWarehouse();
+  const { currentWarehouse, isLoading: isWarehouseLoading } =
+    useCurrentWarehouse();
 
-  // const { currentUserInfo, isLoading: isUserLoading } = useCurrentUserInfo();
+  const { currentUserInfo, isLoading: isUserLoading } = useCurrentUserInfo();
 
   const { data: partyDebtAccounts, isLoading: isDebtAccountLoading } = useQuery(
     {
@@ -81,80 +88,82 @@ const NewReceiptForm: React.FC<NewReceiptFormProps> = ({
         })),
     });
 
-  // const { mutate: createReceipt, isPending: isCreating } = useMutation({
-  //   mutationFn: (data: any) => Promise.resolve(data), // Replace with actual receipt service
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({
-  //       predicate: (query) =>
-  //         query.queryKey.includes("debt-accounts") ||
-  //         query.queryKey.includes("receipts"),
-  //     });
-  //     onCancel();
-  //   },
-  // });
+  const { mutate: createReceipt, isPending: isCreating } = useMutation({
+    mutationFn: receiptService.create,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey.includes("debt-accounts") ||
+          query.queryKey.includes("receipts"),
+      });
+      onCancel();
+    },
+  });
 
-  // useEffect(() => {
-  //   if (currentWarehouse) {
-  //     setWarehouse(currentWarehouse);
-  //   }
-  //   if (currentUserInfo) {
-  //     setUser(currentUserInfo);
-  //   }
-  //   if (partyDebtAccounts) {
-  //     initReceiptDetails(partyDebtAccounts);
-  //   }
-  // }, [
-  //   currentWarehouse,
-  //   currentUserInfo,
-  //   partyDebtAccounts,
-  //   setWarehouse,
-  //   setUser,
-  //   initReceiptDetails,
-  // ]);
+  useEffect(() => {
+    if (currentWarehouse) {
+      setWarehouse(currentWarehouse);
+    }
+    if (currentUserInfo) {
+      setUser(currentUserInfo);
+    }
+    if (partyDebtAccounts) {
+      initReceiptDetails(partyDebtAccounts);
+    }
+  }, [
+    currentWarehouse,
+    currentUserInfo,
+    partyDebtAccounts,
+    setWarehouse,
+    setUser,
+    initReceiptDetails,
+  ]);
 
   const totalDebt = partyDebtAccounts?.reduce<number>(
     (acc, cur) => acc + cur.remainingAmount,
     0,
   );
 
-  // function handleFinish() {
-  //   const newReceipt = {
-  //     customerId: customer.customer_id,
-  //     warehouseId: currentWarehouse!.warehouseId,
-  //     userId: currentUserInfo!.userId,
-  //     createdDate: createdDate!,
-  //     totalReceivedAmount: totalReceivedAmount!,
-  //     paymentMethodId: paymentMethodId!,
-  //     receiptDetails: receiptDetails.map((detail) => ({
-  //       debtAccountId: detail.debtAccount.debtAccountId,
-  //       receiptAmount: detail.receiptAmount,
-  //     })),
-  //   };
+  function handleFinish() {
+    const newReceipt: CreateReceiptRequest = {
+      customerId: customer.customerId,
+      warehouseId: currentWarehouse!.warehouseId,
+      userId: currentUserInfo!.userId,
+      createdDate: createdDate!,
+      totalReceivedAmount: totalReceivedAmount!,
+      paymentMethodId: paymentMethodId!,
+      receiptDetails: receiptDetails.map((detail) => ({
+        debtAccountId: detail.debtAccount.debtAccountId,
+        receiptAmount: detail.receiptAmount,
+      })),
+    };
+    console.log(newReceipt);
 
-  //   createReceipt(newReceipt, {
-  //     onSuccess: () => {
-  //       toast.success("Lập phiếu thu thành công");
-  //       reset();
-  //       form.resetFields();
-  //     },
-  //     onError: (error) => {
-  //       toast.error(getNotificationMessage(error) || "Lập phiếu thu thất bại");
-  //     },
-  //   });
-  // }
+    createReceipt(newReceipt, {
+      onSuccess: () => {
+        toast.success("Lập phiếu thu thành công");
+        reset();
+        form.resetFields();
+      },
+      onError: (error) => {
+        toast.error(getNotificationMessage(error) || "Lập phiếu thu thất bại");
+      },
+    });
+  }
 
   return (
     <Skeleton
       loading={
-        // isWarehouseLoading ||
-        // isUserLoading ||
-        isDebtAccountLoading || isPaymentMethodLoading
+        isWarehouseLoading ||
+        isUserLoading ||
+        isDebtAccountLoading ||
+        isPaymentMethodLoading
       }
     >
       <Form
         form={form}
         layout="vertical"
-        // onFinish={handleFinish}
+        onFinish={handleFinish}
         initialValues={{
           createdDate: dayjs().tz().format("YYYY-MM-DD"),
           totalReceivedAmount: 0,
@@ -166,10 +175,10 @@ const NewReceiptForm: React.FC<NewReceiptFormProps> = ({
               <Input value={customer.customerName} readOnly />
             </Form.Item>
             <Form.Item label="Kho">
-              <Input value={"Kho chính"} readOnly />
+              <Input value={currentWarehouse?.warehouseName} readOnly />
             </Form.Item>
             <Form.Item label="Người tạo">
-              <Input value={"Tăng Thiện Đạt"} readOnly />
+              <Input value={currentUserInfo?.fullName} readOnly />
             </Form.Item>
             <Form.Item
               label="Ngày lập phiếu"
@@ -223,11 +232,11 @@ const NewReceiptForm: React.FC<NewReceiptFormProps> = ({
                 className="right-aligned-number w-full"
                 controls={false}
                 max={totalDebt}
-                // value={totalReceivedAmount}
-                // onChange={(value) => {
-                //   form.setFieldsValue({ totalReceivedAmount: value });
-                //   setTotalReceivedAmount(value as number);
-                // }}
+                value={totalReceivedAmount}
+                onChange={(value) => {
+                  form.setFieldsValue({ totalReceivedAmount: value });
+                  setTotalReceivedAmount(value as number);
+                }}
                 formatter={(value) => formatCurrency(value)}
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 step={1000}
@@ -241,9 +250,9 @@ const NewReceiptForm: React.FC<NewReceiptFormProps> = ({
             >
               <Select
                 options={paymentMethodOptions}
-                // onChange={(value) => {
-                //   setPaymentMethodId(value as string);
-                // }}
+                onChange={(value) => {
+                  setPaymentMethodId(value as string);
+                }}
               />
             </Form.Item>
             <Form.Item label="Nợ sau">
@@ -251,7 +260,7 @@ const NewReceiptForm: React.FC<NewReceiptFormProps> = ({
                 className="right-aligned-number w-full"
                 controls={false}
                 readOnly
-                // value={totalDebt! - totalReceivedAmount}
+                value={totalDebt! - totalReceivedAmount}
                 formatter={(value) => formatCurrency(value)}
                 parser={(value) => parseCurrency(value) as unknown as 0}
                 step={1000}
@@ -265,22 +274,22 @@ const NewReceiptForm: React.FC<NewReceiptFormProps> = ({
             </Form.Item>
           </div>
         </div>
-        <ReceiptDetailTable receiptDetails={partyDebtAccounts || []} />
+        <ReceiptDetailTable />
         <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
           <Space>
             <Button
               onClick={() => {
                 onCancel();
-                // reset();
+                reset();
               }}
-              // loading={isCreating}
+              loading={isCreating}
             >
               Hủy
             </Button>
             <Button
               type="primary"
               htmlType="submit"
-              // loading={isCreating}
+              loading={isCreating}
               disabled={partyDebtAccounts?.length === 0}
             >
               Lưu

@@ -55,7 +55,7 @@ public class DebtAccountQueryController {
     }
 
     @GetMapping("/supplier/{supplierId}/page")
-    public ApiResponse<PartyDebtAccountPageResult> getPartyDebtAccountPage(@PathVariable String supplierId, @RequestParam Map<String, String> filterParams) {
+    public ApiResponse<PartyDebtAccountPageResult> getSupplierDebtAccountPage(@PathVariable String supplierId, @RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetPartyDebtAccountPageQuery getPartyDebtAccountPageQuery = GetPartyDebtAccountPageQuery.builder()
@@ -70,6 +70,26 @@ public class DebtAccountQueryController {
                 .status(HttpStatus.OK.value())
                 .success(true)
                 .message("Supplier debt account page retrieved successfully")
+                .payload(partyDebtAccountPageResult)
+                .build();
+    }
+
+    @GetMapping("/customer/{customerId}/page")
+    public ApiResponse<PartyDebtAccountPageResult> getCustomerDebtAccountPage(@PathVariable String customerId, @RequestParam Map<String, String> filterParams) {
+        PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
+        SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
+        GetPartyDebtAccountPageQuery getPartyDebtAccountPageQuery = GetPartyDebtAccountPageQuery.builder()
+                .partyId(customerId)
+                .partyType(DebtPartyType.CUSTOMER)
+                .sortParams(sortParams)
+                .paginationParams(paginationParams)
+                .filterParams(filterParams)
+                .build();
+        PartyDebtAccountPageResult partyDebtAccountPageResult = queryGateway.query(getPartyDebtAccountPageQuery, ResponseTypes.instanceOf(PartyDebtAccountPageResult.class)).join();
+        return ApiResponse.<PartyDebtAccountPageResult>builder()
+                .status(HttpStatus.OK.value())
+                .success(true)
+                .message("Customer debt account page retrieved successfully")
                 .payload(partyDebtAccountPageResult)
                 .build();
     }

@@ -28,6 +28,8 @@ axon:
         mode: subscribing
       payment-group:
         mode: subscribing
+      receipt-group:
+        mode: subscribing
 application:
   security:
     rsa:

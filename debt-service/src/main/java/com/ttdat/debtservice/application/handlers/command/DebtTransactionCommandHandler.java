@@ -20,6 +20,7 @@ public class DebtTransactionCommandHandler {
                 .debtAccountId(createDebtTransactionCommand.getDebtAccountId())
                 .amount(createDebtTransactionCommand.getAmount())
                 .transactionType(createDebtTransactionCommand.getTransactionType())
+                .sourceId(createDebtTransactionCommand.getSourceId())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(debtTransactionCreatedEvent));
     }

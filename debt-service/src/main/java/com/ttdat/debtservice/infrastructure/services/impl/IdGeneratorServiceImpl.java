@@ -22,4 +22,13 @@ public class IdGeneratorServiceImpl implements IdGeneratorService {
         String randomPart = RandomStringUtils.secure().nextAlphanumeric(8).toUpperCase();
         return datePart + randomPart;
     }
+
+    @Override
+    public String generateReceiptId() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String datePart = currentDate.format(formatter);
+        String randomPart = RandomStringUtils.secure().nextAlphanumeric(8).toUpperCase();
+        return datePart + randomPart;
+    }
 }
