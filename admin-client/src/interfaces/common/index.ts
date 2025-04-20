@@ -55,3 +55,15 @@ export interface IStatsCardValue {
   changePercentage: number;
   trend: TrendType;
 }
+
+export interface ActivityChartData {
+  label: string;
+  imports: number;
+  exports: number;
+}
+
+export interface StatisticFilterCriteria {
+  startDate?: string;
+  endDate?: string;
+  type?: string;
+}

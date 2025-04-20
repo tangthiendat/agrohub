@@ -161,6 +161,7 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
           key: "dashboard",
           icon: <MdDashboard />,
         },
+
         ...(hasAuthChildren
           ? [
               {

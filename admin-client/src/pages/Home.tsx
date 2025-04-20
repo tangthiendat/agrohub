@@ -25,9 +25,11 @@ import {
   invoiceService,
 } from "../services";
 import Loading from "../common/components/Loading";
+import { useSearchParams } from "react-router";
 
 const Home: React.FC = () => {
   useTitle("Trang chủ | Dashboard");
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [dateFilter, setDateFilter] = useState({
     startDate: null,
@@ -73,26 +75,32 @@ const Home: React.FC = () => {
     dashboardTopSellingProducts,
   );
 
-  // Handle date filter changes
   const handleDateChange = (
     startDate: string | null,
     endDate: string | null,
     type: string | null,
   ) => {
-    setDateFilter({
-      startDate,
-      endDate,
-      type: type || "range",
-    });
+    if (startDate) {
+      searchParams.set("startDate", startDate);
+    } else {
+      searchParams.delete("startDate");
+    }
 
-    // In a real application, we would fetch new data based on the date filter
-    console.log("Date filter changed:", startDate, endDate, type);
+    if (endDate) {
+      searchParams.set("endDate", endDate);
+    } else {
+      searchParams.delete("endDate");
+    }
+
+    if (type) {
+      searchParams.set("type", type);
+    } else {
+      searchParams.delete("type");
+    }
+
+    setSearchParams(searchParams);
   };
 
-  // // In a real application, we would fetch data when component mounts or filter changes
-  // useEffect(() => {
-  //   // Fetch data based on dateFilter
-  // }, [dateFilter]);
   if (
     isOrderCountLoading ||
     isCustomerDebtLoading ||
@@ -160,7 +168,7 @@ const Home: React.FC = () => {
           <FilterTimeWithOutDate onDateChange={handleDateChange} />
         </div>
         <div className="bg-white p-4 shadow">
-          <InventoryActivityChart data={inventoryActivity} />
+          <InventoryActivityChart />
         </div>
       </div>
 
