@@ -6,6 +6,7 @@ import com.ttdat.core.application.queries.customer.SearchCustomerIdListQuery;
 import com.ttdat.core.application.queries.inventory.GetProductBatchInfoByIdQuery;
 import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
+import com.ttdat.core.application.queries.stats.GetExportInvoiceCountQuery;
 import com.ttdat.core.application.queries.user.GetUserInfoByIdQuery;
 import com.ttdat.salesservice.api.dto.common.ExportInvoiceDTO;
 import com.ttdat.salesservice.api.dto.common.ExportInvoiceDetailBatchDTO;
@@ -133,5 +134,11 @@ public class ExportInvoiceQueryHandler {
             importInvoiceSpec = importInvoiceSpec.and(querySpec);
         }
         return importInvoiceSpec;
+    }
+
+    @QueryHandler
+    public Long handle(GetExportInvoiceCountQuery getExportInvoiceCountQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        return exportInvoiceRepository.countByRange(warehouseId, getExportInvoiceCountQuery.getStartDate(), getExportInvoiceCountQuery.getEndDate());
     }
 }

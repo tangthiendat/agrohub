@@ -6,6 +6,7 @@ import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.core.api.dto.response.WarehouseInfo;
 import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
+import com.ttdat.core.application.queries.stats.GetImportInvoiceCountQuery;
 import com.ttdat.core.application.queries.user.GetUserInfoByIdQuery;
 import com.ttdat.purchaseservice.api.dto.common.ImportInvoiceDTO;
 import com.ttdat.purchaseservice.api.dto.common.ImportInvoiceDetailDTO;
@@ -101,5 +102,11 @@ public class ImportInvoiceQueryHandler {
             importInvoiceSpec = importInvoiceSpec.and(querySpec);
         }
         return importInvoiceSpec;
+    }
+
+    @QueryHandler
+    public Long handle(GetImportInvoiceCountQuery getImportInvoiceCountQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        return importInvoiceRepository.countByRange(warehouseId, getImportInvoiceCountQuery.getStartDate(), getImportInvoiceCountQuery.getEndDate());
     }
 }

@@ -97,3 +97,9 @@ export enum CustomerType {
   INDIVIDUAL = "INDIVIDUAL",
   BUSINESS = "BUSINESS",
 }
+
+export enum TrendType {
+  UP = "UP",
+  DOWN = "DOWN",
+  STABLE = "STABLE",
+}

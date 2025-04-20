@@ -9,6 +9,7 @@ import {
   ExportOutlined,
 } from "@ant-design/icons";
 import { formatCurrency } from "../../utils/number";
+import { TrendType } from "../../common/enums";
 
 const { Title, Text } = Typography;
 
@@ -17,7 +18,7 @@ interface StatsCardProps {
   value: number;
   isCurrency?: boolean;
   changePercentage: number;
-  trend: "up" | "down";
+  trend: TrendType;
   icon: "order" | "money" | "import" | "export";
 }
 
@@ -55,10 +56,15 @@ const StatsCard: React.FC<StatsCardProps> = ({
           <Tooltip title={`${changePercentage}% so với tháng trước`}>
             <Text
               className={`mt-2 flex items-center ${
-                trend === "up" ? "text-green-500" : "text-red-500"
+                trend === TrendType.UP
+                  ? "text-green-500"
+                  : trend === TrendType.DOWN
+                    ? "text-red-500"
+                    : "text-gray-500"
               }`}
             >
-              {trend === "up" ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              {trend === TrendType.UP && <ArrowUpOutlined />}
+              {trend === TrendType.DOWN && <ArrowDownOutlined />}
               <span className="ml-1">{changePercentage}%</span>
             </Text>
           </Tooltip>

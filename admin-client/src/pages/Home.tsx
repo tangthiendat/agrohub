@@ -17,6 +17,9 @@ import InventoryActivityChart from "../features/dashboard/InventoryActivityChart
 import CategoryInventoryPieChart from "../features/dashboard/CategoryInventoryPieChart";
 import TopCustomersDebtChart from "../features/dashboard/TopCustomersDebtChart";
 import TopSellingProductsChart from "../features/dashboard/TopSellingProductsChart";
+import { useQuery } from "@tanstack/react-query";
+import { invoiceService } from "../services";
+import Loading from "../common/components/Loading";
 // import StatsCard from "../components/dashboard/StatsCard";
 // import InventoryActivityChart from "../components/dashboard/InventoryActivityChart";
 // import CategoryInventoryPieChart from "../components/dashboard/CategoryInventoryPieChart";
@@ -40,6 +43,12 @@ const Home: React.FC = () => {
     startDate: null,
     endDate: null,
     type: "month",
+  });
+
+  const { data: orderStats, isLoading: isOrderCountLoading } = useQuery({
+    queryFn: () => invoiceService.getOrderStatsCard(),
+    queryKey: ["invoices", "stats", "card"],
+    select: (data) => data.payload,
   });
 
   const [stats, setStats] = useState({
@@ -78,24 +87,29 @@ const Home: React.FC = () => {
     console.log("Date filter changed:", startDate, endDate, type);
   };
 
-  // In a real application, we would fetch data when component mounts or filter changes
-  useEffect(() => {
-    // Fetch data based on dateFilter
-  }, [dateFilter]);
+  // // In a real application, we would fetch data when component mounts or filter changes
+  // useEffect(() => {
+  //   // Fetch data based on dateFilter
+  // }, [dateFilter]);
+  if (isOrderCountLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="dashboard-container p-6">
       {/* Stats Cards */}
       <Row gutter={[16, 16]} className="mb-6">
-        <Col xs={24} sm={12} md={6}>
-          <StatsCard
-            title="Tổng số đơn hàng"
-            value={stats.ordersCount.value}
-            changePercentage={stats.ordersCount.changePercentage}
-            trend={stats.ordersCount.trend}
-            icon="order"
-          />
-        </Col>
+        {orderStats && (
+          <Col xs={24} sm={12} md={6}>
+            <StatsCard
+              title="Tổng số đơn hàng"
+              value={orderStats.value}
+              changePercentage={orderStats.changePercentage}
+              trend={orderStats.trend}
+              icon="order"
+            />
+          </Col>
+        )}
         <Col xs={24} sm={12} md={6}>
           <StatsCard
             title="Tổng công nợ"
