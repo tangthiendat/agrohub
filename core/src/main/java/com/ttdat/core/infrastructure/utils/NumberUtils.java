@@ -28,7 +28,10 @@ public class NumberUtils {
     }
 
     public static BigDecimal getChangePercentage(BigDecimal previousValue, BigDecimal currentValue) {
+        if(previousValue.compareTo(BigDecimal.ZERO) == 0) {
+            return BigDecimal.ZERO;
+        }
         BigDecimal ratio = currentValue.divide(previousValue, 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
-        return ratio.compareTo(BigDecimal.valueOf(100)) >= 0 ? ratio.subtract(BigDecimal.valueOf(100)) : ratio ;
+        return ratio.compareTo(BigDecimal.valueOf(100)) >= 0 ? ratio.subtract(BigDecimal.valueOf(100)) : BigDecimal.valueOf(100).subtract(ratio);
     }
 }

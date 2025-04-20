@@ -18,23 +18,8 @@ import CategoryInventoryPieChart from "../features/dashboard/CategoryInventoryPi
 import TopCustomersDebtChart from "../features/dashboard/TopCustomersDebtChart";
 import TopSellingProductsChart from "../features/dashboard/TopSellingProductsChart";
 import { useQuery } from "@tanstack/react-query";
-import { invoiceService } from "../services";
+import { debtAccountService, invoiceService } from "../services";
 import Loading from "../common/components/Loading";
-// import StatsCard from "../components/dashboard/StatsCard";
-// import InventoryActivityChart from "../components/dashboard/InventoryActivityChart";
-// import CategoryInventoryPieChart from "../components/dashboard/CategoryInventoryPieChart";
-// import TopCustomersDebtChart from "../components/dashboard/TopCustomersDebtChart";
-// import TopSellingProductsChart from "../components/dashboard/TopSellingProductsChart";
-// import {
-//   dashboardOrderStats,
-//   dashboardCustomerDebtStats,
-//   dashboardImportStats,
-//   dashboardExportStats,
-//   dashboardInventoryActivity,
-//   dashboardCategoryInventory,
-//   dashboardTopCustomersDebt,
-//   dashboardTopSellingProducts,
-// } from "../mock/dashboardData";
 
 const Home: React.FC = () => {
   useTitle("Trang chủ | Dashboard");
@@ -50,6 +35,13 @@ const Home: React.FC = () => {
     queryKey: ["invoices", "stats", "card"],
     select: (data) => data.payload,
   });
+
+  const { data: customerDebtStats, isLoading: isCustomerDebtLoading } =
+    useQuery({
+      queryFn: () => debtAccountService.getCustomerDebtStatsCard(),
+      queryKey: ["debt-accounts", "stats", "card"],
+      select: (data) => data.payload,
+    });
 
   const [stats, setStats] = useState({
     ordersCount: dashboardOrderStats,
@@ -110,16 +102,18 @@ const Home: React.FC = () => {
             />
           </Col>
         )}
-        <Col xs={24} sm={12} md={6}>
-          <StatsCard
-            title="Tổng công nợ"
-            value={stats.customerDebt.value}
-            isCurrency={true}
-            changePercentage={stats.customerDebt.changePercentage}
-            trend={stats.customerDebt.trend}
-            icon="money"
-          />
-        </Col>
+        {customerDebtStats && (
+          <Col xs={24} sm={12} md={6}>
+            <StatsCard
+              title="Tổng công nợ"
+              value={customerDebtStats.value}
+              isCurrency={true}
+              changePercentage={customerDebtStats.changePercentage}
+              trend={customerDebtStats.trend}
+              icon="money"
+            />
+          </Col>
+        )}
         <Col xs={24} sm={12} md={6}>
           <StatsCard
             title="Tổng nhập kho"

@@ -7,9 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface ExportInvoiceRepository extends JpaRepository<ExportInvoice, String>, JpaSpecificationExecutor<ExportInvoice> {
     @Query("SELECT COUNT(e) FROM ExportInvoice e WHERE e.warehouseId = :warehouseId AND e.createdDate BETWEEN :startDate AND :endDate")
     Long countByRange(Long warehouseId, LocalDate startDate, LocalDate endDate);
+
+    @Query("SELECT e FROM ExportInvoice e WHERE e.warehouseId = :warehouseId AND e.createdDate BETWEEN :startDate AND :endDate")
+    List<ExportInvoice> findByRange(Long warehouseId, LocalDate startDate, LocalDate endDate);
 }

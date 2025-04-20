@@ -3,6 +3,7 @@ import { createApiClient } from "../../config/axios/api-client";
 import {
   ApiResponse,
   IPartyDebtAccount,
+  IStatsCardValue,
   Page,
   PaginationParams,
   PartyDebtAccountFilterCriteria,
@@ -28,6 +29,8 @@ export interface IDebtAccountService {
     sort?: SortParams,
     filter?: PartyDebtAccountFilterCriteria,
   ): Promise<ApiResponse<Page<IPartyDebtAccount>>>;
+
+  getCustomerDebtStatsCard(): Promise<ApiResponse<IStatsCardValue>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/debt-accounts", {
@@ -81,6 +84,10 @@ class DebtAccountService implements IDebtAccountService {
         },
       })
     ).data;
+  }
+
+  async getCustomerDebtStatsCard(): Promise<ApiResponse<IStatsCardValue>> {
+    return (await apiClient.get("/stats/card")).data;
   }
 }
 

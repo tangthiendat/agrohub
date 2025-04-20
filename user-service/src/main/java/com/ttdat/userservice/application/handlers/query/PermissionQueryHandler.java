@@ -26,10 +26,10 @@ public class PermissionQueryHandler {
     private final PermissionRepository permissionRepository;
     private final PermissionMapper permissionMapper;
 
-    @QueryHandler
-    public List<PermissionDTO> handle(GetAllPermissionsQuery getAllPermissionsQuery) {
-        return permissionMapper.toDTOs(permissionRepository.findAll());
-    }
+@QueryHandler
+public List<PermissionDTO> handle(GetAllPermissionsQuery getAllPermissionsQuery) {
+    return permissionMapper.toDTOs(permissionRepository.findAll());
+}
 
     @QueryHandler
     public PermissionPageResult handle(GetPermissionPageQuery getPermissionPageQuery) {

@@ -3,11 +3,14 @@ package com.ttdat.debtservice.api.controllers.query;
 import com.ttdat.core.api.dto.request.PaginationParams;
 import com.ttdat.core.api.dto.request.SortParams;
 import com.ttdat.core.api.dto.response.ApiResponse;
+import com.ttdat.core.api.dto.response.StatsCardValue;
 import com.ttdat.core.domain.entities.DebtPartyType;
+import com.ttdat.core.infrastructure.utils.NumberUtils;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccount;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccountPageResult;
 import com.ttdat.debtservice.application.queries.debtaccount.GetPartyDebtAccountPageQuery;
+import com.ttdat.debtservice.application.queries.debtaccount.GetTotalCustomerDebtInRangeQuery;
 import com.ttdat.debtservice.application.queries.debtaccount.GetUnpaidDebtAccountByPartyIdQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
@@ -15,6 +18,8 @@ import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +96,35 @@ public class DebtAccountQueryController {
                 .success(true)
                 .message("Customer debt account page retrieved successfully")
                 .payload(partyDebtAccountPageResult)
+                .build();
+    }
+
+    @GetMapping("/stats/card")
+    public ApiResponse<StatsCardValue> getDebtAccountStatsCard() {
+        LocalDate today = LocalDate.now();
+        LocalDate startOfMonth = today.withDayOfMonth(1);
+        GetTotalCustomerDebtInRangeQuery getTotalCustomerDebtInRangeQuery = GetTotalCustomerDebtInRangeQuery.builder()
+                .startDate(startOfMonth)
+                .endDate(today)
+                .build();
+        BigDecimal currentTotalCustomerDebt = queryGateway.query(getTotalCustomerDebtInRangeQuery, ResponseTypes.instanceOf(BigDecimal.class)).join();
+        LocalDate startOfPreviousMonth = today.minusMonths(1).withDayOfMonth(1);
+        LocalDate endOfPreviousMonth = startOfPreviousMonth.plusMonths(1).minusDays(1);
+        GetTotalCustomerDebtInRangeQuery getPreviousMonthTotalCustomerDebtInRangeQuery = GetTotalCustomerDebtInRangeQuery.builder()
+                .startDate(startOfPreviousMonth)
+                .endDate(endOfPreviousMonth)
+                .build();
+        BigDecimal previousTotalCustomerDebt = queryGateway.query(getPreviousMonthTotalCustomerDebtInRangeQuery, ResponseTypes.instanceOf(BigDecimal.class)).join();
+        StatsCardValue statsCardValue = StatsCardValue.builder()
+                .value(currentTotalCustomerDebt)
+                .changePercentage(NumberUtils.getChangePercentage(previousTotalCustomerDebt, currentTotalCustomerDebt))
+                .trend(NumberUtils.getTrendType(previousTotalCustomerDebt, currentTotalCustomerDebt))
+                .build();
+        return ApiResponse.<StatsCardValue>builder()
+                .status(HttpStatus.OK.value())
+                .message("Get debt account stats card successfully")
+                .success(true)
+                .payload(statsCardValue)
                 .build();
     }
 
