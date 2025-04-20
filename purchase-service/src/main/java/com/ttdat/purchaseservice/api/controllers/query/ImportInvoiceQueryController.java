@@ -10,7 +10,6 @@ import com.ttdat.purchaseservice.api.dto.response.ImportInvoicePageResult;
 import com.ttdat.purchaseservice.application.queries.importinvoice.GetImportInvoicePageQuery;
 import com.ttdat.purchaseservice.application.queries.importinvoice.GetTotalImportInRangeQuery;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/v1/import-invoices")
 @RequiredArgsConstructor
@@ -64,7 +62,6 @@ public class ImportInvoiceQueryController {
                 .endDate(endOfPreviousMonth)
                 .build();
         BigDecimal previousTotalImport = queryGateway.query(getPreviousMonthTotalImportQuery, ResponseTypes.instanceOf(BigDecimal.class)).join();
-        log.info("Current total import: {}, Previous total import: {}", currentTotalImport, previousTotalImport);
         StatsCardValue statsCardValue = StatsCardValue.builder()
                 .value(currentTotalImport)
                 .changePercentage(NumberUtils.getChangePercentage(previousTotalImport, currentTotalImport))
