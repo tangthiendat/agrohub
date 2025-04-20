@@ -130,6 +130,8 @@ export const usePaymentStore = create<PaymentState>()(
           ...initialState,
         })),
     })),
-    { name: "PaymentStore" },
+    {
+      name: "PaymentStore",
+    },
   ),
 );

@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ProductTotalQuantityUpdatedEvent {
+public class ProductTotalQuantityAddedEvent {
     String productId;
 
     Double quantity;

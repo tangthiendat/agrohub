@@ -28,6 +28,7 @@ import SupplierDebt from "../features/debt/SupplierDebt";
 import Customers from "../pages/Customers";
 import ExportInvoices from "../pages/ExportInvoices";
 import NewExportInvoice from "../features/sales/export-invoice/NewExportInvoice";
+import CustomerDebt from "../features/debt/CustomerDebt";
 
 const router = createBrowserRouter([
   {
@@ -120,6 +121,10 @@ const router = createBrowserRouter([
             path: "",
             index: true,
             element: <Customers />,
+          },
+          {
+            path: ":id/debt",
+            element: <CustomerDebt />,
           },
         ],
       },

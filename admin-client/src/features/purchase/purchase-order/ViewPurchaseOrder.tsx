@@ -542,34 +542,35 @@ const ViewPurchaseOrder: React.FC = () => {
             >
               <DatePicker disabled className="w-full" format="DD/MM/YYYY" />
             </Form.Item>
-            <Form.Item
-              label="Ngày dự kiến nhận hàng"
-              name="expectedDeliveryDate"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn ngày dự kiến nhận hàng",
-                },
-              ]}
-              getValueProps={(value: string) => ({
-                value: value && dayjs(value),
-              })}
-              normalize={(value: Dayjs) =>
-                value && value.tz().format("YYYY-MM-DD")
-              }
-            >
-              <DatePicker
-                disabled
-                className="w-full"
-                format="DD/MM/YYYY"
-                placeholder=""
-                onChange={(date: Dayjs) => {
-                  form.setFieldsValue({
-                    expectedDeliveryDate: date.tz().format("YYYY-MM-DD"),
-                  });
-                }}
-              />
-            </Form.Item>
+            {purchaseOrder?.status !== PurchaseOrderStatus.PENDING && (
+              <Form.Item
+                label="Ngày dự kiến nhận hàng"
+                name="expectedDeliveryDate"
+                rules={[
+                  {
+                    required: true,
+                    message: "Vui lòng chọn ngày dự kiến nhận hàng",
+                  },
+                ]}
+                getValueProps={(value: string) => ({
+                  value: value && dayjs(value),
+                })}
+                normalize={(value: Dayjs) =>
+                  value && value.tz().format("YYYY-MM-DD")
+                }
+              >
+                <DatePicker
+                  className="w-full"
+                  format="DD/MM/YYYY"
+                  placeholder=""
+                  onChange={(date: Dayjs) => {
+                    form.setFieldsValue({
+                      expectedDeliveryDate: date.tz().format("YYYY-MM-DD"),
+                    });
+                  }}
+                />
+              </Form.Item>
+            )}
             <Form.Item label="Ghi chú" name="note">
               <Input.TextArea
                 readOnly={

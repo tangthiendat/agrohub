@@ -77,7 +77,7 @@ public class PurchaseOrderAggregate {
                 .supplierId(purchaseOrderCommand.getSupplierId())
                 .userId(purchaseOrderCommand.getUserId())
                 .orderDate(purchaseOrderCommand.getOrderDate())
-                .expectedDeliveryDate(purchaseOrderCommand.getExpectedDeliveryDate())
+//                .expectedDeliveryDate(purchaseOrderCommand.getExpectedDeliveryDate())
                 .status(purchaseOrderCommand.getStatus())
                 .totalAmount(purchaseOrderCommand.getTotalAmount())
                 .discountValue(purchaseOrderCommand.getDiscountValue())
@@ -147,7 +147,7 @@ public class PurchaseOrderAggregate {
         this.supplierId = purchaseOrderCreatedEvent.getSupplierId();
         this.userId = purchaseOrderCreatedEvent.getUserId();
         this.orderDate = purchaseOrderCreatedEvent.getOrderDate();
-        this.expectedDeliveryDate = purchaseOrderCreatedEvent.getExpectedDeliveryDate();
+//        this.expectedDeliveryDate = purchaseOrderCreatedEvent.getExpectedDeliveryDate();
         this.purchaseOrderDetails = purchaseOrderCreatedEvent.getPurchaseOrderDetails();
         this.status = purchaseOrderCreatedEvent.getStatus();
         this.totalAmount = purchaseOrderCreatedEvent.getTotalAmount();

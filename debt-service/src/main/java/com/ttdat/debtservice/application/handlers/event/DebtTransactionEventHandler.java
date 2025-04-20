@@ -1,7 +1,7 @@
 package com.ttdat.debtservice.application.handlers.event;
 
 import com.ttdat.debtservice.application.mappers.DebtTransactionMapper;
-import com.ttdat.debtservice.application.repositories.DebtTransactionRepository;
+import com.ttdat.debtservice.domain.repositories.DebtTransactionRepository;
 import com.ttdat.debtservice.domain.entities.DebtTransaction;
 import com.ttdat.debtservice.domain.events.transaction.DebtTransactionCreatedEvent;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,6 @@ public class DebtTransactionEventHandler {
     @Transactional
     @EventHandler
     public void on(DebtTransactionCreatedEvent debtTransactionCreatedEvent) {
-        log.info("Handling DebtTransactionCreatedEvent: {}", debtTransactionCreatedEvent);
         DebtTransaction debtTransaction = debtTransactionMapper.toEntity(debtTransactionCreatedEvent);
         debtTransactionRepository.save(debtTransaction);
     }

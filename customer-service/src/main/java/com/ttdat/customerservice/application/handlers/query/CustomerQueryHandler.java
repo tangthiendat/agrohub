@@ -8,6 +8,7 @@ import com.ttdat.core.application.queries.customer.SearchCustomerIdListQuery;
 import com.ttdat.customerservice.api.dto.CustomerDTO;
 import com.ttdat.customerservice.api.dto.response.CustomerPageResult;
 import com.ttdat.customerservice.application.mappers.CustomerMapper;
+import com.ttdat.customerservice.application.queries.customer.GetCustomerByIdQuery;
 import com.ttdat.customerservice.application.queries.customer.GetCustomerQueryPageQuery;
 import com.ttdat.customerservice.application.queries.customer.SearchCustomerQuery;
 import com.ttdat.customerservice.application.repositories.CustomerRepository;
@@ -74,6 +75,13 @@ public class CustomerQueryHandler {
         Customer customer = customerRepository.findById(getCustomerInfoByIdQuery.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND));
         return customerMapper.toCustomerInfo(customer);
+    }
+
+    @QueryHandler
+    public CustomerDTO handle(GetCustomerByIdQuery getCustomerByIdQuery) {
+        Customer customer = customerRepository.findById(getCustomerByIdQuery.getCustomerId())
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.CUSTOMER_NOT_FOUND));
+        return customerMapper.toDTO(customer);
     }
 
     @QueryHandler

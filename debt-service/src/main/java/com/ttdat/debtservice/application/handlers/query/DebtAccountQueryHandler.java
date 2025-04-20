@@ -6,7 +6,7 @@ import com.ttdat.debtservice.api.dto.response.PartyDebtAccountPageResult;
 import com.ttdat.debtservice.application.mappers.DebtAccountMapper;
 import com.ttdat.debtservice.application.queries.debtaccount.GetPartyDebtAccountPageQuery;
 import com.ttdat.debtservice.application.queries.debtaccount.GetUnpaidDebtAccountByPartyIdQuery;
-import com.ttdat.debtservice.application.repositories.DebtAccountRepository;
+import com.ttdat.debtservice.domain.repositories.DebtAccountRepository;
 import com.ttdat.debtservice.domain.entities.DebtAccount;
 import com.ttdat.debtservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.debtservice.infrastructure.utils.SpecificationUtils;

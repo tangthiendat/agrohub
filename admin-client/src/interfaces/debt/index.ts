@@ -46,7 +46,6 @@ export interface IPartyDebtAccount {
 export interface PartyDebtAccountFilterCriteria {
   debtStatus?: string;
 }
-
 export interface CreatePaymentDetailRequest {
   debtAccountId: string;
   paymentAmount: number;
@@ -60,4 +59,19 @@ export interface CreatePaymentRequest {
   totalPaidAmount: number;
   paymentMethodId: string;
   paymentDetails: CreatePaymentDetailRequest[];
+}
+
+export interface CreateReceiptDetailRequest {
+  debtAccountId: string;
+  receiptAmount: number;
+}
+
+export interface CreateReceiptRequest {
+  customerId: string;
+  warehouseId: number;
+  userId: string;
+  createdDate: string;
+  totalReceivedAmount: number;
+  paymentMethodId: string;
+  receiptDetails: CreateReceiptDetailRequest[];
 }

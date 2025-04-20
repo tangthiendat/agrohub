@@ -1,7 +1,7 @@
 package com.ttdat.purchaseservice.application.handlers.event;
 
 import com.ttdat.core.application.commands.debt.CreateDebtAccountCommand;
-import com.ttdat.core.application.commands.product.UpdateProductTotalQuantityCommand;
+import com.ttdat.core.application.commands.product.AddProductTotalQuantityCommand;
 import com.ttdat.core.application.commands.stock.AddProductStockCommand;
 import com.ttdat.core.application.constants.SystemConfigConstants;
 import com.ttdat.core.application.queries.product.GetProductStockQuantityQuery;
@@ -50,11 +50,11 @@ public class ImportInvoiceEventHandler {
                     .quantity(Double.valueOf(importInvoiceDetail.getQuantity()))
                     .build();
             commandGateway.send(addProductStockCommand);
-            UpdateProductTotalQuantityCommand updateProductTotalQuantityCommand = UpdateProductTotalQuantityCommand.builder()
+            AddProductTotalQuantityCommand addProductTotalQuantityCommand = AddProductTotalQuantityCommand.builder()
                     .productId(importInvoiceDetail.getProductId())
                     .quantity(productStockQuantity)
                     .build();
-            commandGateway.send(updateProductTotalQuantityCommand);
+            commandGateway.send(addProductTotalQuantityCommand);
         });
 
         CreateDebtAccountCommand createDebtAccountCommand = CreateDebtAccountCommand.builder()

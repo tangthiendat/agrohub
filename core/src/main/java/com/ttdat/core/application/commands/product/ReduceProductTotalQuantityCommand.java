@@ -12,7 +12,6 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class ReduceProductTotalQuantityCommand {
-    @TargetAggregateIdentifier
     String productId;
 
     Double quantity;

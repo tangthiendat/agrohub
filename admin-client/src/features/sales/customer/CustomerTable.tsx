@@ -5,7 +5,7 @@ import {
   CaretUpFilled,
   FilterFilled,
 } from "@ant-design/icons";
-import { useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { TableProps } from "antd/lib";
 import {
   getDefaultFilterValue,
@@ -25,6 +25,7 @@ import { CUSTOMER_TYPE_NAME, PERMISSIONS } from "../../../common/constants";
 import UpdateCustomer from "./UpdateCustomer";
 import Access from "../../auth/Access";
 import UpdateCustomerStatus from "./UpdateCustomerStatus";
+import MoneyIcon from "../../../common/components/icons/MoneyIcon";
 
 interface CustomerTableProps {
   customerPage?: Page<ICustomer>;
@@ -40,6 +41,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
   isLoading,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [tableParams, setTableParams] = useState<TableParams>(() => ({
     pagination: {
       current: Number(searchParams.get("page")) || 1,
@@ -206,6 +208,10 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
           <Access permission={PERMISSIONS[Module.CUSTOMER].UPDATE} hideChildren>
             <UpdateCustomer customer={customer} />
           </Access>
+          <MoneyIcon
+            tooltipTitle="Công nợ"
+            onClick={() => navigate(`${customer.customerId}/debt`)}
+          />
           <Access
             permission={PERMISSIONS[Module.CUSTOMER].UPDATE_STATUS}
             hideChildren

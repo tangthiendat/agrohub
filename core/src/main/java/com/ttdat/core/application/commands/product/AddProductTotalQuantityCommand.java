@@ -11,8 +11,7 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
-public class UpdateProductTotalQuantityCommand {
-    @TargetAggregateIdentifier
+public class AddProductTotalQuantityCommand {
     String productId;
 
     Double quantity;

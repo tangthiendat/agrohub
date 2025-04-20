@@ -16,6 +16,8 @@ interface ICustomerService {
     filter?: CustomerFilterCriteria,
   ): Promise<ApiResponse<Page<ICustomer>>>;
 
+  getById(customerId: string): Promise<ApiResponse<ICustomer>>;
+
   update(
     customerId: string,
     updatedCustomer: ICustomer,
@@ -48,6 +50,10 @@ class CustomerService implements ICustomerService {
         },
       })
     ).data;
+  }
+
+  async getById(customerId: string): Promise<ApiResponse<ICustomer>> {
+    return (await apiClient.get(`/${customerId}`)).data;
   }
 
   async update(

@@ -259,4 +259,10 @@ export const PERMISSIONS = {
       httpMethod: HttpMethod.POST,
     },
   },
+  [Module.RECEIPT]: {
+    CREATE: {
+      apiPath: "/api/v1/receipts",
+      httpMethod: HttpMethod.POST,
+    },
+  },
 };
