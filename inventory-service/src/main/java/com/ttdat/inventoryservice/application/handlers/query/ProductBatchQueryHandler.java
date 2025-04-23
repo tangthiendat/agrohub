@@ -88,9 +88,8 @@ public class ProductBatchQueryHandler {
     public List<ProductBatchDTO> handle(GetAllProductBatchQuery getAllProductBatchQuery, QueryMessage<?, ?> queryMessage) {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Map<String, String> filterParams = getAllProductBatchQuery.getFilterParams();
-        filterParams.put("warehouseId", warehouseId.toString());
-        Specification<ProductBatch> productBatchSpec = getProductBatchSpec(filterParams);
-        List<ProductBatch> productBatches = productBatchRepository.findAll(productBatchSpec);
+        String productId = filterParams.get("productId");
+        List<ProductBatch> productBatches = productBatchRepository.findByWarehouseIdAndProductId(warehouseId, productId);
         return productBatches.stream()
                 .filter(productBatch -> !productBatch.getBatchLocations().isEmpty())
                 .map(productBatchMapper::toDTO)
