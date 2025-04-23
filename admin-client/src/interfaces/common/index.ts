@@ -67,3 +67,8 @@ export interface StatisticFilterCriteria {
   endDate?: string;
   type?: string;
 }
+
+export interface CategoryInventoryData {
+  label: string;
+  value: number;
+}

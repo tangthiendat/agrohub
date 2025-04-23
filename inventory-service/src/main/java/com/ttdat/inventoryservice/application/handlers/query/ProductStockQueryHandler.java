@@ -7,6 +7,7 @@ import com.ttdat.inventoryservice.api.dto.common.ProductStockDTO;
 import com.ttdat.inventoryservice.api.dto.response.ProductStockPageResult;
 import com.ttdat.inventoryservice.application.mappers.ProductStockMapper;
 import com.ttdat.inventoryservice.application.queries.stock.GetProductStockPageQuery;
+import com.ttdat.inventoryservice.application.queries.stock.GetWarehouseProductStockQuery;
 import com.ttdat.inventoryservice.domain.entities.ProductStock;
 import com.ttdat.inventoryservice.domain.repositories.ProductStockRepository;
 import com.ttdat.inventoryservice.infrastructure.utils.PaginationUtils;
@@ -59,7 +60,7 @@ public class ProductStockQueryHandler {
         Specification<ProductStock> spec = Specification.where(null);
         spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class));
         Map<String, String> productFilterParams = new HashMap<>();
-        if(filterParams.containsKey("categoryId")) {
+        if (filterParams.containsKey("categoryId")) {
             productFilterParams.put("categoryId", filterParams.get("categoryId"));
         }
         if (filterParams.containsKey("query")) {
@@ -77,5 +78,25 @@ public class ProductStockQueryHandler {
             }
         }
         return spec;
+    }
+
+    @QueryHandler
+    public List<ProductStockDTO> handle(GetWarehouseProductStockQuery getWarehouseProductStockQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+        Map<String, String> filterParams = new HashMap<>();
+        filterParams.put("warehouseId", warehouseId.toString());
+        Specification<ProductStock> productStockSpec = getProductStockSpec(filterParams);
+        List<ProductStock> productStocks = productStockRepository.findAll(productStockSpec);
+        return productStocks.stream()
+                .map(productStock -> {
+                    ProductStockDTO productStockDTO = productStockMapper.toDTO(productStock);
+                    GetProductInfoByIdQuery getProductInfoByIdQuery = GetProductInfoByIdQuery.builder()
+                            .productId(productStock.getProductId())
+                            .build();
+                    ProductInfo productInfo = queryGateway.query(getProductInfoByIdQuery, ResponseTypes.instanceOf(ProductInfo.class)).join();
+                    productStockDTO.setProduct(productInfo);
+                    return productStockDTO;
+                })
+                .toList();
     }
 }

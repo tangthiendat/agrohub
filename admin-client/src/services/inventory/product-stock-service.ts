@@ -1,6 +1,7 @@
 import { AxiosInstance } from "axios";
 import {
   ApiResponse,
+  CategoryInventoryData,
   IProductStock,
   Page,
   PaginationParams,
@@ -15,6 +16,7 @@ interface IProductStockService {
     sort?: SortParams,
     filter?: ProductStockFilterCriteria,
   ): Promise<ApiResponse<Page<IProductStock>>>;
+  getCategoryInventoryStats(): Promise<ApiResponse<CategoryInventoryData[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/product-stocks", {
@@ -37,6 +39,12 @@ class ProductStockService implements IProductStockService {
         },
       })
     ).data;
+  }
+
+  async getCategoryInventoryStats(): Promise<
+    ApiResponse<CategoryInventoryData[]>
+  > {
+    return (await apiClient.get("/stats/category-inventory")).data;
   }
 }
 
