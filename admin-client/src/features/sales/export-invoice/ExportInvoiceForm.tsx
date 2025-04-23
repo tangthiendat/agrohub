@@ -22,7 +22,6 @@ import {
   ExportInvoiceDetailState,
   useExportInvoiceStore,
 } from "../../../store/export-invoice-store";
-import { convertKeysToSnakeCase } from "../../../utils/data";
 import { formatCurrency, parseCurrency } from "../../../utils/number";
 import SearchCustomerBar from "../customer/SearchCustomerBar";
 import toast from "react-hot-toast";
@@ -128,10 +127,7 @@ const ExportInvoiceForm: React.FC<ExportInvoiceFormProps> = ({
         }),
       ),
     };
-    console.log(
-      "New Export Invoice: ",
-      convertKeysToSnakeCase(newExportInvoice),
-    );
+
     createExportInvoice(newExportInvoice, {
       onSuccess: () => {
         toast.success("Tạo phiếu xuất kho thành công");
