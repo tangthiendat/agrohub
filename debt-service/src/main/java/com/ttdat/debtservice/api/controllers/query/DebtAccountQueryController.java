@@ -9,7 +9,9 @@ import com.ttdat.core.infrastructure.utils.NumberUtils;
 import com.ttdat.core.infrastructure.utils.RequestParamsUtils;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccount;
 import com.ttdat.debtservice.api.dto.response.PartyDebtAccountPageResult;
+import com.ttdat.debtservice.api.dto.response.TopCustomerDebtChartData;
 import com.ttdat.debtservice.application.queries.debtaccount.GetPartyDebtAccountPageQuery;
+import com.ttdat.debtservice.application.queries.debtaccount.GetTopCustomerDebtQuery;
 import com.ttdat.debtservice.application.queries.debtaccount.GetTotalCustomerDebtInRangeQuery;
 import com.ttdat.debtservice.application.queries.debtaccount.GetUnpaidDebtAccountByPartyIdQuery;
 import lombok.RequiredArgsConstructor;
@@ -125,6 +127,22 @@ public class DebtAccountQueryController {
                 .message("Get debt account stats card successfully")
                 .success(true)
                 .payload(statsCardValue)
+                .build();
+    }
+
+    @GetMapping("/stats/top-customers")
+    public ApiResponse<List<TopCustomerDebtChartData>> getTopCustomerDebtChart() {
+        GetTopCustomerDebtQuery getTopCustomerDebtQuery = GetTopCustomerDebtQuery.builder().build();
+        List<TopCustomerDebtChartData> topCustomers = queryGateway.query(
+                getTopCustomerDebtQuery,
+                ResponseTypes.multipleInstancesOf(TopCustomerDebtChartData.class)
+        ).join();
+
+        return ApiResponse.<List<TopCustomerDebtChartData>>builder()
+                .status(HttpStatus.OK.value())
+                .message("Get top customer debt chart successfully")
+                .success(true)
+                .payload(topCustomers)
                 .build();
     }
 

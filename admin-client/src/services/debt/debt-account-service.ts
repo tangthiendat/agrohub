@@ -8,6 +8,7 @@ import {
   PaginationParams,
   PartyDebtAccountFilterCriteria,
   SortParams,
+  TopCustomerDebtChartData,
 } from "../../interfaces";
 
 export interface IDebtAccountService {
@@ -31,6 +32,8 @@ export interface IDebtAccountService {
   ): Promise<ApiResponse<Page<IPartyDebtAccount>>>;
 
   getCustomerDebtStatsCard(): Promise<ApiResponse<IStatsCardValue>>;
+
+  getTopCustomerDebtStats(): Promise<ApiResponse<TopCustomerDebtChartData[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/debt-accounts", {
@@ -88,6 +91,12 @@ class DebtAccountService implements IDebtAccountService {
 
   async getCustomerDebtStatsCard(): Promise<ApiResponse<IStatsCardValue>> {
     return (await apiClient.get("/stats/card")).data;
+  }
+
+  async getTopCustomerDebtStats(): Promise<
+    ApiResponse<TopCustomerDebtChartData[]>
+  > {
+    return (await apiClient.get("/stats/top-customers")).data;
   }
 }
 

@@ -5,6 +5,7 @@ import com.ttdat.core.application.queries.customer.GetCustomerInfoByIdQuery;
 import com.ttdat.core.application.queries.customer.SearchCustomerIdListQuery;
 import com.ttdat.core.application.queries.exportinvoice.GetExportSummaryInRangeQuery;
 import com.ttdat.core.application.queries.exportinvoice.SearchExportInvoiceIdListQuery;
+import com.ttdat.core.application.queries.exportinvoice.SearchWarehouseExportInvoiceIdListQuery;
 import com.ttdat.core.application.queries.inventory.GetProductBatchInfoByIdQuery;
 import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
@@ -148,6 +149,17 @@ public class ExportInvoiceQueryHandler {
     public Long handle(GetExportInvoiceCountQuery getExportInvoiceCountQuery, QueryMessage<?, ?> queryMessage) {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         return exportInvoiceRepository.countByRange(warehouseId, getExportInvoiceCountQuery.getStartDate(), getExportInvoiceCountQuery.getEndDate());
+    }
+
+    @QueryHandler
+    public List<String> handle(SearchWarehouseExportInvoiceIdListQuery searchWarehouseExportInvoiceIdListQuery){
+        Long warehouseId = searchWarehouseExportInvoiceIdListQuery.getWarehouseId();
+        Map<String, String> filterParams = Map.of("warehouseId", warehouseId.toString());
+        Specification<ExportInvoice> exportInvoiceSpec = getExportInvoiceSpec(filterParams);
+        List<ExportInvoice> exportInvoices = exportInvoiceRepository.findAll(exportInvoiceSpec);
+        return exportInvoices.stream()
+                .map(ExportInvoice::getExportInvoiceId)
+                .toList();
     }
 
     @QueryHandler

@@ -1,24 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
 import { formatCurrency } from "../../utils/number";
+import { useQuery } from "@tanstack/react-query";
+import { debtAccountService } from "../../services";
 
 // Register Chart.js components
 Chart.register(...registerables);
 
-interface CustomerDebt {
-  name: string;
-  value: number;
-}
-
-interface TopCustomersDebtChartProps {
-  data: CustomerDebt[];
-}
-
-const TopCustomersDebtChart: React.FC<TopCustomersDebtChartProps> = ({
-  data,
-}) => {
+const TopCustomersDebtChart: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+
+  const { data: topCustomerDebtStats } = useQuery({
+    queryKey: ["debt-accounts", "stats", "top-customers"],
+    queryFn: () => debtAccountService.getTopCustomerDebtStats(),
+    select: (data) => data.payload,
+  });
 
   useEffect(() => {
     if (chartRef.current) {
@@ -29,8 +26,6 @@ const TopCustomersDebtChart: React.FC<TopCustomersDebtChartProps> = ({
 
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
-        const sortedData = [...data].sort((a, b) => b.value - a.value);
-
         // Generate colors for bars
         const colors = [
           "#FF9900",
@@ -48,12 +43,16 @@ const TopCustomersDebtChart: React.FC<TopCustomersDebtChartProps> = ({
           type: "bar",
           data: {
             // Don't truncate labels - we'll handle wrapping in the options
-            labels: sortedData.map((item) => item.name),
+            labels:
+              topCustomerDebtStats?.map((item) => item.customerName) ?? [],
             datasets: [
               {
                 label: "Công nợ",
-                data: sortedData.map((item) => item.value),
-                backgroundColor: colors.slice(0, sortedData.length),
+                data: topCustomerDebtStats?.map((item) => item.totalDebt) ?? [],
+                backgroundColor: colors.slice(
+                  0,
+                  topCustomerDebtStats?.length || 0,
+                ),
                 borderWidth: 0,
                 borderRadius: 4,
                 maxBarThickness: 30,
@@ -146,7 +145,7 @@ const TopCustomersDebtChart: React.FC<TopCustomersDebtChartProps> = ({
         chartInstance.current.destroy();
       }
     };
-  }, [data]);
+  }, [topCustomerDebtStats]);
 
   return (
     <div style={{ height: "320px" }}>

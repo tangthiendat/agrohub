@@ -72,3 +72,8 @@ export interface CategoryInventoryData {
   label: string;
   value: number;
 }
+
+export interface TopCustomerDebtChartData {
+  customerName: string;
+  totalDebt: number;
+}

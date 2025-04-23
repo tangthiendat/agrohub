@@ -1,31 +1,22 @@
-import { Row, Col } from "antd";
-import { useEffect, useState } from "react";
-import { useTitle } from "../common/hooks";
+import { useQuery } from "@tanstack/react-query";
+import { Col, Row } from "antd";
+import { useState } from "react";
+import { useSearchParams } from "react-router";
 import FilterTimeWithOutDate from "../common/components/FilterTimeWithOutDate";
-import {
-  dashboardCategoryInventory,
-  dashboardCustomerDebtStats,
-  dashboardExportStats,
-  dashboardImportStats,
-  dashboardInventoryActivity,
-  dashboardOrderStats,
-  dashboardTopCustomersDebt,
-  dashboardTopSellingProducts,
-} from "../features/dashboard/mock/dashboardData";
-import StatsCard from "../features/dashboard/StatsCard";
-import InventoryActivityChart from "../features/dashboard/InventoryActivityChart";
+import Loading from "../common/components/Loading";
+import { useTitle } from "../common/hooks";
 import CategoryInventoryPieChart from "../features/dashboard/CategoryInventoryPieChart";
+import InventoryActivityChart from "../features/dashboard/InventoryActivityChart";
+import { dashboardTopSellingProducts } from "../features/dashboard/mock/dashboardData";
+import StatsCard from "../features/dashboard/StatsCard";
 import TopCustomersDebtChart from "../features/dashboard/TopCustomersDebtChart";
 import TopSellingProductsChart from "../features/dashboard/TopSellingProductsChart";
-import { useQuery } from "@tanstack/react-query";
 import {
   debtAccountService,
   exportInvoiceService,
   importInvoiceService,
   invoiceService,
 } from "../services";
-import Loading from "../common/components/Loading";
-import { useSearchParams } from "react-router";
 
 const Home: React.FC = () => {
   useTitle("Trang chủ | Dashboard");
@@ -62,15 +53,6 @@ const Home: React.FC = () => {
     select: (data) => data.payload,
   });
 
-  const [inventoryActivity, setInventoryActivity] = useState(
-    dashboardInventoryActivity,
-  );
-  const [categoryInventory, setCategoryInventory] = useState(
-    dashboardCategoryInventory,
-  );
-  const [topCustomersDebt, setTopCustomersDebt] = useState(
-    dashboardTopCustomersDebt,
-  );
   const [topSellingProducts, setTopSellingProducts] = useState(
     dashboardTopSellingProducts,
   );
@@ -179,7 +161,7 @@ const Home: React.FC = () => {
             <h3 className="mb-4 text-lg font-semibold">
               Tỉ lệ tồn kho theo danh mục
             </h3>
-            <CategoryInventoryPieChart data={categoryInventory} />
+            <CategoryInventoryPieChart />
           </div>
         </Col>
         <Col xs={24} md={12}>
@@ -187,7 +169,7 @@ const Home: React.FC = () => {
             <h3 className="mb-4 text-lg font-semibold">
               Top 5 khách hàng có công nợ cao nhất
             </h3>
-            <TopCustomersDebtChart data={topCustomersDebt} />
+            <TopCustomersDebtChart />
           </div>
         </Col>
         <Col xs={24} md={12}>
