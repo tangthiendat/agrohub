@@ -17,6 +17,18 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  kafka:
+    bootstrap-servers: ${KAFKA_CLUSTER_BOOTSTRAP_SERVERS}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 5
+      compression-type: lz4
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        spring.json.add.type.headers: false
 axon:
   axonserver:
     servers: ${AXON_SERVER}
@@ -34,3 +46,7 @@ application:
   security:
     rsa:
       rsa-public-key: classpath:certs/public-key.pem
+
+kafka:
+  email:
+    topic: purchase-service.order.placed
