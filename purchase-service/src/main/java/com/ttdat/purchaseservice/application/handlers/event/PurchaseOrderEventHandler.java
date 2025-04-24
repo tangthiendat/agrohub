@@ -2,12 +2,14 @@ package com.ttdat.purchaseservice.application.handlers.event;
 
 import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.api.dto.response.ProductUnitInfo;
+import com.ttdat.core.api.dto.response.UserInfo;
 import com.ttdat.core.api.dto.response.WarehouseInfo;
 import com.ttdat.core.application.constants.SystemConfigConstants;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
 import com.ttdat.core.application.queries.inventory.GetWarehouseInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
+import com.ttdat.core.application.queries.user.GetUserInfoByIdQuery;
 import com.ttdat.purchaseservice.api.dto.common.SupplierDTO;
 import com.ttdat.purchaseservice.application.mappers.PurchaseOrderMapper;
 import com.ttdat.purchaseservice.application.queries.supplier.GetSupplierByIdQuery;
@@ -49,7 +51,7 @@ public class PurchaseOrderEventHandler {
     @EventHandler
     public void on(PurchaseOrderCreatedEvent purchaseOrderCreatedEvent) {
         PurchaseOrder purchaseOrder = purchaseOrderMapper.toEntity(purchaseOrderCreatedEvent);
-//        purchaseOrderRepository.save(purchaseOrder);
+        purchaseOrderRepository.save(purchaseOrder);
         List<EmailPurchaseOrderDetail> purchaseOrderDetails = purchaseOrder.getPurchaseOrderDetails().stream()
                 .map(purchaseOrderDetail -> {
                     GetProductInfoByIdQuery getProductInfoByIdQuery = GetProductInfoByIdQuery.builder()
@@ -77,15 +79,24 @@ public class PurchaseOrderEventHandler {
                 .build();
         SupplierDTO supplierDTO = queryGateway.query(getSupplierByIdQuery, ResponseTypes.instanceOf(SupplierDTO.class)).join();
 
+        GetUserInfoByIdQuery getUserInfoByIdQuery = GetUserInfoByIdQuery.builder()
+                .userId(purchaseOrderCreatedEvent.getUserId())
+                .build();
+        UserInfo userInfo = queryGateway.query(getUserInfoByIdQuery, ResponseTypes.instanceOf(UserInfo.class)).join();
+
         Map<String, Object> context = new HashMap<>();
         context.put("purchaseOrderId", purchaseOrder.getPurchaseOrderId());
         context.put("supplierName", supplierDTO.getSupplierName());
+        context.put("orderDate", purchaseOrder.getOrderDate());
         context.put("warehouseName", warehouseInfo.getWarehouseName());
         context.put("warehouseAddress", warehouseInfo.getAddress());
         context.put("purchaseOrderDetails", purchaseOrderDetails);
+        context.put("userName", userInfo.getFullName());
+        context.put("userEmail", userInfo.getEmail());
+        context.put("userPhoneNumber", userInfo.getPhoneNumber());
 
         PurchaseOrderCreatedMessage purchaseOrderCreatedMessage = PurchaseOrderCreatedMessage.builder()
-                .toEmail(purchaseOrder.getSupplier().getEmail())
+                .toEmail(supplierDTO.getEmail())
                 .subject("ĐƠN ĐẶT HÀNG #" + purchaseOrder.getPurchaseOrderId())
                 .templateName(SystemConfigConstants.PURCHASE_ORDER_CREATED_MAIL_TEMPLATE)
                 .context(context)
