@@ -1,4 +1,5 @@
 import { GetProp, UploadProps } from "antd";
+import { TrendType } from "../../common/enums";
 
 export interface ErrorDetail {
   field: string;
@@ -48,3 +49,36 @@ export interface Auditable {
 }
 
 export type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+
+export interface IStatsCardValue {
+  value: number;
+  changePercentage: number;
+  trend: TrendType;
+}
+
+export interface ActivityChartData {
+  label: string;
+  imports: number;
+  exports: number;
+}
+
+export interface StatisticFilterCriteria {
+  startDate?: string;
+  endDate?: string;
+  type?: string;
+}
+
+export interface CategoryInventoryData {
+  label: string;
+  value: number;
+}
+
+export interface TopCustomerDebtChartData {
+  customerName: string;
+  totalDebt: number;
+}
+
+export interface TopSellingProductChartData {
+  productName: string;
+  totalSales: number;
+}

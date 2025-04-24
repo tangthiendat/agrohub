@@ -3,10 +3,12 @@ import { createApiClient } from "../../config/axios/api-client";
 import {
   ApiResponse,
   IPartyDebtAccount,
+  IStatsCardValue,
   Page,
   PaginationParams,
   PartyDebtAccountFilterCriteria,
   SortParams,
+  TopCustomerDebtChartData,
 } from "../../interfaces";
 
 export interface IDebtAccountService {
@@ -28,6 +30,10 @@ export interface IDebtAccountService {
     sort?: SortParams,
     filter?: PartyDebtAccountFilterCriteria,
   ): Promise<ApiResponse<Page<IPartyDebtAccount>>>;
+
+  getCustomerDebtStatsCard(): Promise<ApiResponse<IStatsCardValue>>;
+
+  getTopCustomerDebtStats(): Promise<ApiResponse<TopCustomerDebtChartData[]>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/debt-accounts", {
@@ -81,6 +87,16 @@ class DebtAccountService implements IDebtAccountService {
         },
       })
     ).data;
+  }
+
+  async getCustomerDebtStatsCard(): Promise<ApiResponse<IStatsCardValue>> {
+    return (await apiClient.get("/stats/card")).data;
+  }
+
+  async getTopCustomerDebtStats(): Promise<
+    ApiResponse<TopCustomerDebtChartData[]>
+  > {
+    return (await apiClient.get("/stats/top-customers")).data;
   }
 }
 

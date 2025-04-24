@@ -1,23 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Chart, registerables } from "chart.js";
+import React, { useEffect, useRef } from "react";
+import { productStockService } from "../../services";
 
 // Register Chart.js components
 Chart.register(...registerables);
 
-interface CategoryData {
-  name: string;
-  value: number;
-}
-
-interface CategoryInventoryPieChartProps {
-  data: CategoryData[];
-}
-
-const CategoryInventoryPieChart: React.FC<CategoryInventoryPieChartProps> = ({
-  data,
-}) => {
+const CategoryInventoryPieChart: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+
+  const { data: categoryInventoryStats } = useQuery({
+    queryKey: ["product-stocks", "stats", "category-inventory"],
+    queryFn: () => productStockService.getCategoryInventoryStats(),
+    select: (data) => data.payload,
+  });
 
   // Generate distinctive colors for pie chart segments
   const generateColors = (count: number) => {
@@ -51,11 +48,13 @@ const CategoryInventoryPieChart: React.FC<CategoryInventoryPieChartProps> = ({
         chartInstance.current = new Chart(ctx, {
           type: "doughnut",
           data: {
-            labels: data.map((item) => item.name),
+            labels: categoryInventoryStats?.map((item) => item.label) ?? [],
             datasets: [
               {
-                data: data.map((item) => item.value),
-                backgroundColor: generateColors(data.length),
+                data: categoryInventoryStats?.map((item) => item.value) ?? [],
+                backgroundColor: generateColors(
+                  categoryInventoryStats?.length || 0,
+                ),
                 borderWidth: 1,
                 borderColor: "#fff",
               },
@@ -74,7 +73,8 @@ const CategoryInventoryPieChart: React.FC<CategoryInventoryPieChartProps> = ({
                     const label = context.label || "";
                     const value = context.raw;
                     const total = context.chart.data.datasets[0].data.reduce(
-                      (acc: number, val: number) => acc + val,
+                      (acc: number, val) =>
+                        acc + (typeof val === "number" ? val : 0),
                       0,
                     );
                     const percentage = Math.round(
@@ -96,7 +96,7 @@ const CategoryInventoryPieChart: React.FC<CategoryInventoryPieChartProps> = ({
         chartInstance.current.destroy();
       }
     };
-  }, [data]);
+  }, [categoryInventoryStats]);
 
   return (
     <div style={{ height: "300px" }}>

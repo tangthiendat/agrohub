@@ -104,6 +104,7 @@ const FilterTimeWithoutDate: React.FC<FilterTimeWithoutDateProps> = ({
     searchParams.set("startDate", selectedDates[0]);
     if (type === "range") {
       searchParams.set("endDate", selectedDates[1]!);
+      // searchParams.set("type", "date");
       searchParams.delete("type");
     } else {
       searchParams.set("type", type);
@@ -176,7 +177,7 @@ const FilterTimeWithoutDate: React.FC<FilterTimeWithoutDateProps> = ({
           >
             {/* <Option value="date">Ngày</Option> */}
             <Option value="month">Tháng</Option>
-            <Option value="quarter">Quý</Option>
+            {/* <Option value="quarter">Quý</Option> */}
             <Option value="year">Năm</Option>
             <Option value="range">Khoảng thời gian</Option>
           </Select>

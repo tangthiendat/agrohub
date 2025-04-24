@@ -4,6 +4,7 @@ import com.ttdat.core.api.dto.response.ProductBatchInfo;
 import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.application.queries.inventory.GetProductBatchInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
+import com.ttdat.core.application.queries.product.SearchProductIdListQuery;
 import com.ttdat.inventoryservice.api.dto.common.ProductBatchDTO;
 import com.ttdat.inventoryservice.api.dto.response.ProductBatchPageResult;
 import com.ttdat.inventoryservice.application.mappers.ProductBatchMapper;
@@ -59,14 +60,25 @@ public class ProductBatchQueryHandler {
 
     private Specification<ProductBatch> getProductBatchSpec(Map<String, String> filterParams) {
         Specification<ProductBatch> spec = Specification.where(null);
-        spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class))
-                .and(SpecificationUtils.buildSpecification(filterParams, "productId", String.class));
+        spec = spec.and(SpecificationUtils.buildJoinSpecification(filterParams, "warehouse", "warehouseId", Long.class));
+//                .and(SpecificationUtils.buildSpecification(filterParams, "productId", String.class));
+        Map<String, String> productFilterParams = new HashMap<>();
         if (filterParams.containsKey("query")) {
             String searchValue = filterParams.get("query");
             Specification<ProductBatch> querySpec = (root, query, criteriaBuilder) -> {
                 String likePattern = "%" + searchValue + "%";
                 return criteriaBuilder.like(root.get("batchId"), likePattern);
             };
+            productFilterParams.put("query", filterParams.get("query"));
+            SearchProductIdListQuery searchProductIdListQuery = SearchProductIdListQuery.builder()
+                    .filterParams(productFilterParams)
+                    .build();
+            List<String> productIdList = queryGateway.query(searchProductIdListQuery, ResponseTypes.multipleInstancesOf(String.class)).join();
+            if (!productIdList.isEmpty()) {
+                Specification<ProductBatch> productIdSpec = (root, query, criteriaBuilder) ->
+                        root.get("productId").in(productIdList);
+                querySpec = querySpec.or(productIdSpec);
+            }
             spec = spec.and(querySpec);
         }
         return spec;
@@ -76,9 +88,8 @@ public class ProductBatchQueryHandler {
     public List<ProductBatchDTO> handle(GetAllProductBatchQuery getAllProductBatchQuery, QueryMessage<?, ?> queryMessage) {
         Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Map<String, String> filterParams = getAllProductBatchQuery.getFilterParams();
-        filterParams.put("warehouseId", warehouseId.toString());
-        Specification<ProductBatch> productBatchSpec = getProductBatchSpec(filterParams);
-        List<ProductBatch> productBatches = productBatchRepository.findAll(productBatchSpec);
+        String productId = filterParams.get("productId");
+        List<ProductBatch> productBatches = productBatchRepository.findByWarehouseIdAndProductId(warehouseId, productId);
         return productBatches.stream()
                 .filter(productBatch -> !productBatch.getBatchLocations().isEmpty())
                 .map(productBatchMapper::toDTO)

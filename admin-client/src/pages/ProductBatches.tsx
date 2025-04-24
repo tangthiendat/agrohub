@@ -62,7 +62,7 @@ const ProductBatches: React.FC = () => {
           <div className="w-[40%]">
             <div className="flex gap-3">
               <Search
-                placeholder="Tìm kiếm theo mã lô hàng"
+                placeholder="Tìm kiếm theo mã lô hàng hoặc tên sản phẩm"
                 defaultValue={searchParams.get("query") || ""}
                 enterButton
                 allowClear

@@ -1,23 +1,20 @@
 import React, { useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
+import { useQuery } from "@tanstack/react-query";
+import { exportInvoiceService } from "../../services";
 
 // Register Chart.js components
 Chart.register(...registerables);
 
-interface ProductData {
-  name: string;
-  value: number;
-}
-
-interface TopSellingProductsChartProps {
-  data: ProductData[];
-}
-
-const TopSellingProductsChart: React.FC<TopSellingProductsChartProps> = ({
-  data,
-}) => {
+const TopSellingProductsChart: React.FC = () => {
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart | null>(null);
+
+  const { data: topSellingProductsStats } = useQuery({
+    queryKey: ["export-invoices", "stats", "top-products"],
+    queryFn: () => exportInvoiceService.getTopSellingProductsStats(),
+    select: (data) => data.payload,
+  });
 
   useEffect(() => {
     if (chartRef.current) {
@@ -28,8 +25,6 @@ const TopSellingProductsChart: React.FC<TopSellingProductsChartProps> = ({
 
       const ctx = chartRef.current.getContext("2d");
       if (ctx) {
-        const sortedData = [...data].sort((a, b) => b.value - a.value);
-
         // Generate colors for bars
         const colors = [
           "#3699FF",
@@ -47,12 +42,17 @@ const TopSellingProductsChart: React.FC<TopSellingProductsChartProps> = ({
           type: "bar",
           data: {
             // Don't truncate labels - we'll handle wrapping in the options
-            labels: sortedData.map((item) => item.name),
+            labels:
+              topSellingProductsStats?.map((item) => item.productName) ?? [],
             datasets: [
               {
-                label: "Số lượng bán",
-                data: sortedData.map((item) => item.value),
-                backgroundColor: colors.slice(0, sortedData.length),
+                label: "Lượt bán",
+                data:
+                  topSellingProductsStats?.map((item) => item.totalSales) ?? [],
+                backgroundColor: colors.slice(
+                  0,
+                  topSellingProductsStats?.length || 0,
+                ),
                 borderWidth: 0,
                 borderRadius: 4,
                 maxBarThickness: 30,
@@ -136,7 +136,7 @@ const TopSellingProductsChart: React.FC<TopSellingProductsChartProps> = ({
         chartInstance.current.destroy();
       }
     };
-  }, [data]);
+  }, [topSellingProductsStats]);
 
   return (
     <div style={{ height: "320px" }}>

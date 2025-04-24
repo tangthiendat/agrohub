@@ -3,7 +3,6 @@ package com.ttdat.core.application.commands.product;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Data
 @Builder

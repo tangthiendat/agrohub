@@ -1,28 +1,30 @@
 // Mock data for dashboard
 
+import { TrendType } from "../../../common/enums";
+
 // Stats for cards
 export const dashboardOrderStats = {
   value: 124,
   changePercentage: 12.5,
-  trend: "up" as const,
+  trend: TrendType.UP,
 };
 
 export const dashboardCustomerDebtStats = {
   value: 78500000,
   changePercentage: 8.3,
-  trend: "up" as const,
+  trend: TrendType.DOWN,
 };
 
 export const dashboardImportStats = {
   value: 356,
   changePercentage: 5.2,
-  trend: "up" as const,
+  trend: TrendType.UP,
 };
 
 export const dashboardExportStats = {
   value: 287,
   changePercentage: 3.7,
-  trend: "down" as const,
+  trend: TrendType.DOWN,
 };
 
 // Inventory activity chart data (imports and exports by date) - Focused on March
