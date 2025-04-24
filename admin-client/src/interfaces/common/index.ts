@@ -77,3 +77,8 @@ export interface TopCustomerDebtChartData {
   customerName: string;
   totalDebt: number;
 }
+
+export interface TopSellingProductChartData {
+  productName: string;
+  totalSales: number;
+}

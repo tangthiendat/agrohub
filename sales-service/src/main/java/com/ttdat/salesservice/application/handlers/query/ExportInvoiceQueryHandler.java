@@ -17,10 +17,12 @@ import com.ttdat.salesservice.api.dto.common.ExportInvoiceDTO;
 import com.ttdat.salesservice.api.dto.common.ExportInvoiceDetailBatchDTO;
 import com.ttdat.salesservice.api.dto.common.ExportInvoiceDetailDTO;
 import com.ttdat.salesservice.api.dto.response.ExportInvoicePageResult;
+import com.ttdat.salesservice.api.dto.response.TopSellingProductChartData;
 import com.ttdat.salesservice.application.mappers.ExportInvoiceDetailBatchMapper;
 import com.ttdat.salesservice.application.mappers.ExportInvoiceDetailMapper;
 import com.ttdat.salesservice.application.mappers.ExportInvoiceMapper;
 import com.ttdat.salesservice.application.queries.exportinvoice.GetExportInvoicePageQuery;
+import com.ttdat.salesservice.application.queries.exportinvoice.GetTopSellingProductQuery;
 import com.ttdat.salesservice.application.queries.exportinvoice.GetTotalExportInRangeQuery;
 import com.ttdat.salesservice.domain.entities.ExportInvoice;
 import com.ttdat.salesservice.domain.repositories.ExportInvoiceRepository;
@@ -254,5 +256,39 @@ public class ExportInvoiceQueryHandler {
                             .build();
                 })
                 .toList();
+    }
+
+    @QueryHandler
+    public List<TopSellingProductChartData> handle(GetTopSellingProductQuery getTopSellingProductQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
+
+        List<ExportInvoice> exportInvoices = exportInvoiceRepository.findByWarehouseId(warehouseId);
+        Map<String, Double> productSellingMap = new HashMap<>();
+
+        // Count occurrences of each product in export invoice details
+        exportInvoices.forEach(invoice ->
+            invoice.getExportInvoiceDetails().forEach(detail -> {
+                String productId = detail.getProductId();
+                productSellingMap.merge(productId, 1.0, Double::sum);
+            })
+        );
+
+        // Get top 5 products and their info
+        return productSellingMap.entrySet().stream()
+            .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+            .limit(5)
+            .map(entry -> {
+                GetProductInfoByIdQuery getProductInfoByIdQuery = GetProductInfoByIdQuery.builder()
+                    .productId(entry.getKey())
+                    .build();
+                ProductInfo productInfo = queryGateway.query(getProductInfoByIdQuery,
+                    ResponseTypes.instanceOf(ProductInfo.class)).join();
+
+                return TopSellingProductChartData.builder()
+                    .productName(productInfo.getProductName())
+                    .totalSales(entry.getValue())
+                    .build();
+            })
+            .toList();
     }
 }

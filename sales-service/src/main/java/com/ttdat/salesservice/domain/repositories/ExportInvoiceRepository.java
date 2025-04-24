@@ -16,4 +16,6 @@ public interface ExportInvoiceRepository extends JpaRepository<ExportInvoice, St
 
     @Query("SELECT e FROM ExportInvoice e WHERE e.warehouseId = :warehouseId AND e.createdDate BETWEEN :startDate AND :endDate")
     List<ExportInvoice> findByRange(Long warehouseId, LocalDate startDate, LocalDate endDate);
+
+    List<ExportInvoice> findByWarehouseId(Long warehouseId);
 }

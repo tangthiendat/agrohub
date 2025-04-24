@@ -9,6 +9,7 @@ import {
   Page,
   PaginationParams,
   SortParams,
+  TopSellingProductChartData,
 } from "../../interfaces";
 
 interface IExportInvoiceService {
@@ -21,6 +22,9 @@ interface IExportInvoiceService {
     filter?: ExportInvoiceFilterCriteria,
   ): Promise<ApiResponse<Page<IExportInvoice>>>;
   getExportStatsCard(): Promise<ApiResponse<IStatsCardValue>>;
+  getTopSellingProductsStats(): Promise<
+    ApiResponse<TopSellingProductChartData[]>
+  >;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/export-invoices", {
@@ -53,6 +57,12 @@ class ExportInvoiceService implements IExportInvoiceService {
 
   async getExportStatsCard(): Promise<ApiResponse<IStatsCardValue>> {
     return (await apiClient.get("/stats/card")).data;
+  }
+
+  async getTopSellingProductsStats(): Promise<
+    ApiResponse<TopSellingProductChartData[]>
+  > {
+    return (await apiClient.get("/stats/top-products")).data;
   }
 }
 export const exportInvoiceService = new ExportInvoiceService();
