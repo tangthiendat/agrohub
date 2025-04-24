@@ -31,3 +31,5 @@ export const DEBT_STATUS_COLOR: Record<string, string> = {
   [DebtStatus.OVERDUE]: "orange",
   [DebtStatus.PARTIALLY_PAID]: "blue",
 };
+
+export const WARNING_QUANTITY = 10;

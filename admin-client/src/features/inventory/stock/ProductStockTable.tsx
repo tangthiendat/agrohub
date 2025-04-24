@@ -20,6 +20,7 @@ import {
 } from "../../../utils/color";
 import { useQuery } from "@tanstack/react-query";
 import { categoryService } from "../../../services";
+import { WARNING_QUANTITY } from "../../../common/constants";
 
 interface ProductStockTableProps {
   productStockPage?: Page<IProductStock>;
@@ -175,6 +176,15 @@ const ProductStockTable: React.FC<ProductStockTableProps> = ({
           <CaretUpFilled style={{ color: getSortUpIconColor(sortOrder) }} />
           <CaretDownFilled style={{ color: getSortDownIconColor(sortOrder) }} />
         </div>
+      ),
+      render: (_, record: IProductStock) => (
+        <span
+          style={{
+            color: record.quantity < WARNING_QUANTITY ? "red" : "inherit",
+          }}
+        >
+          {record.quantity}
+        </span>
       ),
     },
     {
