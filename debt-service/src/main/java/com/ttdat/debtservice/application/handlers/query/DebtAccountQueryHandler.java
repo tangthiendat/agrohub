@@ -15,8 +15,8 @@ import com.ttdat.debtservice.application.queries.debtaccount.GetPartyDebtAccount
 import com.ttdat.debtservice.application.queries.debtaccount.GetTopCustomerDebtQuery;
 import com.ttdat.debtservice.application.queries.debtaccount.GetTotalCustomerDebtInRangeQuery;
 import com.ttdat.debtservice.application.queries.debtaccount.GetUnpaidDebtAccountByPartyIdQuery;
-import com.ttdat.debtservice.domain.repositories.DebtAccountRepository;
 import com.ttdat.debtservice.domain.entities.DebtAccount;
+import com.ttdat.debtservice.domain.repositories.DebtAccountRepository;
 import com.ttdat.debtservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.debtservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,29 +121,30 @@ public class DebtAccountQueryHandler {
         Map<String, BigDecimal> customerDebtAccountMap = debtAccounts.stream()
                 .collect(HashMap::new, (map, debtAccount) -> {
                     String customerId = debtAccount.getPartyId();
+                    BigDecimal remainingAmount = debtAccount.getRemainingAmount();
+                    map.merge(customerId, remainingAmount, BigDecimal::add);
+                }, HashMap::putAll);
+
+        // Sort the map by value in descending order and limit to top 5
+        Map<String, BigDecimal> top5CustomerDebtAccountMap = customerDebtAccountMap.entrySet().stream()
+                .sorted((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()))
+                .limit(5)
+                .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), HashMap::putAll);
+
+        return top5CustomerDebtAccountMap.entrySet()
+                .stream()
+                .map(entry -> {
+                    String customerId = entry.getKey();
                     GetCustomerInfoByIdQuery getCustomerInfoByIdQuery = GetCustomerInfoByIdQuery.builder()
                             .customerId(customerId)
                             .build();
                     CustomerInfo customerInfo = queryGateway.query(getCustomerInfoByIdQuery, ResponseTypes.instanceOf(CustomerInfo.class)).join();
-                    BigDecimal remainingAmount = debtAccount.getRemainingAmount();
-                    map.merge(customerInfo.getCustomerName(), remainingAmount, BigDecimal::add);
-                }, HashMap::putAll);
-        return customerDebtAccountMap.entrySet().stream()
-                .map(entry -> {
-                    String customerName = entry.getKey();
                     BigDecimal totalDebt = entry.getValue();
                     return TopCustomerDebtChartData.builder()
-                            .customerName(customerName)
+                            .customerName(customerInfo.getCustomerName())
                             .totalDebt(totalDebt)
                             .build();
                 })
-                .sorted((o1, o2) -> {
-                    if (o1.getTotalDebt() == null || o2.getTotalDebt() == null) {
-                        return 0;
-                    }
-                    return o2.getTotalDebt().compareTo(o1.getTotalDebt());
-                })
-                .limit(5)
                 .toList();
 
     }
