@@ -1,16 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { Col, Row } from "antd";
-import { useState } from "react";
 import { useSearchParams } from "react-router";
 import FilterTimeWithOutDate from "../common/components/FilterTimeWithOutDate";
 import Loading from "../common/components/Loading";
 import { useTitle } from "../common/hooks";
 import CategoryInventoryPieChart from "../features/dashboard/CategoryInventoryPieChart";
 import InventoryActivityChart from "../features/dashboard/InventoryActivityChart";
-import { dashboardTopSellingProducts } from "../features/dashboard/mock/dashboardData";
 import StatsCard from "../features/dashboard/StatsCard";
 import TopCustomersDebtChart from "../features/dashboard/TopCustomersDebtChart";
-import TopSellingProductsChart from "../features/dashboard/TopSellingProductsChart";
 import {
   debtAccountService,
   exportInvoiceService,
@@ -21,12 +18,6 @@ import {
 const Home: React.FC = () => {
   useTitle("Trang chủ | Dashboard");
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const [dateFilter, setDateFilter] = useState({
-    startDate: null,
-    endDate: null,
-    type: "month",
-  });
 
   const { data: orderStats, isLoading: isOrderCountLoading } = useQuery({
     queryFn: () => invoiceService.getOrderStatsCard(),
@@ -52,10 +43,6 @@ const Home: React.FC = () => {
     queryKey: ["export-invoices", "stats", "card"],
     select: (data) => data.payload,
   });
-
-  const [topSellingProducts, setTopSellingProducts] = useState(
-    dashboardTopSellingProducts,
-  );
 
   const handleDateChange = (
     startDate: string | null,
@@ -172,14 +159,14 @@ const Home: React.FC = () => {
             <TopCustomersDebtChart />
           </div>
         </Col>
-        <Col xs={24} md={12}>
+        {/* <Col xs={24} md={12}>
           <div className="bg-white p-4 shadow">
             <h3 className="mb-4 text-lg font-semibold">
               Top 5 sản phẩm bán chạy nhất
             </h3>
             <TopSellingProductsChart data={topSellingProducts} />
           </div>
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );
