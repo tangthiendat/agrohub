@@ -276,7 +276,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       CLUSTER_ID: "ZGI5YjMwZmNiODI1MTFlZm"
       KAFKA_LOG_DIRS: "/tmp/kraft-logs"
-
+    networks:
+      - agrohub
 
   kafka-ui:
     container_name: kafka-ui
@@ -292,3 +293,5 @@ services:
       SERVER_PORT: 9000
       # volumes:
       #   - kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+    networks:
+      - agrohub

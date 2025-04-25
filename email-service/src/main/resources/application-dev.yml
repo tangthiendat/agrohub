@@ -36,6 +36,9 @@ spring:
           auth: true
           starttls:
             enable: true
+axon:
+  axonserver:
+    servers: ${AXON_SERVER}
 kafka:
   email:
     topic: purchase-service.order.placed

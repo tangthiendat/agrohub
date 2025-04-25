@@ -10,6 +10,11 @@ spring:
   threads:
     virtual:
       enabled: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
   kafka:
     bootstrap-servers: ${KAFKA_CLUSTER_BOOTSTRAP_SERVERS}
     producer:
@@ -36,3 +41,9 @@ spring:
           auth: true
           starttls:
             enable: true
+axon:
+  axonserver:
+    servers: ${AXON_SERVER}
+kafka:
+  email:
+    topic: purchase-service.order.placed
