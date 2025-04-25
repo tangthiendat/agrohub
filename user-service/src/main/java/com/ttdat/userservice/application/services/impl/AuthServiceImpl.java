@@ -68,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
         response.addCookie(refreshTokenCookie);
         return AuthResponse.builder()
                 .accessToken(accessToken)
+                .roleName(user.getRole().getRoleName())
                 .build();
     }
 

@@ -152,16 +152,19 @@ export function useMenuItems(user?: IUser): MenuProps["items"] {
       const hasSalesItem = Boolean(viewCustomers || viewExportInvoices);
 
       const menuItems = [
-        {
-          label: (
-            <NavLink className="" to="/">
-              Trang chủ
-            </NavLink>
-          ),
-          key: "dashboard",
-          icon: <MdDashboard />,
-        },
-
+        ...(user.role.roleName !== "EMPLOYEE"
+          ? [
+              {
+                label: (
+                  <NavLink className="" to="/">
+                    Trang chủ
+                  </NavLink>
+                ),
+                key: "dashboard",
+                icon: <MdDashboard />,
+              },
+            ]
+          : []),
         ...(hasAuthChildren
           ? [
               {

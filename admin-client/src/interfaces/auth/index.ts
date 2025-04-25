@@ -7,6 +7,7 @@ export interface IAuthRequest {
 }
 export interface IAuthResponse {
   accessToken: string;
+  roleName: string;
 }
 
 export interface IPermission extends Auditable {
