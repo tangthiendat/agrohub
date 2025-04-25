@@ -14,6 +14,7 @@ import { useCurrentUserInfo } from "../../../common/hooks/useCurrentUserInfo";
 import { IProduct } from "../../../interfaces";
 import { purchaseOrderService } from "../../../services";
 import { usePurchaseOrderStore } from "../../../store/purchase-order-store";
+import { WARNING_QUANTITY } from "../../../common/constants";
 
 const NewPurchaseOrder: React.FC = () => {
   const [form] = Form.useForm();
@@ -112,12 +113,23 @@ const NewPurchaseOrder: React.FC = () => {
                 />
                 <div className="flex-1">
                   <div className="flex items-center justify-between gap-2 font-semibold">
-                    <div className="text-wrap">{product.productName} </div>
-                    <div className="bg-sky-100 px-[3px] py-[3px] text-sky-600">
-                      {
-                        product.productUnits.find((unit) => unit.isDefault)!
-                          .unit.unitName
-                      }
+                    <div className="text-wrap">{product.productName}</div>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`${
+                          product.currentStock < WARNING_QUANTITY
+                            ? "text-red-500"
+                            : "text-gray-600"
+                        }`}
+                      >
+                        Tồn kho: {product.currentStock}
+                      </div>
+                      <div className="bg-sky-100 px-[3px] py-[3px] text-sky-600">
+                        {
+                          product.productUnits.find((unit) => unit.isDefault)!
+                            .unit.unitName
+                        }
+                      </div>
                     </div>
                   </div>
                   <div>

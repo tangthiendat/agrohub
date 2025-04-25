@@ -3,6 +3,7 @@ package com.ttdat.inventoryservice.application.handlers.query;
 import com.ttdat.core.api.dto.response.ProductBatchInfo;
 import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.application.queries.inventory.GetProductBatchInfoByIdQuery;
+import com.ttdat.core.application.queries.inventory.GetProductCurrentStockQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
 import com.ttdat.core.application.queries.product.SearchProductIdListQuery;
 import com.ttdat.inventoryservice.api.dto.common.ProductBatchDTO;
@@ -11,6 +12,7 @@ import com.ttdat.inventoryservice.application.mappers.ProductBatchMapper;
 import com.ttdat.inventoryservice.application.queries.batch.GetAllProductBatchQuery;
 import com.ttdat.inventoryservice.application.queries.batch.GetProductBatchPageQuery;
 import com.ttdat.inventoryservice.domain.entities.ProductBatch;
+import com.ttdat.inventoryservice.domain.entities.ProductBatchLocation;
 import com.ttdat.inventoryservice.domain.repositories.ProductBatchRepository;
 import com.ttdat.inventoryservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.inventoryservice.infrastructure.utils.SpecificationUtils;
@@ -107,5 +109,19 @@ public class ProductBatchQueryHandler {
                 .findFirst()
                 .orElse(null);
         return productBatchMapper.toProductBatchInfo(productBatch);
+    }
+
+    @QueryHandler
+    public Double handle(GetProductCurrentStockQuery getProductCurrentStockQuery){
+        List<ProductBatch> productBatches = productBatchRepository.findByWarehouseIdAndProductId(getProductCurrentStockQuery.getWarehouseId(), getProductCurrentStockQuery.getProductId());
+        if (productBatches.isEmpty()) {
+            return 0.0;
+        }
+        return productBatches.stream()
+                .filter(productBatch -> !productBatch.getBatchLocations().isEmpty())
+                .map(productBatch -> productBatch.getBatchLocations().stream()
+                        .mapToDouble(ProductBatchLocation::getQuantity)
+                        .sum())
+                .reduce(0.0, Double::sum);
     }
 }

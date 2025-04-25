@@ -3,6 +3,7 @@ package com.ttdat.productservice.application.handlers.query;
 import com.ttdat.core.api.dto.response.ProductInfo;
 import com.ttdat.core.application.exceptions.ErrorCode;
 import com.ttdat.core.application.exceptions.ResourceNotFoundException;
+import com.ttdat.core.application.queries.inventory.GetProductCurrentStockQuery;
 import com.ttdat.core.application.queries.product.GetProductInfoByIdQuery;
 import com.ttdat.core.application.queries.product.GetProductStockQuantityQuery;
 import com.ttdat.core.application.queries.product.SearchProductIdListQuery;
@@ -19,12 +20,16 @@ import com.ttdat.productservice.domain.repositories.ProductRepository;
 import com.ttdat.productservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.productservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.messaging.responsetypes.ResponseTypes;
+import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryHandler;
+import org.axonframework.queryhandling.QueryMessage;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
+import java.awt.geom.Arc2D;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +38,7 @@ import java.util.Map;
 public class ProductQueryHandler {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
-    private final UnitMapper unitMapper;
+    private final QueryGateway queryGateway;
 
     @QueryHandler
     public ProductPageResult handle(GetProductPageQuery getProductPageQuery) {
@@ -76,10 +81,22 @@ public class ProductQueryHandler {
     }
 
     @QueryHandler
-    public List<ProductDTO> handle(SearchProductQuery searchProductQuery) {
+    public List<ProductDTO> handle(SearchProductQuery searchProductQuery, QueryMessage<?, ?> queryMessage) {
+        Long warehouseId = (Long) queryMessage.getMetaData().get("warehouseId");
         Specification<Product> productSpec = getProductSpec(Map.of("query", searchProductQuery.getQuery()));
         List<Product> products = productRepository.findAll(productSpec);
-        return productMapper.toDTOList(products);
+        return products.stream()
+                .map(product -> {
+                    ProductDTO productDTO = productMapper.toDTO(product);
+                    GetProductCurrentStockQuery getProductCurrentStockQuery = GetProductCurrentStockQuery.builder()
+                            .productId(product.getProductId())
+                            .warehouseId(warehouseId)
+                            .build();
+                    Double currentStock = queryGateway.query(getProductCurrentStockQuery, ResponseTypes.instanceOf(Double.class)).join();
+                    productDTO.setCurrentStock(currentStock);
+                    return productDTO;
+                })
+                .toList();
     }
 
     @QueryHandler

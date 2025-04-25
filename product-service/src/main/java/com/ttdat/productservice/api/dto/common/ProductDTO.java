@@ -27,6 +27,8 @@ public class ProductDTO {
     @PositiveOrZero(message = "Total quantity must not be negative")
     Double totalQuantity;
 
+    Double currentStock;
+
     @Size(max = 255, message = "Image URL must not exceed 255 characters")
     String imageUrl;
 

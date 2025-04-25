@@ -13,6 +13,7 @@ import { useCurrentUserInfo, useCurrentWarehouse } from "../../../common/hooks";
 import { IProduct } from "../../../interfaces";
 import { useExportInvoiceStore } from "../../../store/export-invoice-store";
 import { exportInvoiceService, productBatchService } from "../../../services";
+import { WARNING_QUANTITY } from "../../../common/constants";
 
 const NewExportInvoice: React.FC = () => {
   const [form] = Form.useForm();
@@ -69,6 +70,14 @@ const NewExportInvoice: React.FC = () => {
   }, [productBatches, initDetailBatch, currentProductId]);
 
   function handleSelectProduct(product: IProduct) {
+    if (product.currentStock === 0) {
+      modal.warning({
+        title: "Không thể thêm sản phẩm",
+        content: `Sản phẩm ${product.productName} hiện không có sẵn trong kho. Vui lòng kiểm tra lại hàng mới nhập hoặc vị trí lưu trữ.`,
+      });
+      return;
+    }
+
     const productExists = exportInvoiceDetails.some(
       (detail) => detail.product.productId === product.productId,
     );
@@ -155,12 +164,23 @@ const NewExportInvoice: React.FC = () => {
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between gap-2 font-semibold">
-                      <div className="text-wrap">{product.productName} </div>
-                      <div className="bg-sky-100 px-[3px] py-[3px] text-sky-600">
-                        {
-                          product.productUnits.find((unit) => unit.isDefault)!
-                            .unit.unitName
-                        }
+                      <div className="text-wrap">{product.productName}</div>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className={`${
+                            product.currentStock < WARNING_QUANTITY
+                              ? "text-red-500"
+                              : "text-gray-600"
+                          }`}
+                        >
+                          Tồn kho: {product.currentStock}
+                        </div>
+                        <div className="bg-sky-100 px-[3px] py-[3px] text-sky-600">
+                          {
+                            product.productUnits.find((unit) => unit.isDefault)!
+                              .unit.unitName
+                          }
+                        </div>
                       </div>
                     </div>
                     <div>
