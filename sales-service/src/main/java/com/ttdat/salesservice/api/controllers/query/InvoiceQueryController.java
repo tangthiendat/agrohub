@@ -8,6 +8,7 @@ import com.ttdat.core.application.queries.stats.GetImportInvoiceCountQuery;
 import com.ttdat.core.infrastructure.utils.DateUtils;
 import com.ttdat.core.infrastructure.utils.NumberUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.context.annotation.Import;
@@ -26,6 +27,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/invoices")
 @RequiredArgsConstructor
@@ -81,40 +83,64 @@ public class InvoiceQueryController {
 
         Map<String, Activity> activityStats = new TreeMap<>();
 
-        if (type.equals("year")) {
+      if (type.equals("year")) {
             int currentYear = LocalDate.now().getYear();
-            IntStream.rangeClosed(1, 12).forEach(month -> {
-                String key = YearMonth.of(currentYear, month).toString();
-                activityStats.put(key, Activity.builder()
-                        .imports(BigDecimal.ZERO)
-                        .exports(BigDecimal.ZERO)
-                        .build());
-            });
+            int requestedYear = Integer.parseInt(startDateStr);
+            if (currentYear >= requestedYear) {
+                int currentMonth = LocalDate.now().getMonthValue();
+                IntStream.rangeClosed(1, currentYear == requestedYear ? currentMonth : 12).forEach(month -> {
+                    String key = YearMonth.of(currentYear, month).toString();
+                    activityStats.put(key, Activity.builder()
+                            .imports(BigDecimal.ZERO)
+                            .exports(BigDecimal.ZERO)
+                            .build());
+                });
+            }
         }
 
-        if (type.equals("month")) {
+       if (type.equals("month")) {
             LocalDate now = LocalDate.now();
             int currentMonth = now.getMonthValue();
-            int currentDateOfMonth;
             int requestedMonth = Integer.parseInt(startDateStr.split("-")[1]);
-            YearMonth yearMonth = YearMonth.of(now.getYear(), requestedMonth);
-            if (currentMonth == requestedMonth) {
-                currentDateOfMonth = now.getDayOfMonth();
-            } else {
-                currentDateOfMonth = yearMonth.lengthOfMonth();
+            if (currentMonth >= requestedMonth) {
+                YearMonth yearMonth = YearMonth.of(now.getYear(), requestedMonth);
+                int currentDateOfMonth = (requestedMonth < currentMonth)
+                        ? yearMonth.lengthOfMonth()
+                        : now.getDayOfMonth();
+
+                IntStream.rangeClosed(1, currentDateOfMonth).forEach(day -> {
+                    String key = yearMonth.atDay(day).toString();
+                    activityStats.put(key, Activity.builder()
+                            .imports(BigDecimal.ZERO)
+                            .exports(BigDecimal.ZERO)
+                            .build());
+                });
             }
-            IntStream.rangeClosed(1, currentDateOfMonth).forEach(day -> {
-                String key = yearMonth.atDay(day).toString();
-                activityStats.put(key, Activity.builder()
-                        .imports(BigDecimal.ZERO)
-                        .exports(BigDecimal.ZERO)
-                        .build());
-            });
         }
 
         if (type.equals("quarter")) {
             LocalDate startDate = DateUtils.parseDate(startDateStr, "quarter");
-            LocalDate endDate = startDate.plusMonths(3).withDayOfMonth(1).minusDays(1);
+            LocalDate calculatedEndDate = startDate.plusMonths(3).withDayOfMonth(1).minusDays(1);
+            LocalDate today = LocalDate.now();
+            LocalDate endDate = today.isBefore(calculatedEndDate) ? today : calculatedEndDate;
+
+            while (!startDate.isAfter(endDate)) {
+                String key = startDate.toString();
+                activityStats.put(key, Activity.builder()
+                        .imports(BigDecimal.ZERO)
+                        .exports(BigDecimal.ZERO)
+                        .build());
+                startDate = startDate.plusDays(1);
+            }
+        }
+
+        if (type.equals("date")) {
+            LocalDate startDate = DateUtils.parseDate(startDateStr, "date");
+            LocalDate endDate = DateUtils.parseDate(endDateStr, "date");
+            LocalDate today = LocalDate.now();
+            if (today.isBefore(endDate)) {
+                endDate = today;
+            }
             while (!startDate.isAfter(endDate)) {
                 String key = startDate.toString();
                 activityStats.put(key, Activity.builder()
@@ -127,9 +153,12 @@ public class InvoiceQueryController {
 
         GetImportSummaryInRangeQuery getImportSummaryInRangeQuery = GetImportSummaryInRangeQuery.builder()
                 .startDateStr(startDateStr)
-                .endDateStr(endDateStr)
                 .type(type)
                 .build();
+        if(endDateStr != null){
+            getImportSummaryInRangeQuery.setEndDateStr(endDateStr);
+        }
+
         List<ImportSummary> importSummaries = queryGateway.query(getImportSummaryInRangeQuery, ResponseTypes.multipleInstancesOf(ImportSummary.class)).join();
 
         importSummaries.forEach(importSummary -> {
@@ -151,9 +180,11 @@ public class InvoiceQueryController {
 
         GetExportSummaryInRangeQuery getExportSummaryInRangeQuery = GetExportSummaryInRangeQuery.builder()
                 .startDateStr(startDateStr)
-                .endDateStr(endDateStr)
                 .type(type)
                 .build();
+        if(endDateStr != null){
+            getExportSummaryInRangeQuery.setEndDateStr(endDateStr);
+        }
         List<ExportSummary> exportSummaries = queryGateway.query(getExportSummaryInRangeQuery, ResponseTypes.multipleInstancesOf(ExportSummary.class)).join();
 
         exportSummaries.forEach(exportSummary -> {

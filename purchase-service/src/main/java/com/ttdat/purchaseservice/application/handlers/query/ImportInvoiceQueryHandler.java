@@ -142,19 +142,17 @@ public class ImportInvoiceQueryHandler {
         if (filterParams.containsKey("startDate") && filterParams.containsKey("type") && !filterParams.containsKey("endDate")) {
             String startDateStr = filterParams.get("startDate");
             String type = filterParams.get("type");
-            log.info("Start date: {}, Type: {}", startDateStr, type);
             LocalDate startDate = DateUtils.parseDate(startDateStr, type);
-            log.info("Parsed start date: {}", startDate);
             importInvoiceStatsSpec = importInvoiceStatsSpec.and((root, query, cb) -> {
                 LocalDate endDate;
                 if (type.equalsIgnoreCase("date")) {
                     endDate = startDate.plusDays(1);
                 } else if (type.equalsIgnoreCase("month")) {
-                    endDate = startDate.withDayOfMonth(startDate.lengthOfMonth()).plusDays(1);
+                    endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
                 } else if (type.equalsIgnoreCase("quarter")) {
-                    endDate = startDate.plusMonths(3).withDayOfMonth(1).minusDays(1).plusDays(1);
+                    endDate = startDate.plusMonths(3).withDayOfMonth(1).minusDays(1);
                 } else if (type.equalsIgnoreCase("year")) {
-                    endDate = startDate.withDayOfYear(startDate.lengthOfYear()).plusDays(1);
+                    endDate = startDate.withDayOfYear(startDate.lengthOfYear());
                 } else {
                     throw new IllegalArgumentException("Invalid date type: " + type);
                 }
@@ -178,7 +176,9 @@ public class ImportInvoiceQueryHandler {
         Map<String, String> filterParams = new HashMap<>();
         filterParams.put("warehouseId", warehouseId.toString());
         filterParams.put("startDate", getImportSummaryInRangeQuery.getStartDateStr());
-        filterParams.put("endDate", getImportSummaryInRangeQuery.getEndDateStr());
+        if(getImportSummaryInRangeQuery.getEndDateStr() != null) {
+            filterParams.put("endDate", getImportSummaryInRangeQuery.getEndDateStr());
+        }
         filterParams.put("type", getImportSummaryInRangeQuery.getType());
         Specification<ImportInvoice> importInvoiceSpec = getImportInvoiceStatsSpec(filterParams);
         List<ImportInvoice> importInvoices = importInvoiceRepository.findAll(importInvoiceSpec);

@@ -204,11 +204,11 @@ public class ExportInvoiceQueryHandler {
                 if (type.equalsIgnoreCase("date")) {
                     endDate = startDate.plusDays(1);
                 } else if (type.equalsIgnoreCase("month")) {
-                    endDate = startDate.withDayOfMonth(startDate.lengthOfMonth()).plusDays(1);
+                    endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
                 } else if (type.equalsIgnoreCase("quarter")) {
-                    endDate = startDate.plusMonths(3).withDayOfMonth(1).minusDays(1).plusDays(1);
+                    endDate = startDate.plusMonths(3).withDayOfMonth(1).minusDays(1);
                 } else if (type.equalsIgnoreCase("year")) {
-                    endDate = startDate.withDayOfYear(startDate.lengthOfYear()).plusDays(1);
+                    endDate = startDate.withDayOfYear(startDate.lengthOfYear());
                 } else {
                     throw new IllegalArgumentException("Invalid date type: " + type);
                 }
@@ -232,7 +232,9 @@ public class ExportInvoiceQueryHandler {
         Map<String, String> filterParams = new HashMap<>();
         filterParams.put("warehouseId", warehouseId.toString());
         filterParams.put("startDate", getExportSummaryInRangeQuery.getStartDateStr());
-        filterParams.put("endDate", getExportSummaryInRangeQuery.getEndDateStr());
+        if(getExportSummaryInRangeQuery.getEndDateStr() != null) {
+            filterParams.put("endDate", getExportSummaryInRangeQuery.getEndDateStr());
+        }
         filterParams.put("type", getExportSummaryInRangeQuery.getType());
         Specification<ExportInvoice> exportInvoiceSpec = getExportInvoiceStatsSpec(filterParams);
         List<ExportInvoice> exportInvoices = exportInvoiceRepository.findAll(exportInvoiceSpec);
