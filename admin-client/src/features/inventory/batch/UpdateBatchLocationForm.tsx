@@ -222,6 +222,12 @@ const UpdateBatchLocationForm: React.FC<UpdateBatchLocationFormProps> = ({
         sm: 3,
       },
     },
+    {
+      label: "Đơn vị tính",
+      key: "unit",
+      children: productBatch.product.productUnits.find((pu) => pu.isDefault)
+        ?.unit.unitName,
+    },
   ];
   const columns: TableProps<IProductBatchLocation>["columns"] = [
     {
