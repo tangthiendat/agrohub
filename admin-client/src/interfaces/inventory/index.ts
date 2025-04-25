@@ -58,6 +58,7 @@ export interface IProductBatchInfo {
 
 export interface ProductBatchFilterCriteria {
   query?: string;
+  isArranged?: boolean;
 }
 
 export interface IProductStock extends Auditable {

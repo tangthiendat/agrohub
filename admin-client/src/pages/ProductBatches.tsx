@@ -30,6 +30,12 @@ const ProductBatches: React.FC = () => {
 
   const filter: ProductBatchFilterCriteria = {
     query: searchParams.get("query") || undefined,
+    isArranged:
+      searchParams.get("isArranged") === "true"
+        ? true
+        : searchParams.get("isArranged") === "false"
+          ? false
+          : undefined,
   };
 
   const { data, isLoading } = useQuery({

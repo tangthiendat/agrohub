@@ -17,6 +17,7 @@ import com.ttdat.inventoryservice.domain.repositories.ProductBatchRepository;
 import com.ttdat.inventoryservice.infrastructure.utils.PaginationUtils;
 import com.ttdat.inventoryservice.infrastructure.utils.SpecificationUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.axonframework.queryhandling.QueryHandler;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProductBatchQueryHandler {
@@ -45,18 +47,34 @@ public class ProductBatchQueryHandler {
         Specification<ProductBatch> productBatchSpec = getProductBatchSpec(filterParams);
         Pageable pageable = PaginationUtils.getPageable(getProductBatchPageQuery.getPaginationParams(), getProductBatchPageQuery.getSortParams());
         Page<ProductBatch> productBatchPage = productBatchRepository.findAll(productBatchSpec, pageable);
+        List<ProductBatchDTO> content = productBatchPage.getContent().stream()
+                .map(productBatch -> {
+                    ProductBatchDTO productBatchDTO = productBatchMapper.toDTO(productBatch);
+                    GetProductInfoByIdQuery getProductInfoByIdQuery = GetProductInfoByIdQuery.builder()
+                            .productId(productBatch.getProductId())
+                            .build();
+                    ProductInfo productInfo = queryGateway.query(getProductInfoByIdQuery, ResponseTypes.instanceOf(ProductInfo.class)).join();
+                    productBatchDTO.setProduct(productInfo);
+                    return productBatchDTO;
+                }).toList();
+        log.info("FilterParams: {}", filterParams);
+        if(filterParams.containsKey("isArranged")) {
+            log.info("isArranged is true");
+            boolean isArranged = Boolean.parseBoolean(filterParams.get("isArranged"));
+            if(isArranged){
+            content = content.stream()
+                    .filter(productBatchDTO -> !productBatchDTO.getBatchLocations().isEmpty())
+                    .toList();
+            } else {
+                content = content.stream()
+                        .filter(productBatchDTO -> productBatchDTO.getBatchLocations().isEmpty())
+                        .toList();
+            }
+
+        }
         return ProductBatchPageResult.builder()
                 .meta(PaginationUtils.getPaginationMeta(productBatchPage))
-                .content(productBatchPage.getContent().stream()
-                        .map(productBatch -> {
-                            ProductBatchDTO productBatchDTO = productBatchMapper.toDTO(productBatch);
-                            GetProductInfoByIdQuery getProductInfoByIdQuery = GetProductInfoByIdQuery.builder()
-                                    .productId(productBatch.getProductId())
-                                    .build();
-                            ProductInfo productInfo = queryGateway.query(getProductInfoByIdQuery, ResponseTypes.instanceOf(ProductInfo.class)).join();
-                            productBatchDTO.setProduct(productInfo);
-                            return productBatchDTO;
-                        }).toList())
+                .content(content)
                 .build();
     }
 

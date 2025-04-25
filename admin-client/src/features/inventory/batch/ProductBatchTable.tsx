@@ -3,6 +3,7 @@ import {
   CaretUpFilled,
   CheckCircleFilled,
   CloseCircleFilled,
+  FilterFilled,
 } from "@ant-design/icons";
 import { Space, Table, TablePaginationConfig } from "antd";
 import { TableProps } from "antd/lib";
@@ -11,9 +12,17 @@ import { useSearchParams } from "react-router";
 import AddBatchLocation from "./AddBatchLocation";
 import ViewBatchLocation from "./ViewBatchLocation";
 import { IProductBatch, IProductInfo, Page } from "../../../interfaces";
-import { getSortDownIconColor, getSortUpIconColor } from "../../../utils/color";
+import {
+  getFilterIconColor,
+  getSortDownIconColor,
+  getSortUpIconColor,
+} from "../../../utils/color";
 import { formatDate } from "../../../utils/datetime";
-import { getDefaultSortOrder, getSortDirection } from "../../../utils/filter";
+import {
+  getDefaultFilterValue,
+  getDefaultSortOrder,
+  getSortDirection,
+} from "../../../utils/filter";
 
 interface ProductBatchTableProps {
   productBatchPage?: Page<IProductBatch>;
@@ -178,6 +187,17 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
       key: "isArranged",
       width: "10%",
       align: "center",
+      filters: [
+        {
+          text: "Đã sắp xếp",
+          value: true,
+        },
+        {
+          text: "Chưa sắp xếp",
+          value: false,
+        },
+      ],
+      defaultFilteredValue: getDefaultFilterValue(searchParams, "isArranged"),
       render: (_, record: IProductBatch) => {
         const isArranged =
           record.batchLocations && record.batchLocations.length > 0;
@@ -187,6 +207,9 @@ const ProductBatchTable: React.FC<ProductBatchTableProps> = ({
           <CloseCircleFilled className="text-lg text-[#F44336]" />
         );
       },
+      filterIcon: (filtered) => (
+        <FilterFilled style={{ color: getFilterIconColor(filtered) }} />
+      ),
     },
     {
       title: "Hành động",
