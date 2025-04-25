@@ -1,0 +1,16 @@
+#Use this dockerfile if you have Maven installed on your local machine
+#Run mvn clean package -DskipTests in the root directory before using docker compose
+FROM eclipse-temurin:21-jre-alpine
+
+RUN unlink /etc/localtime;ln -s  /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/localtime
+
+WORKDIR /app
+
+COPY email-service/target/*.jar /app/email-service.jar
+
+EXPOSE 8087
+
+ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
+ENV SPRING_PROFILES_ACTIVE="docker"
+
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTIONS} -jar /app/email-service.jar"]

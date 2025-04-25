@@ -92,3 +92,16 @@ services:
       - "8086:8086"
     networks:
       - agrohub
+
+  email-service:
+    build:
+      context: .
+      dockerfile: email-service/Dockerfile.dev
+    image: agrohub/email-service:dev
+    container_name: email-service
+    env_file:
+      - email-service/.env.docker
+    ports:
+      - "8087:8087"
+    networks:
+      - agrohub

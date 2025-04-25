@@ -9,13 +9,13 @@ COPY user-service/ user-service/
 COPY product-service/ product-service/
 COPY inventory-service/ inventory-service/
 COPY purchase-service/ purchase-service/
-COPY customer-service/ customer-service/
 COPY debt-service/ debt-service/
+COPY customer-service/ customer-service/
 COPY sales-service/ sales-service/
 COPY email-service/ email-service/
 
 #Build only user-service and its dependent modules
-RUN mvn clean package -DskipTests -pl customer-service -am
+RUN mvn clean package -DskipTests -pl email-service -am
 
 FROM eclipse-temurin:21-jre-alpine
 
@@ -23,11 +23,11 @@ RUN unlink /etc/localtime;ln -s  /usr/share/zoneinfo/Asia/Ho_Chi_Minh /etc/local
 
 WORKDIR /app
 
-COPY --from=build /app/customer-service/target/*.jar /app/customer-service.jar
+COPY --from=build /app/email-service/target/*.jar /app/email-service.jar
 
-EXPOSE 8085
+EXPOSE 8087
 
 ENV JAVA_OPTIONS="-Xmx2048m -Xms256m"
 ENV SPRING_PROFILES_ACTIVE="docker"
 
-ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTIONS} -jar /app/customer-service.jar"]
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTIONS} -jar /app/email-service.jar"]

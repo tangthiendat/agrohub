@@ -1,0 +1,46 @@
+# Ignore Maven target directory
+target/
+
+# Ignore Maven wrapper files
+.mvn/
+mvnw
+mvnw.cmd
+
+# Ignore IntelliJ IDEA project files
+.idea/
+*.iml
+
+# Ignore Eclipse project files
+.project
+.classpath
+.settings/
+
+# Ignore NetBeans project files
+nbproject/
+
+# Ignore build system files
+pom.xml~
+
+# Ignore temporary files and directories
+*.log
+*.tmp
+*.swp
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Ignore OS-generated files
+.DS_Store
+Thumbs.db
+
+# Ignore version control system directories
+.git/
+.gitignore
+.gitattributes
+
+# Ignore other IDE-specific directories
+.vscode/
+
+# Ignore Docker-related files
+docker-compose.yml
+Dockerfile
