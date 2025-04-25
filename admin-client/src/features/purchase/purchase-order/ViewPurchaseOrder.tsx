@@ -321,7 +321,7 @@ const ViewPurchaseOrder: React.FC = () => {
       supplierId: currentPurchaseOrder!.supplier.supplierId,
       status: currentPurchaseOrder!.status,
       orderDate: currentPurchaseOrder!.orderDate,
-      expectedDeliveryDate: currentPurchaseOrder!.expectedDeliveryDate,
+      expectedDeliveryDate: form.getFieldValue("expectedDeliveryDate"),
       totalAmount: currentPurchaseOrder!.totalAmount,
       discountValue: currentPurchaseOrder!.discountValue,
       discountType: currentPurchaseOrder!.discountType,
