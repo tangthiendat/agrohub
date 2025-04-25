@@ -145,6 +145,7 @@ public class DebtAccountQueryHandler {
                             .totalDebt(totalDebt)
                             .build();
                 })
+                .sorted((TopCustomerDebtChartData o1, TopCustomerDebtChartData o2) -> o2.getTotalDebt().compareTo(o1.getTotalDebt()))
                 .toList();
 
     }
