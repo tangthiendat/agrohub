@@ -542,13 +542,17 @@ const ViewPurchaseOrder: React.FC = () => {
             >
               <DatePicker disabled className="w-full" format="DD/MM/YYYY" />
             </Form.Item>
-            {purchaseOrder?.status !== PurchaseOrderStatus.PENDING && (
+            {((purchaseOrder?.status !== PurchaseOrderStatus.PENDING &&
+              purchaseOrder?.status !== PurchaseOrderStatus.CANCELLED) ||
+              purchaseOrder.expectedDeliveryDate) && (
               <Form.Item
                 label="Ngày dự kiến nhận hàng"
                 name="expectedDeliveryDate"
                 rules={[
                   {
-                    required: true,
+                    required:
+                      purchaseOrder?.status !== PurchaseOrderStatus.PENDING &&
+                      purchaseOrder?.status !== PurchaseOrderStatus.CANCELLED,
                     message: "Vui lòng chọn ngày dự kiến nhận hàng",
                   },
                 ]}
@@ -560,6 +564,14 @@ const ViewPurchaseOrder: React.FC = () => {
                 }
               >
                 <DatePicker
+                  disabled={
+                    currentPurchaseOrder?.status ===
+                      PurchaseOrderStatus.PENDING ||
+                    currentPurchaseOrder?.status ===
+                      PurchaseOrderStatus.CANCELLED ||
+                    currentPurchaseOrder?.status ===
+                      PurchaseOrderStatus.COMPLETED
+                  }
                   className="w-full"
                   format="DD/MM/YYYY"
                   placeholder=""

@@ -149,7 +149,7 @@ const PurchaseOrderTable: React.FC<PurchaseOrderTableProps> = ({
       key: "expectedDeliveryDate",
       width: "15%",
       render: (expectedDeliveryDate: string) =>
-        formatDate(expectedDeliveryDate),
+        expectedDeliveryDate ? formatDate(expectedDeliveryDate) : "",
       sorter: true,
       defaultSortOrder: getDefaultSortOrder(
         searchParams,
