@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router";
 import { StatisticFilterCriteria } from "../../interfaces";
 import { invoiceService } from "../../services";
+import { formatTimeLabel } from "../../utils/datetime";
 
 // Register Chart.js components
 Chart.register(...registerables);
@@ -48,7 +49,10 @@ const InventoryActivityChart: React.FC = () => {
         chartInstance.current = new Chart(ctx, {
           type: "line",
           data: {
-            labels: activityStats?.map((item) => item.label) ?? [],
+            labels:
+              activityStats?.map((item) =>
+                formatTimeLabel(item.label, filter.type || "month"),
+              ) ?? [],
             datasets: [
               {
                 label: "Nhập kho",

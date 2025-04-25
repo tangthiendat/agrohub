@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Col, Row } from "antd";
 import { useSearchParams } from "react-router";
+import dayjs from "dayjs";
 import FilterTimeWithOutDate from "../common/components/FilterTimeWithOutDate";
 import Loading from "../common/components/Loading";
-import { useTitle } from "../common/hooks";
 import CategoryInventoryPieChart from "../features/dashboard/CategoryInventoryPieChart";
 import InventoryActivityChart from "../features/dashboard/InventoryActivityChart";
 import StatsCard from "../features/dashboard/StatsCard";
@@ -14,10 +14,12 @@ import {
   importInvoiceService,
   invoiceService,
 } from "../services";
+import { useTitle } from "../common/hooks";
 
 const Home: React.FC = () => {
   useTitle("Trang chủ | Dashboard");
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentMonth = dayjs().format("MM/YYYY");
 
   const { data: orderStats, isLoading: isOrderCountLoading } = useQuery({
     queryFn: () => invoiceService.getOrderStatsCard(),
@@ -81,6 +83,9 @@ const Home: React.FC = () => {
 
   return (
     <div className="dashboard-container p-6">
+      <h1 className="mb-6 text-2xl font-bold">
+        Tổng quan hoạt động kho tháng {currentMonth}
+      </h1>
       {/* Stats Cards */}
       <Row gutter={[16, 16]} className="mb-6">
         {orderStats && (

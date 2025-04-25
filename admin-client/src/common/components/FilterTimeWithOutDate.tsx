@@ -177,7 +177,7 @@ const FilterTimeWithoutDate: React.FC<FilterTimeWithoutDateProps> = ({
           >
             {/* <Option value="date">Ngày</Option> */}
             <Option value="month">Tháng</Option>
-            {/* <Option value="quarter">Quý</Option> */}
+            <Option value="quarter">Quý</Option>
             <Option value="year">Năm</Option>
             <Option value="range">Khoảng thời gian</Option>
           </Select>
