@@ -2,7 +2,19 @@ import { DiscountType, PurchaseOrderStatus } from "../../common/enums";
 import { IUserInfo } from "../auth";
 import { Auditable } from "../common";
 import { IWarehouseInfo } from "../inventory";
-import { IProduct, IProductUnit } from "../product";
+import {
+  IProduct,
+  IProductInfo,
+  IProductUnit,
+  IProductUnitInfo,
+} from "../product";
+
+export interface ISupplierRating extends Auditable {
+  warehouseId: number;
+  ratingId: string;
+  trustScore: number;
+  comment?: string;
+}
 
 export interface ISupplier extends Auditable {
   supplierId: string;
@@ -13,6 +25,7 @@ export interface ISupplier extends Auditable {
   address?: string;
   taxCode?: string;
   contactPerson?: string;
+  supplierRating?: ISupplierRating;
   notes?: string;
 }
 
@@ -113,7 +126,7 @@ export interface PurchaseOrderFilterCriteria {
 }
 
 export interface CreateBatchRequest {
-  manufacturerDate: string;
+  manufacturingDate: string;
   expirationDate: string;
   quantity: number;
 }
@@ -138,4 +151,31 @@ export interface CreateImportInvoiceRequest {
   finalAmount: number;
   importInvoiceDetails: CreateImportInvoiceDetail[];
   note?: string;
+}
+
+export interface IImportInvoiceDetail {
+  importInvoiceDetailId: string;
+  product: IProductInfo;
+  productUnit: IProductUnitInfo;
+  quantity: number;
+  unitPrice: number;
+}
+
+export interface IImportInvoice extends Auditable {
+  importInvoiceId: string;
+  supplier: ISupplier;
+  warehouse: IWarehouseInfo;
+  user: IUserInfo;
+  createdDate: string;
+  importInvoiceDetails: IImportInvoiceDetail[];
+  totalAmount: number;
+  discountValue: number;
+  discountType: DiscountType;
+  vatRate: number;
+  finalAmount: number;
+  note?: string;
+}
+
+export interface ImportInvoiceFilterCriteria {
+  query?: string;
 }

@@ -20,17 +20,18 @@ public class ImportInvoiceDetail {
     String importInvoiceDetailId;
 
     @ManyToOne
-    @JoinColumn(name = "import_invoice_id")
+    @JoinColumn(name = "import_invoice_id", nullable = false)
     ImportInvoice importInvoice;
 
-    @Column(length = 100)
+    @Column(length = 50, nullable = false)
     String productId;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     String productUnitId;
 
+    @Column(nullable = false)
     Integer quantity;
 
-    @Column(precision = 15, scale = 2)
+    @Column(precision = 15, scale = 2, nullable = false)
     BigDecimal unitPrice;
 }

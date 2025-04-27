@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đơn Đặt Hàng</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .header {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-block {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+<p class="header">Kính gửi: <strong th:text="${supplierName}"></strong>,</p>
+
+<p>Chúng tôi xin gửi đến Quý Công Ty đơn đặt hàng mới từ hệ thống AgroHub.</p>
+
+<p>
+    <strong>Mã đơn hàng:</strong>
+    <span th:text="${purchaseOrderId != null ? purchaseOrderId : 'N/A'}"></span><br/>
+    <strong>Ngày đặt hàng:</strong>
+    <span th:text="${#temporals.format(T(java.time.LocalDate).of(orderDate[0], orderDate[1], orderDate[2]), 'dd/MM/yyyy')}"></span>
+</p>
+
+<div class="info-block">
+    <strong>Kho nhận hàng:</strong> <span th:text="${warehouseName}"></span> -
+    <span th:text="${warehouseAddress}"></span>
+</div>
+
+<div class="info-block">
+    <p><strong>Thông tin người lập đơn:</strong></p>
+    <ul>
+        <li><strong>Họ tên:</strong> <span th:text="${userName}"></span></li>
+        <li><strong>Email:</strong> <span th:text="${userEmail}"></span></li>
+        <li><strong>Điện thoại:</strong> <span th:text="${userPhoneNumber}"></span></li>
+    </ul>
+</div>
+
+<p>Chi tiết đơn hàng:</p>
+<table>
+    <thead>
+    <tr>
+        <th>Sản phẩm</th>
+        <th>Đơn vị</th>
+        <th>Số lượng</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${purchaseOrderDetails}">
+        <td th:text="${item.productName}">Tên sản phẩm</td>
+        <td th:text="${item.unitName}">Đơn vị</td>
+        <td th:text="${item.quantity}">Số lượng</td>
+    </tr>
+    </tbody>
+</table>
+
+<p class="info-block">
+    Quý Công Ty vui lòng liên hệ người lập đơn để báo giá hoặc xác nhận đơn hàng.
+</p>
+
+<p>Trân trọng,</p>
+</body>
+</html>

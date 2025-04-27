@@ -1,7 +1,7 @@
 package com.ttdat.purchaseservice.application.commands.purchaseorder;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

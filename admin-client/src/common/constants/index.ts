@@ -1,10 +1,9 @@
-import { PurchaseOrderStatus } from "../enums";
+import { DebtStatus, LocationStatus, PurchaseOrderStatus } from "../enums";
 
 export * from "./notification";
 export * from "./permission";
-export * from "./user";
 export * from "./status";
-export * from "./product";
+export * from "./name";
 
 export const VIETNAM_TIMEZONE = "Asia/Ho_Chi_Minh";
 
@@ -18,3 +17,19 @@ export const PURCHASE_ORDER_STATUS_COLOR: Record<string, string> = {
   [PurchaseOrderStatus.COMPLETED]: "#2196F3",
   [PurchaseOrderStatus.CANCELLED]: "#F44336",
 };
+
+export const LOCATION_STATUS_COLOR: Record<string, string> = {
+  [LocationStatus.AVAILABLE]: "green",
+  [LocationStatus.OCCUPIED]: "blue",
+  [LocationStatus.LOCKED]: "red",
+  [LocationStatus.UNDER_MAINTENANCE]: "yellow",
+};
+
+export const DEBT_STATUS_COLOR: Record<string, string> = {
+  [DebtStatus.UNPAID]: "red",
+  [DebtStatus.PAID]: "green",
+  [DebtStatus.OVERDUE]: "orange",
+  [DebtStatus.PARTIALLY_PAID]: "blue",
+};
+
+export const WARNING_QUANTITY = 10;

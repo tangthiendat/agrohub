@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(UUID id, UserDTO userDTO) {
+    public void updateUser(String id, UserDTO userDTO) {
         UpdateUserCommand updateUserCommand = UpdateUserCommand.builder()
                 .userId(id)
                 .fullName(userDTO.getFullName())
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserStatus(UUID id, UpdateUserStatusRequest updateUserStatusRequest) {
+    public void updateUserStatus(String id, UpdateUserStatusRequest updateUserStatusRequest) {
         UpdateUserStatusCommand updateUserStatusCommand = UpdateUserStatusCommand.builder()
                 .userId(id)
                 .active(updateUserStatusRequest.isActive())

@@ -1,10 +1,10 @@
 package com.ttdat.purchaseservice.domain.aggregate;
 
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CancelPurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.CreatePurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderCommand;
 import com.ttdat.purchaseservice.application.commands.purchaseorder.UpdatePurchaseOrderStatusCommand;
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCancelledEvent;
 import com.ttdat.purchaseservice.domain.events.purchaseorder.PurchaseOrderCreatedEvent;
@@ -77,7 +77,7 @@ public class PurchaseOrderAggregate {
                 .supplierId(purchaseOrderCommand.getSupplierId())
                 .userId(purchaseOrderCommand.getUserId())
                 .orderDate(purchaseOrderCommand.getOrderDate())
-                .expectedDeliveryDate(purchaseOrderCommand.getExpectedDeliveryDate())
+//                .expectedDeliveryDate(purchaseOrderCommand.getExpectedDeliveryDate())
                 .status(purchaseOrderCommand.getStatus())
                 .totalAmount(purchaseOrderCommand.getTotalAmount())
                 .discountValue(purchaseOrderCommand.getDiscountValue())
@@ -147,7 +147,7 @@ public class PurchaseOrderAggregate {
         this.supplierId = purchaseOrderCreatedEvent.getSupplierId();
         this.userId = purchaseOrderCreatedEvent.getUserId();
         this.orderDate = purchaseOrderCreatedEvent.getOrderDate();
-        this.expectedDeliveryDate = purchaseOrderCreatedEvent.getExpectedDeliveryDate();
+//        this.expectedDeliveryDate = purchaseOrderCreatedEvent.getExpectedDeliveryDate();
         this.purchaseOrderDetails = purchaseOrderCreatedEvent.getPurchaseOrderDetails();
         this.status = purchaseOrderCreatedEvent.getStatus();
         this.totalAmount = purchaseOrderCreatedEvent.getTotalAmount();

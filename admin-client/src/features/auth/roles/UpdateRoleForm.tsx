@@ -1,12 +1,21 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Row,
+  Skeleton,
+  Space,
+  Switch,
+} from "antd";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { Button, Card, Col, Form, Input, Row, Space, Switch } from "antd";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Loading from "../../../common/components/Loading";
-import RolePermissions from "./RolePermissions";
 import { IRole } from "../../../interfaces";
 import { permissionService } from "../../../services";
 import { roleService } from "../../../services/auth/role-service";
+import RolePermissions from "./RolePermissions";
 
 interface UpdateRoleProps {
   roleToUpdate?: IRole;
@@ -96,73 +105,73 @@ const UpdateRoleForm: React.FC<UpdateRoleProps> = ({
     }
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
-    <Form
-      onFinish={handleFinish}
-      form={form}
-      layout="vertical"
-      initialValues={{ permissions: [], active: true }}
-    >
-      <Row>
-        <Col span={12}>
-          <Form.Item
-            label="Tên vai trò"
-            name="roleName"
-            rules={[{ required: true, message: "Vui lòng nhập tên vai trò" }]}
-            getValueFromEvent={(event) => event.target.value.toUpperCase()}
-          >
-            <Input readOnly={viewOnly} className="uppercase" />
-          </Form.Item>
-        </Col>
-        <Col span={11} offset={1}>
-          <Form.Item label="Trạng thái" name="active" valuePropName="checked">
-            <Switch
-              disabled={viewOnly}
-              checkedChildren="ACTIVE"
-              unCheckedChildren="INACTIVE"
-            />
-          </Form.Item>
-        </Col>
-        <Col span={24}>
-          <Form.Item label="Mô tả" name="description">
-            <Input.TextArea readOnly={viewOnly} rows={2} />
-          </Form.Item>
-        </Col>
-        <Col span={24}>
-          <Card className="mb-5" title="Quyền hạn của vai trò" size="small">
-            <RolePermissions
-              form={form}
-              roleToUpdate={roleToUpdate}
-              permissions={
-                viewOnly ? roleToUpdate?.permissions || [] : data?.payload || []
-              }
-              viewOnly={viewOnly}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      {!viewOnly && (
-        <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
-          <Space>
-            <Button onClick={onCancel} loading={isCreating || isUpdating}>
-              Hủy
-            </Button>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isCreating || isUpdating}
+    <Skeleton loading={isLoading} active>
+      <Form
+        onFinish={handleFinish}
+        form={form}
+        layout="vertical"
+        initialValues={{ permissions: [], active: true }}
+      >
+        <Row>
+          <Col span={12}>
+            <Form.Item
+              label="Tên vai trò"
+              name="roleName"
+              rules={[{ required: true, message: "Vui lòng nhập tên vai trò" }]}
+              getValueFromEvent={(event) => event.target.value.toUpperCase()}
             >
-              {roleToUpdate ? "Cập nhật" : "Thêm mới"}
-            </Button>
-          </Space>
-        </Form.Item>
-      )}
-    </Form>
+              <Input readOnly={viewOnly} className="uppercase" />
+            </Form.Item>
+          </Col>
+          <Col span={11} offset={1}>
+            <Form.Item label="Trạng thái" name="active" valuePropName="checked">
+              <Switch
+                disabled={viewOnly}
+                checkedChildren="ACTIVE"
+                unCheckedChildren="INACTIVE"
+              />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item label="Mô tả" name="description">
+              <Input.TextArea readOnly={viewOnly} rows={2} />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Card className="mb-5" title="Quyền hạn của vai trò" size="small">
+              <RolePermissions
+                form={form}
+                roleToUpdate={roleToUpdate}
+                permissions={
+                  viewOnly
+                    ? roleToUpdate?.permissions || []
+                    : data?.payload || []
+                }
+                viewOnly={viewOnly}
+              />
+            </Card>
+          </Col>
+        </Row>
+
+        {!viewOnly && (
+          <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
+            <Space>
+              <Button onClick={onCancel} loading={isCreating || isUpdating}>
+                Hủy
+              </Button>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isCreating || isUpdating}
+              >
+                {roleToUpdate ? "Cập nhật" : "Thêm mới"}
+              </Button>
+            </Space>
+          </Form.Item>
+        )}
+      </Form>
+    </Skeleton>
   );
 };
 

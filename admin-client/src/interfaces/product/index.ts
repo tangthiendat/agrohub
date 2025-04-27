@@ -7,7 +7,17 @@ export interface IUnit extends Auditable {
   description: string;
 }
 
+export interface IUnitInfo {
+  unitId: number;
+  unitName: string;
+}
+
 export interface ICategory extends Auditable {
+  categoryId: number;
+  categoryName: string;
+}
+
+export interface ICategoryInfo {
   categoryId: number;
   categoryName: string;
 }
@@ -27,11 +37,19 @@ export interface IProductUnit {
   productUnitPrices: IProductUnitPrice[];
 }
 
+export interface IProductUnitInfo {
+  productUnitId: string;
+  unit: IUnitInfo;
+  conversionFactor: number;
+  isDefault: boolean;
+}
+
 export interface IProduct extends Auditable {
   productId: string;
   productName: string;
   description?: string;
   totalQuantity?: number;
+  currentStock: number;
   imageUrl?: string;
   category: ICategory;
   defaultExpDays: number;
@@ -45,5 +63,13 @@ export interface IProduct extends Auditable {
 
 export interface ProductFilterCriteria {
   query?: string;
-  categoryId?: number;
+  categoryId?: string;
+}
+
+export interface IProductInfo {
+  productId: string;
+  productName: string;
+  category: ICategoryInfo;
+  imageUrl: string;
+  productUnits: IProductUnitInfo[];
 }

@@ -14,7 +14,7 @@ import {
   SortParams,
 } from "../interfaces";
 import { productService } from "../services";
-import ProductTable from "../features/product/ProductTable";
+import ProductTable from "../features/item/product/ProductTable";
 
 const Products: React.FC = () => {
   useTitle("Sản phẩm");
@@ -33,7 +33,7 @@ const Products: React.FC = () => {
 
   const filter: ProductFilterCriteria = {
     query: searchParams.get("query") || undefined,
-    categoryId: Number(searchParams.get("categoryId")) || undefined,
+    categoryId: searchParams.get("categoryId") || undefined,
   };
 
   const { data, isLoading } = useQuery({

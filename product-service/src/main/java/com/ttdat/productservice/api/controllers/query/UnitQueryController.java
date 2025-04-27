@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,20 +27,19 @@ public class UnitQueryController {
     private final QueryGateway queryGateway;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<UnitDTO>>> getUnits() {
+    public ApiResponse<List<UnitDTO>> getUnits() {
         GetAllUnitsQuery getAllUnitsQuery = GetAllUnitsQuery.builder().build();
         List<UnitDTO> units = queryGateway.query(getAllUnitsQuery, ResponseTypes.multipleInstancesOf(UnitDTO.class)).join();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<List<UnitDTO>>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Units retrieved successfully")
-                        .success(true)
-                        .payload(units)
-                        .build());
+        return ApiResponse.<List<UnitDTO>>builder()
+                .status(HttpStatus.OK.value())
+                .message("Units retrieved successfully")
+                .success(true)
+                .payload(units)
+                .build();
     }
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<UnitPageResult>> getUnitPage(@RequestParam Map<String, String> filterParams) {
+    public ApiResponse<UnitPageResult> getUnitPage(@RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetUnitPageQuery getUnitPageQuery = GetUnitPageQuery.builder()
@@ -49,13 +47,12 @@ public class UnitQueryController {
                 .sortParams(sortParams)
                 .build();
         UnitPageResult unitPageResult = queryGateway.query(getUnitPageQuery, ResponseTypes.instanceOf(UnitPageResult.class)).join();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.<UnitPageResult>builder()
-                        .status(HttpStatus.OK.value())
-                        .message("Unit page retrieved successfully")
-                        .success(true)
-                        .payload(unitPageResult)
-                        .build());
+        return ApiResponse.<UnitPageResult>builder()
+                .status(HttpStatus.OK.value())
+                .message("Unit page retrieved successfully")
+                .success(true)
+                .payload(unitPageResult)
+                .build();
     }
 
 }

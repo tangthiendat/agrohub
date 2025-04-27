@@ -1,6 +1,6 @@
 package com.ttdat.purchaseservice.domain.events.purchaseorder;
 
-import com.ttdat.purchaseservice.domain.entities.DiscountType;
+import com.ttdat.core.domain.entities.DiscountType;
 import com.ttdat.purchaseservice.domain.entities.PurchaseOrderStatus;
 import com.ttdat.purchaseservice.domain.valueobject.EvtPurchaseOrderDetail;
 import lombok.*;
@@ -26,7 +26,7 @@ public class PurchaseOrderCreatedEvent {
 
     LocalDate orderDate;
 
-    LocalDate expectedDeliveryDate;
+//    LocalDate expectedDeliveryDate;
 
     PurchaseOrderStatus status;
 

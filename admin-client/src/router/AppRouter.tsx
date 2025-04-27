@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ErrorIndicator from "../common/components/ErrorIndicator";
 import ProtectedRoute from "../features/auth/ProtectedRoute";
-import NewProduct from "../features/product/NewProduct";
+import NewProduct from "../features/item/product/NewProduct";
 import AdminLayout from "../layouts/AdminLayout";
 import Categories from "../pages/Categories";
 import Home from "../pages/Home";
@@ -11,16 +11,24 @@ import Products from "../pages/Products";
 import Roles from "../pages/Roles";
 import Units from "../pages/Units";
 import Users from "../pages/Users";
-import ViewProduct from "../features/product/ViewProduct";
-import EditProduct from "../features/product/EditProduct";
+import ViewProduct from "../features/item/product/ViewProduct";
+import EditProduct from "../features/item/product/EditProduct";
 import Suppliers from "../pages/Suppliers";
-import EditProductSuppliers from "../features/product/EditProductSuppliers";
+import EditProductSuppliers from "../features/item/product/EditProductSuppliers";
 import Warehouses from "../pages/Warehouses";
 import PurchaseOrders from "../pages/PurchaseOrders";
-import NewPurchaseOrder from "../features/purchase-order/NewPurchaseOrder";
-import ViewPurchaseOrder from "../features/purchase-order/ViewPurchaseOrder";
+import NewPurchaseOrder from "../features/purchase/purchase-order/NewPurchaseOrder";
+import ViewPurchaseOrder from "../features/purchase/purchase-order/ViewPurchaseOrder";
 import ImportInvoices from "../pages/ImportInvoices";
-import NewImportInvoice from "../features/import-invoice/NewImportInvoice";
+import NewImportInvoice from "../features/purchase/import-invoice/NewImportInvoice";
+import ProductLocations from "../pages/ProductLocations";
+import ProductBatches from "../pages/ProductBatches";
+import ProductStocks from "../pages/ProductStocks";
+import SupplierDebt from "../features/debt/SupplierDebt";
+import Customers from "../pages/Customers";
+import ExportInvoices from "../pages/ExportInvoices";
+import NewExportInvoice from "../features/sales/export-invoice/NewExportInvoice";
+import CustomerDebt from "../features/debt/CustomerDebt";
 
 const router = createBrowserRouter([
   {
@@ -94,7 +102,31 @@ const router = createBrowserRouter([
       },
       {
         path: "/suppliers",
-        element: <Suppliers />,
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <Suppliers />,
+          },
+          {
+            path: ":id/debt",
+            element: <SupplierDebt />,
+          },
+        ],
+      },
+      {
+        path: "/customers",
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <Customers />,
+          },
+          {
+            path: ":id/debt",
+            element: <CustomerDebt />,
+          },
+        ],
       },
       {
         path: "/warehouses",
@@ -129,6 +161,33 @@ const router = createBrowserRouter([
           {
             path: "new",
             element: <NewImportInvoice />,
+          },
+        ],
+      },
+      {
+        path: "/product-locations",
+        element: <ProductLocations />,
+      },
+      {
+        path: "/product-batches",
+        element: <ProductBatches />,
+      },
+      {
+        path: "/product-stocks",
+        element: <ProductStocks />,
+      },
+
+      {
+        path: "/export-invoices",
+        children: [
+          {
+            path: "",
+            index: true,
+            element: <ExportInvoices />,
+          },
+          {
+            path: "new",
+            element: <NewExportInvoice />,
           },
         ],
       },

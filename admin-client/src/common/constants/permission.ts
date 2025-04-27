@@ -134,6 +134,10 @@ export const PERMISSIONS = {
       apiPath: "/api/v1/suppliers/{id}/status",
       httpMethod: HttpMethod.PATCH,
     },
+    RATE: {
+      apiPath: "/api/v1/suppliers/{id}/ratings",
+      httpMethod: HttpMethod.POST,
+    },
   },
   [Module.WAREHOUSE]: {
     GET_PAGE: {
@@ -174,6 +178,90 @@ export const PERMISSIONS = {
     },
     CREATE: {
       apiPath: "/api/v1/import-invoices",
+      httpMethod: HttpMethod.POST,
+    },
+  },
+  [Module.PRODUCT_LOCATION]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/product-locations/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/product-locations",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/product-locations/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+  },
+  [Module.PRODUCT_BATCH]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/product-batches/page",
+      httpMethod: HttpMethod.GET,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/product-batches/{id}",
+      httpMethod: HttpMethod.PATCH,
+    },
+  },
+  [Module.PRODUCT_STOCK]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/product-stocks/page",
+      httpMethod: HttpMethod.GET,
+    },
+  },
+  [Module.DEBT_ACCOUNT]: {
+    GET_SUPPLIER_UNPAID: {
+      apiPath: "/api/v1/debt-accounts/supplier/{supplierId}/unpaid",
+      httpMethod: HttpMethod.GET,
+    },
+    GET_SUPPLIER_PAGE: {
+      apiPath: "/api/v1/debt-accounts/supplier/{supplierId}/page",
+      httpMethod: HttpMethod.GET,
+    },
+  },
+  [Module.PAYMENT]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/payments/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/payments",
+      httpMethod: HttpMethod.POST,
+    },
+  },
+  [Module.CUSTOMER]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/customers/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/customers",
+      httpMethod: HttpMethod.POST,
+    },
+    UPDATE: {
+      apiPath: "/api/v1/customers/{id}",
+      httpMethod: HttpMethod.PUT,
+    },
+    UPDATE_STATUS: {
+      apiPath: "/api/v1/customers/{id}/status",
+      httpMethod: HttpMethod.PATCH,
+    },
+  },
+  [Module.EXPORT_INVOICE]: {
+    GET_PAGE: {
+      apiPath: "/api/v1/export-invoices/page",
+      httpMethod: HttpMethod.GET,
+    },
+    CREATE: {
+      apiPath: "/api/v1/export-invoices",
+      httpMethod: HttpMethod.POST,
+    },
+  },
+  [Module.RECEIPT]: {
+    CREATE: {
+      apiPath: "/api/v1/receipts",
       httpMethod: HttpMethod.POST,
     },
   },

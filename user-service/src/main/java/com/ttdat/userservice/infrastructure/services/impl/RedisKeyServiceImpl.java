@@ -9,7 +9,7 @@ import java.util.UUID;
 @Service
 public class RedisKeyServiceImpl implements RedisKeyService {
     @Override
-    public String getUserRoleKey(UUID userId) {
+    public String getUserRoleKey(String userId) {
         return RedisKeys.USER_PREFIX + ":" + userId + ":role";
     }
 }

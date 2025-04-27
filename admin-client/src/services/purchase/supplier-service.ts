@@ -3,6 +3,7 @@ import { createApiClient } from "../../config/axios/api-client";
 import {
   ApiResponse,
   ISupplier,
+  ISupplierRating,
   Page,
   PaginationParams,
   SortParams,
@@ -24,6 +25,16 @@ interface ISupplierService {
   ): Promise<ApiResponse<void>>;
   updateStatus(supplierId: string, active: boolean): Promise<ApiResponse<void>>;
   search(query?: string): Promise<ApiResponse<ISupplier[]>>;
+  createRating(
+    supplierId: string,
+    supplierRating: ISupplierRating,
+  ): Promise<ApiResponse<void>>;
+  updateRating(
+    supplierId: string,
+    ratingId: string,
+    supplierRating: ISupplierRating,
+  ): Promise<ApiResponse<void>>;
+  getById(supplierId: string): Promise<ApiResponse<ISupplier>>;
 }
 
 const apiClient: AxiosInstance = createApiClient("api/v1/suppliers", {
@@ -70,6 +81,31 @@ class SupplierService implements ISupplierService {
 
   async search(query?: string): Promise<ApiResponse<ISupplier[]>> {
     return (await apiClient.get("/search", { params: { query } })).data;
+  }
+
+  async createRating(
+    supplierId: string,
+    supplierRating: ISupplierRating,
+  ): Promise<ApiResponse<void>> {
+    return (await apiClient.post(`/${supplierId}/ratings`, supplierRating))
+      .data;
+  }
+
+  async updateRating(
+    supplierId: string,
+    ratingId: string,
+    supplierRating: ISupplierRating,
+  ): Promise<ApiResponse<void>> {
+    return (
+      await apiClient.patch(
+        `/${supplierId}/ratings/${ratingId}`,
+        supplierRating,
+      )
+    ).data;
+  }
+
+  async getById(supplierId: string): Promise<ApiResponse<ISupplier>> {
+    return (await apiClient.get(`/${supplierId}`)).data;
   }
 }
 

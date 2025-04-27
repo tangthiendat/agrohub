@@ -12,20 +12,30 @@ const LoginForm: React.FC = () => {
   const [loginForm] = Form.useForm<IAuthRequest>();
   const navigate = useNavigate();
   const accessToken = window.localStorage.getItem("access_token");
+  const roleName = window.localStorage.getItem("role_name");
 
   useEffect(() => {
     if (accessToken) {
-      navigate("/");
+      if (roleName === "EMPLOYEE") {
+        navigate("/customers");
+      } else {
+        navigate("/");
+      }
     }
-  }, [accessToken, navigate]);
+  }, [accessToken, navigate, roleName]);
 
   const { mutate: login } = useMutation({
     mutationFn: authService.login,
     onSuccess: (data: ApiResponse<IAuthResponse>) => {
       if (data.payload) {
-        const { accessToken } = data.payload;
+        const { accessToken, roleName } = data.payload;
         window.localStorage.setItem("access_token", accessToken);
-        navigate("/");
+        window.localStorage.setItem("role_name", roleName);
+        if (roleName === "EMPLOYEE") {
+          navigate("/customers");
+        } else {
+          navigate("/");
+        }
       }
     },
   });

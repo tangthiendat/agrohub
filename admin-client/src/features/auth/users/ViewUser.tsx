@@ -3,7 +3,7 @@ import { Descriptions, DescriptionsProps, Drawer, Tag } from "antd";
 import { useState } from "react";
 import ViewIcon from "../../../common/components/icons/ViewIcon";
 import Loading from "../../../common/components/Loading";
-import WarehouseOption from "../../warehouse/WarehouseOption";
+import WarehouseOption from "../../item/warehouse/WarehouseOption";
 import { GENDER_NAME } from "../../../common/constants";
 import { IUser } from "../../../interfaces";
 import { warehouseService } from "../../../services";

@@ -42,7 +42,7 @@ public class AuthQueryHandler {
         String userRoleKey = RedisKeys.USER_PREFIX + ":" + userId + ":role";
         AuthRole authRole = (AuthRole) redisService.get(userRoleKey);
         if (authRole == null) {
-            User user = userRepository.findById(UUID.fromString(userId))
+            User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.USER_NOT_FOUND));
             authRole = roleMapper.toAuthRole(user.getRole());
             redisService.set(userRoleKey, authRole, 5, TimeUnit.MINUTES);

@@ -68,6 +68,7 @@ public class AuthServiceImpl implements AuthService {
         response.addCookie(refreshTokenCookie);
         return AuthResponse.builder()
                 .accessToken(accessToken)
+                .roleName(user.getRole().getRoleName())
                 .build();
     }
 
@@ -82,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
             String tokenKey = "token" + ":" + tokenId;
             tokenBlacklistService.blacklistToken(tokenKey, timeToExpire);
         }
-        String userRoleKey = redisKeyService.getUserRoleKey(UUID.fromString(userId));
+        String userRoleKey = redisKeyService.getUserRoleKey(userId);
         redisService.delete(userRoleKey);
 
         // Remove refresh token from http only cookie

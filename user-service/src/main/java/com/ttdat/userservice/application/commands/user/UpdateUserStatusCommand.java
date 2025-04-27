@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.UUID;
-
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,6 +14,6 @@ import java.util.UUID;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class UpdateUserStatusCommand {
-    UUID userId;
+    String userId;
     boolean active;
 }

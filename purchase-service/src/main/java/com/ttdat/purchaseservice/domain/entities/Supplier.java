@@ -21,18 +21,17 @@ public class Supplier extends Auditable {
     @Column(length = 50)
     String supplierId;
 
-    @Column(length = 200)
+    @Column(length = 150, nullable = false)
     String supplierName;
 
-    @Column(length = 50)
+    @Column(nullable = false)
     String email;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     String phoneNumber;
 
     boolean active;
 
-    @Column(length = 200)
     String address;
 
     @Column(length = 20)
@@ -49,4 +48,7 @@ public class Supplier extends Auditable {
 
     @OneToMany(mappedBy = "supplier")
     List<PurchaseOrder> purchaseOrders;
+
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.EAGER)
+    List<SupplierRating> supplierRatings;
 }

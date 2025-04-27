@@ -1,13 +1,7 @@
 package com.ttdat.purchaseservice.application.handlers.command;
 
-import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierCommand;
-import com.ttdat.purchaseservice.application.commands.supplier.CreateSupplierProductCommand;
-import com.ttdat.purchaseservice.application.commands.supplier.UpdateSupplierCommand;
-import com.ttdat.purchaseservice.application.commands.supplier.UpdateSupplierStatusCommand;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierCreatedEvent;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierProductCreatedEvent;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierStatusUpdatedEvent;
-import com.ttdat.purchaseservice.domain.events.supplier.SupplierUpdatedEvent;
+import com.ttdat.purchaseservice.application.commands.supplier.*;
+import com.ttdat.purchaseservice.domain.events.supplier.*;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.eventhandling.EventBus;
@@ -68,6 +62,30 @@ public class SupplierCommandHandler {
                 .productId(createSupplierProductCommand.getProductId())
                 .build();
         eventBus.publish(GenericEventMessage.asEventMessage(supplierProductCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(CreateSupplierRatingCommand createSupplierRatingCommand){
+        SupplierRatingCreatedEvent supplierRatingCreatedEvent = SupplierRatingCreatedEvent.builder()
+                .ratingId(createSupplierRatingCommand.getRatingId())
+                .warehouseId(createSupplierRatingCommand.getWarehouseId())
+                .supplierId(createSupplierRatingCommand.getSupplierId())
+                .trustScore(createSupplierRatingCommand.getTrustScore())
+                .comment(createSupplierRatingCommand.getComment())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(supplierRatingCreatedEvent));
+    }
+
+    @CommandHandler
+    public void handle(UpdateSupplierRatingCommand updateSupplierRatingCommand){
+        SupplierRatingUpdatedEvent supplierRatingUpdatedEvent = SupplierRatingUpdatedEvent.builder()
+                .ratingId(updateSupplierRatingCommand.getRatingId())
+                .warehouseId(updateSupplierRatingCommand.getWarehouseId())
+                .supplierId(updateSupplierRatingCommand.getSupplierId())
+                .trustScore(updateSupplierRatingCommand.getTrustScore())
+                .comment(updateSupplierRatingCommand.getComment())
+                .build();
+        eventBus.publish(GenericEventMessage.asEventMessage(supplierRatingUpdatedEvent));
     }
 
 }

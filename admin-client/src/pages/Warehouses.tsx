@@ -1,8 +1,8 @@
 import Access from "../features/auth/Access";
-import AddWarehouse from "../features/warehouse/AddWarehouse";
+import AddWarehouse from "../features/item/warehouse/AddWarehouse";
 import { Module } from "../common/enums";
 import { PERMISSIONS } from "../common/constants";
-import WarehouseTable from "../features/warehouse/WarehouseTable";
+import WarehouseTable from "../features/item/warehouse/WarehouseTable";
 
 const Warehouses: React.FC = () => {
   return (

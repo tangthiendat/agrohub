@@ -28,6 +28,8 @@ axon:
         mode: subscribing
       product-stock-group:
         mode: subscribing
+      product-location-group:
+        mode: subscribing
 application:
   security:
     rsa:

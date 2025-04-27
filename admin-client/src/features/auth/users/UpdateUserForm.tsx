@@ -7,6 +7,7 @@ import {
   Radio,
   Select,
   SelectProps,
+  Skeleton,
   Space,
   Switch,
 } from "antd";
@@ -14,12 +15,11 @@ import { DatePickerProps } from "antd/lib";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import Loading from "../../../common/components/Loading";
-import WarehouseOption from "../../warehouse/WarehouseOption";
+import removeAccents from "remove-accents";
 import { GENDER_NAME } from "../../../common/constants";
 import { IUser, IWarehouse } from "../../../interfaces";
-import { userService, warehouseService, roleService } from "../../../services";
-import removeAccents from "remove-accents";
+import { roleService, userService, warehouseService } from "../../../services";
+import WarehouseOption from "../../item/warehouse/WarehouseOption";
 
 interface UpdateUserFormProps {
   userToUpdate?: IUser;
@@ -130,7 +130,6 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
       );
     } else {
       const newUser = values;
-      console.log(newUser);
       createUser(newUser, {
         onSuccess: () => {
           toast.success("Thêm mới người dùng thành công");
@@ -144,197 +143,197 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({
     }
   }
 
-  if (isRolesLoading || isWarehouseLoading) {
-    return <Loading />;
-  }
-
   return (
-    <Form
-      layout="vertical"
-      form={form}
-      onFinish={handleFinish}
-      initialValues={{ active: true }}
-    >
-      <div className="flex gap-8">
-        <Form.Item
-          className="flex-1"
-          label="Họ và tên"
-          name="fullName"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập họ và tên",
-            },
-          ]}
-        >
-          <Input placeholder="Họ và tên" />
-        </Form.Item>
-
-        <Form.Item
-          className="flex-1"
-          label="Giới tính"
-          name="gender"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn giới tính",
-            },
-          ]}
-        >
-          <Radio.Group className="space-x-4" options={genderOptions} />
-        </Form.Item>
-      </div>
-      <div className="flex gap-8">
-        <Form.Item
-          className="flex-1"
-          label="Ngày sinh"
-          name="dob"
-          rules={[
-            {
-              required: true,
-              message: "Ngày sinh không hợp lệ",
-            },
-          ]}
-          getValueProps={(value: string) => ({
-            value: value && dayjs(value),
-          })}
-          normalize={(value: Dayjs) => value && value.tz().format("YYYY-MM-DD")}
-        >
-          <DatePicker
-            className="w-full"
-            format="DD/MM/YYYY"
-            disabledDate={disabledDate}
-            placeholder="Chọn ngày sinh"
-          />
-        </Form.Item>
-        <Form.Item
-          className="flex-1"
-          label="Trạng thái"
-          name="active"
-          valuePropName="checked"
-        >
-          <Switch checkedChildren="ACTIVE" unCheckedChildren="INACTIVE" />
-        </Form.Item>
-      </div>
-      <div className="flex gap-8">
-        <Form.Item
-          className="flex-1"
-          label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập email",
-            },
-            {
-              type: "email",
-              message: "Email không hợp lệ",
-            },
-          ]}
-        >
-          <Input placeholder="Email" />
-        </Form.Item>
-
-        <Form.Item
-          className="flex-1"
-          label="Số điện thoại"
-          name="phoneNumber"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập số điện thoại",
-            },
-            {
-              pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
-              message: "Số điện thoại không hợp lệ",
-            },
-          ]}
-        >
-          <Input placeholder="Số điện thoại" />
-        </Form.Item>
-      </div>
-      <div className="flex gap-8">
-        <Form.Item
-          className="flex-1"
-          label="Kho làm việc"
-          name="warehouseId"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn kho làm việc",
-            },
-          ]}
-        >
-          <Select
-            showSearch
-            allowClear
-            labelRender={labelRender}
-            placeholder="Chọn kho"
-            options={warehouseOptions}
-            filterOption={(input, option) => {
-              const warehouse = option?.label.props.warehouse as IWarehouse;
-              return (
-                removeAccents(warehouse.warehouseName.toLowerCase()).includes(
-                  removeAccents(input.toLowerCase()),
-                ) ||
-                removeAccents(warehouse?.address.toLowerCase()).includes(
-                  removeAccents(input.toLowerCase()),
-                )
-              );
-            }}
-          />
-        </Form.Item>
-
-        <Form.Item
-          className="flex-1"
-          label="Vai trò"
-          name={["role", "roleId"]}
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng chọn vai trò",
-            },
-          ]}
-        >
-          <Select placeholder="Chọn vai trò" options={roleOptions} />
-        </Form.Item>
-      </div>
-      {!userToUpdate && (
-        <Form.Item
-          style={{ width: "calc(50% - 1rem)" }}
-          label="Mật khẩu"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Vui lòng nhập mật khẩu",
-            },
-            {
-              min: 6,
-              message: "Mật khẩu phải chứa ít nhất 6 ký tự",
-            },
-          ]}
-        >
-          <Input.Password placeholder="Mật khẩu" />
-        </Form.Item>
-      )}
-
-      <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
-        <Space>
-          <Button onClick={onCancel} loading={isCreating || isUpdating}>
-            Hủy
-          </Button>
-
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={isCreating || isUpdating}
+    <Skeleton loading={isRolesLoading || isWarehouseLoading} active>
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={handleFinish}
+        initialValues={{ active: true }}
+      >
+        <div className="flex gap-8">
+          <Form.Item
+            className="flex-1"
+            label="Họ và tên"
+            name="fullName"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập họ và tên",
+              },
+            ]}
           >
-            {userToUpdate ? "Cập nhật" : "Thêm mới"}
-          </Button>
-        </Space>
-      </Form.Item>
-    </Form>
+            <Input placeholder="Họ và tên" />
+          </Form.Item>
+
+          <Form.Item
+            className="flex-1"
+            label="Giới tính"
+            name="gender"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn giới tính",
+              },
+            ]}
+          >
+            <Radio.Group className="space-x-4" options={genderOptions} />
+          </Form.Item>
+        </div>
+        <div className="flex gap-8">
+          <Form.Item
+            className="flex-1"
+            label="Ngày sinh"
+            name="dob"
+            rules={[
+              {
+                required: true,
+                message: "Ngày sinh không hợp lệ",
+              },
+            ]}
+            getValueProps={(value: string) => ({
+              value: value && dayjs(value),
+            })}
+            normalize={(value: Dayjs) =>
+              value && value.tz().format("YYYY-MM-DD")
+            }
+          >
+            <DatePicker
+              className="w-full"
+              format="DD/MM/YYYY"
+              disabledDate={disabledDate}
+              placeholder="Chọn ngày sinh"
+            />
+          </Form.Item>
+          <Form.Item
+            className="flex-1"
+            label="Trạng thái"
+            name="active"
+            valuePropName="checked"
+          >
+            <Switch checkedChildren="ACTIVE" unCheckedChildren="INACTIVE" />
+          </Form.Item>
+        </div>
+        <div className="flex gap-8">
+          <Form.Item
+            className="flex-1"
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập email",
+              },
+              {
+                type: "email",
+                message: "Email không hợp lệ",
+              },
+            ]}
+          >
+            <Input placeholder="Email" />
+          </Form.Item>
+
+          <Form.Item
+            className="flex-1"
+            label="Số điện thoại"
+            name="phoneNumber"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập số điện thoại",
+              },
+              {
+                pattern: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
+                message: "Số điện thoại không hợp lệ",
+              },
+            ]}
+          >
+            <Input placeholder="Số điện thoại" />
+          </Form.Item>
+        </div>
+        <div className="flex gap-8">
+          <Form.Item
+            className="flex-1"
+            label="Kho làm việc"
+            name="warehouseId"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn kho làm việc",
+              },
+            ]}
+          >
+            <Select
+              showSearch
+              allowClear
+              labelRender={labelRender}
+              placeholder="Chọn kho"
+              options={warehouseOptions}
+              filterOption={(input, option) => {
+                const warehouse = option?.label.props.warehouse as IWarehouse;
+                return (
+                  removeAccents(warehouse.warehouseName.toLowerCase()).includes(
+                    removeAccents(input.toLowerCase()),
+                  ) ||
+                  removeAccents(warehouse?.address.toLowerCase()).includes(
+                    removeAccents(input.toLowerCase()),
+                  )
+                );
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item
+            className="flex-1"
+            label="Vai trò"
+            name={["role", "roleId"]}
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn vai trò",
+              },
+            ]}
+          >
+            <Select placeholder="Chọn vai trò" options={roleOptions} />
+          </Form.Item>
+        </div>
+        {!userToUpdate && (
+          <Form.Item
+            style={{ width: "calc(50% - 1rem)" }}
+            label="Mật khẩu"
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mật khẩu",
+              },
+              {
+                min: 6,
+                message: "Mật khẩu phải chứa ít nhất 6 ký tự",
+              },
+            ]}
+          >
+            <Input.Password placeholder="Mật khẩu" />
+          </Form.Item>
+        )}
+
+        <Form.Item className="text-right" wrapperCol={{ span: 24 }}>
+          <Space>
+            <Button onClick={onCancel} loading={isCreating || isUpdating}>
+              Hủy
+            </Button>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isCreating || isUpdating}
+            >
+              {userToUpdate ? "Cập nhật" : "Thêm mới"}
+            </Button>
+          </Space>
+        </Form.Item>
+      </Form>
+    </Skeleton>
   );
 };
 

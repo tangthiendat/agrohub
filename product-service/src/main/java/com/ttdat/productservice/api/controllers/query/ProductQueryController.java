@@ -12,7 +12,7 @@ import com.ttdat.productservice.application.queries.product.SearchProductQuery;
 import lombok.RequiredArgsConstructor;
 import org.axonframework.messaging.responsetypes.ResponseTypes;
 import org.axonframework.queryhandling.QueryGateway;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class ProductQueryController {
     private final QueryGateway queryGateway;
 
     @GetMapping("/page")
-    public ResponseEntity<ApiResponse<ProductPageResult>> getProductPage(@RequestParam Map<String, String> filterParams) {
+    public ApiResponse<ProductPageResult> getProductPage(@RequestParam Map<String, String> filterParams) {
         PaginationParams paginationParams = RequestParamsUtils.getPaginationParams(filterParams);
         SortParams sortParams = RequestParamsUtils.getSortParams(filterParams);
         GetProductPageQuery getProductPageQuery = GetProductPageQuery.builder()
@@ -34,36 +34,39 @@ public class ProductQueryController {
                 .filterParams(filterParams)
                 .build();
         ProductPageResult productPageResult = queryGateway.query(getProductPageQuery, ResponseTypes.instanceOf(ProductPageResult.class)).join();
-        return ResponseEntity.ok(ApiResponse.<ProductPageResult>builder()
+        return ApiResponse.<ProductPageResult>builder()
+                .status(HttpStatus.OK.value())
                 .message("Product page retrieved successfully")
                 .success(true)
                 .payload(productPageResult)
-                .build());
+                .build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDTO>> getProductById(@PathVariable String id) {
+    public ApiResponse<ProductDTO> getProductById(@PathVariable String id) {
         GetProductByIdQuery getProductByIdQuery = GetProductByIdQuery.builder()
                 .productId(id)
                 .build();
         ProductDTO productDTO = queryGateway.query(getProductByIdQuery, ResponseTypes.instanceOf(ProductDTO.class)).join();
-        return ResponseEntity.ok(ApiResponse.<ProductDTO>builder()
+        return ApiResponse.<ProductDTO>builder()
+                .status(HttpStatus.OK.value())
                 .message("Product retrieved successfully")
                 .success(true)
                 .payload(productDTO)
-                .build());
+                .build();
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<ProductDTO>>> getAllProducts(@RequestParam String query) {
+    public ApiResponse<List<ProductDTO>> getAllProducts(@RequestParam String query) {
         SearchProductQuery searchProductQuery = SearchProductQuery.builder()
                 .query(query)
                 .build();
         List<ProductDTO> productDTOs = queryGateway.query(searchProductQuery, ResponseTypes.multipleInstancesOf(ProductDTO.class)).join();
-        return ResponseEntity.ok(ApiResponse.<List<ProductDTO>>builder()
+        return ApiResponse.<List<ProductDTO>>builder()
+                .status(HttpStatus.OK.value())
                 .message("Products retrieved successfully")
                 .success(true)
                 .payload(productDTOs)
-                .build());
+                .build();
     }
 }

@@ -15,3 +15,13 @@ export function formatTimestamp(timestamp: string): string {
 export function formatDate(date: string): string {
   return dayjs(date).tz().format("DD/MM/YYYY");
 }
+
+export function formatTimeLabel(label: string, type: string): string {
+  const date = dayjs(label).tz();
+  if (type === "date" || type === "month" || type === "quarter") {
+    return date.format("DD/MM");
+  } else if (type === "year") {
+    return date.format("MM/YYYY");
+  }
+  return label;
+}

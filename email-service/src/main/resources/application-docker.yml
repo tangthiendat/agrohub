@@ -10,3 +10,40 @@ spring:
   threads:
     virtual:
       enabled: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+  kafka:
+    bootstrap-servers: ${KAFKA_CLUSTER_BOOTSTRAP_SERVERS}
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: purchase-order-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      enable-auto-commit: true
+      properties:
+        spring.json.trusted.packages: '*'
+        spring.json.use.type.headers: false
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.StickyAssignor
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    default-encoding: UTF-8
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+axon:
+  axonserver:
+    servers: ${AXON_SERVER}
+kafka:
+  email:
+    topic: purchase-service.order.placed
